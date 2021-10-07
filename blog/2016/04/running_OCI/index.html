@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Getting Started with OCI &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Mrunal Patel' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Getting Started with OCI' property='og:title'>
+<meta content='This post will walk you through the steps to running a runc container using the OCI configuration.&#x000A;&#x000A;We will walk through two examples. One for running a Fedora container and another for running a Redis container.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/04/running_OCI/' property='og:url'>
+<meta content='2016-04-13T13:20:00Z' property='article:published_time'>
+<meta content='mrunalp' property='article:author:username'>
+<meta content='Fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OCI' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='runc' property='article:tag'>
+<link href='/blog/tag/runc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Getting Started with OCI' name='twitter:title'>
+<meta content='This post will walk you through the steps to running a runc container using the OCI configuration.&#x000A;&#x000A;We will walk through two examples. One for running a Fedora container and another for running a Redis container.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_04 blog_2016_04_running_OCI blog_2016_04_running_OCI_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Getting Started with OCI
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/mrunalp/">Mrunal Patel</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-04-13T13:20:00Z'>
+Wednesday 13 April 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This post will walk you through the steps to running a runc container using the <a href="https://github.com/opencontainers/runtime-spec/">OCI</a> configuration.</p>
+
+<p>We will walk through two examples. One for running a Fedora container and another for running a Redis container.</p>
+
+<p></p>
+
+<p>There are three steps to running a runc container:</p>
+
+<ol>
+<li>Construct a rootfs</li>
+<li>Create a OCI configuration</li>
+<li>Start the runtime</li>
+</ol>
+
+<h3>Getting ocitools</h3>
+
+<p><a href="https://github.com/opencontainers/ocitools">OCItools</a> are a bunch of utilities to work with the OCI specification. We are going to make use of the generate utility. It helps generate a OCI configuration for runc with a command line that is similar to docker run.</p>
+<pre class="highlight plaintext"><code>$ export GOPATH=/some/dir&#x000A;$ go get github.com/opencontainers/ocitools&#x000A;$ cd $GOPATH/src/github.com/opencontainers/ocitools&#x000A;$ make &amp;&amp; make install&#x000A;</code></pre>
+
+<p><strong>Note:</strong> OCItools will soon be available as a package on Fedora, RHEL, and CentOS.</p>
+
+<h3>Fedora Container</h3>
+
+<p>There are various ways to construct a rootfs. Ultimately, it is just a directory with a bunch of files that will be visible and used inside your container. In this example, we will use dnf to construct a rootfs.</p>
+
+<p>First we create a directory for our container:</p>
+<pre class="highlight plaintext"><code>$ mkdir /runc/containers/Fedora/rootfs&#x000A;$ cd /runc/containers/Fedora&#x000A;$ dnf install --installroot /runc/containers/Fedora/rootfs bash coreutils procps-ng iptools&#x000A;</code></pre>
+
+<p>Next we generate a configuration using OCItools:</p>
+<pre class="highlight plaintext"><code>$ ocitools generate --args bash&#x000A;</code></pre>
+
+<p>This create a config.json in the current directory. By passing <code>--args</code> we change the command to be run to <code>bash</code> from the default.</p>
+
+<p>And finally, we start the container:</p>
+<pre class="highlight plaintext"><code>$ runc start Fedora&#x000A;bash-4.3# ps -ef&#x000A;UID        PID  PPID  C STIME TTY          TIME CMD&#x000A;root         1     0  0 18:02 ?        00:00:00 bash&#x000A;root         7     1  0 18:03 ?        00:00:00 ps -ef&#x000A;bash-4.3# ip a&#x000A;1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1&#x000A;    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00&#x000A;    inet 127.0.0.1/8 scope host lo&#x000A;       valid_lft forever preferred_lft forever&#x000A;    inet6 ::1/128 scope host&#x000A;       valid_lft forever preferred_lft forever&#x000A;bash-4.3# ls -l&#x000A;total 48&#x000A;lrwxrwxrwx.   1 root root    7 Feb  3 22:10 bin -&gt; usr/bin&#x000A;dr-xr-xr-x.   2 root root 4096 Feb  3 22:10 boot&#x000A;drwxr-xr-x.   5 root root  360 Apr  8 18:02 dev&#x000A;drwxr-xr-x.  29 root root 4096 Apr  8 17:45 etc&#x000A;drwxr-xr-x.   2 root root 4096 Feb  3 22:10 home&#x000A;lrwxrwxrwx.   1 root root    7 Feb  3 22:10 lib -&gt; usr/lib&#x000A;lrwxrwxrwx.   1 root root    9 Feb  3 22:10 lib64 -&gt; usr/lib64&#x000A;drwxr-xr-x.   2 root root 4096 Feb  3 22:10 media&#x000A;drwxr-xr-x.   2 root root 4096 Feb  3 22:10 mnt&#x000A;drwxr-xr-x.   2 root root 4096 Feb  3 22:10 opt&#x000A;dr-xr-xr-x. 287 root root    0 Apr  8 18:02 proc&#x000A;dr-xr-x---.   2 root root 4096 Apr  8 17:43 root&#x000A;drwxr-xr-x.   5 root root 4096 Apr  8 17:45 run&#x000A;lrwxrwxrwx.   1 root root    8 Feb  3 22:10 sbin -&gt; usr/sbin&#x000A;drwxr-xr-x.   2 root root 4096 Feb  3 22:10 srv&#x000A;dr-xr-xr-x.  13 root root    0 Apr  7 22:19 sys&#x000A;drwxrwxrwt.   2 root root 4096 Apr  8 17:45 tmp&#x000A;drwxr-xr-x.  12 root root 4096 Apr  8 17:42 usr&#x000A;drwxr-xr-x.  19 root root 4096 Apr  8 17:45 var&#x000A;bash-4.3#&#x000A;</code></pre>
+
+<p>We can list the running containers by using <code>runc list</code> in another terminal:</p>
+<pre class="highlight plaintext"><code>$ runc list&#x000A;ID          PID         STATUS      BUNDLE      CREATED&#x000A;Fedora      7770        running     /runc       2016-04-08T18:02:12.186900248Z&#x000A;</code></pre>
+
+<p>We can exec another process in the container using <code>runc exec</code>:</p>
+<pre class="highlight plaintext"><code>[root@dhcp-16-129 ~]# runc exec Fedora sh&#x000A;sh-4.3# ps -ef&#x000A;UID        PID  PPID  C STIME TTY          TIME CMD&#x000A;root         1     0  0 18:02 ?        00:00:00 bash&#x000A;root        10     0  0 18:04 ?        00:00:00 sh&#x000A;root        16    10  0 18:04 ?        00:00:00 ps -ef&#x000A;sh-4.3# exit&#x000A;exit&#x000A;</code></pre>
+
+<h3>Redis Container</h3>
+
+<p>We&rsquo;ll create a rootfs using dnf just like we did for Fedora:</p>
+<pre class="highlight plaintext"><code>$ mkdir /runc/containers/redis/rootfs&#x000A;$ cd /runc/containers/redis&#x000A;$ dnf install --installroot /runc/containers/redis/rootfs redis&#x000A;</code></pre>
+
+<p>Next, we generate a configuration using OCItools:</p>
+<pre class="highlight plaintext"><code>$ ocitools generate --args /usr/bin/redis-server --network host&#x000A;</code></pre>
+
+<p>We customize the args to start the redis-server and set network to host, meaning that we will use the host network stack instead of creating a new network namespace for the container.</p>
+
+<p>Next, we start the Redis container:</p>
+<pre class="highlight plaintext"><code>$ runc start redis&#x000A;1:C 08 Apr 18:08:22.665 # Warning: no config file specified, using the default config. In order to specify a config file use /usr/bin/redis-server /path/to/redis.conf&#x000A;1:M 08 Apr 18:08:22.669 # Server started, Redis version 3.0.6&#x000A;1:M 08 Apr 18:08:22.670 * DB loaded from disk: 0.001 seconds&#x000A;1:M 08 Apr 18:08:22.670 * The server is now ready to accept connections on port 6379&#x000A;</code></pre>
+
+<p>We have our redis-server up and running!</p>
+
+<p>We can try to connect to it from a redis-cli by exec&#39;ing into the container:</p>
+<pre class="highlight plaintext"><code>$ runc exec redis redis-cli&#x000A;127.0.0.1:6379&gt;&#x000A;127.0.0.1:6379&gt; set name mrunal&#x000A;OK&#x000A;127.0.0.1:6379&gt; get name&#x000A;"mrunal"&#x000A;127.0.0.1:6379&gt; quit&#x000A;</code></pre>
+
+<p>These are some simple examples to get started with OCI. OCItools generate allows configuring the config with flags.
+We use the host networking stack as a convenience. In a future post, we will delve into OCI hooks that allow
+setting up container networking.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/oci/">OCI</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/04/running_OCI/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/04/running_OCI/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/04/running_OCI/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-59 blog_page-59_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/docker-as-middleman/">Docker as Development Middleman</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-16T00:00:00Z'>
+Tuesday 16 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>When compared to dynamic sites based on WordPress or Drupal, staticly generated blog and Web sites (like this one) can go a long way toward simplifying deployment and maintenance. There&rsquo;s no database or server-side code to maintain, and, when paired with a service like Github or Gitlab, you can accept posts or other contributions from anyone, via pull request.</p>
+
+<p>However, while simplifying certain areas, static sites introduce a bit more complexity in other areas. Among the handful of <a href="http://middlemanapp.com/">Middleman</a>-based static sites that <a href="http://community.redhat.com/">our team</a> at Red Hat help maintain, we&rsquo;ve seen the specter of &ldquo;it works on <em>my</em> laptop&rdquo; arise. </p>
+
+<p>With Middleman, authors preview content on their local machine, using Middleman&rsquo;s built-in development server. There isn&rsquo;t much setup required to run this development server, but when the same Middleman code runs on different machines, with different operating systems, and different assortments of Ruby gems, things don&rsquo;t always work as expected.</p>
+
+<p>Enter Docker, which makes it easy to enforce a common application environment for users on different machines. Here&rsquo;s how I&rsquo;m using Docker to write and preview this post:</p>
+
+<p>First, I&rsquo;ll make sure that git and docker are installed on my Fedora 20 notebook, and I&rsquo;ll add myself to the docker group on my machine.</p>
+<pre class="highlight plaintext"><code>sudo yum install -y git docker-io&#x000A;</code></pre>
+<pre class="highlight plaintext"><code>sudo usermod -a -G docker $USER&#x000A;</code></pre>
+
+<p>For the group add to take effect, you must log out and back in, or run <code>su - $USER</code> before continuing.</p>
+
+<p>Then, I&rsquo;ll cruise over to Github, <a href="https://github.com/projectatomic/atomic-site/fork">make a fork</a> of the Project Atomic Web site repo, and clone my new repo:</p>
+<pre class="highlight plaintext"><code>git clone git@github.com:jasonbrooks/atomic-site.git &amp;&amp; cd atomic-site&#x000A;</code></pre>
+
+<p>There&rsquo;s a script named <code>docker.sh</code> in the repository that builds and runs a Docker container for running local development version of the projectatomic.io site.</p>
+
+<p>I have a couple of modifications for the script and Dockerfile, which make it easier to viewing changes to the site as I write.</p>
+
+<p>First, in the <code>Dockerfile</code> included in the repo, I change the FROM line to <code>FROM fedora:20</code>, which is the official Fedora image. If you&rsquo;d prefer a CentOS image, you can change this line to <code>FROM centos:centos7</code>. If you do, you&rsquo;ll also need to add <code>tar</code> and <code>patch</code> to the list of packages to install in line 5. </p>
+
+<p>I also remove line 11, <code>ADD source /tmp/source</code>, because rather than roll the site source into my image, I&rsquo;m going to point to the source directory in my checkout of the site. This way, I can add and edit posts without rebuilding the image.</p>
+
+<p>Next, I edit the <code>docker.sh</code> script included in the repo such that the <code>docker run</code> command reads:</p>
+<pre class="highlight plaintext"><code>docker run -p 4567:4567 -v "$(pwd)"/source:/tmp/source:ro middleman&#x000A;</code></pre>
+
+<p>Finally, I modify the SELinux context of my checked-out source directory to allow my Docker container to read it:
+<code>&#x000A;chcon -Rt svirt_sandbox_file_t source/</code>
+To build and run the container, simply run:
+<code>&#x000A;sh docker.sh</code>
+After a short time (shorter, naturally, if you have an image already cached on your machine), the Middleman development server will be running on your machine at <a href="http://0.0.0.0:4567">http://0.0.0.0:4567</a>. </p>
+
+<p>When you add to or edit the posts and other files within the source directory in your checked-out repo, you can refresh the page in your browser to see your changes.</p>
+
+<a class="more-link view-article" href="/blog/2014/09/docker-as-middleman/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/">Yet Another Reason Containers Don't Contain: Kernel Keyrings</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-15T17:39:00Z'>
+Monday 15 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I see people rushing to set up Web sites and PaaS Servers that allow random people to upload Docker container images, and I feel like I am the voice in the wilderness. Remember, containers do not contain!</p>
+
+<h3>Containers Do Not Contain</h3>
+
+<p>As I stated in <a href="http://opensource.com/business/14/7/docker-security-selinux">my posts</a> <a href="https://opensource.com/business/14/9/security-for-docker">on OpenSource.com</a>, not all of the operating system is namespaced. Parts that are not namespaced can potentially allow containers to attack each other, or the host, or at the very least will allow leakage of information into the containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kernel/">Kernel</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/fedora-test-day-for-cockpit-tomorrow-16-september-2014/">Fedora Test Day for Cockpit Tomorrow (16 September 2014)</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-15T16:23:00Z'>
+Monday 15 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The Fedora Project holds regular Test Days to help put releases or individual components through their paces. This week, Fedora&rsquo;s Test Day will focus on <a href="http://cockpit-project.org/">Cockpit</a>, which will be part of the Fedora Atomic Host in Fedora 21.</p>
+
+<p>If you&rsquo;d like to participate, be sure to <a href="https://fedoraproject.org/wiki/Test_Day:2014-09-16_Cockpit">look over the Test Day on the Fedora wiki</a> and check out the prerequisites, test cases, and how to file results and bugs.</p>
+
+<p>Note that the test day runs all day, and you should be able to find help in the <a href="irc://irc.freenode.net/#fedora-test-day">#fedora-test-day</a> channel on Freenode. (New to IRC? See <a href="https://fedoraproject.org/wiki/How_to_use_IRC">the Fedora guide on IRC</a>.) </p>
+
+<p>Questions? Ask on the <a href="https://lists.fedorahosted.org/mailman/listinfo/cockpit-devel">cockpit-devel</a> mailing list. </p>
+
+<a class="more-link view-article" href="/blog/2014/09/fedora-test-day-for-cockpit-tomorrow-16-september-2014/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">Cockpit</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/running-syslog-within-a-docker-container/">Running Syslog Within a Docker Container</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-11T20:06:00Z'>
+Thursday 11 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently I received a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1139734">bug report</a> on Docker complaining about using rsyslogd within a container.  </p>
+
+<p>The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message, and nothing happened.</p>
+<pre class="highlight plaintext"><code># docker run -it --rm rhel /bin/bash&#x000A;# yum -y install rsyslog&#x000A;# /usr/sbin/rsyslogd&#x000A;# logger "this is a test"&#x000A;</code></pre>
+
+<p>No message showed up in <code>/var/log/messages</code> within the container, or on the host machine for that matter.</p>
+
+<p>The user then looked and noticed that <code>/dev/log</code> did not exist and this was where logger was writing the message. The user thought this was a bug.</p>
+
+<p>The problem was that in RHEL7 and Fedora we now use journald, which listens on <code>/dev/log</code> for incoming messages. In RHEL7 and Fedora, rsyslog actually reads messages from the journal via its API by default.</p>
+
+<p>But not all docker containers run systemd and journald. (Most don&rsquo;t). In order to get the rsyslogd to work the way the user wanted, he would have to modify the configuration file, <code>/etc/rsyslogd.conf</code>:</p>
+
+<ul>
+<li>In <code>/etc/rsyslog.conf</code> remove <code>$ModLoad imjournal</code>.</li>
+<li>Set <code>$OmitLocalLogging</code> to <code>off</code>.</li>
+<li>Make sure <code>$ModLoad imuxsock</code> is present.</li>
+<li>Also comment out: <code>$IMJournalStateFile imjournal.state</code>.</li>
+</ul>
+
+<p>After making these changes rsyslogd will start listening on <code>/dev/log</code> within the container and the logger messages will get accepted by rsyslogd and written to <code>/var/log/messages</code> within the container.</p>
+
+<p>If you wanted to logging messages to go to the host logger, you could <q>volume</q> mount <code>/dev/log</code> into the container.</p>
+<pre class="highlight plaintext"><code># docker run -v /dev/log:/dev/log -it --rm rhel /bin/bash&#x000A;# logger "this is a test"&#x000A;</code></pre>
+
+<p>The message should show up in the host&rsquo;s journalct log, and if you are running rsyslog on the host, the message should end up in <code>/var/log/messages</code>.</p>
+
+<a class="more-link view-article" href="/blog/2014/09/running-syslog-within-a-docker-container/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/journald/">journald</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+<li><a href="/blog/tag/syslog/">Syslog</a></li>
+<li><a href="/blog/tag/systemd/">systemd</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/using-kubernetes-for-simple-containers-and-services/">Using Kubernetes for Simple Containers and Services</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-11T18:47:00Z'>
+Thursday 11 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Mark Lamourine is working on an excellent series of posts that demonstrate how you&rsquo;d use <a href="https://github.com/GoogleCloudPlatform/kubernetes">Kubernetes</a> to run services using Docker containers. The latest is <a href="http://cloud-mechanic.blogspot.com/2014/09/kubernetes-simple-containers-and.html">Kubernetes: Simple Containers and Services</a>.</p>
+
+<p>The most recent post explores creating the subsidiary services for a <a href="http://www.pulpproject.org/">Pulp</a> service within a Kubernetes cluster:</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2014/09/using-kubernetes-for-simple-containers-and-services/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/amqp-broker/">AMQP Broker</a></li>
+<li><a href="/blog/tag/cluster/">Cluster</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+<li><a href="/blog/tag/mongodb/">MongoDB</a></li>
+<li><a href="/blog/tag/pulp/">Pulp</a></li>
+<li><a href="/blog/tag/qpid/">QPID</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=58/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=55/">55</a>
+</li>
+<li>
+<a href="/blog/page=56/">56</a>
+</li>
+<li>
+<a href="/blog/page=57/">57</a>
+</li>
+<li>
+<a href="/blog/page=58/">58</a>
+</li>
+<li class='active'>
+<span>59</span>
+</li>
+<li>
+<a href="/blog/page=60/">60</a>
+</li>
+<li>
+<a href="/blog/page=61/">61</a>
+</li>
+<li>
+<a href="/blog/page=62/">62</a>
+</li>
+<li>
+<a href="/blog/page=63/">63</a>
+</li>
+<li>
+<a href="/blog/page=60/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

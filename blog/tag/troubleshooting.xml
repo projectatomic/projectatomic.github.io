@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Troubleshooting</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/troubleshooting.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>How container registries prevent information leakage</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/</id>
+    <published>2016-10-25T13:41:13+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Antonio Murdaca</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently people have been reporting unexpected errors when doing a &lt;code&gt;skopeo copy&lt;/code&gt; versus a &lt;code&gt;docker pull&lt;/code&gt;:  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1347805"&gt;1347805&lt;/a&gt;, &lt;a href="https://github.com/projectatomic/skopeo/issues/235"&gt;235&lt;/a&gt;, and &lt;a href="https://github.com/docker/docker/issues/27281"&gt;27281&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/skopeo"&gt;Skopeo&lt;/a&gt; is a command-line tool that that does various operations with container images and container image registries, including pulling the images to the host.  It is also used under the covers by the &lt;a href="https://github.com/projectatomic/atomic"&gt;atomic&lt;/a&gt; command-line tool.&lt;/p&gt;
+
+&lt;p&gt;This post explains why those weird errors can come up when pulling images.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what happens when a user tries to pull an image from the docker hub and the image doesn&amp;rsquo;t exist:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull thisimagedoesntexist
+Using default tag: latest
+Trying to pull repository docker.io/library/thisimagedoesntexist ...
+Pulling repository docker.io/library/thisimagedoesntexist
+Error: image library/thisimagedoesntexist:latest not found
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We get an &amp;lsquo;image not found&amp;rsquo;, as expected, right?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try the same with skopeo copy:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://thisimagedoesntexist oci:what
+FATA[0002] Error initializing image from source docker://thisimagedoesntexist:latest: unauthorized: authentication required
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What?&lt;/p&gt;
+
+&lt;p&gt;Why are we getting an &lt;code&gt;unauthorized error&lt;/code&gt; message?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what&amp;rsquo;s really happening under the hood:&lt;/p&gt;
+
+&lt;p&gt;The docker daemon:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Attempts to contact a V2 registry&lt;/li&gt;
+&lt;li&gt;V2 registry returns &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Daemon falls back and try to pull the same image from a V1 registry&lt;/li&gt;
+&lt;li&gt;Attempt to contact a V1 registry&lt;/li&gt;
+&lt;li&gt;V1 registry isn&amp;rsquo;t deployed, we get a 404&lt;/li&gt;
+&lt;li&gt;The docker command line interprets the 404 as an image not found&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Skopeo:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Attempts to contact a V2 registry&lt;/li&gt;
+&lt;li&gt;V2 registry returns &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Skopeo errors out and shows the  &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Why is docker trying to contact a V1 registry?&lt;/h3&gt;
+
+&lt;p&gt;Docker still  supports the old V1 registry API (remember &lt;a href="https://github.com/docker/docker-registry"&gt;docker-registry&lt;/a&gt;?).
+Some registry deployments use both V1 and V2 registries.  When the docker engine fails to get a V2 Image, it falls back and tries to contact a V1 registry that may have the image.&lt;/p&gt;
+
+&lt;p&gt;Yes, but:&lt;/p&gt;
+
+&lt;h3&gt;Why does skopeo return &amp;#39;unauthorized&amp;rsquo;?&lt;/h3&gt;
+
+&lt;p&gt;The V2 registry API is designed to prevent information leaks about private repositories (GitHub does the same, if you’re wondering).&lt;/p&gt;
+
+&lt;p&gt;From the first example above, &lt;em&gt;library/imagedoesntexist&lt;/em&gt; could be a private repository/image (or not!).  The registry can&amp;rsquo;t tell you that the repository/image doesn&amp;rsquo;t exist; it can only tell you that you&amp;rsquo;re not authorized to access it.&lt;/p&gt;
+
+&lt;p&gt;In fact, if you have a private repository/image on the docker hub and try to pull it with skopeo, you still get &amp;#39;unauthorized&amp;rsquo; (unless you&amp;rsquo;re logged in of course).
+Skopeo only supports V2 registries. Since V1 registries are being purged, we decided to not add support for V1 to Skopeo.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see some examples with a private image named &lt;em&gt;runcom/what&lt;/em&gt;:&lt;/p&gt;
+
+&lt;p&gt;If &lt;em&gt;runcom/what&lt;/em&gt; is a private image and I&amp;rsquo;m &lt;em&gt;not&lt;/em&gt; logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://runcom/what oci:what
+FATA[0001] Error initializing image from source docker://runcom/what:latest: unauthorized: authentication required
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see it&amp;rsquo;s not telling me whether the image exists or not on the registry. It just tells me that I&amp;rsquo;m not authorized to pull the image.&lt;/p&gt;
+
+&lt;p&gt;Now, if &lt;em&gt;runcom/what&lt;/em&gt; is a private image and I&amp;rsquo;m logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://runcom/what oci:what
+FATA[0002] Error initializing image from source docker://runcom/what:latest: manifest unknown: manifest unknown
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above error is indeed an &amp;#39;image not found&amp;rsquo; (e.g., a 404 from the V2 registry). Since I’m logged in,  I have the rights to understand if the image is on the registry.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what happens with docker instead when I&amp;rsquo;m not logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull runcom/what                                                     
+Using default tag: latest
+Trying to pull repository docker.io/runcom/what ...
+Pulling repository docker.io/runcom/what
+Error: image runcom/what:latest not found
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well, remember the docker engine falls back to V1? Let’s have a look at the docker engine logs to really understand why it felt back to V1. We see the following error message:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Oct 24 16:51:19 localhost.localdomain docker[1408]: time='2016-10-24T16:51:19.548329131+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'
+Oct 24 16:51:20 localhost.localdomain docker[1408]: time='2016-10-24T16:51:20.113460151+02:00' level=error msg='Attempting next endpoint for pull after error: unauthorized: authentication required'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great. Exactly like skopeo, before falling back to V1, it’s correctly telling us that I’m unauthorized to pull the image (note, it’s not telling me anything about the existence of that image on the docker hub!)&lt;/p&gt;
+
+&lt;p&gt;If I try to pull the same image but this time logged in, I&amp;rsquo;ll get the same image not found error, but this time I can spot the following in the logs:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Oct 24 16:54:11 localhost.localdomain docker[1408]: time='2016-10-24T16:54:11.706002616+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'
+Oct 24 16:54:12 localhost.localdomain docker[1408]: time='2016-10-24T16:54:12.283006158+02:00' level=error msg='Attempting next endpoint for pull after error: manifest unknown: manifest unknown'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The errors in the logs are exactly the same as the ones we get with skopeo. Just that docker falls back and tries a V1 registry while skopeo doesn’t fall back.&lt;/p&gt;
+
+&lt;p&gt;That means that skopeo is indeed providing the correct error message from the V2 registry while docker is reporting &amp;#39;image not found&amp;rsquo; because it hides the real/correct unauthorized error from the V2 registry and only shows the V1 error.  Docker command line might actually be giving you bogus information, when the container image is actually stored in V2, but reports the image does not exist when you are not logged in.  When upstream docker eventually drops backward support for V1, it will report the same error that skopeo does.&lt;/p&gt;
+
+&lt;p&gt;I hope this post will shed some light about why these errors differ between docker and skopeo.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

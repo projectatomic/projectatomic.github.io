@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Volumes</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/volumes.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Better ways of handling logging in containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/playing-with-docker-logging/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/playing-with-docker-logging/</id>
+    <published>2016-10-24T10:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Traditional logging systems, like syslog, do not quite work by default with Containers. This is especially true if they are running without an init system in the container.&lt;/p&gt;
+
+&lt;h4&gt;STDIN/STDERR messages in journal&lt;/h4&gt;
+
+&lt;p&gt;I recently received a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1386661"&gt;bugzilla&lt;/a&gt; report complaining about logging inside of a docker container.&lt;/p&gt;
+
+&lt;p&gt;First the user complained about all of STDOUT/STDERR showing up in the journal. This can actually be configured in the docker daemon using the &amp;ndash;log-driver parameter:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;man dockerd
+...
+
+  --log-driver="json-file|syslog|journald|gelf|fluentd|
+   awslogs|splunk|etwlogs|gcplogs|none"
+  Default driver for container logs. Default is json-file.
+  Warning: docker logs command works only for json-file logging driver.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Red Hat based Operating Systems use &lt;code&gt;--log-driver=journald&lt;/code&gt; by default, because we believe log files should be permanently stored on the host system.  The upstream docker default is &lt;code&gt;json-file&lt;/code&gt;.  With &lt;code&gt;json-file&lt;/code&gt; the logs are removed when an admin removes the container using &lt;code&gt;docker rm&lt;/code&gt;. .  Another problem with the &lt;code&gt;json-file&lt;/code&gt; logger is that tools that maintain logs won’t work with them. ,  We were having problems with containers’ logs filling up the system, and users not knowing what was using up the space.  &lt;/p&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t like our default, including the STDOUT/STDERR messages being recorded in the journal, you can edit /etc/sysconfig/docker and change the log-driver.&lt;/p&gt;
+
+&lt;p&gt;The bugzilla report then went on to ask about getting syslog and journal messages from the container.  Where do these messages generated inside of the container end up?&lt;/p&gt;
+
+&lt;h4&gt;syslog and journal log messages silently dropped by default&lt;/h4&gt;
+
+&lt;p&gt;One big problem with standard docker containers is that any service that writes messages to syslog or directly to the journal get dropped by default.  Docker does not record any logs unless the messages are written to STDIN/STDERR.  There is no logging service running inside of the container to catch these messages.&lt;/p&gt;
+
+&lt;h4&gt;Running a logging system inside of the container&lt;/h4&gt;
+
+&lt;p&gt;If you want proper logging setup, I would suggest that you investigate running
+&lt;a href="http://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/"&gt;systemd inside of a container.&lt;/a&gt;.  This would setup systemd as pid 1, but would also run journald inside of the container and the syslog and journal messages would be handled the same was as when they are on the hosts.&lt;/p&gt;
+
+&lt;p&gt;A lot of people do not want to run a full init system inside of their containers.  Another option would be to have services running on the host listen for these messages.  An administrator can  volume mount in the hosts sockets into your container.  &lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s look into this.&lt;/p&gt;
+
+&lt;h4&gt;Getting messages out of the container to the host logging system.&lt;/h4&gt;
+
+&lt;p&gt;The bug reporter went on to show that volume mounting the /dev/log from the host into the container did not successfully get log messages from the container to the host journal.  They got messages sent to syslog, but not to the journal:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -ti -v /dev/log:/dev/log fedora sh
+container# dnf -y install systemd-python
+...
+container# python &amp;lt;&amp;lt;&amp;lt; "from systemd import journal; journal.send('journald Hello')"
+container# logger "logger Hello"
+container# exit
+
+# journalctl -b | grep Hello
+Oct 19 09:53:28 dhcp-10-19-62-196.boston.devel.redhat.com root[16787]: logger Hello
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice that the &lt;q&gt;journald Hello&lt;/q&gt; message to the journal does not show up, but the logger message does. The difference is syslog messages sent from the logger command write to /dev/log, and journald on the host is listening for syslog messages there. When it sees the message sent to the bind mounted /dev/log, it logs the message in the journal.&lt;/p&gt;
+
+&lt;p&gt;The python &lt;code&gt;journal.send&lt;/code&gt; call attempts to write &lt;q&gt;journald Hello&lt;/q&gt; to the  /run/systemd/journald/socket socket.  This socket does not exists inside of the container and the python code silently drops the message.&lt;/p&gt;
+
+&lt;p&gt;The following example works for me, binding in the hosts journal socket:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -ti -v /dev/log:/dev/log -v /var/run/systemd/journal/socket:/var/run/systemd/journal/socket fedora sh
+container# dnf -y install systemd-python
+...
+container# python &amp;lt;&amp;lt;&amp;lt; "from systemd import journal; journal.send('journald Hello')"
+container# logger "logger Hello"
+container# exit
+
+# journalctl -b | grep Hello
+Oct 19 09:57:51 dhcp-10-19-62-196.boston.devel.redhat.com python[17523]: journald Hello
+Oct 19 09:57:53 dhcp-10-19-62-196.boston.devel.redhat.com root[16787]: logger Hello
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;journal.Send&lt;/code&gt; call above connects to /run/systemd/journal/socket and since we leaked it into the container, the messages gets to the host’s journal.&lt;/p&gt;
+
+&lt;p&gt;Note: SELinux was in enforcing mode for all of these tests.   We allow container processes to communicate with the journal/syslog sockets on the host by default.&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Handling of logging messages inside of containers can be difficult, most users just ignore this and rely on the applications to read/write STDOUT/STDERR.   Getting syslog and journal messages out of the containers, requires an application to be listening on /dev/log and /run/system/journal/socket.  The application that listens can either be run inside of the container or you can take advantage of volume mounts to listen from outside of the container.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Using Volumes with Docker can Cause Problems with SELinux</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/</id>
+    <published>2015-06-15T17:52:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;When using SELinux for controlling processes within a container, you need to make sure any content that gets volume mounted into the container is readable, and potentially writable, depending on the use case.&lt;/p&gt;
+
+&lt;p&gt;By default, Docker container processes run with the &lt;code&gt;system_u:system_r:svirt_lxc_net_t:s0&lt;/code&gt; label.  The &lt;code&gt;svirt_lxc_net_t&lt;/code&gt; type is allowed to read/execute most content under /usr, but it is not allowed to use most other types on the system. &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;If you want to volume mount content under &lt;code&gt;/var&lt;/code&gt;, for example, into a container you need to set the labels on this content.  In the &lt;code&gt;docker run&lt;/code&gt; man page we mention this.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;man docker-run
+...
+When  using  SELinux,  be  aware that the host has no knowledge of container SELinux policy. Therefore, in the above example, if SELinux policy  is enforced,  the /var/db directory is not  writable to the container. A "Permission Denied" message will occur and an avc: message in the host's syslog.
+
+To  work  around  this, at time of writing this man page, the following command needs to be run in order for the  proper  SELinux  policy  type label to be attached to the host directory:
+
+# chcon -Rt svirt_sandbox_file_t /var/db
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This got easier recently since Docker finally merged a patch which will be showing up in docker-1.7 (We have been carrying the patch in docker-1.6 on RHEL, CentOS, and Fedora).&lt;/p&gt;
+
+&lt;p&gt;This patch adds support for &lt;q&gt;z&lt;/q&gt; and &lt;q&gt;Z&lt;/q&gt; as options on the volume mounts (-v).&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  docker run -v /var/db:/var/db:z rhel7 /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Will automatically do the &lt;code&gt;chcon -Rt svirt_sandbox_file_t /var/db&lt;/code&gt; described in the man page.&lt;/p&gt;
+
+&lt;p&gt;Even better, you can use &lt;code&gt;Z&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  docker run -v /var/db:/var/db:Z rhel7 /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will label the content inside the container with the exact MCS label that the container will run with, basically it runs &lt;code&gt;chcon -Rt svirt_sandbox_file_t -l s0:c1,c2 /var/db&lt;/code&gt; where &lt;code&gt;s0:c1,c2&lt;/code&gt; differs for each container.&lt;/p&gt;
+
+&lt;p&gt;I have a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1230098"&gt;bug&lt;/a&gt;
+ that was reported to me, that might become common. The user got AVC&amp;rsquo;s that looked like the following.&lt;/p&gt;
+
+&lt;p&gt;Raw Audit Messages&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;type=AVC msg=audit(1433926625.524:1347): avc:  denied  { write } for  pid=29280 comm=&lt;q&gt;launch&lt;/q&gt; name=&lt;q&gt;addons&lt;/q&gt; dev=&lt;q&gt;dm-2&lt;/q&gt; ino=2491404 scontext=system&lt;/em&gt;u:system_r:svirt_lxc_net_t:&lt;strong&gt;s0:c147,c266&lt;/strong&gt; tcontext=system_u:object_r:svirt_sandbox_file_t:&lt;strong&gt;s0:c372,c410&lt;/strong&gt; tclass=dir permissive=0_&lt;/p&gt;
+
+&lt;p&gt;Notice the bolded MCS labels. &lt;/p&gt;
+
+&lt;p&gt;The problem here was the user created a volume and labeled it from one container with the &lt;q&gt;Z&lt;/q&gt; for one container, then attempted to share it in another container.  Which SELinux denied since the Multi-Category Security (MCS) labels differed. &lt;/p&gt;
+
+&lt;p&gt;I told the reporter that he needs to mount it using Z or z, since at some point the volume got a different containers labels on it.&lt;/p&gt;
+
+&lt;p&gt;Your container processes are running with this label, &lt;code&gt;system_u:system_r:svirt_lxc_net_t:s0:c147,c266&lt;/code&gt; Notice the &lt;code&gt;s0:c147,c266&lt;/code&gt;
+The volume mount is labeled &lt;code&gt;system_u:object_r:svirt_sandbox_file_t:s0:c372,c410&lt;/code&gt; Notice the MCS label &lt;code&gt;s0:c372,c410&lt;/code&gt; MCS Security prevents read/write of content with different MCS labels. However it will allow read/write of content labeled with an s0 label.&lt;/p&gt;
+
+&lt;p&gt;If you volume mount a image with &lt;code&gt;-v /SOURCE:/DESTINATION:z&lt;/code&gt; docker will automatically  relabel the content for you to s0. If you volume mount with a &lt;q&gt;Z&lt;/q&gt;, then the label will be specific to the container, and not be able to be shared between containers.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

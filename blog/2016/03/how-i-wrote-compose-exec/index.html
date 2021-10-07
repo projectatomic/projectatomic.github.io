@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How I Wrote exec Support for docker-compose &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tomáš Tomeček' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How I Wrote exec Support for docker-compose' property='og:title'>
+<meta content='If you are a docker-compose user, as I am, you may be missing one feature:&#x000A;exec—spawning arbitrary commands in already running containers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/' property='og:url'>
+<meta content='2016-03-29T00:00:00Z' property='article:published_time'>
+<meta content='ttomecek' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker-compose' property='article:tag'>
+<link href='/blog/tag/docker-compose.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='orchestration' property='article:tag'>
+<link href='/blog/tag/orchestration.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='patches' property='article:tag'>
+<link href='/blog/tag/patches.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How I Wrote exec Support for docker-compose' name='twitter:title'>
+<meta content='If you are a docker-compose user, as I am, you may be missing one feature:&#x000A;exec—spawning arbitrary commands in already running containers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_how-i-wrote-compose-exec blog_2016_03_how-i-wrote-compose-exec_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How I Wrote exec Support for docker-compose
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/ttomecek/">Tomáš Tomeček</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-29T00:00:00Z'>
+Tuesday 29 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>If you are a <code>docker-compose</code> user, as I am, you may be missing one feature:
+<code>exec</code>&mdash;spawning arbitrary commands in already running containers.</p>
+
+<p></p>
+
+<p>Instead of doing this:</p>
+<pre class="highlight plaintext"><code>$ docker exec -ti $container bash&#x000A;</code></pre>
+
+<p>you should be able do the same with <code>docker-compose</code> itself:</p>
+<pre class="highlight plaintext"><code>$ docker-compose exec web bash&#x000A;</code></pre>
+
+<p>Usually when you wanted to do such thing, you had to:</p>
+
+<ol>
+<li>Type <code>docker exec -ti</code></li>
+<li>Now, the container name</li>
+<li><code>^c</code></li>
+<li><code>docker ps</code>, I forgot to name my container again!</li>
+<li><code>ba3f7099b709</code>, ugh</li>
+<li><code>docker exec -ti</code>, once again, copy-paste that ID, write <code>bash</code> and 30 seconds later:</li>
+</ol>
+<pre class="highlight plaintext"><code>[root@ba3f7099b709 /] # █&#x000A;</code></pre>
+
+<p>That workflow isn&rsquo;t very ideal. So I realized I wanted to implement the feature (especially when there already was <a href="https://github.com/docker/compose/issues/593">an
+issue open</a>, with tons of <code>+1</code> and not even a single promise of someone working on it).</p>
+
+<h3>Easy Start</h3>
+
+<p>In September, I cloned <code>compose</code> and started working on the code. I managed to have a working prototype very soon:</p>
+<pre class="highlight plaintext"><code>$ docker-compose exec web ls&#x000A;bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var&#x000A;</code></pre>
+
+<h3>Time to Go Interactive</h3>
+
+<p>That&rsquo;s when all the fun started.</p>
+
+<p>Running simple, non-interactive commands is pretty trivial. Just <a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-create">create an exec
+object</a> via engine&rsquo;s API,
+<a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-start">start</a> it, and collect results. Easy.</p>
+
+<p>When you want an interactive session, it&rsquo;s getting a bit more complex than a simple request/response over HTTP. That&rsquo;s when
+<a href="https://github.com/d11wtq/dockerpty">dockerpty</a> comes into the play. It is able to <em>attach</em> to the process via engine&rsquo;s
+API, send input, receive output and display it. Brief code-browsing revealed there&rsquo;s tons of work ahead:</p>
+
+<ul>
+<li>I had to <a href="https://github.com/d11wtq/dockerpty/pull/48/commits/df6ac1a49b99803c95233e51d0cd9b8f6aba9240">rewrite</a> big part of existing codebase.</li>
+<li>I had to change existing API and add a new one.</li>
+<li>Cherry on top: the tests didn&rsquo;t work and I had to <a href="https://github.com/d11wtq/dockerpty/pull/53/commits/555b525f49026271c9a291f014c3b7025b183d4a">fix</a> those.</li>
+</ul>
+
+<p>Even <code>dockerpty</code> didn&rsquo;t have all the bits to write proper <code>exec</code> support for interactive commands. I had to go deeper:
+improve python&rsquo;s API client&mdash;<code>docker-py</code>. Luckily that <a href="https://github.com/docker/docker-py/pull/858">patch</a> was pretty
+easy: just return socket directly, not a generator.</p>
+
+<p><a href="https://github.com/d11wtq/dockerpty/pull/48">The patch</a> for <code>dockerpty</code> turned out to be super-complex. In the end, it took me more than 5 months to get the former <code>compose</code> patch merged.</p>
+
+<p>Enjoy <code>docker-compose exec</code> once 1.7 is out! Happy <code>exec</code>ing!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/docker-compose/">docker-compose</a></li>
+<li><a href="/blog/tag/orchestration/">orchestration</a></li>
+<li><a href="/blog/tag/patches/">patches</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

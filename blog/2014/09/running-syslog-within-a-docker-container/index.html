@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Running Syslog Within a Docker Container &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Running Syslog Within a Docker Container' property='og:title'>
+<meta content='Recently I received a bug report on Docker complaining about using rsyslogd within a container.  &#x000A;&#x000A;The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/' property='og:url'>
+<meta content='2014-09-11T20:06:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='journald' property='article:tag'>
+<link href='/blog/tag/journald.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='RHEL' property='article:tag'>
+<link href='/blog/tag/rhel.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Syslog' property='article:tag'>
+<link href='/blog/tag/syslog.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='systemd' property='article:tag'>
+<link href='/blog/tag/systemd.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Running Syslog Within a Docker Container' name='twitter:title'>
+<meta content='Recently I received a bug report on Docker complaining about using rsyslogd within a container.  &#x000A;&#x000A;The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_09 blog_2014_09_running-syslog-within-a-docker-container blog_2014_09_running-syslog-within-a-docker-container_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Running Syslog Within a Docker Container
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-11T20:06:00Z'>
+Thursday 11 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently I received a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1139734">bug report</a> on Docker complaining about using rsyslogd within a container.  </p>
+
+<p>The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message, and nothing happened.</p>
+<pre class="highlight plaintext"><code># docker run -it --rm rhel /bin/bash&#x000A;# yum -y install rsyslog&#x000A;# /usr/sbin/rsyslogd&#x000A;# logger "this is a test"&#x000A;</code></pre>
+
+<p>No message showed up in <code>/var/log/messages</code> within the container, or on the host machine for that matter.</p>
+
+<p>The user then looked and noticed that <code>/dev/log</code> did not exist and this was where logger was writing the message. The user thought this was a bug.</p>
+
+<p>The problem was that in RHEL7 and Fedora we now use journald, which listens on <code>/dev/log</code> for incoming messages. In RHEL7 and Fedora, rsyslog actually reads messages from the journal via its API by default.</p>
+
+<p>But not all docker containers run systemd and journald. (Most don&rsquo;t). In order to get the rsyslogd to work the way the user wanted, he would have to modify the configuration file, <code>/etc/rsyslogd.conf</code>:</p>
+
+<ul>
+<li>In <code>/etc/rsyslog.conf</code> remove <code>$ModLoad imjournal</code>.</li>
+<li>Set <code>$OmitLocalLogging</code> to <code>off</code>.</li>
+<li>Make sure <code>$ModLoad imuxsock</code> is present.</li>
+<li>Also comment out: <code>$IMJournalStateFile imjournal.state</code>.</li>
+</ul>
+
+<p>After making these changes rsyslogd will start listening on <code>/dev/log</code> within the container and the logger messages will get accepted by rsyslogd and written to <code>/var/log/messages</code> within the container.</p>
+
+<p>If you wanted to logging messages to go to the host logger, you could <q>volume</q> mount <code>/dev/log</code> into the container.</p>
+<pre class="highlight plaintext"><code># docker run -v /dev/log:/dev/log -it --rm rhel /bin/bash&#x000A;# logger "this is a test"&#x000A;</code></pre>
+
+<p>The message should show up in the host&rsquo;s journalct log, and if you are running rsyslog on the host, the message should end up in <code>/var/log/messages</code>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/journald/">journald</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+<li><a href="/blog/tag/syslog/">Syslog</a></li>
+<li><a href="/blog/tag/systemd/">systemd</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

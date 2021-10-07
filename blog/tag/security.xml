@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Security</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/security.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Fedora Atomic March 1 Release and Security Fix</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/03/fedora_atomic_2week/"/>
+    <id>http://www.projectatomic.io/blog/2017/03/fedora_atomic_2week/</id>
+    <published>2017-03-06T19:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;The latest Fedora Atomic Host bi-weekly release now available.  Per the prior &lt;a href="/blog/2017/02/matching-fedora-ostree-released-content-with-each-2week-atomic-release/"&gt;Fedora Atomic blog post&lt;/a&gt;, OSTree updates and biweekly releases are now fully synchronized.  We have also added &lt;q&gt;latest&lt;/q&gt; links to make downloading the most current version simple.&lt;/p&gt;
+
+&lt;p&gt;As this release contains a security update, users of Atomic Host are urged to update their systems as soon as they can. It fixes &lt;a href="https://access.redhat.com/security/cve/cve-2017-6074"&gt;CVE-2017-6074: DCCP double-free vulnerability&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;On existing Atomic Host systems, users may update to the following OSTree commit:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Commit: ba95a4665776b58d342ad9cc367111179f9b8fcf19c6606f8964a8ec1622cadc
+Version: 25.67
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Existing systems can be upgraded in place via e.g. &lt;code&gt;atomic host upgrade&lt;/code&gt; or
+&lt;code&gt;atomic host deploy&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Corresponding image media for new installations can be downloaded from &lt;a href="https://getfedora.org/en/cloud/download/atomic.html"&gt;getfedora.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Respective signed CHECKSUM files can be found here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-25-20170228.0/Atomic/x86_64/iso/Fedora-Atomic-25-20170228.0-x86_64-CHECKSUM"&gt;ISO checksum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-25-20170228.0/CloudImages/x86_64/images/Fedora-CloudImages-25-20170228.0-x86_64-CHECKSUM"&gt;Cloud image checksum&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For direct download, the &lt;q&gt;latest&lt;/q&gt; targets are always available at the following URLs:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_iso_latest"&gt;Latest ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_qcow2_latest"&gt;Latest QCOW&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_raw_latest"&gt;Latest raw image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_libvirt_latest"&gt;Latest LibVirt VM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_virtualbox_latest"&gt;Latest VirtualBox VM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Filename fetching URLs for downloading to remote systems are available by querying the following links:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_iso_latest_filename"&gt;ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_qcow2_latest_filename"&gt;QCOW&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_raw_latest_filename"&gt;raw&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename"&gt;LibVirt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename"&gt;VirtualBox&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more information about the latest targets, please reference &lt;a href="https://fedoraproject.org/wiki/Cloud#Quick_Links"&gt;the Fedora
+Cloud Wiki space&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This release contains the following changes since last release from
+5a9de04163a60c5f2771b3d307601fa4e2234f12b662c97e28290b7bcbdb43f0 to
+ba95a4665776b58d342ad9cc367111179f9b8fcf19c6606f8964a8ec1622cadc&lt;/p&gt;
+
+&lt;p&gt;Changed:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;audit 2.7.2-2.fc25 -&amp;gt; 2.7.3-1.fc25&lt;/li&gt;
+&lt;li&gt;audit-libs 2.7.2-2.fc25 -&amp;gt; 2.7.3-1.fc25&lt;/li&gt;
+&lt;li&gt;audit-libs-python 2.7.2-2.fc25 -&amp;gt; 2.7.3-1.fc25&lt;/li&gt;
+&lt;li&gt;audit-libs-python3 2.7.2-2.fc25 -&amp;gt; 2.7.3-1.fc25&lt;/li&gt;
+&lt;li&gt;cockpit-bridge 130-1.fc25 -&amp;gt; 131-1.fc25&lt;/li&gt;
+&lt;li&gt;cockpit-docker 130-1.fc25 -&amp;gt; 131-1.fc25&lt;/li&gt;
+&lt;li&gt;cockpit-networkmanager 130-1.fc25 -&amp;gt; 131-1.fc25&lt;/li&gt;
+&lt;li&gt;cockpit-ostree 130-1.fc25 -&amp;gt; 131-1.fc25&lt;/li&gt;
+&lt;li&gt;cockpit-system 130-1.fc25 -&amp;gt; 131-1.fc25&lt;/li&gt;
+&lt;li&gt;container-selinux 2:2.5-1.fc25 -&amp;gt; 2:2.6-1.fc25&lt;/li&gt;
+&lt;li&gt;crypto-policies 20160921-2.git75b9b04.fc25 -&amp;gt; 20160921-4.gitf3018dd.fc25&lt;/li&gt;
+&lt;li&gt;dbus 1:1.11.8-1.fc25 -&amp;gt; 1:1.11.10-1.fc25&lt;/li&gt;
+&lt;li&gt;dbus-libs 1:1.11.8-1.fc25 -&amp;gt; 1:1.11.10-1.fc25&lt;/li&gt;
+&lt;li&gt;fedora-repos 25-1 -&amp;gt; 25-2&lt;/li&gt;
+&lt;li&gt;glib2 2.50.2-1.fc25 -&amp;gt; 2.50.3-1.fc25&lt;/li&gt;
+&lt;li&gt;gnutls 3.5.8-2.fc25 -&amp;gt; 3.5.9-2.fc25&lt;/li&gt;
+&lt;li&gt;gomtree 0.3.0-1.fc25 -&amp;gt; 0.3.1-1.fc25&lt;/li&gt;
+&lt;li&gt;grep 2.27-1.fc25 -&amp;gt; 2.27-2.fc25&lt;/li&gt;
+&lt;li&gt;iptables 1.6.0-2.fc25 -&amp;gt; 1.6.0-3.fc25&lt;/li&gt;
+&lt;li&gt;iptables-libs 1.6.0-2.fc25 -&amp;gt; 1.6.0-3.fc25&lt;/li&gt;
+&lt;li&gt;iptables-services 1.6.0-2.fc25 -&amp;gt; 1.6.0-3.fc25&lt;/li&gt;
+&lt;li&gt;kernel 4.9.9-200.fc25 -&amp;gt; 4.9.12-200.fc25&lt;/li&gt;
+&lt;li&gt;kernel-core 4.9.9-200.fc25 -&amp;gt; 4.9.12-200.fc25&lt;/li&gt;
+&lt;li&gt;kernel-modules 4.9.9-200.fc25 -&amp;gt; 4.9.12-200.fc25&lt;/li&gt;
+&lt;li&gt;libblkid 2.28.2-1.fc25 -&amp;gt; 2.28.2-2.fc25&lt;/li&gt;
+&lt;li&gt;libfdisk 2.28.2-1.fc25 -&amp;gt; 2.28.2-2.fc25&lt;/li&gt;
+&lt;li&gt;libmount 2.28.2-1.fc25 -&amp;gt; 2.28.2-2.fc25&lt;/li&gt;
+&lt;li&gt;libnetfilter_conntrack 1.0.4-6.fc24 -&amp;gt; 1.0.6-2.fc25&lt;/li&gt;
+&lt;li&gt;libsmartcols 2.28.2-1.fc25 -&amp;gt; 2.28.2-2.fc25&lt;/li&gt;
+&lt;li&gt;libsolv 0.6.25-1.fc25 -&amp;gt; 0.6.26-1.fc25&lt;/li&gt;
+&lt;li&gt;libuuid 2.28.2-1.fc25 -&amp;gt; 2.28.2-2.fc25&lt;/li&gt;
+&lt;li&gt;nfs-utils 1:2.1.1-1.fc25 -&amp;gt; 1:2.1.1-2.rc1.fc25&lt;/li&gt;
+&lt;li&gt;openssh 7.4p1-2.fc25 -&amp;gt; 7.4p1-3.fc25&lt;/li&gt;
+&lt;li&gt;openssh-clients 7.4p1-2.fc25 -&amp;gt; 7.4p1-3.fc25&lt;/li&gt;
+&lt;li&gt;openssh-server 7.4p1-2.fc25 -&amp;gt; 7.4p1-3.fc25&lt;/li&gt;
+&lt;li&gt;ostree 2017.1-2.fc25 -&amp;gt; 2017.2-3.fc25&lt;/li&gt;
+&lt;li&gt;ostree-grub2 2017.1-2.fc25 -&amp;gt; 2017.2-3.fc25&lt;/li&gt;
+&lt;li&gt;pcre 8.40-1.fc25 -&amp;gt; 8.40-4.fc25&lt;/li&gt;
+&lt;li&gt;publicsuffix-list-dafsa 20170116-1.fc25 -&amp;gt; 20170206-1.fc25&lt;/li&gt;
+&lt;li&gt;rpm-ostree 2016.13-1.fc25 -&amp;gt; 2017.2-2.fc25&lt;/li&gt;
+&lt;li&gt;selinux-policy 3.13.1-225.6.fc25 -&amp;gt; 3.13.1-225.10.fc25&lt;/li&gt;
+&lt;li&gt;selinux-policy-targeted 3.13.1-225.6.fc25 -&amp;gt; 3.13.1-225.10.fc25&lt;/li&gt;
+&lt;li&gt;sos 3.2-4.fc25 -&amp;gt; 3.3-1.fc25&lt;/li&gt;
+&lt;li&gt;strace 4.15-1.fc25 -&amp;gt; 4.16-1.fc25&lt;/li&gt;
+&lt;li&gt;systemd 231-12.fc25 -&amp;gt; 231-14.fc25&lt;/li&gt;
+&lt;li&gt;systemd-container 231-12.fc25 -&amp;gt; 231-14.fc25&lt;/li&gt;
+&lt;li&gt;systemd-libs 231-12.fc25 -&amp;gt; 231-14.fc25&lt;/li&gt;
+&lt;li&gt;systemd-pam 231-12.fc25 -&amp;gt; 231-14.fc25&lt;/li&gt;
+&lt;li&gt;systemd-udev 231-12.fc25 -&amp;gt; 231-14.fc25&lt;/li&gt;
+&lt;li&gt;util-linux 2.28.2-1.fc25 -&amp;gt; 2.28.2-2.fc25&lt;/li&gt;
+&lt;li&gt;vim-minimal 2:8.0.324-1.fc25 -&amp;gt; 2:8.0.347-2.fc25&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Added:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ostree-libs-2017.2-3.fc25.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note that this release contains kernel-4.9.12-200.fc25 which contains
+the fix for CVE-2017-6074: DCCP double-free vulnerability.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 132 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/02/cockpit-132/"/>
+    <id>http://www.projectatomic.io/blog/2017/02/cockpit-132/</id>
+    <published>2017-02-24T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release
+regularly. Here are the release notes from version 130, 131 and 132.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Kernel dump configuration support added&lt;/h3&gt;
+
+&lt;p&gt;Kernel crash dump configuration is now possible in Cockpit: view and toggle the status of the kdump service,
+with hints how to enable if the kernel boot parameters need to be changed. Cockpit shows the amount of reserved
+memory and setting a path for dumping the kernel on the local filesystem, with a toggle for compressing the crash dumps.
+Take a look at the video below for a demo.&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/VXhuqPR2K5c?ecver=1" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;MAC addresses for ethernet adapters and bonds can be modified&lt;/h3&gt;
+
+&lt;p&gt;On the Networking page, MAC addresses for ethernet adapters can now be clicked to edit them, starting with
+NetworkManager version 1.4. For bonds, the MAC addresses are shown and can be edited starting with NetworkManager
+version 1.6. Take a look at the video below for a demo.&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/JIHQmFHOrO4?ecver=1" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Show session virtual Machines on the machines page&lt;/h3&gt;
+
+&lt;p&gt;Libvirt differentiates between system virtual machines and session ones, which are tied to the user. In Cockpit
+all the virtual machines accessible to the logged in user, system and session, are now shown in a combined list.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Session virtual machines" src="http://cockpit-project.org/blog/images/cockpit-machines-session.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;SELinux functionality is now available without setroubleshootd&lt;/h3&gt;
+
+&lt;p&gt;The SELinux page in Cockpit can do more than just troubleshoot. It was therefore renamed to &lt;code&gt;SELinux&lt;/code&gt; and
+the functionality of toggling between enforcing/permissive mode is now also available even if &lt;code&gt;setroubleshoot-server&lt;/code&gt;
+isn&amp;rsquo;t installed. This was cause for unexpected behavior on Atomic Host systems without &lt;code&gt;setroubleshoot-server&lt;/code&gt;
+where it&amp;rsquo;s non-trivial and often undesired to add that package.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="SELinux without troubleshooting" src="http://cockpit-project.org/blog/images/cockpit-selinux-disabled.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 132 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/132"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-132-1.fc25"&gt;Fedora 25&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use the packages to install this version of Cockpit. When installing from the tarball, remove
+/etc/systemd/system/cockpit.service.d/fatal.conf manually afterwards to prevent Cockpit from exiting in rare cases.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Tightening Up SELinux Policy for Containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/02/selinux-policy-containers/"/>
+    <id>http://www.projectatomic.io/blog/2017/02/selinux-policy-containers/</id>
+    <published>2017-02-16T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I wrote a blog post a couple of weeks ago &lt;a href="http://rhelblog.redhat.com/2017/01/13/selinux-mitigates-container-vulnerability/"&gt;explaining how SELinux can block breakout&lt;/a&gt; of processes in containers using when exploiting a vulnerability in the &lt;code&gt;/usr/bin/docker-runc&lt;/code&gt; or &lt;code&gt;/usr/bin/runc&lt;/code&gt; executable.  At the time, I explained that the policy for &lt;code&gt;container_t&lt;/code&gt; was blocked from writing to most parts of the OS other the container content labeled &lt;code&gt;container_file_t&lt;/code&gt;. Despite blocking writes, though, it still allowed reads of some files.&lt;/p&gt;
+
+&lt;p&gt;A few people were alarmed when they realized that SELinux would block the breakout on writes but there is a chance for information leakage into the container. The usual example was the ability to read /etc/passwd from the host. But this isn&amp;rsquo;t unlimited access to the host. If the same container processes tried to read /etc/shadow on the hosts, or content in users home directories, or database data in /var, they would be blocked.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Why is that allowed?&lt;/h3&gt;
+
+&lt;p&gt;When writing SELinux policy for a general purpose process type, you always have a battle between security and usability.  If you make the policy too tight, no one will use it. If you make it too loose, then it provides little additional security. Finding the sweet spot in the middle is difficult. The default SELinux policy allows this access for two main reasons.&lt;/p&gt;
+
+&lt;p&gt;The original policy for containers was written before docker for virt-sandbox. virt-sandbox was an effort to use libvirt-lxc tooling for splitting up the host OS Into several containers. Our idea at the time was to allow you to run multiple containers with a shared /usr and perhaps a shared /etc, but have each container have its own /var.  The thinking was read only content in /etc is shared with unprivileged users, and an admin should control the data available in /etc. Think of having hundreds of containers each running the same apache services off of the host OS.  Each one having their own private writable directories under /var.
+When docker came along, we decided to use the same policy mainly to allow people do things like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -v /etc/passwd:/etc/passwd rhel7 sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -d -v /usr:/usr rhel7 /usr/bin/foobar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also we saw people volume mounting in things like /etc/resolv.conf, /etc/hosts, /etc/localtime &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;This allowed us flexibility on labeling, with limited exposure to information leak. Upstream docker now has the ability to relabel content on the host when running inside of a container.&lt;/p&gt;
+
+&lt;p&gt;Executing a command like the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -d -v /var/lib/mariadb:/var/lib/madiadb:Z mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Will cause the docker daemon to relabel the /var/lib/mariadb on the host to match the label of the container.  But you would not want to do this with shared content in /etc.&lt;/p&gt;
+
+&lt;p&gt;Using the ‘:Z’ on /etc/passwd would be a bad idea.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -v /etc/passwd:/etc/passwd:Z rhel7 sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command relabels /etc/passwd to a label that blocks access to other confined applications, potentially breaking those applications.&lt;/p&gt;
+
+&lt;p&gt;Since these issues have been pointed out I have decided to tighten the default policy by eliminating the container process types&amp;rsquo; ability to read default labels in /etc.  This will prevent a container process from being able to read /etc/passwd and other default files, but may cause certain issues when people want to volume mount in content from the hosts /etc directory.  We will try this out in Rawhide and Fedora 26, and see if it does not cause issues, eventually back port it to RHEL.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>What does --selinux-enabled do?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/</id>
+    <published>2016-07-11T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I recently answered an email asking about &amp;ndash;selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m currently researching the topic of &lt;code&gt;--selinux-enabled&lt;/code&gt; in docker and what it is doing when set to TRUE.&lt;/p&gt;
+
+&lt;p&gt;From what I&amp;rsquo;m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.&lt;/p&gt;
+
+&lt;p&gt;But I&amp;rsquo;m wondering if that is even correct, and if so, what else is happening when setting &lt;code&gt;--selinux-enabled&lt;/code&gt; to TRUE.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;`&lt;code&gt;--selinux-enabled&lt;/code&gt; on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file &lt;code&gt;/etc/selinux/targeted/contexts/lxc_contexts&lt;/code&gt; for the default context to run containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat /etc/selinux/targeted/contexts/lxc_contexts
+process = "system_u:system_r:svirt_lxc_net_t:s0"
+content = "system_u:object_r:virt_var_lib_t:s0"
+file = "system_u:object_r:svirt_sandbox_file_t:s0"
+sandbox_kvm_process = "system_u:system_r:svirt_qemu_net_t:s0"
+sandbox_kvm_process = "system_u:system_r:svirt_qemu_net_t:s0"
+sandbox_lxc_process = "system_u:system_r:svirt_lxc_net_t:s0"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Docker by default uses a confined SELinux type &lt;code&gt;svirt_lxc_net_t&lt;/code&gt; to isolate the container processes from the host, and it generates a unique MCS label to allow SELinux to prevent one container process from attacking other container processes and content.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t specify &lt;code&gt;--selinux-enabled&lt;/code&gt;, docker does not execute SELinux code to set labels. When docker launches a container process, the system falls back to default transition policy.  This means the container processes will either run as docker_t or spc_t (depending on the version of policy you have installed). Both of these types are unconfined.  SELinux will provide no security separation for these container processes.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;In addition, I&amp;rsquo;m also wondering what the impact will be, when &lt;code&gt;--selinux-enabed&lt;/code&gt; is set to TRUE together with &lt;code&gt;--icc&lt;/code&gt; to TRUE? Does it have any impact or is it unrelated.&lt;/p&gt;
+
+&lt;p&gt;Could it be possible that with &lt;code&gt;--icc&lt;/code&gt; and &lt;code&gt;--selinux-enabed&lt;/code&gt; set to TRUE that we might have challenges when communicating between Containers when the connection is not specified (as it should be, when &lt;code&gt;--icc&lt;/code&gt; is set to FALSE).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It&amp;rsquo;s unrelated. &lt;code&gt;--icc FALSE&lt;/code&gt; sets up iptables rules that prevent containers from connecting to each other over the local network to each other.  The default SELinux policy allows all network connectivity between containers.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Also, does anybody know what will happen if I run &lt;code&gt;docker&lt;/code&gt; with &lt;code&gt;--selinux-enabled&lt;/code&gt; for a while (so start containers, pull images, etc.) and then restart the daemon with &lt;code&gt;--selinux-enabled&lt;/code&gt;. Is it possible that it does impact the environment somehow and that certain activities need to be done or shouldn&amp;rsquo;t this affect the service at all?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The only potential problem I can think of would be volume mounting being mislabeled.  If you volume mount content off of the host with &lt;code&gt;-v /source/path:/dest/path:Z&lt;/code&gt; and SELinux is disabled, docker will not set up labels for the container.  If you later turn on &lt;code&gt;--selinux-enabled&lt;/code&gt; these containers would not be able to read/write the content in the mounted volume.  Thinking about this further, I am not sure what labels the containers created while &lt;code&gt;--selinux-disabled&lt;/code&gt; was set.  These pre-created containers would probably continue to run with an unconfined domain, and newer containers would run with confinement.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Live Demos at Red Hat Summit 2016</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/06/rh-summit-demos/"/>
+    <id>http://www.projectatomic.io/blog/2016/06/rh-summit-demos/</id>
+    <published>2016-06-28T01:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;If you&amp;rsquo;re at Red Hat Summit, you might want to come by the Atomic Pod in Community Central and see the &lt;a href="/blog/2016/06/micro-cluster-part-2/"&gt;Sub-Atomic Cluster&lt;/a&gt;. More usefully, we&amp;rsquo;ll be having a series of live demos by various contributors to the Atomic suite of projects, including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Tuesday, 12:45pm: Using Cockpit to manage Kubernetes and Registry with Stef Walter and Peter Volpe&lt;/li&gt;
+&lt;li&gt;Tuesday, 4:45pm: Fully automated configure of Kubernetes with Ansible, Jamie Duncan&lt;/li&gt;
+&lt;li&gt;Tuesday, 6:00pm: Atomic Scan with Dan Walsh&lt;/li&gt;
+&lt;li&gt;Wednesday, 12:15pm: Container Security Tools with Mrunal Patel&lt;/li&gt;
+&lt;li&gt;Wednesday, 6:00pm: Atomic Scan with Dan Walsh&lt;/li&gt;
+&lt;li&gt;Thursday, 11:00am: Building Multi-container Apps with Dusty Mabe&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Atomic Pod is in Community Central on the main expo floor, right next to the OpenShift Corner.&lt;/p&gt;
+
+&lt;p&gt;We will be attempting to schedule additional demonstrations as folks become available, so check back on this page for more.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

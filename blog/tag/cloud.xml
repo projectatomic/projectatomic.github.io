@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Cloud</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/cloud.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Test Day for Fedora 28 Atomic/Cloud April 11th</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/04/test-day-for-fedora-28-atomic-cloud-april-11th/"/>
+    <id>http://www.projectatomic.io/blog/2018/04/test-day-for-fedora-28-atomic-cloud-april-11th/</id>
+    <published>2018-04-09T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Sinny Kumari</name>
+    </author>
+    <content type="html">&lt;p&gt;With the Fedora 28 Beta &lt;a href="https://fedoramagazine.org/announcing-fedora-28-beta/"&gt;official release announcement&lt;/a&gt;, the &lt;a href="https://fedoraproject.org/wiki/Atomic_WG"&gt;Fedora Atomic Working Group&lt;/a&gt; and &lt;a href="https://fedoraproject.org/wiki/Cloud_SIG"&gt;Fedora Cloud SIG&lt;/a&gt; would like to invite members of the community to join us in finding and squashing bugs. We are organizing a Test Day on Wednesday, April 11th 2018.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;In this Test Day, you can test Fedora Atomic Host, Fedora Atomic Workstation and Fedora Cloud Base content. See the &lt;a href="https://getfedora.org/en/atomic/prerelease/"&gt;Fedora Atomic Host Pre-Release Page&lt;/a&gt; for links to the artifacts for Fedora Atomic Host, &lt;a href="https://download.fedoraproject.org/pub/fedora/linux/releases/test/28_Beta/AtomicWorkstation/x86_64/iso/Fedora-AtomicWorkstation-ostree-x86_64-28_Beta-1.3.iso"&gt;here&lt;/a&gt; for Atomic Workstation ISO link and the &lt;a href="https://alt.fedoraproject.org/prerelease/index.html"&gt;Alternative Downloads Beta Page&lt;/a&gt; for links to Cloud Base Beta images. We have qcow, AMI and ISO images ready for testing.  Additionally, Vagrant Boxes will be available for testing as well.&lt;/p&gt;
+
+&lt;h3&gt;How do test days work?&lt;/h3&gt;
+
+&lt;p&gt;A test day is an event where anyone can help make sure that changes in Fedora are working well in the upcoming release. Fedora community members often participate, but the public is welcome also. You only need to be able to download materials (including some large files), and read and follow technical directions step by step, to contribute.&lt;/p&gt;
+
+&lt;p&gt;Need some help on what to test and how to test? Checkout &lt;a href="https://fedoraproject.org/wiki/Test_Day:2018-04-11_Cloud-Atomic_Testday"&gt;wiki page&lt;/a&gt; page which provides detailed information about the Atomic/Cloud test day. If you’re available on or around the day of the event, please do some testing . Once you’ve done the testing, make sure to log your test results in the &lt;a href="http://testdays.fedorainfracloud.org/events/39"&gt;test day web application&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Happy testing, and we hope to see you on test day!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora Atomic Host Available in DigitalOcean</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/04/fedora-atomic-digitalocean/"/>
+    <id>http://www.projectatomic.io/blog/2017/04/fedora-atomic-digitalocean/</id>
+    <published>2017-04-27T19:30:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;p&gt;With the &lt;a href="http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr27/"&gt;latest release&lt;/a&gt;
+of Fedora Atomic Host we are now live in
+&lt;a href="https://www.digitalocean.com/"&gt;DigitalOcean&lt;/a&gt;! This was a popular &lt;a href="https://digitalocean.uservoice.com/forums/136585-digitalocean/suggestions/5984177-project-atomic-docker-centos-fedora-scalab"&gt;user
+request&lt;/a&gt;.
+Thanks to the folks at DigitalOcean and the
+&lt;a href="https://pagure.io/atomic-wg/"&gt;Fedora Atomic Working Group&lt;/a&gt;, we now have Fedora Atomic Host as an
+option when creating a droplet. Go ahead and spin up a droplet in the
+web interface or via the &lt;a href="https://github.com/digitalocean/doctl"&gt;doctl&lt;/a&gt;
+CLI today!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Important Notes&lt;/h3&gt;
+
+&lt;p&gt;A few things to note:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;  Usually Fedora Atomic images have you log in as user &lt;em&gt;fedora&lt;/em&gt;. But,
+as with other DigitalOcean images, &lt;strong&gt;log into the Fedora 25
+DigitalOcean cloud image with your ssh key as the &lt;code&gt;root&lt;/code&gt; user&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;  In these images there&amp;rsquo;s &lt;strong&gt;no firewall on by default&lt;/strong&gt;. There&amp;rsquo;s also
+&lt;strong&gt;no cloud provided firewall solution&lt;/strong&gt;. We recommend that you
+secure your system immediately after you log in.&lt;/li&gt;
+&lt;li&gt;  Fedora Atomic Host should be &lt;strong&gt;available in all datacenters&lt;/strong&gt; across
+the globe.&lt;/li&gt;
+&lt;li&gt;  If you have a problem with these images then drop us an email at
+&lt;a href="mailto:atomic-devel@projectatomic.io"&gt;atomic-devel@projectatomic.io&lt;/a&gt;, or ping us in
+&lt;a href="https://webchat.freenode.net/?channels=#atomic"&gt;#atomic&lt;/a&gt; on
+Freenode.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Preparing to Launch a Droplet&lt;/h3&gt;
+
+&lt;p&gt;In order to secure our system let&amp;rsquo;s create some &lt;code&gt;user-data&lt;/code&gt; that will
+instruct cloud-init to enable the default system firewall on bringup.
+This default firewall basically blocks everything but ssh:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;#cloud-config
+bootcmd:
+  - systemctl enable iptables --now
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Later, we will have more complete instructions on setting up iptables with the correct ports for Kubernetes or OpenShift.  If you are in the right datacenter region, we also recommend setting up &lt;a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-use-digitalocean-private-networking"&gt;Private Networking&lt;/a&gt; for your Atomic cluster.&lt;/p&gt;
+
+&lt;h3&gt;Getting Started with the Web UI&lt;/h3&gt;
+
+&lt;p&gt;You can create a Fedora 25 Atomic instance just like you can any other
+droplet within DigitalOcean. On the &lt;strong&gt;Create Droplets&lt;/strong&gt; page we can
+select &lt;code&gt;25 x64 Atomic&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="921" height="393" src="/images/2017-04-27_select-fedora-atomic.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Then, after selecting &lt;code&gt;size&lt;/code&gt; and &lt;code&gt;region&lt;/code&gt;, we can populate the user-data
+in the &lt;code&gt;Select additional options&lt;/code&gt; section:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="925" height="186" src="/images/2017-04-27_cloud-init-user-data.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After that we can go ahead and create the Droplet. Once it is up and
+running we have a nice little status that shows us the IP address of the
+machine:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="919" height="173" src="/images/2017-04-27_droplet-created.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;And finally we should be able to access our droplet:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ssh root@162.243.26.249
+Warning: Permanently added '162.243.26.249' (ECDSA) to the list of known hosts.
+[root@fedora-2gb-nyc2-01 ~]#
+[root@fedora-2gb-nyc2-01 ~]# rpm-ostree status
+State: idle
+Deployments:
+● fedora-atomic:fedora-atomic/25/x86_64/docker-host
+             Version: 25.113 (2017-04-25 01:47:29)
+              Commit: 3492546bc1ef6bca1bc7801ed6bb041 ...
+              OSName: fedora-atomic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Getting Started with the CLI&lt;/h3&gt;
+
+&lt;p&gt;In addition to the Web UI, DigitalOcean has provided a tool for managing
+droplets from the command line, known as
+&lt;a href="https://github.com/digitalocean/doctl"&gt;doctl&lt;/a&gt;. You can grab the &lt;code&gt;doctl&lt;/code&gt;
+binary from the &lt;a href="https://github.com/digitalocean/doctl/releases"&gt;releases
+page&lt;/a&gt; on GitHub and
+interact with the API. In order to do this you need to &lt;a href="https://cloud.digitalocean.com/settings/api/tokens"&gt;generate an API
+token&lt;/a&gt;. One way to
+use this token is by setting the &lt;code&gt;DIGITALOCEAN_ACCESS_TOKEN&lt;/code&gt; environment
+variable to the value of the token.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt; DigitalOcean has provided a full tutorial on using doctl
+&lt;a href="https://www.digitalocean.com/community/tutorials/how-to-use-doctl-the-official-digitalocean-command-line-client"&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;First we&amp;rsquo;ll set the access token and retrieve the fingerprint for our
+ssh key we use within DigitalOcean:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ export DIGITALOCEAN_ACCESS_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ...
+$ doctl compute ssh-key list
+ID       Name     FingerPrint
+84000    Ocean    xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we&amp;rsquo;ll create a file with the contents of the user-data we
+determined in the previous section:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat &amp;lt;&amp;lt;EOF &amp;gt; ./user-data.txt
+#cloud-config
+bootcmd:
+  - systemctl enable iptables --now
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can spin up the droplet based off the &lt;code&gt;fedora-25-x64-atomic&lt;/code&gt;
+image. We&amp;rsquo;ll name it &lt;code&gt;atomicdroplet&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ doctl compute droplet create --image fedora-25-x64-atomic \
+  --region nyc3 --size 4gb \
+  --ssh-keys xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx \
+  --user-data-file ./user-data.txt atomicdroplet
+ID          Name             Public IPv4    Private IPv4    Public IPv6    Memory    VCPUs    Disk    Region    Image                   Status    Tags
+47047971    atomicdroplet                                                  4096      2        60      nyc3      Fedora 25 x64 Atomic    new
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we&amp;rsquo;ll query the API again to see the status and to see what the IP
+address is set to:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ doctl compute droplet list
+ID          Name             Public IPv4       Private IPv4    Public IPv6    Memory    VCPUs    Disk    Region    Image                   Status    Tags
+47047971    atomicdroplet    159.203.94.102                                   4096      2        60      nyc3      Fedora 25 x64 Atomic    active
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And on to accessing the droplet:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ssh root@159.203.94.102
+[root@atomicdroplet ~]# rpm-ostree status
+State: idle
+Deployments:
+● fedora-atomic:fedora-atomic/25/x86_64/docker-host
+             Version: 25.113 (2017-04-25 01:47:29)
+              Commit: 3492546bc1ef6bca1bc7801ed6bb0414f90 ...
+              OSName: fedora-atomic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;And Beyond&lt;/h3&gt;
+
+&lt;p&gt;Now that you have a Fedora Atomic Host droplet you can explore the world
+of containers by either running individual containers by hand or by
+utilizing a more advanced platform for container orchestration and
+life-cycle management. There are some docs on &lt;a href="http://www.projectatomic.io/docs"&gt;projectatomic.io&lt;/a&gt; which can
+help get you started.  &lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll add DigitalOcean to &lt;a href="https://getfedora.org/en/atomic/download/"&gt;getfedora.org&lt;/a&gt; as soon as we can.&lt;/p&gt;
+
+&lt;h3&gt;Thanks&lt;/h3&gt;
+
+&lt;p&gt;A special thanks to Ben Howard
+(&lt;a href="https://twitter.com/utlemming"&gt;@utlemming&lt;/a&gt;) from the DigitalOcean team
+as well as Lars Kellogg-Stedman (&lt;a href="https://twitter.com/larsks"&gt;@larsks&lt;/a&gt;)
+from the Fedora Community for helping us
+&lt;a href="https://bugs.launchpad.net/cloud-init/+bug/1669504"&gt;find&lt;/a&gt;
+&lt;a href="https://bugs.launchpad.net/cloud-init/+bug/1670052"&gt;and&lt;/a&gt;
+&lt;a href="https://bugs.launchpad.net/cloud-init/+bug/1665441"&gt;fix&lt;/a&gt;
+&lt;a href="https://cgit.freedesktop.org/NetworkManager/NetworkManager/commit/?id=3cc00dd550fcbd83ec2f1af9eeb83bf5ec921d21"&gt;many&lt;/a&gt;
+&lt;a href="https://cgit.freedesktop.org/NetworkManager/NetworkManager/commit/?id=a8f0d88596d8dd2b807a7b0adee272c4f077dad"&gt;bugs&lt;/a&gt;
+in order to better support cloud-init static networking and ifcfg file
+support within NetworkManager.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

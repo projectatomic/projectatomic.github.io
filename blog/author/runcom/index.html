@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Articles from
+Antonio Murdaca &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_author blog_author_runcom blog_author_runcom_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<h2>
+Articles from
+Antonio Murdaca
+</h2>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/01/understanding-docker-top-and-ps/">atomic top, docker top, and ps</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-01-18T17:40:47Z'>
+Monday 18 January 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Looking to view running container information quickly? Check out the new <code>atomic top</code> command!</p>
+
+<p><code>atomic top</code> is a new atomic sub-command that will allow you to interactively display the top process information from <em>all</em> of your containers running on a host. It works like the standard <code>top</code> command, where it will continuously update the top processes. Under the hood, <code>atomic top</code> is using Docker&rsquo;s top API to gather information about a particular container. When queried, the Docker daemon uses <code>ps</code> to give back results. The same thing happens with the Docker CLI.</p>
+
+<p>Docker&rsquo;s <code>top</code> command allows users to display the <code>ps</code> output for the main process of a given container ID or name. It&rsquo;s handy because it returns information about containers running on remote daemons as well.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/01/understanding-docker-top-and-ps/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/skopeo-inspect-remote-images/">skopeo: inspect remote images</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-01T10:39:51Z'>
+Tuesday  1 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The <code>atomic verify</code> command checks whether there is a newer image available remotely and scans through all layers to see if any of the layers, which are base images themselves, have a new version available.  If the tool finds an out-of-date image, it will report as such. The command attempts to reach out the registry where the image has been downloaded from to understand if the local image is outdated.</p>
+
+<p>Currently, <code>atomic verify</code> relies on a Docker patch that Red Hat is carrying called <em>remote repository inspection</em>. It adds a new REST route that basically returns <code>docker inspect</code>-like information about a given image as found in the remote registry the image is hosted. We need this feature because <code>atomic verify</code> uses <code>LABEL</code>(s)&mdash;and in particular the <code>Version</code> <code>LABEL</code>&mdash;to check whether the local image needs to be updated. For more information about labels, see  the <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels">projectatomic/ContainerApplicationGenericLabels</a>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/skopeo-inspect-remote-images/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/docker-credentials-store/">Docker Credential Store</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-16T13:25:00Z'>
+Wednesday 16 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>One security feature in the upcoming Docker 1.11 is the capability to use an external credential store for registry authentication. The new version will automatically detect a configured external store, if it is available, and use it instead of the JSON file. We&rsquo;ll be talking more about this in a few paragraphs, but first, let&rsquo;s see how Docker is currently storing credentials.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/docker-credentials-store/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/working-with-containers-image-made-easy/">Working with Containers' Images Made Easy Part 1: skopeo</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-25T08:58:20Z'>
+Monday 25 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This is the first part of a series of posts about containers&rsquo; images. In this first part we&rsquo;re going to focus on <code>skopeo</code>.</p>
+
+<p>Back in March, I published a <a href="http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/">post</a> about <a href="https://github.com/projectatomic/skopeo">skopeo</a>, a new tiny binary to help people interact with Docker registries. Its job has been limited to <em>inspect</em> (<em>skopeo</em> is greek for <em>looking for</em>, <em>observe</em>) images on remote registries as opposed to <code>docker inspect</code>, which is working for locally pulled images.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/working-with-containers-image-made-easy/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/oci/">OCI</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/10/how-the-container-registries-prevent-information-leakage/">How container registries prevent information leakage</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-25T13:41:13Z'>
+Tuesday 25 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently people have been reporting unexpected errors when doing a <code>skopeo copy</code> versus a <code>docker pull</code>:  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1347805">1347805</a>, <a href="https://github.com/projectatomic/skopeo/issues/235">235</a>, and <a href="https://github.com/docker/docker/issues/27281">27281</a>.</p>
+
+<p><a href="https://github.com/projectatomic/skopeo">Skopeo</a> is a command-line tool that that does various operations with container images and container image registries, including pulling the images to the host.  It is also used under the covers by the <a href="https://github.com/projectatomic/atomic">atomic</a> command-line tool.</p>
+
+<p>This post explains why those weird errors...</p>
+<a class="more-link read-more" href="/blog/2016/10/how-the-container-registries-prevent-information-leakage/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/registry/">registry</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+<li><a href="/blog/tag/troubleshooting/">troubleshooting</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/02/crio-runtimes/">CRI-O and Alternative Runtimes in Kubernetes</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-02-08T12:00:00Z'>
+Wednesday  8 February 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The introduction of the <a href="https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/api/v1alpha1/runtime/api.proto">Container Runtime Interface</a> in Kubernetes 1.5.0 as an alpha feature opens the door for plugging alternative <a href="http://programmableinfrastructure.com/components/container-runtime/">container runtimes</a> in the <a href="https://kubernetes.io/docs/admin/kubelet/">kubelet</a> more easily, instead of relying on the default docker runtime. Those new runtimes may include virtual machines based ones, such as runv and Clear Containers, or standard Linux containers runtimes like rkt.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/02/crio-runtimes/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/cri-o/">cri-o</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/06/6-reasons-why-cri-o-is-the-best-runtime-for-kubernetes/">6 Reasons why CRI-O is the best runtime for Kubernetes</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-06-06T11:00:00Z'>
+Tuesday  6 June 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong>CRI-O</strong> is a Kubernetes incubator project which is meant to provide an integration path between Open Containers Initiative (OCI) conformant runtimes and the kubelet. Specifically, it implements the Container Runtime Interface (CRI) using OCI conformant runtimes. CRI-O uses <a href="https://github.com/opencontainers/runc">runc</a> as its default runtime to run Kubernetes pods. For more information you can read a brief introduction <a href="https://www.projectatomic.io/blog/2017/02/crio-runtimes/">here</a>.</p>
+
+<p>Let’s look at the advantages of the CRI-O project.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/06/6-reasons-why-cri-o-is-the-best-runtime-for-kubernetes/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/cri-o/">cri-o</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/06/using-kubeadm-with-cri-o/">Using kubeadm with CRI-O</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-06-09T16:00:00Z'>
+Friday  9 June 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong><a href="https://github.com/kubernetes-incubator/cri-o">CRI-O</a></strong> is a Kubernetes incubator project which is meant to provide an integration path between Open Containers Initiative (OCI) conformant runtimes and the kubelet. Specifically, it implements the Container Runtime Interface (CRI) using OCI conformant runtimes. CRI-O uses <a href="https://github.com/opencontainers/runc">runc</a> as its default runtime to run Kubernetes pods. For more information you can read a brief introduction <a href="https://www.projectatomic.io/blog/2017/02/crio-runtimes/">here</a>. If you&rsquo;re interested into why you should use CRI-O instead of other container runtimes you can read more <a href="https://www.projectatomic.io/blog/2017/06/6-reasons-why-cri-o-is-the-best-runtime-for-kubernetes/">here</a>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/06/using-kubeadm-with-cri-o/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/cri-o/">cri-o</a></li>
+<li><a href="/blog/tag/kubeadm/">kubeadm</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

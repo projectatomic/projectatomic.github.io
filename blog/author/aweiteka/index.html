@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Articles from
+Aaron Weitekamp &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_author blog_author_aweiteka blog_author_aweiteka_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<h2>
+Articles from
+Aaron Weitekamp
+</h2>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/bugfix-container-software-in-place/">Bugfix Container Software In Place</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/aweiteka/">Aaron Weitekamp</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-19T17:54:07Z'>
+Tuesday 19 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Debugging container applications can be frustrating. Last week a few of us got together to hack on <a href="https://github.com/projectatomic/atomicapp">Atomicapp</a> and the <a href="https://github.com/projectatomic/nulecule">Nulecule specification</a>. The codebase was moving fast, so I hit a few bugs. The problem was the application I was running was in a container and the bug was difficult to reproduce on my local workstation. The python traceback output suggested it was a simple fix so I wanted to just edit the code in place in the container and keep moving. But then how would I get the code onto my local development box and into my git repository? And how could I test this code change?</p>
+
+<p>My approach was to bindmount the source from the local workstation into the container so the files being edited can remain in the local git repository.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/05/bugfix-container-software-in-place/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/09/introducing-vendor-labels2/">Introducing Image Metadata Labels for Software Vendors</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/aweiteka/">Aaron Weitekamp</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-09-23T14:12:22Z'>
+Wednesday 23 September 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Docker image metadata can be arbitrarily extended using the LABEL directive in a Dockerfile. This is a great way to annotate an image and enable automation:</p>
+
+<ul>
+<li>How to run or install an image</li>
+<li>Who built an image</li>
+<li>URLs for documentation or other support information</li>
+</ul>
+
+<p>We’ve been encouraging the docker community to standardize these LABELs in an open source way through the <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels/">Container Application Generic...</a></p>
+<a class="more-link read-more" href="/blog/2015/09/introducing-vendor-labels2/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/labels/">labels</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

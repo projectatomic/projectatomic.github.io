@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CentOS Atomic Host 1706 Release &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='CentOS Atomic Host 1706 Release' property='og:title'>
+<meta content='An updated version of CentOS Atomic Host (tree version 7.1706), is now&#x000A;available.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/07/centos-atomic-july-2017/' property='og:url'>
+<meta content='2017-07-20T18:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='CentOS Atomic Host 1706 Release' name='twitter:title'>
+<meta content='An updated version of CentOS Atomic Host (tree version 7.1706), is now&#x000A;available.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_07 blog_2017_07_centos-atomic-july-2017 blog_2017_07_centos-atomic-july-2017_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+CentOS Atomic Host 1706 Release
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-07-20T18:00:00Z'>
+Thursday 20 July 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>An updated version of <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">CentOS Atomic Host</a> (tree version 7.1706), is now
+available.</p>
+
+<p></p>
+
+<p>CentOS Atomic Host includes these core component versions:</p>
+
+<ul>
+<li>  atomic-1.17.2-9.git2760e30.el7.x86_64</li>
+<li>  cloud-init-0.7.5-10.el7.centos.1.x86_64</li>
+<li>  docker-1.12.6-32.git88a4867.el7.centos.x86_64</li>
+<li>  etcd-3.1.9-1.el7.x86_64</li>
+<li>  flannel-0.7.1-1.el7.x86_64</li>
+<li>  kernel-3.10.0-514.26.2.el7.x86_64</li>
+<li>  kubernetes-node-1.5.2-0.7.git269f928.el7.x86_64</li>
+<li>  ostree-2017.5-3.el7.x86_64</li>
+<li>  rpm-ostree-client-2017.5-1.atomic.el7.x86_64</li>
+</ul>
+
+<p>CentOS Atomic Host is available as a VirtualBox or libvirt-formatted
+Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image.
+These images are available for download at cloud.centos.org. The backing
+ostree repo is published to mirror.centos.org.</p>
+
+<h3>Containerized kubernetes-master</h3>
+
+<p>The downstream release of CentOS Atomic Host ships without the
+kubernetes-master package built into the image. Instead, you can run the
+master kubernetes components (apiserver, scheduler, and
+controller-manager) in containers, managed via systemd, using the
+service files and instructions on the CentOS wiki. The containers
+referenced in these systemd service files are built in and hosted from
+the CentOS Community Container Pipeline, based on Dockerfiles from the
+CentOS-Dockerfiles repository.</p>
+
+<p>These containers have been tested with the kubernetes ansible scripts
+provided in the upstream contrib repository, and they work as expected,
+provided you first copy the service files onto your master.</p>
+
+<p>Alternatively, you can install the kubernetes-master components using
+rpm-ostree package layering using the command:
+atomic host install kubernetes-master.</p>
+
+<h3>Upgrading</h3>
+
+<p>If you&rsquo;re running a previous version of CentOS Atomic Host, you can
+upgrade to the current image by running the following command:</p>
+<pre class="highlight plaintext"><code>$ sudo atomic host upgrade&#x000A;</code></pre>
+
+<h3>Images</h3>
+
+<h4>Vagrant</h4>
+
+<p>CentOS-Atomic-Host-7-Vagrant-Libvirt.box and
+CentOS-Atomic-Host-7-Vagrant-Virtualbox.box are Vagrant boxes for
+Libvirt and Virtualbox providers.</p>
+
+<p>The easiest way to consume these images is via the Atlas / Vagrant Cloud
+setup (see <a href="https://atlas.hashicorp.com/centos/boxes/atomic-host">https://atlas.hashicorp.com/centos/boxes/atomic-host</a>). For
+example, getting the VirtualBox instance up would involve running the
+following two commands on a machine with vagrant installed:</p>
+<pre class="highlight plaintext"><code>    $ vagrant init centos/atomic-host &amp;&amp; vagrant up --provider virtualbox&#x000A;</code></pre>
+
+<h4>ISO</h4>
+
+<p>The installer ISO can be used via regular install methods (PXE, CD, USB
+image, etc.) and uses the Anaconda installer to deliver the CentOS
+Atomic Host. This image allows users to control the install using
+kickstarts and to define custom storage, networking and user accounts.
+This is the recommended option for getting CentOS Atomic Host onto bare
+metal machines, or for generating your own image sets for custom
+environments.</p>
+
+<h4>QCOW2</h4>
+
+<p>The CentOS-Atomic-Host-7-GenericCloud.qcow2 image is suitable for use in
+on-premise and local virtualized environments. We test this on
+OpenStack, AWS and local Libvirt installs. If your virtualization
+platform does not provide its own cloud-init metadata source, you can
+create your own NoCloud iso image.</p>
+
+<h4>Amazon Machine Images</h4>
+<pre class="highlight plaintext"><code>Region           Image ID&#x000A;---------------- --------------&#x000A;us-east-1        ami-70e8fd66&#x000A;ap-south-1       ami-c0c4bdaf&#x000A;eu-west-2        ami-dba8bebf&#x000A;eu-west-1        ami-42b6593b&#x000A;ap-northeast-2   ami-7b5e8015&#x000A;ap-northeast-1   ami-597a9e3f&#x000A;sa-east-1        ami-95aedaf9&#x000A;ca-central-1     ami-473e8123&#x000A;ap-southeast-1   ami-93b425f0&#x000A;ap-southeast-2   ami-e1332f82&#x000A;eu-central-1     ami-e95ffd86&#x000A;us-east-2        ami-1690b173&#x000A;us-west-1        ami-189fb178&#x000A;us-west-2        ami-a52a34dc&#x000A;</code></pre>
+
+<p>SHA Sums</p>
+<pre class="highlight plaintext"><code>f854d6ea3fd63b887d644b1a5642607450826bbb19a5e5863b673936790fb4a4&#x000A;CentOS-Atomic-Host-7.1706-GenericCloud.qcow2&#x000A;9e35d7933f5f36f9615dccdde1469fcbf75d00a77b327bdeee3dbcd9fe2dd7ac&#x000A;CentOS-Atomic-Host-7.1706-GenericCloud.qcow2.gz&#x000A;836a27ff7f459089796ccd6cf02fcafd0d205935128acbb8f71fb87f4edb6f6e&#x000A;CentOS-Atomic-Host-7.1706-GenericCloud.qcow2.xz&#x000A;e15dded673f21e094ecc13d498bf9d3f8cf8653282cd1c83e5d163ce47bc5c4f&#x000A;CentOS-Atomic-Host-7.1706-Installer.iso&#x000A;5266a753fa12c957751b5abba68e6145711c73663905cdb30a81cd82bb906457&#x000A;CentOS-Atomic-Host-7.1706-Vagrant-Libvirt.box&#x000A;b85c51420de9099f8e1e93f033572f28efbd88edd9d0823c1b9bafa4216210fd&#x000A;CentOS-Atomic-Host-7.1706-Vagrant-VirtualBox.box&#x000A;&#x000A;</code></pre>
+
+<h3>Release Cycle</h3>
+
+<p>The CentOS Atomic Host image follows the upstream Red Hat Enterprise
+Linux Atomic Host cadence. After sources are released, they&rsquo;re rebuilt
+and included in new images. After the images are tested by the SIG and
+deemed ready, we announce them.</p>
+
+<h3>Getting Involved</h3>
+
+<p>CentOS Atomic Host is produced by the CentOS Atomic SIG, based on
+upstream work from Project Atomic. If you&rsquo;d like to work on testing
+images, help with packaging, documentation &ndash; join us!</p>
+
+<p>The SIG meets weekly on Thursdays at 16:00 UTC in the #centos-devel
+channel, and you&rsquo;ll often find us in #atomic and/or #centos-devel if you
+have questions. You can also join the atomic-devel mailing list if you&rsquo;d
+like to discuss the direction of Project Atomic, its components, or have
+other questions.</p>
+
+<h3>Getting Help</h3>
+
+<p>If you run into any problems with the images or components, feel free to
+ask on the centos-devel mailing list.</p>
+
+<p>Have questions about using Atomic? See the atomic mailing list or find
+us in the #atomic channel on Freenode.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/07/centos-atomic-july-2017/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/07/centos-atomic-july-2017/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/07/centos-atomic-july-2017/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

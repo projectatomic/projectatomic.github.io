@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Building Docker Images &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_docker-image-orig docs_docker-image-orig_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Building Docker Images</h1>
+
+<p>Building Docker images is a key feature for DevOps. Here&rsquo;s how to accomplish this task.</p>
+
+<h2>Containers Versus Images</h2>
+
+<p>Docker is known primarily for the following features:</p>
+
+<ul>
+<li>Resource Management</li>
+<li>Process Isolation</li>
+<li>Security</li>
+<li>Tooling/CLI</li>
+</ul>
+
+<p>Resource management and process isolation come from Linux Containers (LXC). Some security is built into resource management and process isolation. The added security of SELinux is also separate from Docker. The first three features demonstrate the value of containers. Docker, however, provides extra tooling beyond lxc-tools.  </p>
+
+<p>One of the more important features of Docker is <em>image content management</em>, or <em>image layering</em>. Docker&rsquo;s layered approach to images (or content) provides a very powerful abstraction for building up application containers. </p>
+
+<p>Docker allows you to build images using a Dockerfile.  The Dockerfile describes a base image, from which the image can be built using the <code>FROM</code> instruction. <code>FROM</code> implicitly uses a image registry from which the base image is pulled. This can be <code>docker.io</code> or some other (perhaps internal) registry. Extra packages can be installed using the <code>RUN</code> instruction and the Linux distribution&rsquo;s package installation tool. For Fedora and Red Hat Enterprise Linux this tool is <code>yum</code>.  Other content can be added by using the <code>ADD</code> instruction.  These three instructions are the basics for building images using the Dockerfile. A simple example:</p>
+<pre class="highlight plaintext"><code>FROM fedora&#x000A;RUN yum install -y gcc&#x000A;ADD ./myprogramfiles.tar /tmp  &#x000A;</code></pre>
+
+<h2>Two Approaches to Image Building</h2>
+
+<p>There are two approaches to building Docker images.   </p>
+
+<p>Consider the following example: an administrator would like to deploy a new simple website using Docker container technology. </p>
+
+<p>The administrator decides that the image needs three components:</p>
+
+<ul>
+<li>Fedora base image</li>
+<li>Apache Web server</li>
+<li>Web site content</li>
+</ul>
+
+<p>The administrator can build the image in one of the two following ways:</p>
+
+<ul>
+<li>Create a Dockerfile that builds the image with the website included</li>
+<li>Interactively, by running the Fedora base image using a BASH shell to yum install httpd and its dependencies, and then save the image</li>
+</ul>
+
+<p>The first approach involves building a Dockerfile that uses the base Fedora image and installs the needed Apache packages, and then ADDs the necessary files. This ensures that the entire website is complete in one build. We will examine this approach later. The administrator decides that the Fedora + Apache web server layered image is reusable for other future web sites. This means that an Apache Web server image based on Fedora is what is first required. </p>
+
+<h3>Interactively from a Running Fedora Container</h3>
+
+<p>There is a semi-official image called <code>fedora</code> (the latest Fedora version) in the public Docker registry.  For more information on this image and the options available, check the repository page.</p>
+
+<p>To run a container with an interactive shell, run the following Docker command on the Project Atmoic host:</p>
+<pre class="highlight plaintext"><code># docker run -i -t fedora bash&#x000A;</code></pre>
+
+<p>This has created a running Fedora instance in a Docker container and attached a bash shell to the tty. Inside the container shell, run the following <code>yum</code> commands to get the latest updates for Fedora, and to install Apache httpd:</p>
+<pre class="highlight plaintext"><code># yum update -y&#x000A;# yum install -y httpd&#x000A;# exit&#x000A;</code></pre>
+
+<p>From the host machine, save the new image by finding the container ID and then committing it to a new image name:</p>
+<pre class="highlight plaintext"><code># docker ps -a&#x000A;# docker commit c16378f943fe fedora-httpd&#x000A;</code></pre>
+
+<p>Now push the image to the registry using the image ID. In this example the registry is on registry-host and listening on port 5000. Default Docker commands will push to the default <code>docker.io</code> registry. Instead, push to the local registry, which is on a host called <em>registry-host</em>. To do this, tag the image with the host name or IP address, and the port of the registry: </p>
+<pre class="highlight plaintext"><code># docker tag fedora-httpd registry-host:5000/myadmin/fedora-httpd&#x000A;# docker push registry-host:5000/myadmin/fedora-httpd&#x000A;</code></pre>
+
+<p>Check that this worked by running:</p>
+<pre class="highlight plaintext"><code># docker images&#x000A;</code></pre>
+
+<p>You should see both <code>fedora-httpd</code> and <code>registry-host:5000/myadmin/fedora-httpd</code> listed.</p>
+
+<p>The administrator now has a new image that contains a Apache Web server. The administrator can build a Dockerfile based on that image and add the appropriate files. Docker automatically untars or unzips the files in a source tar or zip file into the target directory. Here is the Dockerfile:</p>
+<pre class="highlight plaintext"><code>FROM registryhost:5000/whenry/fedora-httpd&#x000A;MAINTAINER A D Ministator email: admin@corp.example.com&#x000A;&#x000A;# Add the tar file of the web site &#x000A;ADD ./mysite.tar /tmp/&#x000A;&#x000A;# Docker automatically extracted. So move files to web directory&#x000A;RUN mv /tmp/mysite/* /var/www/html&#x000A;&#x000A;EXPOSE 80&#x000A;&#x000A;ENTRYPOINT /usr/sbin/httpd -DFOREGROUND&#x000A;</code></pre>
+
+<p>The administrator can use this simple Dockerfile as a template for building other web sites. </p>
+
+<p>Build and run from the directory where the Dockerfile and content is located.  The &rsquo;.&rsquo; in the <code>docker build</code> command signifies where the Dockerfile is located :</p>
+<pre class="highlight plaintext"><code># docker build -rm --tag=mysite .&#x000A;# docker run -d mysite&#x000A;</code></pre>
+
+<p>This approach is a great way to learn about Docker and building images. It is also good for troubleshooting and prototyping.  It is how <code>docker.io</code> teaches you about Docker in their Getting Started web page.</p>
+
+<p>Recommendation: It would be good to expose port 80 and define the entry point in the <code>fedora-httpd</code> image and then merely add the files in the final Dockefile. That way the application only has to worry about the files needed for the new website.  </p>
+
+<h3>Using a Single Dockerfile</h3>
+
+<p>The administrator may decide that building interactively is tedious and error-prone. Instead the administrator could build a single Dockerfile that layers on the Apache Web server and the web site content in one build. </p>
+
+<p>A good practice is to make a sub-directory with a related name and create a Dockerfile in that directory. E.g. a directory called mongo may contain a Dockerfile for a MongoDB image, or a directory called httpd may container an Dockerfile for an Apache web server. Copy or create all other content that you wish to add to the image into the new directory.  </p>
+<pre class="highlight plaintext"><code># mkdir httpd&#x000A;# cd httpd&#x000A;# cp mysite.tar .&#x000A;</code></pre>
+
+<p>Create the Dockerfile. This Dockerfile assumes a base image called fedora:</p>
+<pre class="highlight plaintext"><code>FROM fedora&#x000A;MAINTAINER A D Ministator email: admin@mycorp.com&#x000A;&#x000A;# Update the image with the latest packages (recommended)&#x000A;RUN yum update -y; yum clean all&#x000A;&#x000A;# Install Apache Web Server&#x000A;RUN yum install -y httpd; yum clean all&#x000A;&#x000A;# Add the tar file of the web site &#x000A;ADD ./mysite.tar /tmp/&#x000A;&#x000A;# Docker automatically extracted. So move files to web directory&#x000A;RUN mv /tmp/mysite/* /var/www/html&#x000A;&#x000A;EXPOSE 80&#x000A;&#x000A;ENTRYPOINT /usr/sbin/httpd -DFOREGROUND&#x000A;</code></pre>
+
+<p>Simply build this Dockerfile from the new httpd directory and run it:</p>
+<pre class="highlight plaintext"><code># docker build -rm --tag=mysite .&#x000A;# docker run -d mysite &#x000A;</code></pre>
+
+<p>It&rsquo;s worth noting from the above that in order to reduce the amount of temporary image layers it is recommended to add <code>; yum clean all</code> after each <code>RUN yum</code> step.</p>
+
+<h2>Which Approach is Right?</h2>
+
+<p>The approach to building images depends on <em>why</em> the user is building the image.</p>
+
+<h3>Prototyping and Troubleshooting</h3>
+
+<p>If prototyping and trouble shooting then the user probably wants to do an interactive, <q>*inside the container*</q> approach. Using this approach the user can take notes of the history of commands used that make sense and what external files may be missing or need changes. These can be ADDed to the Dockerfile.</p>
+
+<h3>Complete Satisfactory Single Build</h3>
+
+<p>If the user is satisfied with a specific image that has been build using the interactive approach and they believe it might be reused elsewhere, then it is recommended to use the single Dockerfile approach that builds it all in one build.</p>
+
+<h2>Filesystem Considerations</h2>
+
+<p>Now that you understand how Docker layers images, it raises some questions on how best to deploy Docker in your environment. Docker supports several different file system formats. How these work and which one you choose for all or part of your deployment will greatly effect your performance and efficiency.</p>
+
+<p>For information and recommendations on supported filesystems please see <a href="http://www.projectatomic.io/docs/filesystems/">Supported Filesystems</a>.</p>
+
+<p>In many use cases it is beneficial to attach and mount a separate filesystem for Docker&rsquo;s use.  This file system will be mounted on /dev/lib/docker. For information on how to mount /var/lib/docker on a separate file system see <a href="http://www.projectatomic.io/docs/docker-storage-recommendation/">Setting Up Storage</a>.</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/docker-image-orig.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

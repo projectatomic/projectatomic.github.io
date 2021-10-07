@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic Quick Start Guide &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_quickstart docs_quickstart_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Project Atomic Quick Start Guide</h1>
+
+<p>This a <strong>Quick Start Guide</strong> (or <q>guide for the impatient</q>) for folks who just want to set up a single Atomic Host and see what all the fuss around Docker and Atomic is about.</p>
+
+<h2>What You Need</h2>
+
+<ul>
+<li><p><strong>A virtualization client.</strong> <a href="http://virt-manager.org/">Virtual Machine Manager</a> (virt-manager) is a very good KVM-based client for Linux systems. Windows and OS X users can give <a href="https://www.virtualbox.org/">VirtualBox</a> a try. Be sure your virtualization client is properly configured to access the Internet.</p></li>
+<li><p><strong>A virtual machine image.</strong> Images for Atomic hosts are produced by both the Fedora Project and the CentOS Project.  Downloads for these images can be found via the <a href="http://www.projectatomic.io/download/">Downloads page</a> in QCOW2, RAW, and Vagrant BOX formats.</p>
+
+<p><strong>Note for VirtualBox users</strong> We are not producing native VirtualBox images, but you can generate your own VirtualBox image from the qcow2 images with <code>qemu-img</code>:</p>
+
+<p><code>$ qemu-img convert -f qcow2 [filename].qcow2 -O vdi [filename].vdi</code></p></li>
+</ul>
+
+<h2>Step by Step</h2>
+
+<p>There are three basic steps we&rsquo;ll do for each virtualization provider before booting the virtual machine:</p>
+
+<ol>
+<li><p>Prep the cloud-init source ISO</p></li>
+<li><p>Create the Atomic host virtual machine</p></li>
+<li><p>Add and configure storage for Docker</p></li>
+</ol>
+
+<h2>Prep the cloud-init source ISO</h2>
+
+<p>In order to pass run time customizations to an Atomic host, we use <a href="http://cloudinit.readthedocs.org/en/latest/"><strong>cloud-init</strong></a> .</p>
+
+<p>You will need to create a metadata ISO to supply critical data when your Atomic host boots.  System data is presented via the <code>meta-data</code> file and configuration data via the <code>user-data</code> file.  We will be setting up the password and ssh key for the default user.  The metatdata ISO is created on the machine running your virtualization provider.</p>
+
+<ol>
+<li><p>Create a <code>meta-data</code> file with your desired hostname and instance-id.  If you need to change any of this information on a running host, you will need to increment the <code>instance-id</code>.  This is how <code>cloud-init</code> identifies a particular instance.</p>
+<pre class="highlight plaintext"><code>$ vi meta-data&#x000A;instance-id: atomic-host001&#x000A;local-hostname: atomic01.example.org&#x000A;</code></pre></li>
+<li><p>Create a <code>user-data</code> file.</p>
+
+<p><strong>Note:</strong> The #cloud-config directive at the beginning of the file is mandatory, not a comment.</p>
+
+<p>This file is the configuration of a user with a temporary, single-use password and an ssh key.  Since no username is specified; the default username is fedora or centos, depending on the virtual machine image used.  If you have multiple admins and ssh keys you&rsquo;d like to access the default user, you can add a new <code>ssh-rsa</code> line.</p>
+<pre class="highlight plaintext"><code>$ vi user-data&#x000A;#cloud-config&#x000A;password: atomic&#x000A;ssh_pwauth: True&#x000A;chpasswd: { expire: False }&#x000A;&#x000A;ssh_authorized_keys:&#x000A;  - ssh-rsa ... foo@bar.baz (insert ~/.ssh/id_rsa.pub here)&#x000A;</code></pre></li>
+<li><p>After creating the <code>user-data</code> and <code>meta-data</code> files, generate an ISO file. Make sure the user running libvirt has the proper permissions to read the generated image.</p>
+<pre class="highlight plaintext"><code>$ genisoimage -output init.iso -volid cidata -joliet -rock user-data meta-data&#x000A;</code></pre></li>
+</ol>
+
+<p>You&rsquo;ll add this ISO as a CD-ROM device in the virtual machine.</p>
+
+<h2>Create the Atomic host virtual machine</h2>
+
+<p>We&rsquo;ll start with the QCOW2 format image for either virt-manager, virt-install, or VirtualBox.  For virt-manager and virt-install, you will use this image directly. For VirtualBox, convert the QCOW2 to VDI in order to create an image suitable for VirtualBox.</p>
+<pre class="highlight plaintext"><code>$ qemu-img convert -f qcow2 [filename].qcow2 -O vdi [filename].vdi&#x000A;&#x000A;</code></pre>
+
+<h3>Creating with virt-manager</h3>
+
+<p>Here&rsquo;s how to get started with Atomic on your machine using virt-manager on Linux. The instructions below are for running virt-manager on Fedora 21. The steps may vary slightly when running older distributions of virt-manager.</p>
+
+<ol>
+<li><p>Select <code>File</code> -&gt; <code>New Virtual Machine</code> from the menu bar. The New VM dialog box will open.</p></li>
+<li><p>Select the Import existing disk image option and click Forward. The next page in the New VM dialog will appear.</p></li>
+<li><p>Click <code>Browse</code>. The Locate or create storage volume dialog will open.</p></li>
+<li><p>Click <code>Browse Local</code>. The Locate existing storage dialog will open.</p></li>
+<li><p>Navigate to the downloaded virtual machine file, select it, and click <code>Open</code>.</p></li>
+<li><p>In the New VM dialog, select <code>Linux</code> for the OS type, <code>Fedora 21</code> (or later) for the Version, and click <code>Forward</code>.</p></li>
+<li><p>Adjust the VM&rsquo;s RAM and CPU settings (if needed) and click <code>Forward</code>.</p></li>
+<li><p>Select the checkbox next to <code>Customize configuration before install</code> and click <code>Forward</code>.  This will allow you to add the metatdata ISO device before booting the VM.</p></li>
+</ol>
+
+<p><strong>Note</strong>: When running virt-manager on Red Hat Enterprise Linux 6 or CentOS 6, the VM <strong>will not boot</strong> until the disk storage format is changed from raw to qcow2.</p>
+
+<h4>Adding the CD-ROM device for the metadata source</h4>
+
+<ol>
+<li>In the virt-manager GUI, click to open your Atomic machine. Then on the top bar click <em>View &gt; Details</em></li>
+<li>Click on <em>Add Hardware</em> on the bottom left corner.</li>
+<li>Choose <em>Storage</em>, and <em>Select managed or other existing storage</em>. Browse and select the <code>init.iso</code> image you created. Change the <em>Device type</em> to CD-ROM device.  Click on <em>Finish</em> to create and attach this storage.</li>
+</ol>
+
+<h3>Creating with virt-install (Command-Line Method)</h3>
+
+<ol>
+<li>Use the following example virt-install command, <strong>modifying each parameter to fit
+your requirements</strong>.  In this example, a new directory, <code>Fedora-Atomic-26/</code>, was created under <code>/var/lib/libvirt/images</code> so that the <code>init.iso</code> created earlier, the vm image <code>Fedora-Atomic-26-20170723.0.x86_64.qcow2</code>, the <code>meta-data</code> file, and the <code>user-data</code> file are all in one folder.</li>
+</ol>
+<pre class="highlight plaintext"><code>virt-install --name atomic-host \&#x000A;--description 'Fedora Atomic Host' \&#x000A;--ram 4096 \&#x000A;--vcpus 4 \&#x000A;--disk path=/var/lib/libvirt/images/Fedora-Atomic-26/Fedora-Atomic-26-20170723.0.x86_64.qcow2 \&#x000A;--os-type linux \&#x000A;--os-variant fedora25 \&#x000A;--network bridge=virbr0 \&#x000A;--graphics vnc,listen=127.0.0.1,port=5901 \&#x000A;--cdrom /var/lib/libvirt/images/Fedora-Atomic-26/init.iso \&#x000A;--noautoconsole&#x000A;</code></pre>
+
+<blockquote>
+<p>Example notes: At the time of this writing, <q>fedora26</q> has not yet been implemented as an option in the os-variant parameter, so the example above will use <q>fedora25</q> as the os-variant parameter value instead. For the graphics parameter, we&rsquo;re setting the vnc listener to localhost because it&rsquo;s more secure to tunnel your VNC connection through SSH so that you don&rsquo;t expose VNC to anyone with access to the network.</p>
+</blockquote>
+
+<h3>Creating with VirtualBox</h3>
+
+<p>Here&rsquo;s how to get started with Atomic on your machine using VirtualBox on Windows, OS X, or Linux.</p>
+
+<ol>
+<li><p>Click the New icon on the VirtualBox toolbar. The Create Virtual Machine dialog box will open.</p></li>
+<li><p>Enter a name for the new machine, select <code>Linux</code> for the Type, <code>Fedora (64 bit)</code> for the Version, and click <code>Next</code>.</p></li>
+<li><p>Adjust the VM&rsquo;s RAM if needed and click <code>Next</code>.</p></li>
+<li><p>Select the <code>Use an existing virtual hard drive</code> option, browse to the file location, and click <code>Create</code>. The virtual machine will be created and the virtual machine will be ready.</p></li>
+</ol>
+
+<h4>Adding the CD-ROM device for the metadata source</h4>
+
+<ol>
+<li>In the VirtualBox GUI, click <em>Settings</em> for you Atomic virtual machine.</li>
+<li>On the <em>Storage</em> tab, for the IDE Controller, <em>Add CD/DVD Device</em>.</li>
+<li>Select <em>Choose Disk</em>, and select the <code>init.iso</code> you created.</li>
+</ol>
+
+<h2>Exploring the Atomic host</h2>
+
+<p>Boot the virtual machine with the CD-ROM attached and cloud-init will populate the default user information with the password or SSH keys you provided in the <code>user-data</code> file. <strong>For a Fedora image, the default user is <code>fedora</code>, for CentOS the default user is <code>centos</code>.</strong></p>
+
+<p>If you created the Atomic host with <code>virt-manager</code> or <code>virt-install</code> and wish to access
+the VM from the command-line, you can use <code>virsh console</code> (where <q>atomic-host</q> is the name of the vm):</p>
+<pre class="highlight plaintext"><code>virsh console atomic-host;&#x000A;</code></pre>
+
+<p>Once you&rsquo;ve booted and logged in to your Atomic host, you can update the system software with <code>$ sudo rpm-ostree upgrade</code> to pull in any updates.</p>
+
+<h3>Add and configure storage for Docker</h3>
+
+<p>Docker is ready to go at this point, but there&rsquo;s another fairly important bit of config to do, if you&rsquo;re going to be testing out more than a couple containers&ndash;you need to add a bigger drive for the docker LVM thin pool.</p>
+
+<h4>Add A New Drive in virt-manager</h4>
+
+<ol>
+<li><p>Select the View, Details menu command on your VM window.</p></li>
+<li><p>Click the Add Hardware. The Add New Virtual Hardware dialog box will open.</p></li>
+<li><p>Select Storage, change disk size to what you want, change bus type to VirtIO, and click Finish. The Add New Virtual Hardware dialog box will close.</p></li>
+</ol>
+
+<h4>Add a New Drive (qemu-img and virsh) from Command-Line</h4>
+
+<ol>
+<li>Create the New Disk Image.  Change the disk size to what you want.</li>
+</ol>
+<pre class="highlight plaintext"><code>qemu-img create -f qcow2 atomic-host-disk2-8G 8G&#x000A;&#x000A;Formatting 'atomic-host-disk2-8G', fmt=qcow2 size=8589934592 encryption=off cluster_size=65536 lazy_refcounts=off refcount_bits=16&#x000A;</code></pre>
+
+<ol>
+<li>Figure out what device names are available <strong>inside the guest VM</strong></li>
+</ol>
+<pre class="highlight plaintext"><code>fdisk -l | grep '^Disk /dev/vd[a-z]'&#x000A;&#x000A;Disk /dev/vda: 6 GiB, 6442450944 bytes, 12582912 sectors&#x000A;</code></pre>
+
+<p>If your vm just has /dev/vda, then you would use <code>vdb</code> in the next step.  If
+vdb is taken, you would use <code>vdc</code>, and so on.</p>
+
+<ol>
+<li>Attach the disk to the VM <strong>from the host</strong></li>
+</ol>
+<pre class="highlight plaintext"><code>virsh attach-disk atomic-host \&#x000A;--source /var/lib/libvirt/images/Fedora-Atomic-26/atomic-host-disk2-8G \&#x000A;--target vdb \&#x000A;--targetbus virtio \&#x000A;--persistent&#x000A;&#x000A;Disk attached successfully&#x000A;</code></pre>
+
+<h4>Add A New Drive in VirtualBox</h4>
+
+<ol>
+<li><p>With the Atomic VM closed, select the Machine, Settings menu command. The Settings dialog box will open.</p></li>
+<li><p>Select the Storage option. The Storage settings will appear.</p></li>
+<li><p>Select the Controller for the VM and click the Add Hard Disk icon. A Question dialog will open.</p></li>
+<li><p>Choose Create New Disk. The Create Virtual Hard Drive dialog box will open.</p></li>
+</ol>
+
+<h3>Configuring the New Drive</h3>
+
+<ol>
+<li><p>Run <code>$ sudo fdisk -l</code> to find name of your new disk (e.g., /dev/vdb)</p></li>
+<li><p>Open <code>/etc/sysconfig/docker-storage-setup</code> in an editor</p></li>
+<li><p>Add the new disk by creating a <code>DEVS</code> entry.  If you added more than one, you can add more to the list separated by a space.</p>
+<pre class="highlight plaintext"><code>DEVS="/dev/vdb"&#x000A;</code></pre></li>
+<li><p>If you&rsquo;d like to use some of the space on the new disk to grow the root volume, you can create a <code>ROOT_SIZE</code> with the new total size.</p>
+<pre class="highlight plaintext"><code>ROOT_SIZE=4G&#x000A;</code></pre></li>
+<li><p>Run <code>$ sudo docker-storage-setup</code> to run the helper script and configure the thin pool.  This tool calculates the amount of available space, what&rsquo;s needed for the metadata pool, and executes the LVM commands.</p></li>
+<li><p>Run <code>$ sudo docker info</code> to make sure that the Docker daemon sees the added space.</p></li>
+<li><p>If you added space to the root volume, run <code>$ sudo xfs_growfs /</code> to make sure the filesystem gets expanded to match the volume size.</p></li>
+<li><p>If you added space to the root volume, run <code>df -Th</code> to make sure that the root volume has been grown to the new total size.</p></li>
+</ol>
+
+<h2>Finding Help</h2>
+
+<p>For more help, check out the Project Atomic mailing lists for <a href="http://lists.projectatomic.io/mailman/listinfo/atomic">general discussions</a> or <a href="http://lists.projectatomic.io/mailman/listinfo/atomic-devel">technical issues</a>.</p>
+
+<h2>Reporting Bugs</h2>
+
+<p>If you have a well identified issue, report it in the Bugzilla hosted by Red Hat. Remember: first <a href="https://bugzilla.redhat.com/buglist.cgi?product=Atomic">check existing issues</a>, then <a href="https://bugzilla.redhat.com/enter_bug.cgi?product=Atomic">enter a new bug</a>. We appreciate your bugs!</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='active nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/quickstart.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

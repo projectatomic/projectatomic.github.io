@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Scl</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/scl.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Moving an RHSCL app to Docker on Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/05/moving-an-rhscl-app-to-docker-on-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2014/05/moving-an-rhscl-app-to-docker-on-atomic/</id>
+    <published>2014-05-09T19:44:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;As I&amp;rsquo;ve mentioned a number of times when I&amp;rsquo;ve spoken about &lt;a href="http://softwarecollections.org"&gt;Software Collections&lt;/a&gt; (SCLs), containers and SCLs are &lt;em&gt;not&lt;/em&gt; mutually exclusive. In fact, SCLs promise to be really important for a lot of developers in building containers for production. &lt;/p&gt;
+
+&lt;p&gt;Langdon White has written up a &lt;a href="http://developerblog.redhat.com/2014/05/07/moving-app-to-docker-on-atomic/"&gt;great post on how to move an RHSCL app to Docker&lt;/a&gt; using an Atomic host:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Ok, now that Atomic is installed, I need to go make a container. After a few fits and starts, mostly related to pathing issues while using the &lt;q&gt;RUN&lt;/q&gt; command, I got a decent Dockerfile working. You &lt;q&gt;run&lt;/q&gt; this file by using the &amp;lsquo;docker build&amp;rsquo; command. Later, you &lt;q&gt;make the app go&lt;/q&gt; with the &amp;#39;docker run&amp;rsquo; command. &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Check out the rest of Langdon&amp;rsquo;s post on &lt;a href="http://developerblog.redhat.com/2014/05/07/moving-app-to-docker-on-atomic/"&gt;the Red Hat Developer Blog&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

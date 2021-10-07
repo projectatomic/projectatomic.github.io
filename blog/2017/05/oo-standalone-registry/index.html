@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Micah Abbott' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host' property='og:title'>
+<meta content='Update: Removed links to Atomic Registry as discontinued.&#x000A;&#x000A;The Project Atomic site has had a section dedicated to the Atomic Registry, which has been discontinued in favor of OpenShift Registry. It was useful for getting a registry up and running as quickly as possible.  However, the software powering the quickstart installation has not always kept up with the OpenShift Origin software which powers the actual registry and web UI.  This has lead to an increase in users reporting issues in the #atomic Freenode IRC channel.  And often it ends with someone pointing to the stand-alone registry documentation that is provided by the OpenShift Origin project.&#x000A;&#x000A;It turns out that deploying the stand-alone registry on a single Fedora 25 Atomic Host system is quite straight-forward and can quickly provide a usable registry. In this blog post, we’ll deploy a proof-of-concept stand-alone registry on a single node, which will end up using self-signed certificates in the process.  In a later blog post, we’ll show you how to setup a stand-alone registry using multiple nodes and your own SSL certificates.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/' property='og:url'>
+<meta content='2017-05-25T18:00:00Z' property='article:published_time'>
+<meta content='miabbott' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='origin' property='article:tag'>
+<link href='/blog/tag/origin.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='registry' property='article:tag'>
+<link href='/blog/tag/registry.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host' name='twitter:title'>
+<meta content='Update: Removed links to Atomic Registry as discontinued.&#x000A;&#x000A;The Project Atomic site has had a section dedicated to the Atomic Registry, which has been discontinued in favor of OpenShift Registry. It was useful for getting a registry up and running as quickly as possible.  However, the software powering the quickstart installation has not always kept up with the OpenShift Origin software which powers the actual registry and web UI.  This has lead to an increase in users reporting issues in the #atomic Freenode IRC channel.  And often it ends with someone pointing to the stand-alone registry documentation that is provided by the OpenShift Origin project.&#x000A;&#x000A;It turns out that deploying the stand-alone registry on a single Fedora 25 Atomic Host system is quite straight-forward and can quickly provide a usable registry. In this blog post, we’ll deploy a proof-of-concept stand-alone registry on a single node, which will end up using self-signed certificates in the process.  In a later blog post, we’ll show you how to setup a stand-alone registry using multiple nodes and your own SSL certificates.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_05 blog_2017_05_oo-standalone-registry blog_2017_05_oo-standalone-registry_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-05-25T18:00:00Z'>
+Thursday 25 May 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong>Update: Removed links to Atomic Registry as discontinued.</strong></p>
+
+<p>The Project Atomic site has had a section dedicated to the Atomic Registry, which has been discontinued in favor of <a href="https://docs.openshift.com/enterprise/3.0/architecture/infrastructure_components/image_registry.html">OpenShift Registry</a>. It was useful for getting a registry up and running as quickly as possible.  However, the software powering the quickstart installation has not always kept up with the <a href="https://www.openshift.org">OpenShift Origin</a> software which powers the actual registry and web UI.  This has lead to an increase in users reporting issues in the #atomic Freenode IRC channel.  And often it ends with someone pointing to the <a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html">stand-alone registry documentation</a> that is provided by the OpenShift Origin project.</p>
+
+<p>It turns out that deploying the stand-alone registry on a single Fedora 25 Atomic Host system is quite straight-forward and can quickly provide a usable registry. In this blog post, we&rsquo;ll deploy a proof-of-concept stand-alone registry on a single node, which will end up using self-signed certificates in the process.  In a later blog post, we&rsquo;ll show you how to setup a stand-alone registry using multiple nodes and your own SSL certificates.</p>
+
+<p></p>
+
+<p>A good portion of this guide was lifted and adapted from <a href="https://twitter.com/dustymabe">Dusty Mabe&rsquo;s</a> excellent guide on <a href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/">installing OpenShift Origin on Fedora 25 Atomic Host</a>.  He also assisted me along the way with some questions, so most of the credit goes to him for figuring out the hard stuff!</p>
+
+<h3>Environment</h3>
+
+<p>For the purposes of this guide, we are going to deploy a stand-alone registry using the &lsquo;all-in-one&rsquo; topology, where we host all the components on a single system.  The OpenShift Origin docs have some <a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html#registry-minimum-hardware-requirements">hardware requirements</a> for this kind of install; they seem rather generous, so you might be able to get away with a less powerful system.  As with most things, your mileage may vary.</p>
+
+<p>In addition to your dedicated system for the registry, you&rsquo;ll also need to have Ansible 2.2 installed on your workstation (or wherever you choose to run the Ansible-based installer).</p>
+
+<p>Once your Fedora 25 Atomic Host system has been provisioned, make sure it is upgraded to the latest version by using the <code>atomic host upgrade</code> command.</p>
+
+<p>Additionally, I decided I would configure Docker to use the <code>overlay2</code> storage driver for my install.  This is completely optional, but if you decide to make this change you can use the <a href="http://www.projectatomic.io/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/">instructions in a previous blog post</a> to do so.</p>
+
+<h3>Prepping the Installer</h3>
+
+<p>OpenShift Origin provides an excellent <a href="https://www.ansible.com/">Ansible-based</a> installer that we will used to deploy the registry.  So the first thing to do is checkout the installer from the <a href="https://github.com/openshift/openshift-ansible">GitHub repo</a>.  At the time of this writing, I used a specific version (<a href="https://github.com/openshift/openshift-ansible/releases/tag/openshift-ansible-3.4.24-1">3.4.24-1</a>) of the repo to ensure it would work correctly for me.  We&rsquo;ll checkout the repo to that version as part of this process.</p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/openshift/openshift-ansible.git&#x000A;$ cd openshift-ansible&#x000A;$ git checkout openshift-ansible-3.4.24-1&#x000A;HEAD is now at 90f6a70... Automatic commit of package [openshift-ansible] release [3.6.24-1].&#x000A;</code></pre>
+
+<p>The next step is to prepare the inventory file for the installer.  My dedicated system for the registry has a &#39;public&rsquo; IP address of <code>10.8.172.199</code>, so we use that value throughout.  (I&rsquo;m using a VM in a private OpenStack instance, so the &#39;public&rsquo; IP address is only visible on our corporate network and is not reachable from the Internet.)</p>
+
+<p>Notice how I am using the <a href="http://xip.io">xip.io</a> service as part of my <code>openshift_master_default_subdomain</code> value.  It provides wildcard DNS resolution for any IP address you want to use.  This is a handy solution if the system you are using does not have a DNS resolvable hostname.</p>
+<pre class="highlight plaintext"><code># Create an OSEv3 group that contains the masters and nodes groups&#x000A;[OSEv3:children]&#x000A;masters&#x000A;nodes&#x000A;&#x000A;# Set variables common for all OSEv3 hosts&#x000A;[OSEv3:vars]&#x000A;ansible_user=cloud-user&#x000A;ansible_become=true&#x000A;&#x000A;openshift_master_default_subdomain=10.8.172.199.xip.io&#x000A;&#x000A;openshift_deployment_type=origin&#x000A;openshift_release=v1.4.1&#x000A;deployment_subtype=registry&#x000A;containerized=true&#x000A;&#x000A;# enable htpasswd auth&#x000A;openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]&#x000A;openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1'}&#x000A;&#x000A;# host group for masters&#x000A;[masters]&#x000A;10.8.172.199&#x000A;&#x000A;# host group for worker nodes, we list master node here so that&#x000A;# openshift-sdn gets installed. We mark the master node as not&#x000A;# schedulable.&#x000A;[nodes]&#x000A;10.8.172.199 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true&#x000A;</code></pre>
+
+<p>This inventory is very similar to the one used in Dusty&rsquo;s blog post about installing OpenShift Origin, so I&rsquo;m just going to highlight some of the changes I made.</p>
+
+<ul>
+<li>Dropped the specification of the <code>etcd</code> nodes</li>
+<li>Added the <code>deployment_subtype=registry</code> entry</li>
+<li>Dropped the creation of the <code>user</code> username</li>
+<li>Skipped the usage of the <code>openshift_public_hostname</code> and <code>openshift_hostname</code> variables</li>
+<li>New values for <code>openshift_node_labels</code> and <code>openshift_schedulable</code> variables</li>
+</ul>
+
+<p>The most important changes (which are also mentioned in the OpenShift Origin documentation) are the addtion of the <code>deployment_subtype</code> and <code>openshift_schedulable</code> variables.</p>
+
+<p>The <code>deployment_subtype</code> variable instructs the installer to just install the pieces of OpenShift Origin necessary for the stand-alone registry.  Additionally, the <code>openshift_schedulable</code> variable allows the single node to be used to run pods.</p>
+
+<h3>Run the Installer</h3>
+
+<p>We are ready to feed the inventory file to <code>ansible-playbook</code> and run the installer.  We have to use the same workaround mentioned in Dusty&rsquo;s blog post to enable Ansible to use Python3 during execution.</p>
+<pre class="highlight plaintext"><code>$ ansible-playbook -i myinventory playbooks/byo/config.yml -e 'ansible_python_interpreter=/usr/bin/python3'&#x000A;...&#x000A;...&#x000A;PLAY RECAP *********************************************************************&#x000A;10.8.172.199               : ok=567  changed=130  unreachable=0    failed=0&#x000A;localhost                  : ok=9    changed=0    unreachable=0    failed=0&#x000A;</code></pre>
+
+<p>Running the installer will take a few minutes, but once it finished, we can get right to the registry console.</p>
+
+<p>Assuming you have used a similar value for <code>openshift_master_default_subdomain</code>, you&rsquo;ll be able to access your registry console at a URL similar to <code>https://registry-console-default.10.8.172.199.xip.io/</code>.  Just append <code>registry-console-default.</code> to the value of <code>openshift_master_default_subdomain</code>.</p>
+
+<p><img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console.png" /></p>
+
+<p>As mentioned earlier, we used a self-signed certificate for the registry console, so you will have to instruct your browser to accept the certificate when you access the console.</p>
+
+<p>The inventory file we used defined an <code>admin</code> user with the password <code>OriginAdmin</code> and we can use that right away to login.</p>
+
+<p><img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-logged-in.png" /></p>
+
+<h3>Next Steps</h3>
+
+<p>With the <code>admin</code> user, I can immediately create a new project and start pushing images to the registry.  In the image below, I&rsquo;ve created the <code>test</code> project.</p>
+
+<p><img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-test-project.png" /></p>
+
+<p>Because the registry is using a self-signed certificate, I need to configure my local Docker daemon to recognize the registry as an insecure registry.  This means adding <code>--insecure-registry docker-registry-default.10.8.172.199.xip.io</code> to the <code>INSECURE_REGISTRY</code> field in <code>/etc/sysconfig/docker</code> and then using <code>systemctl restart docker</code> to restart the daemon.</p>
+
+<p>After that, I can use the <code>docker login</code> command supplied by the registry console to login to the Docker registry and be granted access to push images.  In the example below, I&rsquo;m just pushing a Fedora base image to the registry.</p>
+<pre class="highlight plaintext"><code>$ sudo docker login -p dNgwgDhlunwAwF52kZ5a4vHzbAXP_aNSScAeLos2qrY -e unused -u unused docker-registry-default.10.8.172.199.xip.io&#x000A;Flag --email has been deprecated, will be removed in 1.13.&#x000A;Login Succeeded&#x000A;$ sudo docker images&#x000A;REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE&#x000A;registry.fedoraproject.org/fedora   latest              917d6b21e974        6 weeks ago         230.6 MB&#x000A;$ sudo docker tag registry.fedoraproject.org/fedora:latest docker-registry-default.10.8.172.199.xip.io/test/fedora:latest&#x000A;$ sudo docker push docker-registry-default.10.8.172.199.xip.io/test/fedora:latest&#x000A;The push refers to a repository [docker-registry-default.10.8.172.199.xip.io/test/fedora]&#x000A;ae934834014c: Pushed&#x000A;latest: digest: sha256:1c28fa233b9e00f24a9b782752032648bdbf748ef1c29af24a5621691d9460ad size: 3153&#x000A;</code></pre>
+
+<p>Immediately in the registry console, I can see the newly pushed image.</p>
+
+<p><img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-pushed-fedora.png" /></p>
+
+<p>And for grins, let&rsquo;s see if we can push an image to the registry using the <code>atomic</code> command, which utilizes <a href="https://github.com/projectatomic/skopeo">skopeo</a> for the push operation.  We&rsquo;ll push the CentOS base image in this example.</p>
+<pre class="highlight plaintext"><code>$ sudo docker images&#x000A;REPOSITORY                                                TAG                 IMAGE ID            CREATED             SIZE&#x000A;registry.centos.org/centos/centos                         latest              5d7f51b6d39a        5 weeks ago         192.5 MB&#x000A;docker-registry-default.10.8.172.199.xip.io/test/fedora   latest              917d6b21e974        6 weeks ago         230.6 MB&#x000A;registry.fedoraproject.org/fedora                         latest              917d6b21e974        6 weeks ago         230.6 MB&#x000A;$ sudo docker tag registry.centos.org/centos/centos:latest docker-registry-default.10.8.172.199.xip.io/test/centos:latest&#x000A;$ sudo atomic push --type atomic docker-registry-default.10.8.172.199.xip.io/test/centos:latest&#x000A;WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand&#x000A;Copying blob sha256:36018b5e978717a047892794aebab513ba6856dbe1bdfeb478ca1219df2c7e9c&#x000A;190.83 MB / 190.83 MB [=======================================================]&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;</code></pre>
+
+<p>Again, we can see the image immediately show up in the registry console.</p>
+
+<p><img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-pushed-centos.png" /></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+<li><a href="/blog/tag/registry/">registry</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Micah Abbott
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/b582aa830fe6ffcd445ff2d4f2ed4bcf" /></div>
+<div class='author-blurb with-photo'>
+<p>Quality Enginer for Red Hat focused on Atomic Host.</p>
+
+<div class='more-link'>
+<a href="/blog/author/miabbott/">View all posts by Micah Abbott &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

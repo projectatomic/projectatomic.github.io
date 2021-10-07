@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Internationalization</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/internationalization.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 133 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/03/cockpit-133/"/>
+    <id>http://www.projectatomic.io/blog/2017/03/cockpit-133/</id>
+    <published>2017-03-06T17:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release
+regularly. Here are the release notes from version 133.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Remotely managed machines are now configured in /etc/cockpit/machines.d&lt;/h3&gt;
+
+&lt;p&gt;Cockpit plugins, other packages, admins, VM management software, or config management systems like
+Ansible/puppet/cloud-init might want to pre-configure machines for cockpit. Previously this information
+was stored in &lt;code&gt;/var/lib/cockpit/machines.json&lt;/code&gt;, but now that information is stored in individual json
+files in &lt;code&gt;/etc/cockpit/machines.d&lt;/code&gt;. Existing &lt;code&gt;machines.json&lt;/code&gt; files are migrated automatically to the new
+format. Check out the documentation below for more information on the format and use.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://cockpit-project.org/guide/133/feature-machines.html"&gt;Multiple machines documentation&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Packages can register additional bridges&lt;/h3&gt;
+
+&lt;p&gt;On the server side the &lt;code&gt;cockpit-bridge&lt;/code&gt; connects to various system APIs. There are additional bridges for specific
+tasks that the main &lt;code&gt;cockpit-bridge&lt;/code&gt; cannot handle, such as tasks that should be carried out with privilege
+escalation. These additional bridges can be registered in the &lt;code&gt;bridges&lt;/code&gt; section of a package&amp;rsquo;s &lt;code&gt;manifest.json&lt;/code&gt;
+file. Check out the documentation below for more information on the format and use.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://cockpit-project.org/guide/133/packages.html#package-bridges"&gt;Additional bridges&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Split translations into individual packages&lt;/h3&gt;
+
+&lt;p&gt;Behind the scenes there&amp;rsquo;s been a lot of work on making translations work more smoothly and future-proof.
+As part of this the translations have been split into the individual packages, which also means they can be updated
+per package in the future. Check out the Zanata link below, it&amp;rsquo;s very easy to contribute translations to Cockpit.
+At this time our top 3 translations (&amp;gt;90%) are Polish (pl), Ukranian (uk) and Chinese (zh-CN). Every bit of help
+here is greatly appreciated and a big thank you to our contributors!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://fedora.zanata.org/project/view/cockpit?dswid=-8859"&gt;Cockpit translations&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 133 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/133"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-133-1.fc25"&gt;Fedora 25&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

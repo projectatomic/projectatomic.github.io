@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Supported Filesystems &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_filesystems docs_filesystems_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Supported Filesystems</h1>
+
+<p>A core part of the Docker model is the efficient use of layered images
+and containers based on images. To implement this Docker relies
+heavily on various filesystem features in the kernel. This document
+will explain how this works and give some advice in how to best use it.</p>
+
+<h2>Storage Backends</h2>
+
+<p>The basis of the filesystem use in Docker is the storage backend
+abstraction. A storage backend allows you to store a set of layers
+each addressed by a unique name. Each layer is a filesystem tree that
+can be mounted when needed and modified.  New layers can be started
+from scratch, but they can also be created with a specified parent.
+This means that they start out with the same content as the parent
+layer, but over time they may diverge. This is typically implemented
+in the backend by some form of copy-on-write in order to allow the
+create operation to be fast.</p>
+
+<p>Some backends also have extra operations that allow efficient
+computation of the differences between layers. These operations all
+have fallback implementations, but they can be slower as they have to
+compare all the files in the layers.</p>
+
+<p>Based on the layer abstraction Docker implements the highlevel
+concepts of images and containers.</p>
+
+<p>Each Docker image on the system is stored as a layer, with the parent
+being the layer of the parent image. To create such an image a new
+layer is created (based on the right parent) and then the changes in
+that image are applied to the newly mounted filesystem.</p>
+
+<p>Containers are a bit more complicated. Each containers has two layers,
+one (called the <q>init</q> layer), which is based on an image layer and a
+child of that which contains the actual container content. The init
+layer contains a few files that must always exist in Docker containers
+(e.g. <code>/.dockerinit)</code>. Committing a container (and thus creating an
+image) involves finding all the changes from the init layer to the
+container layer and applying those to a new layer based on the same
+image the container used.</p>
+
+<h2>The vfs Backend</h2>
+
+<p>The vfs backend is a very simple fallback that has no copy-on-write
+support. Each layer is just a separate directory. Creating a new layer
+based on another layer is done by making a deep copy of the base layer
+into a new directory.</p>
+
+<p>Since this backend doesn&rsquo;t share diskspace use between layers, and
+since creating a new layer is a slow operation this is not a very
+practical backend. However, it still has its uses, for instance to
+verify other backends against, or if you need a super robust (if slow)
+backend that works everywhere.</p>
+
+<h2>The devicemapper Backend</h2>
+
+<p>The devicemapper backend uses the device-mapper thin provisioning
+module (dm-thinp) to implement layers. Device-mapper is the kernel
+part of the LVM2 logical volumes system, so this is a block-level
+copy-on-write system.</p>
+
+<p>The thin provisioning module takes two block devices (the data and the
+metadata devices) and creates a <q>pool</q> of space that can be used to
+create other block devices from. Such block devices are <q>thinly
+provisioned</q> meaning they start out empty, and the parts that are
+unused are not allocated. Additionally it is possible to take a
+copy-on-write snapshot of a device, producing a new device.</p>
+
+<p>On first startup Docker creates a base device on the thin pool,
+containing a empty ext4 filesystem. All other layers are (directly or
+indirectly) snapshots of this base layer. The filesystem has a fixed
+size, which means that all the images and containers have a maximum
+size. By default this size is 10GB, although due to the thin
+provisioning each device tends to use only less space in the pool.</p>
+
+<p>In order to set up a thin pool you need two block devices, which is
+not always something users want to deal with. So, by default Docker
+creates two regular files inside
+<code>/var/lib/docker/devicemapper/devicemapper</code> called <code>data</code> and
+<code>metadata</code> and uses loopback to create block devices of these for the
+thin pool. These files are by default 100GB (data) and 2GB (metadata),
+but they are <q>sparse</q> meaning that unused blocks are not mapped, and
+thus does not take space on the host filesystem.  Additionally there
+is and external file
+(<code>/var/lib/docker/devicemapper/devicemapper/json</code>) that contains the
+mapping from Docker layer names to thin pool ids.</p>
+
+<p>The loopback setup makes it very easy to start using docker on any
+machine, but it is not the most efficient way to use devicemapper. On
+production servers it is recommended that you set up the docker thin
+pool to use real block devices. For best performance the metadata
+device should be on a SSD driver, or at least on a different spindle
+from the data device.</p>
+
+<p>In order to support multiple Docker instances on a system the thin
+pool will be named something like <code>docker-0:33-19478248-pool</code>, where
+the <code>0:30</code> part is the minor/major device nr and <code>19478248</code> is the
+inode number of the /var/lib/docker/devicemapper directory. The same
+prefix is used for the actual thin devices.</p>
+
+<h2>The btrfs Backend</h2>
+
+<p>The brtfs backend requires <code>/var/lib/docker</code> to be on a btrfs filesystem
+and uses the filesystem level snapshotting to implement layers.</p>
+
+<p>Each layer is stored as a btrfs subvolume inside
+<code>/var/lib/docker/btrfs/subvolumes</code> and start out as a snapshot of the
+parent subvolume (if any).</p>
+
+<p>This backend is pretty fast, however btrfs is still maturing and is not
+considered production ready for heavy write loads. Mounting /var/lib/docker 
+on a different filesystem than the rest of your system is recommended in 
+order to limit the impact of filesystem corruption. You would also want to 
+mount the volume directory <code>/var/lib/docker/vfs/</code> on a standard XFS or EXT4 
+filesystem to ensure container data is protected.</p>
+
+<h2>The aufs Backend</h2>
+
+<p>The aufs backend uses the aufs union filesystem. This is not supported
+on the upstream kernel and most distributions (including any from Red
+Hat), and thus is not recommended as a production filesystem. It
+is the original backend for Docker and commonly used on Ubuntu based
+distributions.</p>
+
+<p>The backend stores each layer as an regular directory, containing
+regular files and special aufs metadata. This makes up for all the files
+unique to that layer, as well as information about which files are
+removed from the previous layer. It then relies on the aufs filesystem
+to combine all the layers into a single mountpoint. Any changes to
+this mountpoint goes into the topmost layer.</p>
+
+<h2>Comparison of the Backends</h2>
+
+<p>All backends except the vfs one shares diskspace between base
+images. However, they work on different levels, so the behaviour is
+somewhat different. Both devicemapper and btrfs share data on the
+block level, so a single change in a file will cause just the block
+containing that byte being duplicated. However the aufs backend works
+on the file level, so any change to a file means the entire file will
+be copied to the top layer and then changed there. The exact behaviour
+here therefore depends on what kind of write behaviour an application
+does.</p>
+
+<p>However, any kind of write-heavy load inside a container (such as
+databases or large logs) should generally be done to a volume. A
+volume is a plain directory from the host mounted into the container,
+which means it has none of the overhead that the storage backends may
+have. It also means you can easily access the data from a new
+container if you update the image, or if you want to access the same
+data from multiple concurrent containers.</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='active nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/filesystems.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

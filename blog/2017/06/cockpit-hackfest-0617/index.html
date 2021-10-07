@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cockpit Virtual Hackfest &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Stef Walter' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Cockpit Virtual Hackfest' property='og:title'>
+<meta content='There’s a Cockpit Hackfest underway in Karlsruhe, Germany. We’re working on the&#x000A;virtual machine functionality in Cockpit.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/' property='og:url'>
+<meta content='2017-06-27T14:00:00Z' property='article:published_time'>
+<meta content='stef' property='article:author:username'>
+<meta content='cockpit' property='article:tag'>
+<link href='/blog/tag/cockpit.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='linux' property='article:tag'>
+<link href='/blog/tag/linux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='virtualization' property='article:tag'>
+<link href='/blog/tag/virtualization.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Cockpit Virtual Hackfest' name='twitter:title'>
+<meta content='There’s a Cockpit Hackfest underway in Karlsruhe, Germany. We’re working on the&#x000A;virtual machine functionality in Cockpit.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_06 blog_2017_06_cockpit-hackfest-0617 blog_2017_06_cockpit-hackfest-0617_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Cockpit Virtual Hackfest
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/stef/">Stef Walter</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-06-27T14:00:00Z'>
+Tuesday 27 June 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>There&rsquo;s a Cockpit Hackfest underway in Karlsruhe, Germany. We&rsquo;re working on the
+virtual machine functionality in Cockpit.</p>
+
+<p><img alt="Hackfest" width="4128" height="2322" src="/images/hackfest-1.jpg?1633620578" /></p>
+
+<p></p>
+
+<p>That means interacting with libvirt. Although libvirt has remoting functionality
+it has no API that&rsquo;s actually remotable and callable from Cockpit javascript code.
+So Lars and Pavel started working on a DBus wrapper for the API.</p>
+
+<p>At the same time, Martin is working on making the current
+<a href="http://libvirt.org/virshcmdref.html">virsh</a> based access to libvirt more
+performant, so we don&rsquo;t block on waiting until the DBus wrapper is done.</p>
+
+<p>Lots of work was done understanding <a href="http://redux.js.org/">redux</a>. The initial
+machines code in Cockpit was written using redux, and we needed to map it&rsquo;s
+concept of models and state to the Cockpit way of storing state on the server
+and UI concepts like dialogs. Everyone was involved.</p>
+
+<p>Andreas, Garrett have been working on designs for creating a virtual machine
+and editing virtual machines. Dominik started work on implementing that code.</p>
+
+<p>Marius worked on deletion of virtual machines, and already has a
+<a href="https://github.com/cockpit-project/cockpit/pull/7113">pull request</a> open.</p>
+
+<p>Stef worked is working on the integration tests for the virtual machine stuff
+and is booting nested VMs <a href="https://github.com/cockpit-project/cockpit/pull/7117">using nested images</a>.</p>
+
+<p><img alt="Hackfest" width="4032" height="3024" src="/images/hackfest-2.jpg?1633620578" /></p>
+
+<p>Wheeee.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+<li><a href="/blog/tag/linux/">linux</a></li>
+<li><a href="/blog/tag/virtualization/">virtualization</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

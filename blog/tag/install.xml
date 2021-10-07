@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Install</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/install.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>New Fedora Atomic Installable ISO</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/07/new-fedora-atomic-installable-iso/"/>
+    <id>http://www.projectatomic.io/blog/2014/07/new-fedora-atomic-installable-iso/</id>
+    <published>2014-07-09T20:10:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Colin Walters</name>
+    </author>
+    <content type="html">&lt;p&gt;If you&amp;rsquo;ve been hoping for a bare-metal version of a Fedora Atomic host, there&amp;rsquo;s good news! I&amp;rsquo;ve finally gotten time to work on Fedora/Atomic more, and have created a functional installer ISO based on Fedora Rawhide. &lt;/p&gt;
+
+&lt;p&gt;You can grab the ISO from &lt;a href="http://rpm-ostree.cloud.fedoraproject.org/project-atomic/install/rawhide/20140708.0/"&gt;http://rpm-ostree.cloud.fedoraproject.org/project-atomic/install/rawhide/20140708.0/&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;Unlike the other images we&amp;rsquo;ve produced for Atomic proof-of-concepts, this is designed to be installed on bare metal. None of the trees contain cloud-init, but this will install directly using Anacona to bare metal. &lt;/p&gt;
+
+&lt;p&gt;It contains a cache of the tree content inside it, similar to how the Fedora DVD includes many packages, and the Fedora LiveCD just copies itself. &lt;/p&gt;
+
+&lt;h3&gt;To Receive Updates&lt;/h3&gt;
+
+&lt;p&gt;To get updates after installation, you&amp;rsquo;ll need to run a few commands:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ostree remote add fedora-atomic http://rpm-ostree.cloud.fedoraproject.org/repo
+# atomic rebase fedora-atomic:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let me explain those two commands a bit more.  The first adds a new &lt;q&gt;remote&lt;/q&gt; with the location of the current (hopefully temporary) OSTree repository.  (For more information on the temporary part, see: &lt;a href="https://lists.fedoraproject.org/pipermail/infrastructure/2014-June/014447.html"&gt;https://lists.fedoraproject.org/pipermail/infrastructure/2014-June/014447.html&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now the second command is effectively shorthand for:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;atomic rebase fedora-atomic:fedora-atomic/rawhide/x86_64/server/docker-host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Basically that way you don&amp;rsquo;t have to retype the branch name.  It&amp;rsquo;s shorthand, because you could also rebase to one of the other available trees (such as server/virt-host).&lt;/p&gt;
+
+&lt;p&gt;An important next step here is going to be integrating cloud init by default so that we can use the same tree on both baremetal and cloud.  (Unlike mainline where cloud-init is a package only installed on the cloud images by default; we can&amp;rsquo;t do that without ~doubling the number of trees right now).&lt;/p&gt;
+
+&lt;p&gt;If you have feedback, questions, or ideas on improving the Atomic host, please join the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel mailing list&lt;/a&gt;, ask over on &lt;a href="http://ask.projectatomic.io"&gt;ask.projectatomic.io&lt;/a&gt;, or leave a comment here. This is still a work in progress, and we&amp;rsquo;re looking forward to your feedback! &lt;/p&gt;
+</content>
+  </entry>
+</feed>

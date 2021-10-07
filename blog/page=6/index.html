@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-6 blog_page-6_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/03/building-buildah-container-image-for-kubernetes/">Building a Buildah container image for Kubernetes</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/ipbabble/">ipbabble</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-01T00:00:00Z'>
+Thursday  1 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /></p>
+
+<h3>Building a Buildah Container Image for Kubernetes</h3>
+
+<h4>Background</h4>
+
+<p>Dan Walsh (<a href="https://github.com/rhatdan">@rhatdan</a>) asked me to look into building a working <a href="https://github.com/projectatomic/buildah">Buildah</a> container image. This was not just a cool experiment. It has a real purpose. As many readers know, Dan is not a fan of <a href="https://www.youtube.com/watch?v=BeRr3aZbzqo&amp;list=PLaR6Rq6Z4IqfhzC5ds3sMju7KKNzdd0xy&amp;t=1055s"><q>big fat daemons</q></a>. This has become less of an issue when running containers in Kubernetes as there is an alternative with <a href="http://cri-o.io/">CRI-O</a>. CRI-O provides kubernetes a standard interface to <a href="https://github.com/opencontainers/runtime-spec">OCI compliant runtimes</a>. <a href="https://github.com/opencontainers/runc">runC</a> is the reference implementation of the OCI runtime specification. Kubernetes calls the runtC runtime through CRI-O and runC then talks to the Linux kernel to run a container. This bypasses the need for the Docker daemon, and containerd. With CRI-O, there is no requirement for the Docker daemon for a kubernetes cluster to run containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/03/building-buildah-container-image-for-kubernetes/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/fedora-atomic-28-feb-18/">Fedora 27 Atomic Host February 28th Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-28T00:00:00Z'>
+Wednesday 28 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Fedora Atomic Host 27.93 is available. We have a new kernel (4.15), <a href="https://github.com/ostreedev/ostree/releases/tag/v2018.2">ostree</a>, and <a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2018.3">rpm-ostree</a> in this release.</p>
+
+<p>It is also worth noting that now the <code>rpm-ostree status</code> output will prefix the remote:ref with <code>ostree://</code> in order to denote the system is following an ostree repository remote (see example below). This is in preparation of some upstream changes related to <a href="https://github.com/projectatomic/rpm-ostree/issues/1081">rpm-ostree rojig</a>, where updates can be delivered via a special rpm in a yum repo rather than an ostree server/remote.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/fedora-atomic-28-feb-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/buildah-builds-itself/">Buildah Blocks- Buildah builds itself!</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-27T00:00:00Z'>
+Tuesday 27 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I’m a fan of Isaac Asimov’s <a href="https://en.wikipedia.org/wiki/Three_Laws_of_Robotics"><q>Three Laws of Robotics</q></a> and I&rsquo;m beginning to wonder if these laws need to be wired into <a href="https://github.com/projectatomic/buildah">Buildah</a>. You see Buildah builds itself. It’s self-propagating.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/buildah-builds-itself/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/reintroduction-podman/">Reintroduction of Podman</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-26T00:00:00Z'>
+Monday 26 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Podman (formerly kpod) has been kicking around since last summer.  It was originally part of the <a href="https://github.com/kubernetes-incubator/cri-o&amp;sa=D&amp;ust=1519653090854000&amp;usg=AFQjCNGVeTeYAfYk3RH27hK5ykSNrATy1w">CRI-O</a> project.  We moved podman into a separate project, <a href="https://github.com/projectatomic/libpod">libpod</a>.  We wanted Podman and CRI-O to develop at their own pace.  Both CRI-O and Podman work fine as independent tools and also work well together.</p>
+
+<p>The goal of Podman (Pod Manager) is to offer an experience similar to the docker command line - to allow users to run standalone (non-orchestrated) containers.  Podman also allows users to run groups of containers called pods. For those that don’t know, a Pod is a term developed for the Kubernetes Project which describes an object that has one or more containerized processes sharing multiple namespaces (Network, IPC and optionally PID).</p>
+
+<p>Podman brings innovation to container tools in the spirit of Unix commands which do “one thing” well. Podman doesn’t require a daemon to run containers and pods. This makes it a great asset for your container tools arsenal.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/reintroduction-podman/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/podman/">podman</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/buildah-alpha-0-12/">Buildah Alpha version 0.12 Release Announcement</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-21T00:00:00Z'>
+Wednesday 21 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We&rsquo;re pleased to announce the release of Buildah Alpha version 0.12 on both Fedora 26 and Fedora 27. As always, the latest Buildah can also be acquired from <a href="https://github.com/projectatomic/buildah">GitHub</a> for any other Linux distribution.</p>
+
+<p>The Buildah project has been building some steam over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes. The major highlights for this release are:</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/buildah-alpha-0-12/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=5/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=2/">2</a>
+</li>
+<li>
+<a href="/blog/page=3/">3</a>
+</li>
+<li>
+<a href="/blog/page=4/">4</a>
+</li>
+<li>
+<a href="/blog/page=5/">5</a>
+</li>
+<li class='active'>
+<span>6</span>
+</li>
+<li>
+<a href="/blog/page=7/">7</a>
+</li>
+<li>
+<a href="/blog/page=8/">8</a>
+</li>
+<li>
+<a href="/blog/page=9/">9</a>
+</li>
+<li>
+<a href="/blog/page=10/">10</a>
+</li>
+<li>
+<a href="/blog/page=7/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

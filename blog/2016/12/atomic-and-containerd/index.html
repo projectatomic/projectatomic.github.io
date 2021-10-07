@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Looking forward to working with containerd &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Looking forward to working with containerd' property='og:title'>
+<meta content='A number of folks have asked for my thoughts on the Docker containerd&#x000A;announcement&#x000A;last week. While containerd itself is not new, having been announced&#x000A;over a year&#x000A;ago,&#x000A;we were happy to see that Docker...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/12/atomic-and-containerd/' property='og:url'>
+<meta content='2016-12-22T14:00:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='containerd' property='article:tag'>
+<link href='/blog/tag/containerd.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='crio' property='article:tag'>
+<link href='/blog/tag/crio.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oci' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='runc' property='article:tag'>
+<link href='/blog/tag/runc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Looking forward to working with containerd' name='twitter:title'>
+<meta content='A number of folks have asked for my thoughts on the Docker containerd&#x000A;announcement&#x000A;last week. While containerd itself is not new, having been announced&#x000A;over a year&#x000A;ago,&#x000A;we were happy to see that Docker...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_12 blog_2016_12_atomic-and-containerd blog_2016_12_atomic-and-containerd_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Looking forward to working with containerd
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-22T14:00:00Z'>
+Thursday 22 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A number of folks have asked for my thoughts on the Docker <a href="https://blog.docker.com/2016/12/introducing-containerd/">containerd
+announcement</a>
+last week. While containerd itself is not new, having been <a href="https://blog.docker.com/2015/12/containerd-daemon-to-control-runc/">announced
+over a year
+ago</a>,
+we were happy to see that Docker Inc. is now spinning this out as an
+independent project. This is aligned with Red Hat&rsquo;s overall goal to
+drive open industry <a href="https://www.redhat.com/en/about/blog/linux-container-standards-didn%E2%80%99t-we-talk-about-last-year">standards for Linux
+containers</a>
+and the work that we&rsquo;ve helped drive as a <a href="http://www.infoworld.com/article/2925484/application-virtualization/look-whos-helping-build-docker-besides-docker-itself.html">leading contributor to the
+Docker
+project</a>,
+a founding member of the <a href="https://www.opencontainers.org/">Open Containers
+Initiative</a>, and a leading contributor
+to related projects like <a href="https://runc.io/">OCI runC</a> and <a href="https://www.redhat.com/en/about/blog/running-production-applications-containers-introducing-ocid">CRI-O
+(previously
+OCID)</a>.
+Splitting containerd from Docker Engine and contributing it to a neutral
+foundation, as Docker Inc. has
+<a href="https://www.docker.com/docker-news-and-press/docker-extracts-and-donates-containerd-its-core-container-runtime-accelerate">committed</a>
+to do, is another positive step in that direction.</p>
+
+<p>When we launched CRI-O as a Kubernetes incubator project and
+implementation of the Kubernetes Container Runtime Interface, we
+discussed the importance of having a comprehensive open container
+runtime standard that &ldquo;follows the time-tested UNIX philosophy of
+modular programming.&rdquo; This led us to create key modules for <a href="https://github.com/containers/image">image
+distribution</a> and
+<a href="https://github.com/containers/storage">storage</a>, that built on runC
+and delivered stable container runtime functionality platform builders
+could rely on. We are happy that Docker Inc. has followed the lead of
+<a href="https://www.redhat.com/en/about/blog/running-production-applications-containers-introducing-ocid">CRI-O</a>
+in breaking apart the upstream Docker Engine into a series of more
+modular components, starting with
+<a href="https://containerd.io/">containerd</a>. We hope that the containerd
+project will be able to use some of the work we&rsquo;ve done and also
+continue to get broken down into sub-components. This is critical for
+delivering on the promise of &ldquo;boring infrastructure&rdquo; at the container
+runtime level that platform builders in the container ecosystem, whether
+they are customers or vendors, can rely on.</p>
+
+<p>As we&rsquo;ve done in the past, we would love to work together with the open
+source community on the components needed to support running containers
+locally or by orchestration tools, as customers move towards running
+containers at scale in production environments.</p>
+
+<p>We have every intention of contributing to the containerd effort while
+continuing to engaging with the broader container ecosystem. In this
+spirit, we have offered
+<a href="https://github.com/containers/storage">github.com/containers/storage</a>
+and<a href="https://github.com/containers/image"> github.com/containers/image</a>
+as sub packages to containerd, just in the past few days.
+(<a href="https://github.com/docker/containerd/issues/376">issue 376</a>,
+<a href="https://github.com/docker/containerd/issues/379">issue 379</a>)</p>
+
+<p>These libraries could be shared between containerd, CRI-O and other
+lower level command line tools like
+<a href="https://github.com/projectatomic/skopeo">skopeo</a> for the
+pulling/pushing and storage of images. We want to see these components
+used by many different open source projects, and to be able to evolve at
+their own pace. The goal is to build a set of tools around them so
+people can experiment with building and running Linux containers in a
+myriad of different ways.</p>
+
+<p>Red Hat also plans to continue contributing to CRI-O, as we feel this
+can be a great way to run Kubernetes workloads in the OpenShift
+platform, in addition to the docker container runtime default.
+Meanwhile, the <a href="http://blog.kubernetes.io/2016/12/container-runtime-interface-cri-in-kubernetes.html">Kubernetes Container Runtime Interface
+(CRI)</a>,
+recently released in Kubernetes 1.5, allows users to plug in different
+container runtimes to suit their needs. I believe a dedicated daemon for
+serving the Kubernetes CRI protocol, not servicing all different
+orchestration tools, is the great way to go. &ldquo;One daemon to service them
+all&rdquo; has the potential to get bloated over time. Conflicts between
+orchestration tools may occur, which could lead to compromises that
+could affect performance of one orchestrator over another.</p>
+
+<p>Finally, I am happy to announce we are planning to ship the first alpha
+release of CRI-O inside of Fedora Rawhide (Fedora 26), so that people
+can start to play with it. We have integrated CRI-O and Kubernetes and
+successfully run a basic pod. We are thrilled with the
+<a href="https://github.com/rhatdan/cri-o/graphs/contributors">contributors</a>
+who have joined us from many of the top Linux, open source and container
+companies, and are contributing to getting this first package out the
+door.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containerd/">containerd</a></li>
+<li><a href="/blog/tag/crio/">crio</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/12/atomic-and-containerd/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/12/atomic-and-containerd/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/12/atomic-and-containerd/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic: /usr/bin/atomic &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_usr-bin-atomic docs_usr-bin-atomic_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h2>Atomic: /usr/bin/atomic</h2>
+
+<p>The <a href="https://github.com/projectatomic/atomic"><code>atomic</code> command</a> (<code>/usr/bin/atomic</code>) defines the entrypoint for Project Atomic hosts. </p>
+
+<p>On an Atomic host, you have two main software delivery vehicles:</p>
+
+<ul>
+<li>rpm-ostree for managing the deployment and updates of the host system.</li>
+<li>Linux containers (currently Docker) to provide containers running services and applications. </li>
+</ul>
+
+<p>The goal of <code>atomic</code> is to provide a high-level, coherent entrypoint for the system and to fill in gaps in Linux container implementations.</p>
+
+<h3>Note about Atomic</h3>
+
+<p>The <code>atomic</code> command is still a bit new and undergoing rapid development. It is currently in the Fedora and CentOS Atomic host builds.</p>
+
+<h2>Using /usr/bin/atomic</h2>
+
+<h3><code>atomic run</code></h3>
+
+<p>Atomic allows an image provider to specify how a container image expects to be run.</p>
+
+<p>Specifically this includes the privilege level required.</p>
+
+<p>For example if you built an &lsquo;ntpd&rsquo; container application, that required the
+SYS_TIME capability, you could add meta data to your container image using the
+command:</p>
+<pre class="highlight plaintext"><code>LABEL RUN /usr/bin/docker run -d --cap-add=SYS_TYPE ntpd&#x000A;</code></pre>
+
+<p>Now if you executed <code>atomic run ntpd</code>, it would read the <code>LABEL RUN</code> json metadata from the container image and execute this command.</p>
+
+<h3><code>atomic install</code></h3>
+
+<p>Most of the time when you ship an application, you need to run an install script.  This script would configure the system to run the application, for example it might configure a systemd unit file or configure kubernetes to run the application.  </p>
+
+<p>This tool will allow application developers to embed the install and uninstall scripts within the application.  The application developers can then define the <code>LABEL INSTALL</code> and <code>LABEL UNINSTALL</code> methods, in the image metadata.  Here is a simple httpd installation description.</p>
+<pre class="highlight plaintext"><code># Example Dockerfile for httpd application&#x000A;#&#x000A;FROM        fedora&#x000A;MAINTAINER  Dan Walsh&#x000A;ENV container docker&#x000A;RUN yum -y update; yum -y install httpd; yum clean all&#x000A;&#x000A;LABEL Vendor="Red Hat" License=GPLv2&#x000A;LABEL Version=1.0&#x000A;LABEL INSTALL="docker run --rm --privileged -v /:/host -e HOST=/host -e LOGDIR=${LOGDIR} -e CONFDIR=${CONFDIR} -e DATADIR=${DATADIR} -e IMAGE=IMAGE -e NAME=NAME IMAGE /bin/install.sh"&#x000A;LABEL UNINSTALL="docker run --rm --privileged -v /:/host -e HOST=/host -e IMAGE=IMAGE -e NAME=NAME IMAGE /bin/uninstall.sh"&#x000A;ADD root /&#x000A;&#x000A;EXPOSE 80&#x000A;&#x000A;CMD [ "/usr/sbin/httpd", "-D", "FOREGROUND" ]&#x000A;</code></pre>
+
+<p>Here, <code>atomic install</code> will read the <code>LABEL INSTALL</code> line and substitute <code>NAME</code> with the name specified with the name option, or use the image name, it will also replace <code>IMAGE</code> with the image name.  It will also create the following directories:</p>
+
+<ul>
+<li>CONFDIR=/etc/NAME</li>
+<li>LOGDIR=/var/log/NAME</li>
+<li>DATADIR=/var/lib/NAME</li>
+</ul>
+
+<p>To be used by the application.  The install script could populate these directories if necessary.</p>
+
+<p>In this example the INSTALL method will execute the <code>install.sh</code> script, which we add to the image. The root sub-directory contains the following scripts:</p>
+<pre class="highlight plaintext"><code>cat root/usr/bin/install.sh&#x000A;</code></pre>
+<pre class="highlight shell"><code><span class="c">#!/bin/sh</span>&#x000A;<span class="c"># Make Data Dirs</span>&#x000A;mkdir -p <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">CONFDIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">LOGDIR</span><span class="k">}</span>/httpd <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">DATADIR</span><span class="k">}</span>&#x000A;&#x000A;<span class="c"># Copy Config</span>&#x000A;cp -pR /etc/httpd <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">CONFDIR</span><span class="k">}</span>&#x000A;&#x000A;<span class="c"># Create Container</span>&#x000A;chroot <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span> /usr/bin/docker create -v /var/log/<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>/httpd:/var/log/httpd:Z -v /var/lib/<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>:/var/lib/httpd:Z --name <span class="k">${</span><span class="nv">NAME</span><span class="k">}</span> <span class="k">${</span><span class="nv">IMAGE</span><span class="k">}</span>&#x000A;&#x000A;<span class="c"># Install systemd unit file for running container</span>&#x000A;sed -e <span class="s2">"s/TEMPLATE/</span><span class="k">${</span><span class="nv">NAME</span><span class="k">}</span><span class="s2">/g"</span> etc/systemd/system/httpd_template.service &gt; <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span>/etc/systemd/system/httpd_<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>.service&#x000A;&#x000A;<span class="c"># Enabled systemd unit file</span>&#x000A;chroot <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span> /usr/bin/systemctl <span class="nb">enable</span> /etc/systemd/system/httpd_<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>.service&#x000A;</code></pre>
+
+<h3><code>atomic uninstall</code></h3>
+
+<p>The <code>atomic unistall</code> command does the same variable substitution as described for install, and can be used to remove any host system configuration.</p>
+
+<p>Here is the example script we used.</p>
+<pre class="highlight plaintext"><code>cat root/usr/bin/uninstall.sh &#x000A;</code></pre>
+<pre class="highlight shell"><code><span class="c">#!/bin/sh</span>&#x000A;chroot <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span> /usr/bin/systemctl disable /etc/systemd/system/httpd_<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>.service&#x000A;rm -f <span class="k">${</span><span class="nv">HOST</span><span class="k">}</span>/etc/systemd/system/httpd_<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>.service&#x000A;</code></pre>
+
+<p>Finally here is the systemd unit file template we used:</p>
+<pre class="highlight plaintext"><code>cat root/etc/systemd/system/httpd_template.service &#x000A;</code></pre>
+<pre class="highlight plaintext"><code># cat ./root/etc/systemd/system/httpd_template.service &#x000A;[Unit]&#x000A;Description=The Apache HTTP Server for TEMPLATE&#x000A;After=docker.service&#x000A;&#x000A;[Service]&#x000A;ExecStart=/usr/bin/docker start TEMPLATE&#x000A;ExecStop=/usr/bin/docker stop TEMPLATE&#x000A;ExecReload=/usr/bin/docker exec -t TEMPLATE /usr/sbin/httpd $OPTIONS -k graceful&#x000A;&#x000A;[Install]&#x000A;WantedBy=multi-user.target&#x000A;</code></pre>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/usr-bin-atomic.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

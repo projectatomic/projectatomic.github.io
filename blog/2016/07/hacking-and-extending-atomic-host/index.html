@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hacking and extending Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Hacking and extending Atomic Host' property='og:title'>
+<meta content='Many of the features that make Atomic Host great are due to the immutability of&#x000A;/usr. Things like atomic upgrades and rollbacks and efficient storage of files&#x000A;in an object store all require immutability. However, this immutability is also&#x000A;what can irritate people the most when they first start using Atomic Host.&#x000A;There is no yum or dnf to install programs.  We are at the mercy of the&#x000A;content provider.&#x000A;&#x000A;The answer of course is to use containers. Keep a pet SPC container around&#x000A;that will allow you to do all the configuration and hacking you need, all in the&#x000A;comfort of your favourite editor.&#x000A;&#x000A;But if you’re hacking on the Atomic Host itself, containers can only take&#x000A;you so far. What if you want to change the version of docker on the host? Or&#x000A;install a new package? Or modify an installed Python script for debugging?' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/' property='og:url'>
+<meta content='2016-07-13T13:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='hacking' property='article:tag'>
+<link href='/blog/tag/hacking.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Hacking and extending Atomic Host' name='twitter:title'>
+<meta content='Many of the features that make Atomic Host great are due to the immutability of&#x000A;/usr. Things like atomic upgrades and rollbacks and efficient storage of files&#x000A;in an object store all require immutability. However, this immutability is also&#x000A;what can irritate people the most when they first start using Atomic Host.&#x000A;There is no yum or dnf to install programs.  We are at the mercy of the&#x000A;content provider.&#x000A;&#x000A;The answer of course is to use containers. Keep a pet SPC container around&#x000A;that will allow you to do all the configuration and hacking you need, all in the&#x000A;comfort of your favourite editor.&#x000A;&#x000A;But if you’re hacking on the Atomic Host itself, containers can only take&#x000A;you so far. What if you want to change the version of docker on the host? Or&#x000A;install a new package? Or modify an installed Python script for debugging?' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_07 blog_2016_07_hacking-and-extending-atomic-host blog_2016_07_hacking-and-extending-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Hacking and extending Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-13T13:00:00Z'>
+Wednesday 13 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Many of the features that make Atomic Host great are due to the immutability of
+<code>/usr</code>. Things like atomic upgrades and rollbacks and efficient storage of files
+in an object store all require immutability. However, this immutability is also
+what can irritate people the most when they first start using Atomic Host.
+There is no <code>yum</code> or <code>dnf</code> to install programs.  We are at the mercy of the
+content provider.</p>
+
+<p>The answer of course is to use containers. Keep a <q>pet</q> SPC container around
+that will allow you to do all the configuration and hacking you need, all in the
+comfort of your favourite editor.</p>
+
+<p>But if you&rsquo;re hacking on the Atomic Host <strong>itself</strong>, containers can only take
+you so far. What if you want to change the version of docker on the host? Or
+install a new package? Or modify an installed Python script for debugging?</p>
+
+<p></p>
+
+<p>The latest releases of <a href="http://ostree.readthedocs.org/">OSTree</a> and
+<a href="http://rpm-ostree.readthedocs.org/">rpm-ostree</a> have acquired some new features
+that makes hacking and extending Atomic Host much easier. These features are
+OSTree system unlocking and rpm-ostree package layering. They both answer this
+need for easier Atomic Host mutation, but in a completely different way.</p>
+
+<h3>OSTree system unlocking</h3>
+
+<p>This feature was actually introduced in
+<a href="https://github.com/ostreedev/ostree/releases/tag/v2016.4">v2016.4</a> on March 23,
+2016. It is already in both Fedora and CentOS Atomic Host. In a nutshell, system
+unlocking allows you to make temporary changes to the <code>/usr</code> mount. To do this,
+you simply use the <code>ostree admin unlock</code> command:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# ostree admin unlock&#x000A;Development mode enabled.  A writable overlayfs is now mounted on /usr.&#x000A;All changes there will be discarded on reboot.&#x000A;</code></pre>
+
+<p>We can now do things like:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# touch /usr/woohoo &amp;&amp; echo "success"&#x000A;success&#x000A;-bash-4.2# rpm --install strace-4.8-11.el7.x86_64.rpm&#x000A;-bash-4.2# strace -V&#x000A;strace -- version 4.8&#x000A;</code></pre>
+
+<p>The <code>ostree admin status</code> will also have an updated status output:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# ostree admin status&#x000A;* centos-atomic-host 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091.1&#x000A;    Version: 2016.0.169&#x000A;    Unlocked: development&#x000A;    origin refspec: centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous&#x000A;</code></pre>
+
+<p>As mentioned in the command output, changes are actually written to an
+overlayfs:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# ls /var/tmp/ostree-unlock-ovl.45GXKY/upper/&#x000A;bin  share  woohoo&#x000A;</code></pre>
+
+<p>These changes are all erased at reboot, though they can be made permanent by
+using the <code>--hotfix</code> flag. This will make OSTree push back the current
+deployment as the rollback (so that you can go back to the immutable deployment
+from which you started) and unlock the current deployment:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# ostree admin unlock --hotfix&#x000A;Copying /etc changes: 34 modified, 8 removed, 44650 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Hotfix mode enabled.  A writable overlayfs is now mounted on /usr&#x000A;for this booted deployment.  A non-hotfixed clone has been created&#x000A;as the non-default rollback target.&#x000A;-bash-4.2# ostree admin status&#x000A;* centos-atomic-host 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091.0&#x000A;    Version: 2016.0.169&#x000A;    Unlocked: hotfix&#x000A;    origin refspec: centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous&#x000A;  centos-atomic-host 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091.1&#x000A;    Version: 2016.0.169&#x000A;    origin refspec: centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous&#x000A;</code></pre>
+
+<p>Note however, that there can be issues from unlocking due to its use of
+overlayfs. Most notably, Docker does not currently work with SELinux and
+OverlayFS (see the related Trello card
+<a href="https://trello.com/c/wLlFD9HN/134-8-add-selinux-labeling-support-to-overlayfs">here</a>).</p>
+
+<p>The other caveat is that a hotfix is only as permanent as its associated
+deployment. Thus, as soon as you create a new deployment (e.g. through
+<code>rpm-ostree upgrade/rebase/deploy</code>), the overlayed hotfixed <strong>are not</strong> carried
+over, but simply lost.</p>
+
+<h3>Package layering in rpm-ostree</h3>
+
+<p>This is a relatively much newer feature than system unlocking. It&rsquo;s part of
+<a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2016.4">v2016.4</a>,
+released 4 days ago. There are <a href="https://bodhi.fedoraproject.org/updates/FEDORA-2016-bfecf6abed">updates
+pending</a> in
+Fedora&rsquo;s Bodhi system awaiting your karma. The feature itself has been in the
+works for a while now, with development starting more than a year ago.</p>
+
+<p>Package layering does exactly what it says; it allows you to extend the base
+distribution of RPM packages you receive from your content provider with your
+own packages of choice. In contrast to system unlocking, these additional
+<q>layered</q> packages <strong>are</strong> carried over during upgrades, making it great for
+when your particular system requires an additional package to work correctly.</p>
+
+<p>To use package layering, you can invoke the new <code>pkg-add</code> command of
+<code>rpm-ostree</code>:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# rpm-ostree pkg-add strace&#x000A;notice: pkg-add is a preview command and subject to change.&#x000A;Need to overlay 1 package onto tree 675583e:&#x000A;  strace&#x000A;&#x000A;Downloading metadata: [===================================================] 100%&#x000A;Resolving dependencies... done&#x000A;Transaction: 1 packages&#x000A;  strace-4.8-11.el7.x86_64 (base)&#x000A;Will download: 1 package (271.5 kB)&#x000A;&#x000A;  Downloading from base: [================================================] 100%&#x000A;&#x000A;Importing: [==============================================================] 100%&#x000A;Checking out tree 675583e... done&#x000A;Overlaying... done&#x000A;Writing rpmdb... done&#x000A;Writing OSTree commit... done&#x000A;Copying /etc changes: 34 modified, 8 removed, 44651 added&#x000A;Transaction complete; bootconfig swap: no deployment count change: 0&#x000A;Freed objects: 26.0 MB&#x000A;Added:&#x000A;  strace-4.8-11.el7.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;-bash-4.2# reboot&#x000A;</code></pre>
+
+<p>Once we&rsquo;re rebooted, we can make use of the new package:</p>
+<pre class="highlight plaintext"><code>-bash-4.2# strace -V&#x000A;strace -- version 4.8&#x000A;</code></pre>
+
+<p>The status output of <code>rpm-ostree</code> will now also reflect this layering (which by
+the way received a face lift in this release):</p>
+<pre class="highlight plaintext"><code>-bash-4.2# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous&#x000A;       Version: 2016.0.169 (2016-07-12 16:26:00)&#x000A;    BaseCommit: 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091&#x000A;        Commit: e0291b49619645d4df95c0924a48932f217b0ed4680656ebd47c1b17640a62ee&#x000A;        OSName: centos-atomic-host&#x000A;  GPGSignature: (unsigned)&#x000A;      Packages: strace&#x000A;&#x000A;  centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous&#x000A;       Version: 2016.0.169 (2016-07-11 21:51:17)&#x000A;        Commit: 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091&#x000A;        OSName: centos-atomic-host&#x000A;  GPGSignature: (unsigned)&#x000A;</code></pre>
+
+<p>Not surprisingly, packages that were layered using <code>pkg-add</code> can also be later
+removed by invoking the <code>pkg-remove</code> command, left here as an exercise to the
+reader.</p>
+
+<p>Under the hood, <code>rpm-ostree</code> takes care of many subtleties, including safely
+running RPM <code>%post</code> scripts using
+<a href="https://github.com/projectatomic/bubblewrap">bubblewrap</a> to ensure that the
+OSTree system repo remains uncorrupted, and obeying expected RPM rules (e.g.
+layering a package that conflicts with an existing package will error out).</p>
+
+<p>To summarize, the power that package layering gives you is the ability to
+customize the package set on particular hosts <em>without having to ship it to all
+hosts</em>.</p>
+
+<p>Finally, note that package layering is currently in preview mode, which means
+that it is subject to change, though we will do our best to retain backwards
+compatibility with layered deployments created with the v2016.4 release.</p>
+
+<h3>Bonus section: CentOS Atomic Host Continuous (CAHC)</h3>
+
+<p>You might have been wondering what this <code>centos-atomic-continuous</code> remote was
+about in the command outputs above. The <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic">CentOS Atomic
+SIG</a> has set up an
+automated job that continuously composes ostree repos using the latest code from
+the git master of various Project Atomic components, such as <code>atomic</code>, <code>ostree</code>,
+and <code>rpm-ostree</code>.</p>
+
+<p>This means that within the hour, you can experience the latest and greatest
+Atomic Host has to offer. For example, if you&rsquo;d like to try out package layering
+right away, you can simply rebase onto CAHC and reboot. For more information and
+instructions, see the <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">devel wiki
+page</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/hacking/">hacking</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

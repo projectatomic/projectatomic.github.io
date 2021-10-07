@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Lvm</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/lvm.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Working with Docker LVM Plugin</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/05/docker-lvm-plugin/"/>
+    <id>http://www.projectatomic.io/blog/2016/05/docker-lvm-plugin/</id>
+    <published>2016-05-02T13:55:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Shishir Mahajan</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently Docker introduced a volume command (&lt;code&gt;docker volume –help&lt;/code&gt; for more information) to allow users to create a logical volume and then bind-mount it inside the container at container creation/runtime.  You can achieve this by:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="local_volume_foobar" width="394" height="122" src="/images/./local_volume_foobar_1.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will create a logical volume &lt;code&gt;foobar&lt;/code&gt; mounted at filesystem location &lt;code&gt;/var/lib/docker/volumes&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, you can bind mount the &lt;code&gt;foobar&lt;/code&gt; volume into the &lt;code&gt;/run&lt;/code&gt; directory inside the container.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="bind_mount_foobar_local" width="503" height="111" src="/images/./bind_mount_foobar_local_2.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;While this is all good, Docker does not allow us to put a restriction on the size of the volume created. For use cases like OpenShift, where the Platform-as-a-service (PAAS) system wants to create a size-adjustable container, the docker volume command might not be good enough.&lt;/p&gt;
+
+&lt;p&gt;So we decided to write a docker volume plugin, which would allow us to create a size-adjustable volume and then bind-mount it inside the container.&lt;/p&gt;
+
+&lt;h3&gt;Docker LVM Plugin&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;docker-lvm-plugin&lt;/code&gt; is a volume plugin, which creates logical volumes using LVM2. LVM2 is a userspace toolset that provides logical volume management in Linux.
+To support LVM2 commands used by our plugin, you would basically need devicemapper in your kernel, a userspace devicemapper support library (libdevmapper), and the userspace LVM2 tools. Most of these things should be present by default on your RHEL or Fedora linux distributions.&lt;/p&gt;
+
+&lt;p&gt;I would encourage you to check it out &lt;a href="https://github.com/projectatomic/docker-lvm-plugin"&gt;https://github.com/projectatomic/docker-lvm-plugin&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;p&gt;The README.md has all the instructions on how to set it up and get it running. However I would still point out the important things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Even though the instruction says you need to start the docker-lvm-plugin daemon using &lt;code&gt;systemctl start docker-lvm-plugin&lt;/code&gt;, this is optional as the daemon is on-demand socket activated.  What it means is, once the plugin in installed on your system, doing a &lt;code&gt;docker volume ls&lt;/code&gt; would automatically start the daemon.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Since logical volumes (lv&amp;rsquo;s) are based on a volume group, it is the responsibility of the user (administrator) to provide a volume group name. You can choose an existing volume group name by listing volume groups on your system using &lt;code&gt;vgs&lt;/code&gt; command OR create a new volume group using &lt;code&gt;vgcreate command&lt;/code&gt;. e.g.,&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;vgcreate volume_group_one /dev/hda
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;where &lt;code&gt;/dev/hda&lt;/code&gt; is your partition or whole disk on which physical volumes were created.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Update your volume group name in &lt;code&gt;/etc/docker/docker-lvm-plugin&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;That’s it! You are all set to use the plugin now.&lt;/p&gt;
+
+&lt;h3&gt;Examples&lt;/h3&gt;
+
+&lt;p&gt;To explore how this plugin will work, here are some use-case examples.&lt;/p&gt;
+
+&lt;h4&gt;Volume Creation&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt="lvm_volume_foobar_create" width="601" height="68" src="/images/./lvm_volume_foobar_create_3.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will create a lvm volume named foobar with a size of 208 MB (0.2 GB).&lt;/p&gt;
+
+&lt;h4&gt;Volume List&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt="lvm_volume_list" width="316" height="105" src="/images/./lvm_volume_list_4.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will list volumes created by all docker drivers, including the default driver (local).&lt;/p&gt;
+
+&lt;h4&gt;Volume Inspect&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt="lvm_volume_inspect" width="543" height="201" src="/images/./lvm_volume_inspect_5.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will inspect foobar and return a JSON.&lt;/p&gt;
+
+&lt;h4&gt;Volume Removal&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt="lvm_volume_rm" width="293" height="63" src="/images/./lvm_volume_rm_6.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will remove the lvm volume foobar.&lt;/p&gt;
+
+&lt;h4&gt;Bind Mount lvm volume Inside the Container&lt;/h4&gt;
+
+&lt;p&gt;&lt;img alt="bind_mount_foobar_lvm" width="520" height="51" src="/images/./bind_mount_foobar_lvm_7.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;This will bind mount the logical volume foobar into the home directory of the container.&lt;/p&gt;
+
+&lt;p&gt;Hope you will enjoy playing around with this plugin!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

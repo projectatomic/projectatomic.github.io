@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Docs</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/docs.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Contribute to the Atomic Host Documentation!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/04/contribute-to-atomic-host-doc/"/>
+    <id>http://www.projectatomic.io/blog/2017/04/contribute-to-atomic-host-doc/</id>
+    <published>2017-04-10T22:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Trishna Guha</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt; is changing rapidly and documentation needs to follow the pace of development.  That&amp;rsquo;s why we need your help!&lt;/p&gt;
+
+&lt;p&gt;The new documentation is going to be maintained through the &lt;a href="https://github.com/projectatomic/atomic-host-docs"&gt;Atomic-host-docs&lt;/a&gt; repository, which uses
+AsciiDoc as markup language and AsciiBinder to build the documentation pages. More importantly, AsciiBinder will allow us to produce both Fedora Atomic
+and CentOS Atomic documentation from the same source repository using a concept called &lt;q&gt;distros.&lt;/q&gt;&lt;/p&gt;
+
+&lt;p&gt;Our plans for the documentation include a complete revamp of the current pages, per &lt;a href="https://github.com/projectatomic/atomic-host-docs/blob/master/outline.txt"&gt;our outline&lt;/a&gt; in the repo.  The Atomic Host docs should eventually completely cover installation and setup, quickstarts for trying it out, deployment of Kubernetes and/or OpenShift clusters, and how to compose your own OStrees and deployment.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s where you come in.  We need help writing docs, and converting docs and blog posts from other sources into the new documentation structure.  Read further for how to set up for a doc build.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Requirements:&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://asciidoctor.org/docs/what-is-asciidoc/#what-is-asciidoc"&gt;AsciiDoc&lt;/a&gt; markup language to write Docs.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://asciidoctor.org/"&gt;Asciidoctor&lt;/a&gt; that acts as text processor to convert AsciiDoc content to HTML5, DocBook and others.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.asciibinder.org/"&gt;AsciiBinder&lt;/a&gt; that helps to build, maintain documentation in easier way.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Set up Development Environment:&lt;/h3&gt;
+
+&lt;p&gt;The following steps clones the repository, creates a development environment, and installs required libraries/packages
+on your local system which are required in order to write/build the documentation.  &lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo yum/dnf install ansible
+$ git clone https://github.com/projectatomic/atomic-host-docs.git
+$ cd atomic-host-docs/
+$ git checkout -b branchname
+$ ansible-playbook setup.yml --ask-sudo-pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(some Fedora users may also need to install python2-dnf for the playbook to run)&lt;/p&gt;
+
+&lt;h3&gt;How to Write Docs:&lt;/h3&gt;
+
+&lt;p&gt;Atomic Host Documentation uses the AsciiDoc markup language. You can have a look at the
+&lt;a href="http://asciidoctor.org/docs/asciidoc-syntax-quick-reference"&gt;Reference&lt;/a&gt; for AsciiDoc Syntax.&lt;/p&gt;
+
+&lt;p&gt;The following example demonstrates how to write and build it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir container
+$ touch container/overview.adoc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;container/overview.adoc&lt;/em&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[[container-overview]]
+= Container Overview
+{product-author}
+{product-version}
+:data-uri:
+:icons:
+
+Linux Containers have emerged as a key open source application packaging and delivery technology, combining lightweight application isolation with the flexibility of image-based deployment methods.
+
+I love Containers!!!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After the Doc is ready, we need to make entry in &lt;em&gt;_topic_map.yml&lt;/em&gt; file. This file tells AsciiBinder which topic groups and topics to generate.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;_topic_map.yml&lt;/em&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;---
+Name: Tools
+Dir: container
+Topics:
+  - Name: Overview
+    File: overview
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now go to the root directory of the repo. The following command will build the docs:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ asciibinder
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Verify:&lt;/h3&gt;
+
+&lt;p&gt;A new directory will be created named &lt;em&gt;_preview&lt;/em&gt;, where you will be able to browse the documentation you just built.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s how our example would look after a doc build:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Contribution Guide Demo" width="600" height="316" src="/images/doc-build-screenshot.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Join and Help:&lt;/h3&gt;
+
+&lt;p&gt;If you are looking to contribute to Atomic Host Docs, take a look at our list of &lt;a href="https://github.com/projectatomic/atomic-host-docs/issues"&gt;needs doc tickets&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can ask questions and collaborate on Github, or over email and IRC:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://lists.projectatomic.io/mailman/listinfo/atomic"&gt;Atomic User List&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;Atomic Developer List&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;IRC: #atomic and #fedora-cloud on Freenode server.&lt;/p&gt;
+
+&lt;h3&gt;More to Come&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;re working on CI/CD for documentation deployment and an all-new documentation site.  Once that&amp;rsquo;s built, all regular doc contributors will be able to push changes directly to the documentation build pipeline.  And, of course, the pipeline will use containerized tools running on Atomic Host!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

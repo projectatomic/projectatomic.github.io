@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Cli</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/cli.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Using Environment Substitution with the Atomic Command</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/04/using-environment-substitution-with-the-atomic-command/"/>
+    <id>http://www.projectatomic.io/blog/2015/04/using-environment-substitution-with-the-atomic-command/</id>
+    <published>2015-04-22T11:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I recently published a &lt;a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command"&gt;post on the Red Hat Developer Blog&lt;/a&gt; about the Atomic command that we&amp;rsquo;ve been working on for the last few months. &lt;/p&gt;
+
+&lt;p&gt;The &lt;a href="http://www.projectatomic.io/docs/usr-bin-atomic/"&gt;Atomic&lt;/a&gt; command (/usr/bin/atomic) is a high-level, coherent entrypoint for Atomic Host systems, and aims to fill in the gaps in Linux container implementations. &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the first questions I received was about environment substitution. The user wanted to have standard Bash substitutions working with /usr/bin/atomic. Specifically, he wanted to allow substitutions like &lt;code&gt;$PWD/.foobar&lt;/code&gt; and &lt;code&gt;--user=$(id -u)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I decided to try this out by creating a simple Dockerfile.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;from rhel7
+LABEL RUN echo $PWD/.foobar --user=$(id -u)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then I build the container&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker build -t test .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, I&amp;rsquo;ll execute atomic run test&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;atomic run test
+echo 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at the label using &lt;code&gt;docker inspect&lt;/code&gt;, I see that building the container dropped the $() content.&lt;/p&gt;
+
+&lt;p&gt;So, I&amp;rsquo;ll change the Dockerfile to quote it.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;from rhel7
+LABEL RUN echo '$PWD/.foobar' '--user=$(id -u)'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build the container&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker build -t test .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s run it again:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;atomic run test
+echo $PWD/.foobar --user=$(id -u)
+/root/test1/.foobar --user=0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Success&lt;/h3&gt;
+
+&lt;p&gt;Woohoo, it works! If you want to take advantage of environment variables in your &lt;code&gt;LABEL RUN&lt;/code&gt; statements, make sure to quote them so they&amp;rsquo;re passed through appropriately.&lt;/p&gt;
+
+&lt;p&gt;Have more questions about the &lt;code&gt;atomic&lt;/code&gt; command? Leave a comment here, or ask on the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic"&gt;atomic@projectatomic.io&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

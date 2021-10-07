@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Added no-new-privileges Security Flag to Docker &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Mrunal Patel' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Added no-new-privileges Security Flag to Docker' property='og:title'>
+<meta content='I have contributed support for a no-new-privileges option to docker.&#x000A;This flag has already been included in runc and the Open Container Initiative spec.&#x000A;&#x000A;The new flag supports, in Docker, a security feature that was added to the Linux kernel back in 2012 under the name no_new_privs.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/' property='og:url'>
+<meta content='2016-03-17T12:40:00Z' property='article:published_time'>
+<meta content='mrunalp' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='patches' property='article:tag'>
+<link href='/blog/tag/patches.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='SELinux' property='article:tag'>
+<link href='/blog/tag/selinux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Added no-new-privileges Security Flag to Docker' name='twitter:title'>
+<meta content='I have contributed support for a no-new-privileges option to docker.&#x000A;This flag has already been included in runc and the Open Container Initiative spec.&#x000A;&#x000A;The new flag supports, in Docker, a security feature that was added to the Linux kernel back in 2012 under the name no_new_privs.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_no-new-privs-docker blog_2016_03_no-new-privs-docker_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Added no-new-privileges Security Flag to Docker
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/mrunalp/">Mrunal Patel</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-17T12:40:00Z'>
+Thursday 17 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I have contributed support for a <code>no-new-privileges</code> option to <a href="https://github.com/docker/docker/pull/20727">docker</a>.
+This flag has already been included in <a href="https://github.com/opencontainers/runc/pull/557">runc</a> and the Open Container Initiative <a href="https://github.com/opencontainers/specs/pull/290">spec</a>.</p>
+
+<p>The new flag supports, in Docker, a security feature that was added to the Linux kernel back in 2012 under the name <code>no_new_privs</code>.</p>
+
+<p></p>
+
+<p>The kernel feature works as follows:</p>
+
+<ul>
+<li>A process can set the <code>no_new_privs</code> bit in the kernel that persists across fork, clone, and exec.</li>
+<li>The <code>no_new_privs</code> bit ensures that the process or its children processes do not gain any additional privileges.</li>
+<li>A process isn&rsquo;t allowed to unset the <code>no_new_privs</code> bit once it is set.</li>
+<li>Processes with <code>no_new_privs</code> are not allowed to change uid/gid or gain any other capabilities, even if the process executes setuid binaries or executables with file capability bits set.</li>
+<li><code>no_new_privs</code> also prevents Linux Security Modules (LSMs) like SELinux from transitioning to process labels that have access not allowed to the current process. This means an SELinux process is only allowed to transition to a process type with less privileges.</li>
+</ul>
+
+<p>For more details see the <a href="https://www.kernel.org/doc/Documentation/prctl/no_new_privs.txt">kernel documentation</a>.</p>
+
+<p>Here is an example showcasing how it helps in Docker.</p>
+
+<p>Create a setuid binary that displays the effective uid:</p>
+<pre class="highlight plaintext"><code>[$ dockerfiles]# cat testnnp.c&#x000A;#include &lt;stdio.h&gt;&#x000A;#include &lt;unistd.h&gt;&#x000A;#include &lt;sys/types.h&gt;&#x000A;&#x000A;int main(int argc, char *argv[])&#x000A;{&#x000A;        printf("Effective uid: %d\n", geteuid());&#x000A;        return 0;&#x000A;}&#x000A;[$ dockerfiles]# make testnnp&#x000A;cc     testnnp.c   -o testnnp&#x000A;</code></pre>
+
+<p>Now we will add the binary to a docker image:</p>
+<pre class="highlight plaintext"><code>[$ dockerfiles]# cat Dockerfile&#x000A;FROM fedora:latest&#x000A;ADD testnnp /root/testnnp&#x000A;RUN chmod +s /root/testnnp&#x000A;ENTRYPOINT /root/testnnp&#x000A;&#x000A;[$ dockerfiles]# docker build -t testnnp .&#x000A;Sending build context to Docker daemon 12.29 kB&#x000A;Step 1 : FROM fedora:latest&#x000A; ---&gt; 760a896a323f&#x000A;Step 2 : ADD testnnp /root/testnnp&#x000A; ---&gt; 6c700f277948&#x000A;Removing intermediate container 0981144fe404&#x000A;Step 3 : RUN chmod +s /root/testnnp&#x000A; ---&gt; Running in c1215bfbe825&#x000A; ---&gt; f1f07d05a691&#x000A;Removing intermediate container c1215bfbe825&#x000A;Step 4 : ENTRYPOINT /root/testnnp&#x000A; ---&gt; Running in 5a4d324d54fa&#x000A; ---&gt; 44f767c67e30&#x000A;Removing intermediate container 5a4d324d54fa&#x000A;Successfully built 44f767c67e30&#x000A;</code></pre>
+
+<p>Now we will create and run a container without <code>no-new-privileges</code>:</p>
+<pre class="highlight plaintext"><code>[$ dockerfiles]# docker run -it --rm --user=1000  testnnp&#x000A;Effective uid: 0&#x000A;</code></pre>
+
+<p>This shows that even though you requested a non-privileged user (UID=1000) to run your container, that user would be able to become root by executing the setuid app on the container image.</p>
+
+<p>Running with <code>no-new-privileges</code> prevents the uid transition while running a setuid binary:</p>
+<pre class="highlight plaintext"><code>[$ dockerfiles]# docker run -it --rm --user=1000 --security-opt=no-new-privileges testnnp&#x000A;Effective uid: 1000&#x000A;</code></pre>
+
+<p>As you can see above the container process is still running as UID=1000, meaning that even if the image has dangerous code in it, we can still prevent the user from escalating privileges.</p>
+
+<p>Turning on <code>no_new_privs</code> actually stopped the SELinux transition from the docker daemon type <code>docker_t</code> to the container type, <code>svirt_lxc_net_t</code>. The <code>no_new_privs</code> option only allows SELinux transitions from one type to another if the target type as a complete subset of the source type. Dan Walsh worked on the SELinux policy for docker to fix this. With the latest policy in Fedora 24, <code>no_new_privs</code> and SELinux work well together. We will be back-porting these fixes to RHEL when we ship docker support for <code>no_new_privs</code>.</p>
+
+<p>If you want to allow users to run images as a non-privileged UID, in most cases you would want to prevent them from becoming root. <code>no_new_privileges</code> is a great tool for guaranteeing this.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/patches/">patches</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

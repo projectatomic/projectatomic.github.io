@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-8 blog_page-8_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/01/fedora-atomic-18-jan-18/">Fedora 27 Atomic Host January 18th Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-18T16:00:00Z'>
+Thursday 18 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Fedora Atomic Host we have an updated kernel (the <a href="https://fedoramagazine.org/update-ongoing-meltdown-spectre-work/">spectre patches</a> are slowly working their way out), and an <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1510351">updated docker with a security fix</a>. We also are <em>including</em> <a href="https://pagure.io/atomic-wg/issue/372">firewalld in the ostree</a> now, but we are <em>not</em> enabling it by default. I&rsquo;ll post a follow up blog post on this topic in the next day or two.</p>
+
+<p>The new Fedora Atomic Host update is available via an OSTree update:</p>
+
+<p><strong><em>Version: 27.61</em></strong></p>
+
+<ul>
+<li>Commit(x86_64): 772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9</li>
+<li>Commit(aarch64): 598626fd61dc6ed4b702159e50b6029ee70a527e855fce7d8e61a870b141f893</li>
+<li>Commit(ppc64le): 16ce78ee689066f582dbfc0672dab1706051fefab496fcebd8109d58738eb8fe</li>
+</ul>
+
+<p>We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or <code>atomic host deploy</code>. Systems on Fedora Atomic 26 can be upgraded using <code>rpm-ostree rebase</code>. Refer to the <a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrade guide</a> for more details.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/01/fedora-atomic-18-jan-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/01/buildah-blocks/">Buildah Blocks - OCI Shell Game</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-16T00:00:00Z'>
+Tuesday 16 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I’ve always been fascinated by the <a href="https://en.wikipedia.org/wiki/Shell_game">three shells and a pea game</a> that street hustlers have used for years to make a bit of coin. I love watching a talented person running the game, but I know better than to bet on it! However, playing the game with <a href="https://github.com/projectatomic/buildah">Buildah</a> leads to everyone being a winner.</p>
+
+<p>I had a bit of time to play, so I tried out a variant of the shell game with Open Containers Initiative (OCI) containers. I made a quick example showing how you can create an OCI image with Buildah, saved the image to a repository on Docker Hub and then used both Docker and Buildah to run that  image from Docker Hub. Nothing terribly fancy, but the video does illustrate that Buildah is OCI-compliant and the images it creates can be used by other OCI-compliant technologies.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/01/buildah-blocks/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/01/centos-atomic-1712/">CentOS Atomic Host 7.1712 Available for Download</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-10T00:00:00Z'>
+Wednesday 10 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The CentOS Atomic SIG has released an <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">updated version</a> of
+CentOS Atomic Host (7.1712), a lean operating system designed to run
+Linux containers, built from standard CentOS 7 RPMs, and tracking the
+component versions included in Red Hat Enterprise Linux Atomic Host.</p>
+
+<p>This release includes updated <a href="https://lists.centos.org/pipermail/centos-announce/2018-January/022696.html">kernel</a>, <a href="https://lists.centos.org/pipermail/centos-announce/2018-January/022698.html">linux-firmware</a> and
+<a href="https://lists.centos.org/pipermail/centos-announce/2018-January/022697.html">microcode_ctl</a> packages to address recent security advisories, alongside other minor updates that shipped during the month of
+December.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/01/centos-atomic-1712/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/01/fedora-atomic-4-jan-18/">Fedora 27 Atomic Host January 4th Security Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-04T14:00:00Z'>
+Thursday  4 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit.  This update contains an important security patch.</p>
+<pre class="highlight plaintext"><code>Version: 27.47&#x000A;Commit(x86_64): 397e907961adafaeff11b807ceade8da5783134072406fcdba627f1195e0db76&#x000A;Commit(aarch64): 25965b64256417d7dfed37511ffe0cf842ebe64bd6adc8c57a3c603dcfd79885&#x000A;Commit(ppc64le): c0d0a28a01fd363dfc317e3418935efae6d728a718320dfb3709c4282160f20f&#x000A;</code></pre>
+
+<p>This is a security related release of Fedora Atomic Host to
+address <a href="https://access.redhat.com/security/cve/cve-2017-5754">CVE-2017-5754</a> (Meltdown). This release does not
+yet handle the <q>Spectre</q> vulnerabilities, <a href="https://access.redhat.com/security/cve/cve-2017-5753">CVE-2017-5753</a> and <a href="https://access.redhat.com/security/cve/cve-2017-5715">CVE-2017-5715</a>. Those will
+come in a future update. For more information see the <a href="https://access.redhat.com/security/vulnerabilities/speculativeexecution">Red Hat
+knowledgebase article</a>.</p>
+
+<p>kernel-4.14.11-300.fc27.x86_64 fixes <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1530826">BZ1530826</a> related to
+CVE-2017-5754. It also fixes some other CVEs as well. See <a href="https://bodhi.fedoraproject.org/updates/kernel-4.14.11-300.fc27">the
+attached bugs to the bodhi update</a> for more information.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/01/fedora-atomic-4-jan-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/12/project-atomic-docker-hub-namespace-changes/">Project Atomic Docker Hub Namespace Changes</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/smilner/">Stephen Milner</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-12-20T10:00:00Z'>
+Wednesday 20 December 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As many people are aware the Project Atomic team has provided container images via its <a href="https://hub.docker.com/u/projectatomic/">Docker Hub namespace</a>. As more and more image registries come online it has become apparent that it is time to refocus how our Docker Hub namespace is used. Read on for a rundown of upcoming changes!</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/12/project-atomic-docker-hub-namespace-changes/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/image/">image</a></li>
+<li><a href="/blog/tag/registry/">registry</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=7/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=4/">4</a>
+</li>
+<li>
+<a href="/blog/page=5/">5</a>
+</li>
+<li>
+<a href="/blog/page=6/">6</a>
+</li>
+<li>
+<a href="/blog/page=7/">7</a>
+</li>
+<li class='active'>
+<span>8</span>
+</li>
+<li>
+<a href="/blog/page=9/">9</a>
+</li>
+<li>
+<a href="/blog/page=10/">10</a>
+</li>
+<li>
+<a href="/blog/page=11/">11</a>
+</li>
+<li>
+<a href="/blog/page=12/">12</a>
+</li>
+<li>
+<a href="/blog/page=9/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

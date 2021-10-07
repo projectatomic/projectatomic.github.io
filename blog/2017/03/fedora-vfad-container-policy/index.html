@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora VFAD about Container Guidelines &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora VFAD about Container Guidelines' property='og:title'>
+<meta content='The Fedora Atomic Working Group had our second Virtual Fedora Activity Day (VFAD) last Friday in order to resolve a number of issues and policy questions with the Container Guidelines. Our decisions will be of interest to anyone submitting software to the Fedora Layered Image Build Service (FLIBS), as well as anyone who runs their own public open source registry.  Among those we discussed were versioning, labeling requirements, help files, volumes and systemd in containers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/03/fedora-vfad-container-policy/' property='og:url'>
+<meta content='2017-03-14T20:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='FLIBS' property='article:tag'>
+<link href='/blog/tag/flibs.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora VFAD about Container Guidelines' name='twitter:title'>
+<meta content='The Fedora Atomic Working Group had our second Virtual Fedora Activity Day (VFAD) last Friday in order to resolve a number of issues and policy questions with the Container Guidelines. Our decisions will be of interest to anyone submitting software to the Fedora Layered Image Build Service (FLIBS), as well as anyone who runs their own public open source registry.  Among those we discussed were versioning, labeling requirements, help files, volumes and systemd in containers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_03 blog_2017_03_fedora-vfad-container-policy blog_2017_03_fedora-vfad-container-policy_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora VFAD about Container Guidelines
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-03-14T20:00:00Z'>
+Tuesday 14 March 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The <a href="https://pagure.io/atomic-wg">Fedora Atomic Working Group</a> had our second <a href="https://pagure.io/atomic-wg/issue/238">Virtual Fedora Activity Day</a> (VFAD) last Friday in order to resolve a <a href="https://pagure.io/atomic-wg/roadmap?status=all&amp;milestone=2017-03-10+VFAD">number of issues and policy questions</a> with the <a href="https://fedoraproject.org/wiki/Container:Guidelines">Container Guidelines</a>. Our decisions will be of interest to anyone submitting software to the <a href="https://docs.pagure.org/releng/layered_image_build_service.html">Fedora Layered Image Build Service</a> (FLIBS), as well as anyone who runs their own public open source registry.  Among those we discussed were versioning, labeling requirements, help files, volumes and systemd in containers.</p>
+
+<p></p>
+
+<p>VFADs are an innovation of the Atomic WG.  Regular <a href="https://fedoraproject.org/wiki/Fedora_Activity_Day_-_FAD">Fedora Activity Days</a> (FADs) are held in person, and thus can only happen once a year or so, due to the cost of flying folks in from all over the world.  Since the Atomic WG wants to <q>release early and often,</q> we needed a different way, and Adam Miller and Dusty Mabe came up with one.  Instead of flying everyone around the world, once every month we get together on IRC and video chat for VFAD.  In addition to letting us meet more often, this also lets contributors who couldn&rsquo;t travel to a FAD participate.  The only painful part is the time zones.</p>
+
+<p>Friday&rsquo;s VFAD demonstrated the success of this, attracting nine regular Fedora Atomic contributors, as well as several people who just showed up for specific issues.  For example, Dan Walsh dialed in for the conversation about systemd containers.</p>
+
+<p>We&rsquo;ll discuss a few of the group&rsquo;s decisions below.  For the rest, check out <a href="https://fedoraproject.org/wiki/Atomic/VFAD_20170310">the VFAD notes</a> on the Fedora wiki.</p>
+
+<h3>Run and Usage</h3>
+
+<p>In order to support the container user, every FLIBS container will have either the <code>RUN</code> or <code>Usage</code> labels defined. <code>RUN</code> is consumed by the <a href="https://github.com/projectatomic/atomic">Atomic CLI</a>, which uses it to execute a container image. It&rsquo;s machine-readable, and is part of a set with the <code>INSTALL</code> and <code>UNINSTALL</code> labels.  System Containers are required to have <code>RUN</code>.  For example, the Cockpit Dockerfile has this:</p>
+<pre class="highlight plaintext"><code>LABEL RUN /usr/bin/docker run -d --privileged --pid=host -v /:/host IMAGE /container/atomic-run --local-ssh&#x000A;</code></pre>
+
+<p>Since supporting the Atomic CLI is optional for FLIBS, the maintainer can choose to have a human-readable <code>Usage</code> label instead, such as one for OwnCloud:</p>
+<pre class="highlight plaintext"><code>LABEL Usage="docker run -d -P -v owncloud-data:/var/lib/owncloud -v owncloud-config:/etc/owncloud owncloud"&#x000A;</code></pre>
+
+<p>Importantly, such <code>Usage</code> examples must show how volumes and port mappings are expected to work for the container, as well as any special permissions required.  They can show any container runtime.</p>
+
+<h3>Versions and Releases</h3>
+
+<p>Another issue discussed was the <a href="https://pagure.io/atomic-wg/issue/235">ambiguity around what to put for <code>VERSION</code> and <code>RELEASE</code></a>. As it turns out, part of this came down to a missing feature in our build pipeline, which will be addressed as soon as reasonable.</p>
+
+<p>The obvious answer for <code>VERSION</code> is to populate the ENV variable with the version number of the <q>primary</q> RPM installed in the image.  However, that assumes that a maintainer is manually building the image and each update to the image.  One of the critical features of FLIBS is auto-build so that all images get updated with critical security releases and dependency updates.  Since we have no way for the build system to pull the version number from the RPM right now, that would mean that <code>VERSION</code> does not get updated on auto-build, possibly making it inaccurate.  </p>
+
+<p>As Jason Brooks pointed out, it&rsquo;s better to have no information than inaccurate information.  As such, all image definitions will have <code>VERSION=0</code> until such time as it can be automatically populated.  There will likely be exceptions for specific images where the version is not tied to any specific RPM.</p>
+
+<p><code>RELEASE</code> will start at 1, and get automatically incremented each time either the maintainer or auto-build makes a change.  This means that the maintainer needs to make sure to <code>git pull</code> the FLIBS repository before making any changes to the image.</p>
+
+<h3>Help File</h3>
+
+<p>One of the other issues made obvious by the <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1420275">OwnCloud image submission</a> was the need for a <q>man page</q> for each container.  Complicating this is that some images need only a couple lines of information about how to run them, whereas others (such as OwnCloud or PostgreSQL) need a page or more.  Also, some users will want to be able to access this help information <q>inside</q> the container.  The lack of such help information has been one of the flaws in Docker Hub.</p>
+
+<p>Given that, the group created a multi-step requirement.  Images that need very little documentation (like libraries) will have that in the <code>Help</code> label as text.  Images which need significant documentation will have a file, named one of the following: <code>help1.txt</code>, <code>README</code>, or <code>README.md</code>.  This file will be submitted with the image proposal, and will be included bout inside the container image and available online from fedoraproject.org.  The <code>Help</code> label will link to that URL.</p>
+
+<p>There were several other decisions and details worked out at this VFAD.  In addition to making FLIBS successful, we are hoping that we can set some precedents for other independent, open source registries.  Our container guidelines are being updated now; take a look at them in a week when we&rsquo;re done.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/flibs/">FLIBS</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/03/fedora-vfad-container-policy/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/03/fedora-vfad-container-policy/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/03/fedora-vfad-container-policy/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

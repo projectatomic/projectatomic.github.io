@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic App 0.6.2 released with new index CLI command &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Charlie Drage' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic App 0.6.2 released with new index CLI command' property='og:title'>
+<meta content='This release of Atomic App introduces the new atomicapp index command.&#x000A;&#x000A;We add this command in order to give a quick overview of all available featured and tested Nuleculized applications on github.com/projectatomic/nulecule-library. The ability to generate your own list is available as well with the atomicapp index generate command.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/07/atomic-app-0-6-2-release/' property='og:url'>
+<meta content='2016-07-27T16:55:00Z' property='article:published_time'>
+<meta content='cdrage' property='article:author:username'>
+<meta content='atomicapp' property='article:tag'>
+<link href='/blog/tag/atomicapp.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Nulecule' property='article:tag'>
+<link href='/blog/tag/nulecule.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='releases' property='article:tag'>
+<link href='/blog/tag/releases.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic App 0.6.2 released with new index CLI command' name='twitter:title'>
+<meta content='This release of Atomic App introduces the new atomicapp index command.&#x000A;&#x000A;We add this command in order to give a quick overview of all available featured and tested Nuleculized applications on github.com/projectatomic/nulecule-library. The ability to generate your own list is available as well with the atomicapp index generate command.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_07 blog_2016_07_atomic-app-0-6-2-release blog_2016_07_atomic-app-0-6-2-release_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic App 0.6.2 released with new index CLI command
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-27T16:55:00Z'>
+Wednesday 27 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This release of Atomic App introduces the new <code>atomicapp index</code> command.</p>
+
+<p>We add this command in order to give a quick overview of all available featured and tested Nuleculized applications on <a href="https://github.com/projectatomic/nulecule-library">github.com/projectatomic/nulecule-library</a>. The ability to generate your own list is available as well with the <code>atomicapp index generate</code> command.</p>
+
+<p></p>
+
+<p>The main features of this release are:</p>
+
+<ul>
+<li>Addition of the <code>atomicapp index</code> command</li>
+<li>Correct file permissions are now when extracting Nuleculized containers</li>
+<li>OpenShift connection issue bugfix</li>
+</ul>
+
+<h3><code>atomicapp index</code></h3>
+
+<p>This release adds the addition of the <code>atomicapp index</code> command. By using the <code>atomicapp index list</code> command, Atomic App will retrieve a container containing a valid <code>index.yml</code> and output all available Nulecule containers. This index can also be updated by using <code>atomicapp index update</code>.</p>
+
+<p><strong>atomicapp index list</strong></p>
+
+<p>Outputs the list of available containers located at <code>~/.atomicapp/index.yml</code>.</p>
+<pre class="highlight plaintext"><code>▶ atomicapp index list&#x000A;INFO   :: Atomic App: 0.6.2 - Mode: Index&#x000A;ID                        VER      PROVIDERS  LOCATION                                             &#x000A;postgresql-atomicapp      1.0.0    {D,O,K}    docker.io/projectatomic/postgresql-centos7-atomicapp &#x000A;flask_redis_nulecule      0.0.1    {D,K}      docker.io/projectatomic/flask-redis-centos7-atomicapp&#x000A;redis-atomicapp           0.0.1    {D,O,K}    docker.io/projectatomic/redis-centos7-atomicapp      &#x000A;gocounter                 0.0.1    {D,K}      docker.io/projectatomic/gocounter-scratch-atomicapp  &#x000A;mariadb-atomicapp         1.0.0    {D,O,K}    docker.io/projectatomic/mariadb-centos7-atomicapp    &#x000A;helloapache-app           0.0.1    {D,K,M}    docker.io/projectatomic/helloapache                  &#x000A;mongodb-atomicapp         1.0.0    {D,O,K}    docker.io/projectatomic/mongodb-centos7-atomicapp    &#x000A;etherpad-app              0.0.1    {D,O,K}    docker.io/projectatomic/etherpad-centos7-atomicapp   &#x000A;apache-centos7-atomicapp  0.0.1    {D,K,M}    docker.io/projectatomic/apache-centos7-atomicapp     &#x000A;wordpress-atomicapp       2.0.0    {D,O,K}    docker.io/projectatomic/wordpress-centos7-atomicapp  &#x000A;skydns-atomicapp          0.0.1    {K}        docker.io/projectatomic/skydns-atomicapp             &#x000A;guestbookgo-atomicapp     0.0.1    {O,K}      docker.io/projectatomic/guestbookgo-atomicapp        &#x000A;mariadb-app               0.0.1    {D,K}      docker.io/projectatomic/mariadb-fedora-atomicapp     &#x000A;gitlab-atomicapp          1.2.0    {D,K}      docker.io/projectatomic/gitlab-centos7-atomicapp &#x000A;</code></pre>
+
+<p><strong>atomicapp index update</strong></p>
+
+<p>Updates the <code>index.yml</code> file.</p>
+<pre class="highlight plaintext"><code>▶ atomicapp index update&#x000A;INFO   :: Atomic App: 0.6.2 - Mode: Index&#x000A;INFO   :: Updating the index list&#x000A;INFO   :: Pulling latest index image...&#x000A;INFO   :: Skipping pulling docker image: projectatomic/nulecule-library&#x000A;INFO   :: Copying files from image projectatomic/nulecule-library:/index.yaml to /home/wikus/.atomicapp/index.yaml&#x000A;INFO   :: Index updated&#x000A;</code></pre>
+
+<p><strong>atomicapp index generate</strong></p>
+
+<p>Generates a valid <code>index.yml</code> file to use in listing all available containers.</p>
+<pre class="highlight plaintext"><code>▶ atomicapp index generate ./nulecule-library&#x000A;INFO   :: Atomic App: 0.6.1 - Mode: Index&#x000A;INFO   :: Generating index.yaml from ./nulecule-library&#x000A;INFO   :: index.yaml generated&#x000A;</code></pre>
+
+<p>Want to get started using Atomic App? Have a look at our extensive <a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md">start guide</a>, or use Atomic App as part of the Atomic CLI on an <a href="http://www.projectatomic.io/download/">Atomic Host</a>.</p>
+
+<p>For a full list of changes between 0.6.1 and the 0.6.2 please see <a href="https://github.com/projectatomic/atomicapp/commits/0.6.2">the commit log</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/07/atomic-app-0-6-2-release/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/07/atomic-app-0-6-2-release/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/07/atomic-app-0-6-2-release/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

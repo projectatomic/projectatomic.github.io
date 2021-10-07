@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Kube Virt</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/kubevirt.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic at Red Hat Summit</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/atomic-at-summit/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/atomic-at-summit/</id>
+    <published>2018-05-07T05:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Coming to Red Hat Summit?  Project Atomic will be there! We will have multiple sessions plus demonstrations at the booth in Community Central.  Click through for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Key sessions include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=163857"&gt;Container Linux And Red Hat: the Road Ahead&lt;/a&gt;, where you&amp;rsquo;ll hear what&amp;rsquo;s planned for CoreOS Container Linux and Red Hat Atomic.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=154411"&gt;Atomic BOF&lt;/a&gt;, where we&amp;rsquo;ll discuss the upcoming changes &lt;em&gt;and&lt;/em&gt; introduce some new projects.&lt;/li&gt;
+&lt;li&gt;A great workshop on &lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=166833"&gt;Containerizing Applications&lt;/a&gt;, which will be given three times by Fedora Atomic project contributors.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=153605"&gt;Next-Generation Tools for Container Tech&lt;/a&gt;, covering Buildah, CRI-O, and more.&lt;/li&gt;
+&lt;li&gt;Tons of &lt;a href="https://agenda.summit.redhat.com/?buildah=11&amp;amp;containers=11"&gt;other talks on Atomic, OpenShift and containers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will also have a set of live demonstrations running in our &lt;q&gt;pod&lt;/q&gt; in Community Central on the show floor.  This includes demos by Atomic contributors and maintainers from other container projects.  Here&amp;rsquo;s a schedule:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;strong&gt;Day&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Time&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;*&lt;em&gt;Demo *&lt;/em&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Name&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Tuesday May 8&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Fabian Deutsch &amp;amp; Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:45:00&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;5:15&lt;/td&gt;
+&lt;td&gt;Running and Persisting VMs on Openshift&lt;/td&gt;
+&lt;td&gt;Adam Litke&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Wednesday May 9&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Thursday May 10&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Provisioning Fedora with Ignition&lt;/td&gt;
+&lt;td&gt;Derek Gonyeo&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at Red Hat Summit!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic and Friends at KubeCon</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/"/>
+    <id>http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/</id>
+    <published>2017-11-29T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Going to KubeCon?  Contributors from Project Atomic, OpenShift Origin, and other related projects will be all over the conference, including talks, salons, and a whole schedule of back-to-back demos in the Red Hat booth. Read on for details on what to see at Kubecon.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The week kicks off with &lt;a href="http://openshiftgathering.com/openshiftgathering/austin"&gt;OpenShift Commons&lt;/a&gt;, including &lt;q&gt;The State of the Container Ecosystem&lt;/q&gt; with Dan Walsh and Mrunal Patel, and &lt;q&gt;OpenShift on AWS&lt;/q&gt; by Fedora Atomic contributor David Duncan.  As of this post, registration is still open.&lt;/p&gt;
+
+&lt;p&gt;Mrunal Patel is then &lt;a href="https://kccncna17.sched.com/event/CU6T/cri-o-all-the-runtime-kubernetes-needs-and-nothing-more-mrunal-patel-red-hat"&gt;explaining CRI-O&lt;/a&gt; during the main conference, and there&amp;rsquo;s a &lt;a href="https://kccncna17.sched.com/event/CU8j/cri-o-hosted-by-daniel-walsh-red-hat"&gt;CRI-O BOF&lt;/a&gt;.  Clayton Coleman is keynoting about &amp;ldquo;&lt;a href="https://kccncna17.sched.com/event/CUEB/keynote-red-hat-making-containers-boring-again-clayton-coleman-architect-kubernetes-and-openshift-red-hat"&gt;Making containers boring&lt;/a&gt;.&amp;rdquo;  Fabian Deutsch of KubeVirt is hosting a salon on &lt;a href="https://kccncna17.sched.com/event/CU8m/virtualizing-workloads-on-kubernetes-hosted-by-fabian-deutsch-red-hat"&gt;virtualization in Kubernetes&lt;/a&gt;.  Plus lots of other interesting sessions.&lt;/p&gt;
+
+&lt;p&gt;Then there&amp;rsquo;s the main action, in the Red Hat Booth on the show floor.  We&amp;rsquo;ll have back-to-back demos in the mini-theater all conference long, so that you can see lots of cool technology without ever leaving the show floor.  Here&amp;rsquo;s a full schedule for you to track what&amp;rsquo;s going on; most demos will be given twice.  &lt;/p&gt;
+
+&lt;table class="waffle" cellspacing="2" cellpadding="2"&gt;&lt;tbody&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;&lt;strong&gt;Start Time&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Topic&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Speaker&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Wednesday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;MiniShift Hands-On&lt;/td&gt;&lt;td&gt;Adam Miller&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td&gt;Live Hot Security Patching on OpenShift&lt;/td&gt;&lt;td&gt;Ryan Jarvinen&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;System containers&lt;/td&gt;&lt;td&gt;Jason Brooks&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;Container Native Storage&lt;/td&gt;&lt;td&gt;Jose Rivera&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:00:00 PM&lt;/td&gt;&lt;td&gt;ManageIQ-for-Kubernetes&lt;/td&gt;&lt;td&gt;Federico Simoncelli&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:30:00 PM&lt;/td&gt;&lt;td&gt;CI/CD Flow&lt;/td&gt;&lt;td&gt;Mauricio &amp;ldquo;Maltron&amp;rdquo; Leal&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Native Postgres&lt;/td&gt;&lt;td&gt;Josh Berkus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;05:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Wednesday Evening Booth Crawl&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;06:45:00 PM&lt;/td&gt;&lt;td&gt;New Container Tools&lt;/td&gt;&lt;td&gt;Dan Walsh&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;07:30:00 PM&lt;/td&gt;&lt;td&gt;KubeVirt&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;Fabian Deutch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Thursday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;10:30:00 AM&lt;/td&gt;&lt;td&gt;CI/CD Flow&lt;/td&gt;&lt;td&gt;Mauricio &amp;ldquo;Maltron&amp;rdquo; Leal&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;CRI-O&lt;/td&gt;&lt;td&gt;Mrunal Patel&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;OpenShift Developer Workflow&lt;/td&gt;&lt;td&gt;Ryan Jarvinen&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;MiniShift Hands-On&lt;/td&gt;&lt;td&gt;Adam Miller&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Native Postgres&lt;/td&gt;&lt;td&gt;Josh Berkus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:30:00 PM&lt;/td&gt;&lt;td&gt;System containers&lt;/td&gt;&lt;td&gt;Jason Brooks&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:00:00 PM&lt;/td&gt;&lt;td&gt;KubeVirt&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;Fabian Deutch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:30:00 PM&lt;/td&gt;&lt;td&gt;Container Native Storage&lt;/td&gt;&lt;td&gt;Jose Rivera&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:00:00 PM&lt;/td&gt;&lt;td&gt;ManageIQ-for-Kubernetes&lt;/td&gt;&lt;td&gt;Federico Simoncelli&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;05:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Friday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;10:30:00 AM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at KubeCon!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

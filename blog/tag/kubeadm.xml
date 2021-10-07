@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Kubeadm</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/kubeadm.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Running Kubernetes on Fedora Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/"/>
+    <id>http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/</id>
+    <published>2017-09-06T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Fedora 26 Atomic Host relies on Kubernetes for automating deployment, scaling, and operations of application containers across clusters of hosts.&lt;/p&gt;
+
+&lt;p&gt;Getting up and running with Kubernetes on Fedora Atomic Host involves installing Kubernetes (or sticking with the version of the software that&amp;rsquo;s currently baked into the images), and then configuring a cluster. This can be done manually, with the Kubeadm utility, or with Ansible scripts (among other methods).&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Below is an overview of your options for installing and configuring Kubernetes clusters on Fedora Atomic Hosts. If you&amp;rsquo;re looking to get up and running as quickly as possible with a Fedora Atomic-hosted Kubernetes cluster, skip ahead to the &lt;q&gt;Kubeadm Deployment&lt;/q&gt; section below. For a more configurable installation, check out the Ansible Deployment section.&lt;/p&gt;
+
+&lt;h3&gt;Install Kubernetes&lt;/h3&gt;
+
+&lt;h4&gt;Use Built-in Packages&lt;/h4&gt;
+
+&lt;p&gt;Fedora Atomic Host ships with Kubernetes packages baked into the system image. The specific version of Kubernetes included matches the latest release marked stable for f26 in Fedora&amp;rsquo;s &lt;a href="https://bodhi.fedoraproject.org/updates/?packages=kubernetes&amp;amp;release=F26"&gt;updates system&lt;/a&gt;. If this is the version you wish to run, you can move on to the Manual Deployment, Ansible Deployment or Kubeadm Deployment sections.&lt;/p&gt;
+
+&lt;h5&gt;Updates and Testing Packages&lt;/h5&gt;
+
+&lt;p&gt;If there is a newer stable Kubernetes version available that hasn&amp;rsquo;t yet appeared in a two-weekly Fedora Atomic release, you can access it by rebasing to the updates ref of Fedora Atomic, which is recomposed each night to track the latest stable packages:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# rpm-ostree rebase fedora-atomic:fedora/26/x86_64/updates/atomic-host -r&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Similarly, if there is a newer Kubernetes version available in Fedora&amp;rsquo;s updates-testing repository, you can access it by rebasing to the testing ref of Fedora Atomic, which is recomposed each night to track the latest testing packages:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# rpm-ostree rebase fedora-atomic:fedora/26/x86_64/testing/atomic-host -r&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Use System Containers&lt;/h4&gt;
+
+&lt;p&gt;You can also install Kubernetes using &lt;a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;system containers&lt;/a&gt;, a new approach that will eventually replace baked-in Kubernetes packages in the atomic host. You can begin trying it out now, however:&lt;/p&gt;
+
+&lt;h5&gt;Run on your kubernetes master&lt;/h5&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-apiserver registry.fedoraproject.org/f26/kubernetes-apiserver&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-controller-manager registry.fedoraproject.org/f26/kubernetes-controller-manager&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-scheduler registry.fedoraproject.org/f26/kubernetes-scheduler&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5&gt;Run on your kubernetes node(s)&lt;/h5&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kubelet registry.fedoraproject.org/f26/kubernetes-kubelet&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-proxy registry.fedoraproject.org/f26/kubernetes-proxy&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here, you could proceed with the Manual Deployment or the Ansible Deployment sections.&lt;/p&gt;
+
+&lt;p&gt;System containers place systemd unit files in &lt;code&gt;/etc/systemd/system&lt;/code&gt;, where they override the unit files from the packages baked into the image, so it&amp;rsquo;s possible to install system containers built from other versions of Fedora. You could, for instance, build and run containers including the more recent (1.7.2) version of Kubernetes from rawhide from &lt;a href="https://github.com/projectatomic/atomic-system-containers"&gt;these sources&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Keep in mind that unlike standard containers, which are stored under &lt;code&gt;/var/lib/docker&lt;/code&gt; and may reside on a separate partition, system containers are stored in the root partition, so you may need to provide that partition with more space.&lt;/p&gt;
+
+&lt;h3&gt;Deploy Kubernetes&lt;/h3&gt;
+
+&lt;h4&gt;Kubeadm Deployment&lt;/h4&gt;
+
+&lt;p&gt;Kubeadm is a tool for bootstrapping Kubernetes clusters that&amp;rsquo;s still &lt;a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#kubeadm-maturity"&gt;under development&lt;/a&gt; by the Kubernetes project, but offers a really simple method of getting up and running with a single or multi-node cluster. Starting with the Kubernetes version that ships with Fedora Atomic Host, the kubeadm command is available in a Fedora package. It&amp;rsquo;s not currently baked into the image, but you can install it using rpm-ostree package layering:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# rpm-ostree install kubernetes-kubeadm ethtool ebtables&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After installing, you either have to reboot (using &lt;code&gt;systemctl reboot&lt;/code&gt; or by tacking an &lt;code&gt;-r&lt;/code&gt; onto the end of the install command above) or you can skip the reboot and apply the changes using the experimental command &lt;code&gt;rpm-ostree ex livefs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In order for kubeadm to work with SELinux in enforcing mode, you&amp;rsquo;ll need to &lt;a href="https://github.com/kubernetes/kubeadm/issues/279"&gt;for now&lt;/a&gt; create the following directory and set its SELinux context as follows:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# mkdir /etc/kubernetes/pki&lt;/span&gt;
+
+&lt;span class="c"&gt;# chcon -Rt container_share_t /etc/kubernetes/pki&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also, kubeadm requires a different restart-on-fail behavior from the kubelet, so we&amp;rsquo;ll need to add three lines to this drop-in file (this step won&amp;rsquo;t be necessary once &lt;a href="http://pkgs.fedoraproject.org/cgit/rpms/kubernetes.git/commit/?id=e1f50eb5233848580ed354b1ec8b0c886ce8caaf"&gt;this commit&lt;/a&gt; makes its way into the stable kubeadm rpm):&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# vi /etc/systemd/system/kubelet.service.d/kubeadm.conf&lt;/span&gt;
+
+&lt;span class="nv"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;always
+&lt;span class="nv"&gt;StartLimitInterval&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;0
+&lt;span class="nv"&gt;RestartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;10
+
+&lt;span class="c"&gt;# systemctl daemon-reload&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here, you can follow the &lt;a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/"&gt;upstream kubeadm documentation&lt;/a&gt; to bring up a cluster. Note, though, that you&amp;rsquo;ll have to append &lt;code&gt;--skip-preflight-checks&lt;/code&gt; to the &lt;code&gt;kubeadm init&lt;/code&gt; command because kubeadm currently does not know where to look for Fedora&amp;rsquo;s kernel module configuration. See this &lt;a href="https://github.com/kubernetes/kubernetes/pull/49410"&gt;pull request&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;p&gt;Also, most of the network plugins I&amp;rsquo;ve tested with Kubeadm have an issue running with SELinux confinement, which is one of the reasons why the upstream docs suggest putting SELinux into permissive mode. There are a couple of ways to avoid disabling this security feature on your host, however. I typically edit the yaml file that configures the network plugin to tell Kubernetes to run the plugin as type &lt;a href="http://danwalsh.livejournal.com/74754.html"&gt;&lt;code&gt;spc_t&lt;/code&gt;&lt;/a&gt;, which leaves its containers unconfined by SELinux.&lt;/p&gt;
+
+&lt;p&gt;For instance, here&amp;rsquo;s a portion of the Flannel plugin yaml that I&amp;rsquo;ve edited:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;spec:
+  template:
+    metadata:
+      labels:
+        tier: node
+        app: flannel
+    spec:
+      securityContext:
+        seLinuxOptions:
+          &lt;span class="nb"&gt;type&lt;/span&gt;: &lt;span class="s2"&gt;"spc_t"&lt;/span&gt;
+      hostNetwork: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The three lines beginning with &lt;code&gt;securityContext:&lt;/code&gt; go in right before the &lt;code&gt;hostNetwork: true&lt;/code&gt; line. This same trick should work in any of the network plugin yaml files.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve opened &lt;a href="https://pagure.io/atomic/kubernetes-sig/issue/3"&gt;an issue&lt;/a&gt; here to track efforts to get SELinux-compatible changes into these upstream plugins. Head over there to track progress or help out.&lt;/p&gt;
+
+&lt;p&gt;Another item to keep in mind for Kubeadm on Fedora Atomic Host is that the 1.13.x version of the docker container runtime that&amp;rsquo;s stable in Fedora 26 &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#external-dependency-version-information"&gt;isn&amp;rsquo;t yet validated&lt;/a&gt; for Kubernetes. Due to &lt;a href="https://github.com/kubernetes/kubernetes/issues/40182"&gt;this issue&lt;/a&gt;, you may have to run &lt;code&gt;sudo iptables -P FORWARD ACCEPT&lt;/code&gt; on each Kubeadm node in order to access your services over the network.&lt;/p&gt;
+
+&lt;h5&gt;Kubeadm system container&lt;/h5&gt;
+
+&lt;p&gt;It&amp;rsquo;s also possible to run Kubeadm in a system container, although there isn&amp;rsquo;t yet an official Fedora container image for this system container. Check out &lt;a href="https://github.com/projectatomic/atomic-system-containers/pull/96"&gt;this git pull request&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;h4&gt;Ansible Deployment&lt;/h4&gt;
+
+&lt;p&gt;For a more advanced installation option, the contrib repository of the upstream Kubernetes project contains &lt;a href="https://github.com/kubernetes/contrib/tree/master/ansible"&gt;ansible scripts&lt;/a&gt; for deploying a Kubernetes cluster that work with Fedora Atomic Host and its default Kubernetes packages, as well as with an Atomic Host with installed system containers.&lt;/p&gt;
+
+&lt;p&gt;Grab the scripts by git cloning them:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;git clone https://github.com/kubernetes/contrib.git
+
+&lt;span class="nb"&gt;cd &lt;/span&gt;contrib/ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, create and populate an inventory file with the hostnames or IP addresses of the systems you intend to use as your master and your nodes:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;vi inventory/inventory
+
+&lt;span class="o"&gt;[&lt;/span&gt;masters]
+kube-master-test.example.com
+
+&lt;span class="o"&gt;[&lt;/span&gt;etcd:children]
+masters
+
+&lt;span class="o"&gt;[&lt;/span&gt;nodes]
+kube-minion-test-[1:2].example.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Review and modify &lt;code&gt;inventory/group_vars/all.yml&lt;/code&gt; as needed, for instance, setting your user name or password to use with ansible as desired.&lt;/p&gt;
+
+&lt;p&gt;Finally, run the deploy cluster script:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;scripts
+
+./deploy-cluster.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For more information, check out the &lt;a href="https://github.com/kubernetes/contrib/blob/master/ansible/README.md"&gt;README file&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Manual Deployment&lt;/h4&gt;
+
+&lt;p&gt;Finally, the Project Atomic &lt;a href="http://www.projectatomic.io/docs/gettingstarted/"&gt;Getting Started Guide&lt;/a&gt; provides manual directions for configuring a cluster that should work with a stock Fedora Atomic Host or with a host with Kubernetes installed via system containers.&lt;/p&gt;
+
+&lt;h3&gt;Openshift Origin&lt;/h3&gt;
+
+&lt;p&gt;Another set of routes to running Kubernetes on Fedora Atomic Host involve installing and configuring Openshift Origin, a container application platform built from Kubernetes. Openshift Origin&amp;rsquo;s &lt;a href="https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md"&gt;&lt;code&gt;oc cluster up&lt;/code&gt;&lt;/a&gt; command provides a similar experience to Kubeadm, and there are also &lt;a href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/"&gt;Anisble scripts available&lt;/a&gt; for deploying a full-fledged cluster.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Using kubeadm with CRI-O</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/"/>
+    <id>http://www.projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/</id>
+    <published>2017-06-09T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Antonio Murdaca</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;strong&gt;&lt;a href="https://github.com/kubernetes-incubator/cri-o"&gt;CRI-O&lt;/a&gt;&lt;/strong&gt; is a Kubernetes incubator project which is meant to provide an integration path between Open Containers Initiative (OCI) conformant runtimes and the kubelet. Specifically, it implements the Container Runtime Interface (CRI) using OCI conformant runtimes. CRI-O uses &lt;a href="https://github.com/opencontainers/runc"&gt;runc&lt;/a&gt; as its default runtime to run Kubernetes pods. For more information you can read a brief introduction &lt;a href="https://www.projectatomic.io/blog/2017/02/crio-runtimes/"&gt;here&lt;/a&gt;. If you&amp;rsquo;re interested into why you should use CRI-O instead of other container runtimes you can read more &lt;a href="https://www.projectatomic.io/blog/2017/06/6-reasons-why-cri-o-is-the-best-runtime-for-kubernetes/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;First things first, I&amp;rsquo;m pleased to announce that &lt;a href="https://github.com/kubernetes-incubator/cri-o"&gt;CRI-O&lt;/a&gt; can be seamlessy used with &lt;a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/"&gt;kubeadm&lt;/a&gt; to install kubernetes. This allows containers to be run under Kubernetes without the docker-engine being present on your servers.&lt;/p&gt;
+
+&lt;h3&gt;Getting  started with CRI-O and kubeadm&lt;/h3&gt;
+
+&lt;p&gt;To begin, you first provision machines with CRI-O using a &lt;a href="https://github.com/cri-o/cri-o-ansible"&gt;handy ansible playbook&lt;/a&gt;. The playbook will compile CRI-O from source and is the only installation method currently available. Installation packages for all of the major distributions are under development and should be available in the near future. Stay tuned!&lt;/p&gt;
+
+&lt;p&gt;Once you have  successfully installed CRI-O, you can follow this blog post to install Kubernetes. We&amp;rsquo;re also going to add a network  add-on to provide networking for the cluster.&lt;/p&gt;
+
+&lt;h3&gt;Environment&lt;/h3&gt;
+
+&lt;p&gt;You will be creating a three servers cluster using local virtual machines with &lt;code&gt;libvirt&lt;/code&gt;. The master will be running on Fedora 25, the nodes will be a CentOS 7.3 machine and an Ubuntu 16.04 machine. Here is the identifying information for the two servers:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;| Role       |      IP        | Hostname    |
+|------------|----------------|-------------|
+| master     | 192.168.122.34 | fedora.vm   |
+| node       | 192.168.122.35 | centos.vm   |
+| node       | 192.168.122.36 | ubuntu.vm   |
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you&amp;rsquo;re going through this tutorial using machines in the cloud you can skip the following check. Machines in public clouds can usually  reach each other.&lt;/p&gt;
+
+&lt;h3&gt;Setup SSH&lt;/h3&gt;
+
+&lt;p&gt;Make sure machines are reachable using ssh using private keys to authenticate. We&amp;rsquo;re going to need this for the ansible playbook:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;laptop &lt;span class="nv"&gt;$ &lt;/span&gt;ssh-copy-id root@192.168.122.34 &lt;span class="c"&gt;# fedora.vm&lt;/span&gt;
+laptop &lt;span class="nv"&gt;$ &lt;/span&gt;ssh-copy-id root@192.168.122.35 &lt;span class="c"&gt;# centos.vm&lt;/span&gt;
+laptop &lt;span class="nv"&gt;$ &lt;/span&gt;ssh-copy-id root@192.168.122.36 &lt;span class="c"&gt;# ubuntu.vm&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Check connectivity&lt;/h3&gt;
+
+&lt;p&gt;First  you&amp;rsquo;re going to  make sure both servers can communicate via hostname by checking their &lt;code&gt;/etc/hosts&lt;/code&gt; files:&lt;/p&gt;
+
+&lt;p&gt;On the fedora host:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;fedora.vm &lt;span class="nv"&gt;$ &lt;/span&gt;cat /etc/hosts
+&lt;span class="o"&gt;[&lt;/span&gt;...]
+192.168.122.34 fedora.vm
+192.168.122.35 centos.vm
+192.168.122.36 ubuntu.vm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the ubuntu host:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;ubuntu.vm &lt;span class="nv"&gt;$ &lt;/span&gt;cat /etc/hosts
+&lt;span class="o"&gt;[&lt;/span&gt;...]
+192.168.122.34 fedora.vm
+192.168.122.35 centos.vm
+192.168.122.36 ubuntu.vm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the centos hosts:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;centos.vm &lt;span class="nv"&gt;$ &lt;/span&gt;cat /etc/hosts
+&lt;span class="o"&gt;[&lt;/span&gt;...]
+192.168.122.34 fedora.vm
+192.168.122.35 centos.vm
+192.168.122.36 ubuntu.vm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Clone and run the ansible playbook&lt;/h3&gt;
+
+&lt;p&gt;Now clone the ansible playbook needed to install CRI-O:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;laptop &lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/cri-o/cri-o-ansible
+laptop &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;cri-o-ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The last thing you need to do is now launch the ansible playbook on each server.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;laptop &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;
+/home/runcom/cri-o-ansible
+laptop &lt;span class="nv"&gt;$ &lt;/span&gt;cat hosts
+192.168.122.35
+192.168.122.34 &lt;span class="nv"&gt;ansible_python_interpreter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;’python3’
+192.168.122.36 &lt;span class="nv"&gt;ansible_python_interpreter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;’python3’
+laptop &lt;span class="nv"&gt;$ &lt;/span&gt;ansible-playbook -i hosts cri-o.yml
+&lt;span class="o"&gt;[&lt;/span&gt;...]
+laptop &lt;span class="err"&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Currently the ansible playbook supports Ubuntu 16.04, CentOS 7.3 and Fedora 25+. We&amp;rsquo;re planning to add support for other distributions. Feel free to open a PR for other distributions as well!&lt;/p&gt;
+
+&lt;h3&gt;kubeadm&lt;/h3&gt;
+
+&lt;p&gt;Now that you have correctly provisioned the two servers you need to follow the official &lt;code&gt;kubeadm&lt;/code&gt; documentation to install kubernetes.  You don’t need  to install the &lt;code&gt;docker&lt;/code&gt; package on any server!  It&amp;rsquo;s not needed even though the kubeadm documentation says to install it.  CRI-O is replacing the functionality of the docker engine for  Kubernetes.&lt;/p&gt;
+
+&lt;h4&gt;Setting up the Master&lt;/h4&gt;
+
+&lt;p&gt;Start by logging into the &lt;code&gt;fedora.vm&lt;/code&gt; machine which will be the master node:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;fedora.vm &lt;span class="c"&gt;# cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum.repos.d/kubernetes.repo&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubernetes]
+&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;Kubernetes
+&lt;span class="nv"&gt;baseurl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+&lt;span class="nv"&gt;enabled&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;gpgcheck&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;repo_gpgcheck&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;gpgkey&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+fedora.vm &lt;span class="c"&gt;# dnf install -y kubelet kubeadm kubernetes-cni&lt;/span&gt;
+fedora.vm &lt;span class="c"&gt;# systemctl restart crio&lt;/span&gt;
+fedora.vm &lt;span class="c"&gt;# systemctl enable kubelet &amp;amp;&amp;amp; systemctl start kubelet&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run &lt;code&gt;kubeadm&lt;/code&gt; to install the master node:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;fedora.vm &lt;span class="c"&gt;# kubeadm init --pod-network-cidr=10.244.0.0/16 --skip-preflight-checks&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeadm] WARNING: kubeadm is &lt;span class="k"&gt;in &lt;/span&gt;beta, please &lt;span class="k"&gt;do &lt;/span&gt;not use it &lt;span class="k"&gt;for &lt;/span&gt;production clusters.
+&lt;span class="o"&gt;[&lt;/span&gt;init] Using Kubernetes version: v1.6.4
+&lt;span class="o"&gt;[&lt;/span&gt;init] Using Authorization mode: RBAC
+&lt;span class="o"&gt;[&lt;/span&gt;preflight] Skipping pre-flight checks
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Generated CA certificate and key.
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Generated API server certificate and key.
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] API Server serving cert is signed &lt;span class="k"&gt;for &lt;/span&gt;DNS names &lt;span class="o"&gt;[&lt;/span&gt;kubeadm-master kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs &lt;span class="o"&gt;[&lt;/span&gt;10.96.0.1 10.138.0.4]
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Generated API server kubelet client certificate and key.
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Generated service account token signing key and public key.
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Generated front-proxy CA certificate and key.
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Generated front-proxy client certificate and key.
+&lt;span class="o"&gt;[&lt;/span&gt;certificates] Valid certificates and keys now exist &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="s2"&gt;"/etc/kubernetes/pki"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeconfig] Wrote KubeConfig file to disk: &lt;span class="s2"&gt;"/etc/kubernetes/admin.conf"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeconfig] Wrote KubeConfig file to disk: &lt;span class="s2"&gt;"/etc/kubernetes/kubelet.conf"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeconfig] Wrote KubeConfig file to disk: &lt;span class="s2"&gt;"/etc/kubernetes/controller-manager.conf"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeconfig] Wrote KubeConfig file to disk: &lt;span class="s2"&gt;"/etc/kubernetes/scheduler.conf"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;apiclient] Created API client, waiting &lt;span class="k"&gt;for &lt;/span&gt;the control plane to become ready
+&lt;span class="o"&gt;[&lt;/span&gt;apiclient] All control plane components are healthy after 16.772251 seconds
+&lt;span class="o"&gt;[&lt;/span&gt;apiclient] Waiting &lt;span class="k"&gt;for &lt;/span&gt;at least one node to register and become ready
+&lt;span class="o"&gt;[&lt;/span&gt;apiclient] First node is ready after 5.002536 seconds
+&lt;span class="o"&gt;[&lt;/span&gt;apiclient] Test deployment succeeded
+&lt;span class="o"&gt;[&lt;/span&gt;token] Using token: &amp;lt;token&amp;gt;
+&lt;span class="o"&gt;[&lt;/span&gt;apiconfig] Created RBAC rules
+&lt;span class="o"&gt;[&lt;/span&gt;addons] Created essential addon: kube-proxy
+&lt;span class="o"&gt;[&lt;/span&gt;addons] Created essential addon: kube-dns
+
+Your Kubernetes master has initialized successfully!
+
+To start using your cluster, you need to run &lt;span class="o"&gt;(&lt;/span&gt;as a regular user&lt;span class="o"&gt;)&lt;/span&gt;:
+
+  sudo cp /etc/kubernetes/admin.conf &lt;span class="nv"&gt;$HOME&lt;/span&gt;/
+  sudo chown &lt;span class="k"&gt;$(&lt;/span&gt;id -u&lt;span class="k"&gt;)&lt;/span&gt;:&lt;span class="k"&gt;$(&lt;/span&gt;id -g&lt;span class="k"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/admin.conf
+  &lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;KUBECONFIG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run &lt;span class="s2"&gt;"kubectl apply -f [podnetwork].yaml"&lt;/span&gt; with one of the options listed at:
+  http://kubernetes.io/docs/admin/addons/
+
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join --token 6b7a29.95a2995f65e1d3c9 192.168.122.34:6443
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Do not follow &lt;code&gt;kubeadm&lt;/code&gt; commands in the output above as we&amp;rsquo;re going to use some custom flags to make &lt;code&gt;kubeadm&lt;/code&gt; works nicely with CRI-O&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Make a record of the &lt;code&gt;kubeadm join&lt;/code&gt; token that &lt;code&gt;kubeadm init&lt;/code&gt; outputs. You will need this in a moment when setting up the nodes.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s explain the flags you used:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--pod-network-cidr=10.244.0.0/16&lt;/code&gt;: this is required as you&amp;rsquo;re going to use Flannel to provide network for the cluster&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--skip-preflight-checks&lt;/code&gt;: &lt;code&gt;kubeadm&lt;/code&gt; still assumes docker as the only container runtime which can be used with Kubernetes. You need this flag in order to silence &lt;code&gt;kubeadm init&lt;/code&gt; when it warns us that docker is not installed.  We&amp;rsquo;ve  opened an issue upstream to take care of this at &lt;a href="https://github.com/kubernetes/kubeadm/issues/285"&gt;https://github.com/kubernetes/kubeadm/issues/285&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The master is now up and running. Only thing remaining to do on the master is deploying a network add-on for the cluster. We&amp;rsquo;re going to use a custom Flannel network add-on but we also tested the &lt;a href="https://www.weave.works/docs/net/latest/kube-addon/"&gt;official Weave network add-on&lt;/a&gt; if you wish to use it instead.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;fedora.vm &lt;span class="c"&gt;# export KUBECONFIG=/etc/kubernetes/admin.conf&lt;/span&gt;
+fedora.vm &lt;span class="c"&gt;# kubectl apply -f https://gist.githubusercontent.com/sameo/cf92f65ae54a87807ed294f3de658bcf/raw/95d9a66a2268b779dbb25988541136d1ed2fbfe2/flannel.yaml&lt;/span&gt;
+serviceaccount &lt;span class="s2"&gt;"flannel"&lt;/span&gt; created
+clusterrolebinding &lt;span class="s2"&gt;"flannel"&lt;/span&gt; created
+clusterrole &lt;span class="s2"&gt;"flannel"&lt;/span&gt; created
+serviceaccount &lt;span class="s2"&gt;"calico-policy-controller"&lt;/span&gt; created
+configmap &lt;span class="s2"&gt;"kube-flannel-cfg"&lt;/span&gt; created
+daemonset &lt;span class="s2"&gt;"kube-flannel-ds"&lt;/span&gt; created
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The master is now fully configured.&lt;/p&gt;
+
+&lt;h4&gt;Setting up the Nodes&lt;/h4&gt;
+
+&lt;p&gt;On the Ubuntu node:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;ubuntu.vm &lt;span class="c"&gt;# apt-get update &amp;amp;&amp;amp; apt-get install -y apt-transport-https&lt;/span&gt;
+ubuntu.vm &lt;span class="c"&gt;# curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -&lt;/span&gt;
+ubuntu.vm &lt;span class="c"&gt;# cat &amp;lt;&amp;lt;EOF &amp;gt;/etc/apt/sources.list.d/kubernetes.list&lt;/span&gt;
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+ubuntu.vm &lt;span class="c"&gt;# apt-get update&lt;/span&gt;
+ubuntu.vm &lt;span class="c"&gt;# systemctl restart crio&lt;/span&gt;
+ubuntu.vm &lt;span class="c"&gt;# apt-get install -y kubelet kubeadm kubectl kubernetes-cni&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the Centos node:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;centos.vm &lt;span class="c"&gt;# cat &amp;lt;&amp;lt;EOF &amp;gt; /etc/yum.repos.d/kubernetes.repo&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubernetes]
+&lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;Kubernetes
+&lt;span class="nv"&gt;baseurl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+&lt;span class="nv"&gt;enabled&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;gpgcheck&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;repo_gpgcheck&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;gpgkey&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+centos.vm &lt;span class="c"&gt;# yum install -y kubelet kubeadm kubernetes-cni&lt;/span&gt;
+centos.vm &lt;span class="c"&gt;# systemctl restart crio&lt;/span&gt;
+centos.vm &lt;span class="c"&gt;# systemctl enable kubelet &amp;amp;&amp;amp; systemctl start kubelet&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Installing Kubernetes on the nodes is just a matter of running the &lt;code&gt;kubeadm join&lt;/code&gt; command. You now need to use the token taken from the first &lt;code&gt;kubeadm join&lt;/code&gt; on the master. In case you missed it, run the following command on the master and grab it:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;fedora.vm &lt;span class="c"&gt;# kubeadm token list&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the Centos node:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;centos.vm &lt;span class="c"&gt;# kubeadm join --skip-preflight-checks --token 6b7a29.95a2995f65e1d3c9 192.168.122.34:6443&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeadm] WARNING: kubeadm is &lt;span class="k"&gt;in &lt;/span&gt;beta, please &lt;span class="k"&gt;do &lt;/span&gt;not use it &lt;span class="k"&gt;for &lt;/span&gt;production clusters.
+&lt;span class="o"&gt;[&lt;/span&gt;preflight] Skipping pre-flight checks
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Trying to connect to API Server &lt;span class="s2"&gt;"192.168.122.34:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Created cluster-info discovery client, requesting info from &lt;span class="s2"&gt;"https://192.168.122.34.4:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Cluster info signature and contents are valid, will use API Server &lt;span class="s2"&gt;"https://192.168.122.34:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Successfully established connection with API Server &lt;span class="s2"&gt;"192.168.122.34:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;bootstrap] Detected server version: v1.6.4
+&lt;span class="o"&gt;[&lt;/span&gt;bootstrap] The server supports the Certificates API &lt;span class="o"&gt;(&lt;/span&gt;certificates.k8s.io/v1beta1&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;csr] Created API client to obtain unique certificate &lt;span class="k"&gt;for &lt;/span&gt;this node, generating keys and certificate signing request
+&lt;span class="o"&gt;[&lt;/span&gt;csr] Received signed certificate from the API server, generating KubeConfig...
+&lt;span class="o"&gt;[&lt;/span&gt;kubeconfig] Wrote KubeConfig file to disk: &lt;span class="s2"&gt;"/etc/kubernetes/kubelet.conf"&lt;/span&gt;
+
+Node join &lt;span class="nb"&gt;complete&lt;/span&gt;:
+&lt;span class="k"&gt;*&lt;/span&gt; Certificate signing request sent to master and response
+  received.
+&lt;span class="k"&gt;*&lt;/span&gt; Kubelet informed of new secure connection details.
+
+Run &lt;span class="s1"&gt;'kubectl get nodes'&lt;/span&gt; on the master to see this machine join.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the Ubuntu node:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;ubuntu.vm &lt;span class="c"&gt;# kubeadm join --skip-preflight-checks --token 6b7a29.95a2995f65e1d3c9 192.168.122.34:6443&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;kubeadm] WARNING: kubeadm is &lt;span class="k"&gt;in &lt;/span&gt;beta, please &lt;span class="k"&gt;do &lt;/span&gt;not use it &lt;span class="k"&gt;for &lt;/span&gt;production clusters.
+&lt;span class="o"&gt;[&lt;/span&gt;preflight] Skipping pre-flight checks
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Trying to connect to API Server &lt;span class="s2"&gt;"192.168.122.34:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Created cluster-info discovery client, requesting info from &lt;span class="s2"&gt;"https://192.168.122.34.4:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Cluster info signature and contents are valid, will use API Server &lt;span class="s2"&gt;"https://192.168.122.34:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;discovery] Successfully established connection with API Server &lt;span class="s2"&gt;"192.168.122.34:6443"&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;bootstrap] Detected server version: v1.6.4
+&lt;span class="o"&gt;[&lt;/span&gt;bootstrap] The server supports the Certificates API &lt;span class="o"&gt;(&lt;/span&gt;certificates.k8s.io/v1beta1&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;csr] Created API client to obtain unique certificate &lt;span class="k"&gt;for &lt;/span&gt;this node, generating keys and certificate signing request
+&lt;span class="o"&gt;[&lt;/span&gt;csr] Received signed certificate from the API server, generating KubeConfig...
+&lt;span class="o"&gt;[&lt;/span&gt;kubeconfig] Wrote KubeConfig file to disk: &lt;span class="s2"&gt;"/etc/kubernetes/kubelet.conf"&lt;/span&gt;
+
+Node join &lt;span class="nb"&gt;complete&lt;/span&gt;:
+&lt;span class="k"&gt;*&lt;/span&gt; Certificate signing request sent to master and response
+  received.
+&lt;span class="k"&gt;*&lt;/span&gt; Kubelet informed of new secure connection details.
+
+Run &lt;span class="s1"&gt;'kubectl get nodes'&lt;/span&gt; on the master to see this machine join.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nodes setup is now completed.&lt;/p&gt;
+
+&lt;h3&gt;Enjoy&lt;/h3&gt;
+
+&lt;p&gt;Congratulations! You installed Kubernetes on the cluster and you&amp;rsquo;re using CRI-O as the container runtime!&lt;/p&gt;
+
+&lt;p&gt;To start using your cluster, you need to run (as a regular user) on the master:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;fedora.vm &lt;span class="nv"&gt;$ &lt;/span&gt; sudo cp /etc/kubernetes/admin.conf &lt;span class="nv"&gt;$HOME&lt;/span&gt;/
+fedora.vm &lt;span class="nv"&gt;$ &lt;/span&gt; sudo chown &lt;span class="k"&gt;$(&lt;/span&gt;id -u&lt;span class="k"&gt;)&lt;/span&gt;:&lt;span class="k"&gt;$(&lt;/span&gt;id -g&lt;span class="k"&gt;)&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/admin.conf
+fedora.vm &lt;span class="nv"&gt;$ &lt;/span&gt; &lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;KUBECONFIG&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/admin.conf
+fedora.vm &lt;span class="nv"&gt;$ &lt;/span&gt;kubectl get nodes
+NAME        STATUS    AGE      VERSION
+centos.vm   Ready     17s      v1.6.4
+fedora.vm   Ready     15m      v1.6.4
+ubuntu.vm   Ready     12m      v1.6.4
+fedora.vm &lt;span class="err"&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Play around with your cluster in any way you want. I suggest following the great examples at &lt;a href="http://kubernetesbyexample.com/"&gt;kubernetesbyexample.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Conclusions&lt;/h3&gt;
+
+&lt;p&gt;Kubernetes runs well with alternative runtimes like CRI-O.  Since CRI-O is dedicated to the kubernetes runtime, it is an excellent alternative to the upstream docker engine.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re currently working on making CRI-O available for every major distribution.  This will allow you to install it from your favorite package manager, as opposed to installing it from source. We&amp;rsquo;ll make an official announcement when the packages are ready.  We’re always looking for help and would welcome anyone that would like to join the development effort for CRI-O!&lt;/p&gt;
+
+&lt;p&gt;If you run into issues following these installation instructions, please report them in one of the following places:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/kubernetes-incubator/cri-o"&gt;The CRI-O github repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The #cri-o channel on chat.freenode.net&lt;/li&gt;
+&lt;li&gt;In the comments below&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Grazie mille!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Testing System-Containerized Kubeadm</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/05/testing-system-containerized-kubeadm/"/>
+    <id>http://www.projectatomic.io/blog/2017/05/testing-system-containerized-kubeadm/</id>
+    <published>2017-05-30T13:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently, I’ve been experimenting with running &lt;a href="http://www.projectatomic.io/blog/2017/05/system-containerized-kube/"&gt;Kubernetes in system containers&lt;/a&gt;, and those tests led me to wonder whether I could use system containers as a means of working around the &lt;a href="https://jebpages.com/2016/11/01/installing-kubernetes-on-centos-atomic-host-with-kubeadm/"&gt;issues I’ve experienced&lt;/a&gt; installing &lt;a href="https://kubernetes.io/docs/getting-started-guides/kubeadm/"&gt;kubeadm&lt;/a&gt;, the simple-to-use tool for bootstrapping kubernetes clusters, on an atomic host.&lt;/p&gt;
+
+&lt;p&gt;On a regular CentOS or Fedora host, using kubeadm is a matter of installing rpms for the kubelet, kubectl, kubeadm itself, and for a set of Kubernetes networking tools, kubernetes-cni. On an atomic host, rpm-ostree package layering allows for installing rpms, but if existing kube rpms are already part the atomic host image, as they are for Fedora Atomic Host, you won’t be able to install the prescribed upstream kube versions. And even on a host without built-in kubernetes, like &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel"&gt;CentOS Atomic Continuous&lt;/a&gt;, rpm-ostree won’t abide rpm content stored in &lt;code&gt;/opt&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;I managed to make a &lt;a href="https://github.com/jasonbrooks/atomic-system-containers/tree/kube-containers/kubeadm"&gt;kubadm system container&lt;/a&gt; that uses the same tmpfiles.d trick I used to link kubectl and etcdctl from the container into the the host’s &lt;code&gt;/usr/local/bin&lt;/code&gt; to make the kubeadm tool available from the host.&lt;/p&gt;
+
+&lt;p&gt;For now, this works best on CentOS Atomic Host, with either the &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;downstream&lt;/a&gt; or &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel"&gt;continuous&lt;/a&gt; branches.&lt;/p&gt;
+
+&lt;p&gt;With Fedora-based Atomic Hosts, there are two issues. First, Fedora 25 currently ships with an older version of runc. Soon after the &lt;a href="https://bodhi.fedoraproject.org/updates/FEDORA-2017-f4ccc7cb91"&gt;updated version&lt;/a&gt; gets enough karma, this kubeadm system container will work with Fedora 25&amp;hellip; with SELinux in permissive mode. I’m trying to track down why this is necessary with Fedora but not with CentOS.&lt;/p&gt;
+
+&lt;p&gt;To try it for yourself, start out by installing this kubeadm system container, starting the kubelet service, and kicking off &lt;code&gt;kubeadm init&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic install --system --name kubelet docker.io/jasonbrooks/kubeadm
+# systemctl start kubelet
+# kubeadm init --skip-preflight-checks --pod-network-cidr=10.254.0.0/16
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the &lt;code&gt;kubeadm init&lt;/code&gt; completes, you’ll need to follow the directions on screen to configure kubectl:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo cp /etc/kubernetes/admin.conf $HOME/
+$ sudo chown $(id -u):$(id -g) $HOME/admin.conf
+$ export KUBECONFIG=$HOME/admin.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we need to configure a networking plugin, along with RBAC rules. I&amp;rsquo;ve modified the the &lt;code&gt;kube-flannel.yml&lt;/code&gt; file below to work with SELinux:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel-rbac.yml
+$ kubectl apply -f https://raw.githubusercontent.com/jasonbrooks/flannel/support-selinux-kube/Documentation/kube-flannel.yml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Assuming you want your master to do double-duty as a node for an all in one setup, run the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ kubectl taint nodes --all node-role.kubernetes.io/master-
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once all the pods in the &lt;code&gt;kube-system&lt;/code&gt; namespace are up and running, which you can check with &lt;code&gt;kubectl get pods -n kube-system&lt;/code&gt;, you can test out your cluster. I like to use this guestbook-go app:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ kubectl apply -f https://gist.githubusercontent.com/jasonbrooks/c2cab426c315ec26266ddd2c78aa4b60/raw/f9199348a04d5d65b60ce974992f5fd589b3e1de/guestbookgo.yaml
+
+$ kubectl get svc guestbook
+NAME        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+guestbook   10.106.170.7   &amp;lt;nodes&amp;gt;       3000:32534/TCP   6m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once all the pods for the guestbook app are are up and running, which you can check with &lt;code&gt;kubectl get pods&lt;/code&gt;, you can test out the app by visiting the IP address of your host at the NodePort listed above (in this case 32534).&lt;/p&gt;
+
+&lt;p&gt;Running &lt;code&gt;atomic containers list&lt;/code&gt; will show that most of the containers running are run via docker, with the exception of the kubelet container, run via runc:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ atomic containers list
+   CONTAINER ID IMAGE                COMMAND              CREATED          STATE     BACKEND    RUNTIME   
+   81ab52fe1a6a docker.io/redis@sha2 docker-entrypoint.sh 2017-05-10 14:21 running   docker     docker    
+   cf2561dbd708 docker.io/kubernetes /bin/sh -c /run.sh   2017-05-10 14:21 running   docker     docker    
+   9cbbea14fc20 gcr.io/google_contai ./guestbook          2017-05-10 14:21 running   docker     docker    
+   b8b91e19260e gcr.io/google_contai /pause               2017-05-10 14:21 running   docker     docker    
+   e68cf8f192ab gcr.io/google_contai /pause               2017-05-10 14:21 running   docker     docker    
+   f619b1092cfc gcr.io/google_contai /pause               2017-05-10 14:21 running   docker     docker    
+   5d9b7966a292 gcr.io/google_contai /sidecar --v=2 --log 2017-05-10 12:27 running   docker     docker    
+   f74a7d3da1bd gcr.io/google_contai /dnsmasq-nanny -v=2  2017-05-10 12:27 running   docker     docker    
+   b6afd95588a9 gcr.io/google_contai /kube-dns --domain=c 2017-05-10 12:27 running   docker     docker    
+   96a68d5a53d3 gcr.io/google_contai /pause               2017-05-10 12:27 running   docker     docker    
+   75f981a02222 quay.io/coreos/flann /opt/bin/flanneld -- 2017-05-10 12:27 running   docker     docker    
+   2c7d8e7af5c2 gcr.io/google_contai /usr/local/bin/kube- 2017-05-10 12:27 running   docker     docker    
+   180eeb2e9a26 quay.io/coreos/flann /bin/sh -c 'set -e - 2017-05-10 12:26 running   docker     docker    
+   1c35ebad2642 gcr.io/google_contai /pause               2017-05-10 12:26 running   docker     docker    
+   f09b2e9f60ad gcr.io/google_contai /pause               2017-05-10 12:24 running   docker     docker    
+   b980f99adec8 gcr.io/google_contai etcd --listen-client 2017-05-10 12:24 running   docker     docker    
+   8d58bd57c632 gcr.io/google_contai kube-apiserver --kub 2017-05-10 12:24 running   docker     docker    
+   2ffdb4612a64 gcr.io/google_contai kube-scheduler --add 2017-05-10 12:24 running   docker     docker    
+   2cabf3d7a924 gcr.io/google_contai kube-controller-mana 2017-05-10 12:23 running   docker     docker    
+   a5a8d203f7e7 gcr.io/google_contai /pause               2017-05-10 12:23 running   docker     docker    
+   d25bc2c3808a gcr.io/google_contai /pause               2017-05-10 12:23 running   docker     docker    
+   d3191cdaef80 gcr.io/google_contai /pause               2017-05-10 12:23 running   docker     docker    
+   ef0d198666bc gcr.io/google_contai /pause               2017-05-10 12:23 running   docker     docker    
+   kubelet      docker.io/jasonbrook /usr/bin/launch.sh   2017-05-10 12:22 running   ostree     runc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;kubeadm is still considered beta for now, and there aren&amp;rsquo;t official Fedora or CentOS packages , so the system container I made pulls that packages directly from the upstream. Once kubeadm is considered GA, I expect to see it available in Fedora-packaged form.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

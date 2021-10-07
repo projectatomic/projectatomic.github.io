@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Labels</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/labels.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing Image Metadata Labels for Software Vendors</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/09/introducing-vendor-labels2/"/>
+    <id>http://www.projectatomic.io/blog/2015/09/introducing-vendor-labels2/</id>
+    <published>2015-09-23T14:12:22+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Aaron Weitekamp</name>
+    </author>
+    <content type="html">&lt;p&gt;Docker image metadata can be arbitrarily extended using the LABEL directive in a Dockerfile. This is a great way to annotate an image and enable automation:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How to run or install an image&lt;/li&gt;
+&lt;li&gt;Who built an image&lt;/li&gt;
+&lt;li&gt;URLs for documentation or other support information&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;rsquo;ve been encouraging the docker community to standardize these LABELs in an open source way through the &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels/"&gt;Container Application Generic Labels repository&lt;/a&gt;. Recent &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels/pulls?utf8=%E2%9C%93&amp;amp;q=is%3Apr+is%3Aclosed+author%3Aaweiteka+vendor"&gt;pull requests&lt;/a&gt; added a new vendor directory for software companies (or FOSS projects) to document metadata that is specific to their particular needs. &lt;/p&gt;
+
+&lt;p&gt;As a point of reference, Red Hat released their &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels/blob/master/vendor/redhat/labels.md"&gt;LABEL metadata&lt;/a&gt; and &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels/blob/master/vendor/redhat/names.md"&gt;image naming policy&lt;/a&gt; to the community. This might be a useful reference for other folks building their own metadata.&lt;/p&gt;
+
+&lt;p&gt;Have metadata for your project? Just submit a pull request to help create documentation about metadata your tooling or application depends on. Have questions? Ask on the &lt;a href="http://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt; mailing list, or create an issue in the GitHub repository.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Hey Container Community, Let's Talk about Labels</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/04/hey-container-community-lets-talk-about-labels/"/>
+    <id>http://www.projectatomic.io/blog/2015/04/hey-container-community-lets-talk-about-labels/</id>
+    <published>2015-04-29T15:08:06+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;We have added a new tool called atomic &lt;a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command/"&gt;which I announced last week. &lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The Atomic tool currently takes advantage of the Label patch in docker that allows developers shipping applications as container images, to add arbitrary labels to the images json data.  We chose to use some top level names for identifiers. Right now, Labels support free-form text without any restrictions. This is good in that it&amp;rsquo;s flexible, but bad in that we want containers to be portable and tools like Atomic that make use of the Label should co-exist with other tools that may also use the Label.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;We do not want to namespace these names for the atomic tool since we believe that we should build a &lt;em&gt;de facto&lt;/em&gt; standard for these names.  Then other tools could take advantage of the labels.&lt;/p&gt;
+
+&lt;p&gt;We were &lt;a href="https://twitter.com/solomonstre/status/590996458440011776"&gt;encouraged to invite our competitors to participate in this conversation&lt;/a&gt; so, we have put together a GitHub page with some suggested top level label IDs. We&amp;rsquo;re hoping to bring together folks from all the interested projects and come up with a Generic Label proposal/standard that works for all of us.&lt;/p&gt;
+
+&lt;p&gt;See &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels"&gt;the ContainerApplicationGenericLabels repository on GitHub&lt;/a&gt; for our first take. Please open issues if you have points to discuss, and pull requests to modify the document.&lt;/p&gt;
+
+&lt;p&gt;We actually want Labels to be agnostic of the container tools, so they could be used in other container frameworks/tools like CoreOS and systemd-nspawn. The applications spec introduced by CoreOS has the concept of Annotations, which could take advantage of these names.&lt;/p&gt;
+
+&lt;p&gt;The goal of these labels is to give software delivery engineers a somewhat standard way of describing the application they are delivering.&lt;/p&gt;
+
+&lt;p&gt;We welcome suggestions from anyone in the containers community, including (but not limited to!) CoreOS, Docker, VMware, IBM, Microsoft, Google, Amazon, RackSpace, SUSE, Canonical, and any other projects or companies doing work that might benefit from top-level label IDs.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

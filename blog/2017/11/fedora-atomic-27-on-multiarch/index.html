@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 27 Atomic Host Availability on Multiple Architectures &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Sinny Kumari' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 27 Atomic Host Availability on Multiple Architectures' property='og:title'>
+<meta content='We are proud to announce that multiple architectures are now supported with Fedora 27 Atomic Host release! Now, along with x86_64 architecture, Atomic Host is also available on 64 bit ARM (AArch64) and PowerPC Little Endian (ppc64le). Both aarch64 and ppc64le architectures will receive Atomic OSTree updates in the same way x86_64 does.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/' property='og:url'>
+<meta content='2017-11-16T11:00:00Z' property='article:published_time'>
+<meta content='sinnykumari' property='article:author:username'>
+<meta content='aarch64' property='article:tag'>
+<link href='/blog/tag/aarch64.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='multi-arch' property='article:tag'>
+<link href='/blog/tag/multi-arch.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ppc64le' property='article:tag'>
+<link href='/blog/tag/ppc64le.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 27 Atomic Host Availability on Multiple Architectures' name='twitter:title'>
+<meta content='We are proud to announce that multiple architectures are now supported with Fedora 27 Atomic Host release! Now, along with x86_64 architecture, Atomic Host is also available on 64 bit ARM (AArch64) and PowerPC Little Endian (ppc64le). Both aarch64 and ppc64le architectures will receive Atomic OSTree updates in the same way x86_64 does.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_11 blog_2017_11_fedora-atomic-27-on-multiarch blog_2017_11_fedora-atomic-27-on-multiarch_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 27 Atomic Host Availability on Multiple Architectures
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/sinnykumari/">Sinny Kumari</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-11-16T11:00:00Z'>
+Thursday 16 November 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><img alt="Picture of OverDrive1000 ARM64 system, loaned to Project Atomic by the ARM coalition" width="1024" height="347" src="/images/overdrive1000.png?1633620578" /></p>
+
+<p>We are proud to announce that multiple architectures are now supported with Fedora 27 Atomic Host release! Now, along with x86_64 architecture, Atomic Host is also available on 64 bit ARM (AArch64) and PowerPC Little Endian (ppc64le). Both aarch64 and ppc64le architectures will receive Atomic OSTree updates in the same way x86_64 does.</p>
+
+<p></p>
+
+<p><em>Photo: Overdrive1000 aarch64 system provided by ARM Coalition for testing</em></p>
+
+<h3>Download</h3>
+
+<p>Fedora Atomic Host for aarch64 and ppc64le are available as both ISOs and cloudImages:</p>
+
+<ul>
+<li><p>aarch64</p>
+
+<ul>
+<li><a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/aarch64/iso/Fedora-Atomic-ostree-aarch64-27-20171110.1.iso">ISO</a></li>
+<li><a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-Atomic-27-20171110.1.aarch64.qcow2">QCOW</a></li>
+<li><a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-Atomic-27-20171110.1.aarch64.raw.xz">Raw image</a></li>
+</ul></li>
+<li><p>ppc64le</p>
+
+<ul>
+<li><a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/ppc64le/iso/Fedora-Atomic-ostree-ppc64le-27-20171110.1.iso">ISO</a></li>
+<li><a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20171110.1.ppc64le.qcow2">QCOW</a></li>
+<li><a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20171110.1.ppc64le.raw.xz">Raw image</a></li>
+</ul></li>
+</ul>
+
+<h3>Installation</h3>
+
+<p>Atomic Host can be installed everywhere regular OSes can: on bare metal, virtual machine, or public or private cloud. If you have some aarch64 or ppc64le hardware, we&rsquo;d love for you to take Atomic Host for a spin. If you don&rsquo;t want to reformat the machine, one quick way is to run <code>virt-install</code> on your box.</p>
+
+<p><code>virt-install</code> is a command line tool which will create a virtual machine based on QEMU emulator with KVM hardware acceleration managed by libvirt on top. Install the appropriate virtualizaton packages for your system, to create and access guest VMs using virt-install in both graphical and console mode.  For example, on Fedora do:</p>
+<pre class="highlight plaintext"><code>$ sudo dnf install @virtualization&#x000A;</code></pre>
+
+<p>The above command will install a group of packages: virt-install, qemu-kvm, libvirt-daemon-config-network, libvirt-daemon-kvm, virt-manager and virt-viewer, along with their dependencies. Then, start the libvirtd service if not already running:</p>
+<pre class="highlight plaintext"><code>$ sudo systemctl start libvirtd&#x000A;</code></pre>
+
+<p>We can now use the <code>virt-install</code> command to run Atomic Host image</p>
+<pre class="highlight plaintext"><code>$ sudo virt-install --name fedora-27-atomic --ram 2048 --vcpus 2 \&#x000A;  --disk path=/var/lib/libvirt/images/Fedora-Atomic-27.&lt;arch&gt;.qcow2 \&#x000A;  --os-type linux --os-variant fedora26 --network bridge=virbr0 \&#x000A;  --graphics vnc,listen=127.0.0.1,port=5901 \&#x000A;  --cdrom /var/lib/libvirt/images/init.iso --noautoconsole&#x000A;&#x000A;</code></pre>
+
+<p>Here, we have assumed that Fedora Atomic qcow2 image and init.iso file are available in <code>/var/lib/libvirt/images/</code> directory.</p>
+
+<p>The file <code>init.iso</code> is a metadata ISO to provide critical data when Atomic Host boots. Check out <a href="http://www.projectatomic.io/docs/quickstart/">Prep the cloud-init source ISO</a> to easily create it.
+You might need to make other adjustments to the <code>virt-install</code> command line above depending upon your requirement.</p>
+
+<h4>Limitations with aarch64</h4>
+
+<p>64-bit ARM are available on variations of hardware and installation should work as expected on a server class hardware. However, thre are two major limitations:</p>
+
+<ul>
+<li>Atomic Host ISOs can be installed only in UEFI mode</li>
+<li>Single board computers (e.g. RPi3, Pine64) are not supported yet</li>
+</ul>
+
+<h4>Features</h4>
+
+<p>Atomic Host provides various features, some of them are:</p>
+
+<ul>
+<li><code>Immutable Host</code></li>
+<li><code>Package Layering</code> - Additional package(s) can be installed on top of base Atomic Host using package layering.</li>
+</ul>
+<pre class="highlight plaintext"><code>$ sudo rpm-ostree install elfutils&#x000A;</code></pre>
+
+<ul>
+<li><code>Running containers</code> - One can easily run a container image available locally or from a registry. For example, running hello-world container image from docker.io registry on ppc64le machine:</li>
+</ul>
+<pre class="highlight plaintext"><code>$ sudo docker run --rm docker.io/ppc64le/hello-world&#x000A;</code></pre>
+
+<ul>
+<li><code>Atomic Update and Rollback</code> - Atomic Host receives update in the form of a new Atomic OSTree.</li>
+</ul>
+<pre class="highlight plaintext"><code>$ sudo rpm-ostree upgrade&#x000A;</code></pre>
+
+<p>Since each operation is atomic, it is also possible to undo changes by using rollback feature.</p>
+<pre class="highlight plaintext"><code>$ sudo rpm-ostree rollback&#x000A;</code></pre>
+
+<h4>Reaching out for help</h4>
+
+<p>Go ahead and try it out! If you run into issues, you can reach us via:</p>
+
+<ul>
+<li>Mailing List - <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel@projectatomic.io</a></li>
+<li>IRC channel - #atomic on Freenode</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/aarch64/">aarch64</a></li>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/multi-arch/">multi-arch</a></li>
+<li><a href="/blog/tag/ppc64le/">ppc64le</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

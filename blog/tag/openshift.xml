@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Open Shift</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/openshift.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/"/>
+    <id>http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/</id>
+    <published>2017-05-25T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Micah Abbott</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;strong&gt;Update: Removed links to Atomic Registry as discontinued.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The Project Atomic site has had a section dedicated to the Atomic Registry, which has been discontinued in favor of &lt;a href="https://docs.openshift.com/enterprise/3.0/architecture/infrastructure_components/image_registry.html"&gt;OpenShift Registry&lt;/a&gt;. It was useful for getting a registry up and running as quickly as possible.  However, the software powering the quickstart installation has not always kept up with the &lt;a href="https://www.openshift.org"&gt;OpenShift Origin&lt;/a&gt; software which powers the actual registry and web UI.  This has lead to an increase in users reporting issues in the #atomic Freenode IRC channel.  And often it ends with someone pointing to the &lt;a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html"&gt;stand-alone registry documentation&lt;/a&gt; that is provided by the OpenShift Origin project.&lt;/p&gt;
+
+&lt;p&gt;It turns out that deploying the stand-alone registry on a single Fedora 25 Atomic Host system is quite straight-forward and can quickly provide a usable registry. In this blog post, we&amp;rsquo;ll deploy a proof-of-concept stand-alone registry on a single node, which will end up using self-signed certificates in the process.  In a later blog post, we&amp;rsquo;ll show you how to setup a stand-alone registry using multiple nodes and your own SSL certificates.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;A good portion of this guide was lifted and adapted from &lt;a href="https://twitter.com/dustymabe"&gt;Dusty Mabe&amp;rsquo;s&lt;/a&gt; excellent guide on &lt;a href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/"&gt;installing OpenShift Origin on Fedora 25 Atomic Host&lt;/a&gt;.  He also assisted me along the way with some questions, so most of the credit goes to him for figuring out the hard stuff!&lt;/p&gt;
+
+&lt;h3&gt;Environment&lt;/h3&gt;
+
+&lt;p&gt;For the purposes of this guide, we are going to deploy a stand-alone registry using the &amp;lsquo;all-in-one&amp;rsquo; topology, where we host all the components on a single system.  The OpenShift Origin docs have some &lt;a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html#registry-minimum-hardware-requirements"&gt;hardware requirements&lt;/a&gt; for this kind of install; they seem rather generous, so you might be able to get away with a less powerful system.  As with most things, your mileage may vary.&lt;/p&gt;
+
+&lt;p&gt;In addition to your dedicated system for the registry, you&amp;rsquo;ll also need to have Ansible 2.2 installed on your workstation (or wherever you choose to run the Ansible-based installer).&lt;/p&gt;
+
+&lt;p&gt;Once your Fedora 25 Atomic Host system has been provisioned, make sure it is upgraded to the latest version by using the &lt;code&gt;atomic host upgrade&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;Additionally, I decided I would configure Docker to use the &lt;code&gt;overlay2&lt;/code&gt; storage driver for my install.  This is completely optional, but if you decide to make this change you can use the &lt;a href="http://www.projectatomic.io/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/"&gt;instructions in a previous blog post&lt;/a&gt; to do so.&lt;/p&gt;
+
+&lt;h3&gt;Prepping the Installer&lt;/h3&gt;
+
+&lt;p&gt;OpenShift Origin provides an excellent &lt;a href="https://www.ansible.com/"&gt;Ansible-based&lt;/a&gt; installer that we will used to deploy the registry.  So the first thing to do is checkout the installer from the &lt;a href="https://github.com/openshift/openshift-ansible"&gt;GitHub repo&lt;/a&gt;.  At the time of this writing, I used a specific version (&lt;a href="https://github.com/openshift/openshift-ansible/releases/tag/openshift-ansible-3.4.24-1"&gt;3.4.24-1&lt;/a&gt;) of the repo to ensure it would work correctly for me.  We&amp;rsquo;ll checkout the repo to that version as part of this process.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/openshift/openshift-ansible.git
+$ cd openshift-ansible
+$ git checkout openshift-ansible-3.4.24-1
+HEAD is now at 90f6a70... Automatic commit of package [openshift-ansible] release [3.6.24-1].
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next step is to prepare the inventory file for the installer.  My dedicated system for the registry has a &amp;#39;public&amp;rsquo; IP address of &lt;code&gt;10.8.172.199&lt;/code&gt;, so we use that value throughout.  (I&amp;rsquo;m using a VM in a private OpenStack instance, so the &amp;#39;public&amp;rsquo; IP address is only visible on our corporate network and is not reachable from the Internet.)&lt;/p&gt;
+
+&lt;p&gt;Notice how I am using the &lt;a href="http://xip.io"&gt;xip.io&lt;/a&gt; service as part of my &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt; value.  It provides wildcard DNS resolution for any IP address you want to use.  This is a handy solution if the system you are using does not have a DNS resolvable hostname.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_user=cloud-user
+ansible_become=true
+
+openshift_master_default_subdomain=10.8.172.199.xip.io
+
+openshift_deployment_type=origin
+openshift_release=v1.4.1
+deployment_subtype=registry
+containerized=true
+
+# enable htpasswd auth
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1'}
+
+# host group for masters
+[masters]
+10.8.172.199
+
+# host group for worker nodes, we list master node here so that
+# openshift-sdn gets installed. We mark the master node as not
+# schedulable.
+[nodes]
+10.8.172.199 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This inventory is very similar to the one used in Dusty&amp;rsquo;s blog post about installing OpenShift Origin, so I&amp;rsquo;m just going to highlight some of the changes I made.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dropped the specification of the &lt;code&gt;etcd&lt;/code&gt; nodes&lt;/li&gt;
+&lt;li&gt;Added the &lt;code&gt;deployment_subtype=registry&lt;/code&gt; entry&lt;/li&gt;
+&lt;li&gt;Dropped the creation of the &lt;code&gt;user&lt;/code&gt; username&lt;/li&gt;
+&lt;li&gt;Skipped the usage of the &lt;code&gt;openshift_public_hostname&lt;/code&gt; and &lt;code&gt;openshift_hostname&lt;/code&gt; variables&lt;/li&gt;
+&lt;li&gt;New values for &lt;code&gt;openshift_node_labels&lt;/code&gt; and &lt;code&gt;openshift_schedulable&lt;/code&gt; variables&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The most important changes (which are also mentioned in the OpenShift Origin documentation) are the addtion of the &lt;code&gt;deployment_subtype&lt;/code&gt; and &lt;code&gt;openshift_schedulable&lt;/code&gt; variables.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;deployment_subtype&lt;/code&gt; variable instructs the installer to just install the pieces of OpenShift Origin necessary for the stand-alone registry.  Additionally, the &lt;code&gt;openshift_schedulable&lt;/code&gt; variable allows the single node to be used to run pods.&lt;/p&gt;
+
+&lt;h3&gt;Run the Installer&lt;/h3&gt;
+
+&lt;p&gt;We are ready to feed the inventory file to &lt;code&gt;ansible-playbook&lt;/code&gt; and run the installer.  We have to use the same workaround mentioned in Dusty&amp;rsquo;s blog post to enable Ansible to use Python3 during execution.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible-playbook -i myinventory playbooks/byo/config.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+...
+...
+PLAY RECAP *********************************************************************
+10.8.172.199               : ok=567  changed=130  unreachable=0    failed=0
+localhost                  : ok=9    changed=0    unreachable=0    failed=0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running the installer will take a few minutes, but once it finished, we can get right to the registry console.&lt;/p&gt;
+
+&lt;p&gt;Assuming you have used a similar value for &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt;, you&amp;rsquo;ll be able to access your registry console at a URL similar to &lt;code&gt;https://registry-console-default.10.8.172.199.xip.io/&lt;/code&gt;.  Just append &lt;code&gt;registry-console-default.&lt;/code&gt; to the value of &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As mentioned earlier, we used a self-signed certificate for the registry console, so you will have to instruct your browser to accept the certificate when you access the console.&lt;/p&gt;
+
+&lt;p&gt;The inventory file we used defined an &lt;code&gt;admin&lt;/code&gt; user with the password &lt;code&gt;OriginAdmin&lt;/code&gt; and we can use that right away to login.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-logged-in.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Next Steps&lt;/h3&gt;
+
+&lt;p&gt;With the &lt;code&gt;admin&lt;/code&gt; user, I can immediately create a new project and start pushing images to the registry.  In the image below, I&amp;rsquo;ve created the &lt;code&gt;test&lt;/code&gt; project.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-test-project.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because the registry is using a self-signed certificate, I need to configure my local Docker daemon to recognize the registry as an insecure registry.  This means adding &lt;code&gt;--insecure-registry docker-registry-default.10.8.172.199.xip.io&lt;/code&gt; to the &lt;code&gt;INSECURE_REGISTRY&lt;/code&gt; field in &lt;code&gt;/etc/sysconfig/docker&lt;/code&gt; and then using &lt;code&gt;systemctl restart docker&lt;/code&gt; to restart the daemon.&lt;/p&gt;
+
+&lt;p&gt;After that, I can use the &lt;code&gt;docker login&lt;/code&gt; command supplied by the registry console to login to the Docker registry and be granted access to push images.  In the example below, I&amp;rsquo;m just pushing a Fedora base image to the registry.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker login -p dNgwgDhlunwAwF52kZ5a4vHzbAXP_aNSScAeLos2qrY -e unused -u unused docker-registry-default.10.8.172.199.xip.io
+Flag --email has been deprecated, will be removed in 1.13.
+Login Succeeded
+$ sudo docker images
+REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
+registry.fedoraproject.org/fedora   latest              917d6b21e974        6 weeks ago         230.6 MB
+$ sudo docker tag registry.fedoraproject.org/fedora:latest docker-registry-default.10.8.172.199.xip.io/test/fedora:latest
+$ sudo docker push docker-registry-default.10.8.172.199.xip.io/test/fedora:latest
+The push refers to a repository [docker-registry-default.10.8.172.199.xip.io/test/fedora]
+ae934834014c: Pushed
+latest: digest: sha256:1c28fa233b9e00f24a9b782752032648bdbf748ef1c29af24a5621691d9460ad size: 3153
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Immediately in the registry console, I can see the newly pushed image.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-pushed-fedora.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;And for grins, let&amp;rsquo;s see if we can push an image to the registry using the &lt;code&gt;atomic&lt;/code&gt; command, which utilizes &lt;a href="https://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt; for the push operation.  We&amp;rsquo;ll push the CentOS base image in this example.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker images
+REPOSITORY                                                TAG                 IMAGE ID            CREATED             SIZE
+registry.centos.org/centos/centos                         latest              5d7f51b6d39a        5 weeks ago         192.5 MB
+docker-registry-default.10.8.172.199.xip.io/test/fedora   latest              917d6b21e974        6 weeks ago         230.6 MB
+registry.fedoraproject.org/fedora                         latest              917d6b21e974        6 weeks ago         230.6 MB
+$ sudo docker tag registry.centos.org/centos/centos:latest docker-registry-default.10.8.172.199.xip.io/test/centos:latest
+$ sudo atomic push --type atomic docker-registry-default.10.8.172.199.xip.io/test/centos:latest
+WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand
+Copying blob sha256:36018b5e978717a047892794aebab513ba6856dbe1bdfeb478ca1219df2c7e9c
+190.83 MB / 190.83 MB [=======================================================]
+Writing manifest to image destination
+Storing signatures
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Again, we can see the image immediately show up in the registry console.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-pushed-centos.png" /&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/12/part2-install-origin-on-f25-atomic-host/"/>
+    <id>http://www.projectatomic.io/blog/2016/12/part2-install-origin-on-f25-atomic-host/</id>
+    <published>2016-12-12T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;In &lt;a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/"&gt;part 1&lt;/a&gt;
+of this series, we used the &lt;a href="https://github.com/openshift/openshift-ansible"&gt;OpenShift Ansible
+Installer&lt;/a&gt; to install
+&lt;a href="https://github.com/openshift/origin"&gt;Openshift Origin&lt;/a&gt; on three servers
+that were running &lt;a href="https://getfedora.org/en/atomic/"&gt;Fedora 25 Atomic
+Host&lt;/a&gt;. The three machines we&amp;rsquo;ll be using
+have the following roles and IP address configurations:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;|    Role     |  Public IPv4   | Private IPv4 |
+|-------------|----------------|--------------|
+| master,etcd | 54.175.0.44    | 10.0.173.101 |
+| worker      | 52.91.115.81   | 10.0.156.20  |
+| worker      | 54.204.208.138 | 10.0.251.101 |
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this blog, we&amp;rsquo;ll explore the installed Origin cluster and then launch
+an application to see if everything works.&lt;/p&gt;
+
+&lt;p&gt;                                                                                                                                                                                                         &lt;/p&gt;
+
+&lt;h3&gt;The Installed Origin Cluster&lt;/h3&gt;
+
+&lt;p&gt;With the cluster up and running, we can log in as &lt;code&gt;admin&lt;/code&gt; to the master
+node via the &lt;code&gt;oc&lt;/code&gt; command. To install the &lt;code&gt;oc&lt;/code&gt; CLI on your machine, you can
+&lt;a href="https://docs.openshift.org/1.2/cli_reference/get_started_cli.html#installing-the-cli"&gt;follow these
+instructions&lt;/a&gt;
+or, on Fedora, you can install via &lt;code&gt;dnf install origin-clients&lt;/code&gt;. For
+this demo, we have the &lt;code&gt;origin-clients-1.3.1-1.fc25.x86_64&lt;/code&gt; rpm
+installed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc login --insecure-skip-tls-verify -u admin -p OriginAdmin https://54.175.0.44:8443
+Login successful.
+
+You have access to the following projects and can switch between them with 'oc project &amp;lt;projectname&amp;gt;':
+
+  * default
+    kube-system
+    logging
+    management-infra
+    openshift
+    openshift-infra
+
+Using project "default".
+Welcome! See 'oc help' to get started.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; &lt;code&gt;--insecure-skip-tls-verify&lt;/code&gt; was added because we do not have
+properly signed certificates. See &lt;a href="https://docs.openshift.org/1.2/install_config/install/advanced_install.html#advanced-install-custom-certificates"&gt;the
+docs&lt;/a&gt;
+for installing a custom signed certificate.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;After we log in we can see that we are using the &lt;code&gt;default&lt;/code&gt; namespace.
+Let&amp;rsquo;s see what nodes exist:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc get nodes
+NAME           STATUS                     AGE
+10.0.156.20    Ready                      9h
+10.0.173.101   Ready,SchedulingDisabled   9h
+10.0.251.101   Ready                      9h
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The nodes represent each of the servers that are a part
+of the Origin cluster. The name of each node corresponds with its
+private IPv4 address. Also note that the &lt;code&gt;10.0.173.101&lt;/code&gt; is the private
+IP address from the &lt;code&gt;master,etcd&lt;/code&gt; node and that its status contains
+&lt;code&gt;SchedulingDisabled&lt;/code&gt;. This is because we specified
+&lt;code&gt;openshift_schedulable=false&lt;/code&gt; for this node when we did the install in
+&lt;a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/"&gt;part
+1&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s check the pods, services, and routes that are running in the
+default namespace:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc get pods -o wide
+NAME                       READY     STATUS    RESTARTS   AGE       IP             NODE
+docker-registry-3-hgwfr    1/1       Running   0          9h        10.129.0.3     10.0.156.20
+registry-console-1-q48xn   1/1       Running   0          9h        10.129.0.2     10.0.156.20
+router-1-nwjyj             1/1       Running   0          9h        10.0.156.20    10.0.156.20
+router-1-o6n4a             1/1       Running   0          9h        10.0.251.101   10.0.251.101
+$
+$ oc get svc
+NAME               CLUSTER-IP       EXTERNAL-IP   PORT(S)                   AGE
+docker-registry    172.30.2.89      &amp;lt;none&amp;gt;        5000/TCP                  9h
+kubernetes         172.30.0.1       &amp;lt;none&amp;gt;        443/TCP,53/UDP,53/TCP     9h
+registry-console   172.30.147.190   &amp;lt;none&amp;gt;        9000/TCP                  9h
+router             172.30.217.187   &amp;lt;none&amp;gt;        80/TCP,443/TCP,1936/TCP   9h
+$
+$ oc get routes
+NAME               HOST/PORT                                        PATH      SERVICES           PORT               TERMINATION
+docker-registry    docker-registry-default.54.204.208.138.xip.io              docker-registry    5000-tcp           passthrough
+registry-console   registry-console-default.54.204.208.138.xip.io             registry-console   registry-console   passthrough
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; If there are any pods that have failed to run, you can try to
+debug with the &lt;code&gt;oc status -v&lt;/code&gt;, and &lt;code&gt;oc describe pod/&amp;lt;podname&amp;gt;&lt;/code&gt; commands.
+You can retry any failed deployments with the &lt;code&gt;oc deploy &amp;lt;deploymentname&amp;gt; --retry&lt;/code&gt;
+command.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see that we have a pod, service, and route for both a
+&lt;code&gt;docker-registry&lt;/code&gt; and a &lt;code&gt;registry-console&lt;/code&gt;. The docker registry is where
+any container builds within OpenShift will be pushed and the registry
+console is a web frontend interface for the registry.&lt;/p&gt;
+
+&lt;p&gt;Notice that there are two &lt;code&gt;router&lt;/code&gt; pods and they are running on two
+different nodes; the worker nodes. We can effectively send traffic to
+either of these nodes and it will get routed appropriately. For our
+install we elected to set the &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt; to
+&lt;code&gt;54.204.208.138.xip.io&lt;/code&gt;. With that setting we are only directing traffic
+to one of the worker nodes. Alternatively, we could have configured this
+as a hostname that was load balanced and/or performed round robin to
+either worker node.&lt;/p&gt;
+
+&lt;p&gt;Now that we have explored the install, let&amp;rsquo;s try out logging in as
+&lt;code&gt;admin&lt;/code&gt; to the openshift web console at &lt;code&gt;https://54.175.0.44:8443&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1215" height="682" src="/images/2016-12-12-origin-install-part-2/login.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;And after we&amp;rsquo;ve logged in, we see the list of &lt;strong&gt;projects&lt;/strong&gt; that the
+&lt;code&gt;admin&lt;/code&gt; user has access to:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1213" height="596" src="/images/2016-12-12-origin-install-part-2/logged_in.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We then select the &lt;code&gt;default&lt;/code&gt; project and can view the same applications
+that we looked at before using the &lt;code&gt;oc&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1210" height="768" src="/images/2016-12-12-origin-install-part-2/logged_in_default.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;At the top, there is the registry console. Let&amp;rsquo;s try out accessing the
+registry console by clicking the
+&lt;code&gt;https://registry-console-default.54.204.208.138.xip.io/&lt;/code&gt; link in the
+top right. Note that this is the link from the exposed route:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1213" height="680" src="/images/2016-12-12-origin-install-part-2/registry_console_login.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can log in with the same &lt;code&gt;admin/OriginAdmin&lt;/code&gt; credentials that we used
+to log in to the OpenShift web console.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1212" height="523" src="/images/2016-12-12-origin-install-part-2/registry_console_logged_in.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After logging in, there are links to each project so we can see images
+that belong to each project, and we see recently pushed images.&lt;/p&gt;
+
+&lt;p&gt;And.. We&amp;rsquo;re done! We have poked around the infrastructure of the
+installed Origin cluster a bit. We&amp;rsquo;ve seen registry pods, router pods,
+and accessed the registry web console frontend. Next we&amp;rsquo;ll get fancy and
+throw an example application onto the platform for the &lt;code&gt;user&lt;/code&gt; user.&lt;/p&gt;
+
+&lt;h3&gt;Running an Application as a Normal User&lt;/h3&gt;
+
+&lt;p&gt;Now that we&amp;rsquo;ve observed some of the more admin like items using the
+&lt;code&gt;admin&lt;/code&gt; user&amp;rsquo;s account, we&amp;rsquo;ll give the normal &lt;code&gt;user&lt;/code&gt; a spin. First,
+we&amp;rsquo;ll log in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc login --insecure-skip-tls-verify -u user -p OriginUser https://54.175.0.44:8443                                                                                        
+Login successful.
+
+You don't have any projects. You can try to create a new project, by running
+
+    oc new-project &amp;lt;projectname&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After we log in as a normal user, the CLI tools recognize pretty quickly
+that this user has no projects and no applications running. The CLI
+tools give us some helpful clues as to what we should do next: create a
+new project. Let&amp;rsquo;s create a new project called &lt;code&gt;myproject&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc new-project myproject
+Now using project "myproject" on server "https://54.175.0.44:8443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
+
+to build a new example application in Ruby.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After creating the new project the CLI tools again give us some helpful
+text showing us how to get started with a new application on the
+platform. It is telling us to try out the ruby application with source
+code at
+&lt;a href="https://github.com/openshift/ruby-ex.git"&gt;github.com/openshift/ruby-ex.git&lt;/a&gt;
+and build it on top of the
+&lt;a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#source-build"&gt;Source-to-Image&lt;/a&gt;
+(or
+&lt;a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#source-build"&gt;S2I&lt;/a&gt;)
+image known as &lt;code&gt;centos/ruby-22-centos7&lt;/code&gt;. Might as well give it a spin:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
+--&amp;gt; Found Docker image ecd5025 (10 hours old) from Docker Hub for "centos/ruby-22-centos7"
+
+    Ruby 2.2
+    --------
+    Platform for building and running Ruby 2.2 applications
+
+    Tags: builder, ruby, ruby22
+
+    * An image stream will be created as "ruby-22-centos7:latest" that will track the source image
+    * A source build using source code from https://github.com/openshift/ruby-ex.git will be created
+      * The resulting image will be pushed to image stream "ruby-ex:latest"
+      * Every time "ruby-22-centos7:latest" changes a new build will be triggered
+    * This image will be deployed in deployment config "ruby-ex"
+    * Port 8080/tcp will be load balanced by service "ruby-ex"
+      * Other containers can access this service through the hostname "ruby-ex"
+
+--&amp;gt; Creating resources with label app=ruby-ex ...
+    imagestream "ruby-22-centos7" created
+    imagestream "ruby-ex" created
+    buildconfig "ruby-ex" created
+    deploymentconfig "ruby-ex" created
+    service "ruby-ex" created
+--&amp;gt; Success
+    Build scheduled, use 'oc logs -f bc/ruby-ex' to track its progress.
+    Run 'oc status' to view your app.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s take a moment to digest that. A new &lt;a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#image-streams"&gt;image
+stream&lt;/a&gt;
+was created to track the upstream &lt;code&gt;ruby-22-centos7:latest&lt;/code&gt; image. A
+&lt;code&gt;ruby-ex&lt;/code&gt;
+&lt;a href="https://docs.openshift.org/1.2/dev_guide/builds.html#defining-a-buildconfig"&gt;buildconfig&lt;/a&gt;
+was created that will perform an
+&lt;a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#source-build"&gt;S2I&lt;/a&gt;
+build that will bake the source code into the image from the
+&lt;code&gt;ruby-22-centos7&lt;/code&gt; image stream. The resulting image will be the source
+for another image stream known as &lt;code&gt;ruby-ex&lt;/code&gt;. A
+&lt;a href="https://docs.openshift.org/1.2/architecture/core_concepts/deployments.html#deployments-and-deployment-configurations"&gt;deploymentconfig&lt;/a&gt;
+was created to deploy the application into pods once the build is done.
+Finally, a &lt;code&gt;ruby-ex&lt;/code&gt; service was created so the application can be load
+balanced and discoverable.&lt;/p&gt;
+
+&lt;p&gt;After a short time, we check the status of the application:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc status
+In project myproject on server https://54.175.0.44:8443
+
+svc/ruby-ex - 172.30.213.94:8080
+  dc/ruby-ex deploys istag/ruby-ex:latest &amp;lt;-
+    bc/ruby-ex source builds https://github.com/openshift/ruby-ex.git on istag/ruby-22-centos7:latest
+      build #1 running for 26 seconds
+    deployment #1 waiting on image or update
+
+1 warning identified, use 'oc status -v' to see details.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; The warning referred to in the output is a warning about
+there being no healthcheck defined for this service. You can view the
+text of this warning by running &lt;code&gt;oc status -v&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see here that there is a svc (service) that is associated with a
+dc (deploymentconfig) that is associated with a bc (buildconfig) that
+has a build that has been &lt;code&gt;running for 26 seconds&lt;/code&gt;. The deployment is
+waiting for the build to finish before attempting to run.&lt;/p&gt;
+
+&lt;p&gt;After some more time:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc status
+In project myproject on server https://54.175.0.44:8443
+
+svc/ruby-ex - 172.30.213.94:8080
+  dc/ruby-ex deploys istag/ruby-ex:latest &amp;lt;-
+    bc/ruby-ex source builds https://github.com/openshift/ruby-ex.git on istag/ruby-22-centos7:latest
+    deployment #1 running for 6 seconds
+
+1 warning identified, use 'oc status -v' to see details.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The build is now done and the deployment is running.&lt;/p&gt;
+
+&lt;p&gt;And after more time:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc status
+In project myproject on server https://54.175.0.44:8443
+
+svc/ruby-ex - 172.30.213.94:8080
+  dc/ruby-ex deploys istag/ruby-ex:latest &amp;lt;-
+    bc/ruby-ex source builds https://github.com/openshift/ruby-ex.git on istag/ruby-22-centos7:latest
+    deployment #1 deployed about a minute ago - 1 pod
+
+1 warning identified, use 'oc status -v' to see details.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have an app! What are the running pods in this project?:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc get pods
+NAME              READY     STATUS      RESTARTS   AGE
+ruby-ex-1-build   0/1       Completed   0          13m
+ruby-ex-1-mo3lb   1/1       Running     0          11m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;em&gt;build&lt;/em&gt; has &lt;em&gt;Completed&lt;/em&gt; and the &lt;code&gt;ruby-ex-1-mo3lb&lt;/code&gt; pod is &lt;em&gt;Running&lt;/em&gt;.
+The only thing we have left to do is expose the service so that it can
+be accessed via the router from the outside world:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc expose svc/ruby-ex
+route "ruby-ex" exposed
+$ oc get route/ruby-ex
+NAME      HOST/PORT                                 PATH      SERVICES   PORT       TERMINATION
+ruby-ex   ruby-ex-myproject.54.204.208.138.xip.io             ruby-ex    8080-tcp   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the route exposed we should now be able to access the application
+on &lt;code&gt;ruby-ex-myproject.54.204.208.138.xip.io&lt;/code&gt;. Before we do that we&amp;rsquo;ll
+log in to the openshift console as the &lt;code&gt;user&lt;/code&gt; user and view the running
+pods in project &lt;code&gt;myproject&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1221" height="526" src="/images/2016-12-12-origin-install-part-2/logged_in_user_ruby_ex.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;And pointing the browser to &lt;code&gt;ruby-ex-myproject.54.204.208.138.xip.io&lt;/code&gt; we
+see:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" width="1218" height="275" src="/images/2016-12-12-origin-install-part-2/ruby-ex-half.jpeg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Woot!&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;We have explored the basic OpenShift Origin cluster that we set up in
+part 1 of this two part blog series. We viewed the infrastructure docker
+registry and router components, as well as discussed the router
+components and how they are set up. We also ran through an example
+application that was suggested to us by the command line tools and were
+able to define that application, monitor its progress, and eventually
+access it from our web browser. Hopefully this blog gives the reader an
+idea or two about how they can get started with setting up and using an
+Origin cluster on Fedora 25 Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;Enjoy!&lt;/p&gt;
+
+&lt;p&gt;Dusty&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/"/>
+    <id>http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/</id>
+    <published>2016-12-07T15:23:32+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/openshift/origin"&gt;Openshift Origin&lt;/a&gt; is the upstream
+project that builds on top of the Kubernetes platform and feeds into the
+OpenShift Container Platform product that is available from Red Hat today.
+Origin is a great way to get started with Kubernetes, and what better
+place to run a container orchestration layer than on top of Fedora
+Atomic Host?&lt;/p&gt;
+
+&lt;p&gt;We recently released &lt;a href="https://fedoramagazine.org/fedora-25-released/"&gt;Fedora
+25&lt;/a&gt;, along with the
+first biweekly release of Fedora 25 Atomic Host. This blog post
+will show you the basics for getting a production installation of Origin
+running on Fedora 25 Atomic Host using the &lt;a href="https://github.com/openshift/openshift-ansible"&gt;OpenShift Ansible
+Installer&lt;/a&gt;. The
+OpenShift Ansible installer will allow you to install a
+production-worthy OpenShift cluster. If you&amp;rsquo;d like to just
+try out OpenShift on a single node instead, you can set up OpenShift with
+the &lt;code&gt;oc cluster up&lt;/code&gt; command, which we will detail in a later blog
+post.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;This first post will cover just the installation. In a later blog post
+we&amp;rsquo;ll take the system we just installed for a spin and make sure
+everything is working as expected.&lt;/p&gt;
+
+&lt;h3&gt;Environment&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ve tried to make this setup as generic as possible. In this case we
+will be targeting three generic servers that are running Fedora 25
+Atomic Host. As is common with cloud environments these servers each
+have an &lt;q&gt;internal&lt;/q&gt; private address that can&amp;rsquo;t be accessed from the
+internet, and a public NATed address that can be accessed from
+the outside. Here is the identifying information for the three servers:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;|    Role     |  Public IPv4   | Private IPv4 |
+|-------------|----------------|--------------|
+| master,etcd | 54.175.0.44    | 10.0.173.101 |
+| worker      | 52.91.115.81   | 10.0.156.20  |
+| worker      | 54.204.208.138 | 10.0.251.101 |
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTE&lt;/strong&gt; In a real production setup we would want multiple master
+nodes and multiple etcd nodes closer to what is shown in the
+&lt;a href="https://docs.openshift.org/latest/install_config/install/advanced_install.html#multiple-masters"&gt;installation docs&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see from the table, we&amp;rsquo;ve marked one of the nodes as the master
+and the other two as what we&amp;rsquo;re calling &lt;em&gt;worker nodes&lt;/em&gt;. The master node
+will run the api server, scheduler, and controller manager. We&amp;rsquo;ll also
+run etcd on it. Since we want to make sure we don&amp;rsquo;t starve the node running
+etcd, we&amp;rsquo;ll mark the master node as &lt;strong&gt;unschedulable&lt;/strong&gt; so that
+application containers don&amp;rsquo;t get scheduled to run on it.&lt;/p&gt;
+
+&lt;p&gt;The other two nodes, the worker nodes, will have the proxy and the
+kubelet running on them; this is where the containers (inside of pods)
+will get scheduled to run. We&amp;rsquo;ll also tell the installer to run a
+registry and an HAProxy router on the two worker nodes so that we can
+perform builds as well as access our services from the outside world via
+HAProxy.&lt;/p&gt;
+
+&lt;h3&gt;The Installer&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/openshift/origin"&gt;Openshift Origin&lt;/a&gt; uses
+&lt;a href="https://www.ansible.com/"&gt;Ansible&lt;/a&gt; to manage the installation of
+different nodes in a cluster. The code for this is aggregated in the
+&lt;a href="https://github.com/openshift/openshift-ansible"&gt;OpenShift Ansible
+Installer&lt;/a&gt; on GitHub.
+Additionally, to run the installer we&amp;rsquo;ll need to
+&lt;a href="http://docs.ansible.com/ansible/intro_installation.html#installing-the-control-machine"&gt;install Ansible&lt;/a&gt;
+on our workstation or laptop.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTE&lt;/strong&gt; At this time Ansible 2.2 or greater is &lt;strong&gt;REQUIRED&lt;/strong&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We already have Ansible 2.2 installed so we can skip to cloning the repo:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/openshift/openshift-ansible.git &amp;amp;&amp;gt;/dev/null
+$ cd openshift-ansible/
+$ git checkout 734b9ae199bd585d24c5131f3403345fe88fe5e6
+Previous HEAD position was 6d2a272... Merge pull request #2884 from sdodson/image-stream-sync
+HEAD is now at 734b9ae... Merge pull request #2876 from dustymabe/dusty-fix-etcd-selinux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to document this better in this blog post we are specifically
+checking out commit &lt;code&gt;734b9ae199bd585d24c5131f3403345fe88fe5e6&lt;/code&gt; so that
+we can get reproducible results, since the Openshift Ansible project
+is fast-moving. These instructions will probably work on the latest
+master, but you may hit a bug, in which case you should open an issue.&lt;/p&gt;
+
+&lt;p&gt;Now that we have the installer we can create an inventory file called
+&lt;code&gt;myinventory&lt;/code&gt; in the same directory as the git repo. This inventory
+file can be anywhere, but for this install we&amp;rsquo;ll place it there.&lt;/p&gt;
+
+&lt;p&gt;Using the IP information from the table above we create the following
+inventory file:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_user=fedora
+ansible_become=true
+deployment_type=origin
+containerized=true
+openshift_release=v1.3.1
+openshift_router_selector='router=true'
+openshift_registry_selector='registry=true'
+openshift_master_default_subdomain=54.204.208.138.xip.io
+
+# enable htpasswd auth
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1', 'user': '$apr1$.gw8w9i1$ln9bfTRiD6OwuNTG5LvW50'}
+
+# host group for masters
+[masters]
+54.175.0.44 openshift_public_hostname=54.175.0.44 openshift_hostname=10.0.173.101
+
+# host group for etcd, should run on a node that is not schedulable
+[etcd]
+54.175.0.44
+
+# host group for worker nodes, we list master node here so that
+# openshift-sdn gets installed. We mark the master node as not
+# schedulable.
+[nodes]
+54.175.0.44    openshift_hostname=10.0.173.101 openshift_schedulable=false
+52.91.115.81   openshift_hostname=10.0.156.20  openshift_node_labels="{'router':'true','registry':'true'}"
+54.204.208.138 openshift_hostname=10.0.251.101 openshift_node_labels="{'router':'true','registry':'true'}"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well that is quite a bit to digest, isn&amp;rsquo;t it? Don&amp;rsquo;t worry, we&amp;rsquo;ll break
+down this file in detail.&lt;/p&gt;
+
+&lt;h3&gt;Details of the Inventory File&lt;/h3&gt;
+
+&lt;p&gt;OK, so how did we create this inventory file? We started with &lt;a href="https://docs.openshift.org/latest/install_config/install/advanced_install.html"&gt;the
+docs&lt;/a&gt;
+and copied one of the examples from there. This type of install we are
+doing is called a &lt;strong&gt;BYO&lt;/strong&gt; (Bring Your Own) install because we are
+bringing our own servers and not having the installer contact a cloud
+provider to bring up the infrastructure for us. For reference there is
+also a much more detailed &lt;a href="https://github.com/openshift/openshift-ansible/blob/master/inventory/byo/hosts.ose.example"&gt;BYO inventory
+file&lt;/a&gt;
+you can study.&lt;/p&gt;
+
+&lt;p&gt;So let&amp;rsquo;s break down our inventory file. First we have the &lt;code&gt;OSEv3&lt;/code&gt; group
+and list the hosts in the &lt;code&gt;masters&lt;/code&gt;, &lt;code&gt;nodes&lt;/code&gt;, and &lt;code&gt;etcd&lt;/code&gt; groups as
+children of that group:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we set a bunch of variables for that group:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_user=fedora
+ansible_become=true
+deployment_type=origin
+containerized=true
+openshift_release=v1.3.1
+openshift_router_selector='router=true'
+openshift_registry_selector='registry=true'
+openshift_master_default_subdomain=54.204.208.138.xip.io
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s run through each of them:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;  &lt;code&gt;ansible_user=fedora&lt;/code&gt; - &lt;code&gt;fedora&lt;/code&gt; is the user that you use to connect
+to Fedora 25 Atomic Host.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;ansible_become=true&lt;/code&gt; - We want the installer to &lt;code&gt;sudo&lt;/code&gt; when
+running commands.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;deployment_type=origin&lt;/code&gt; - Run OpenShift Origin.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;containerized=true&lt;/code&gt; - Run Origin from containers.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;openshift_release=v1.3.1&lt;/code&gt; - The version of Origin to run.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;openshift_router_selector=&amp;#39;router=true&amp;#39;&lt;/code&gt; - Set it so that any nodes
+that have this label applied to them will run a router by default.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;openshift_registry_selector=&amp;#39;registry=true&amp;#39;&lt;/code&gt; - Set it so that any
+nodes that have this label applied to them will run a registry
+by default.&lt;/li&gt;
+&lt;li&gt;  &lt;code&gt;openshift_master_default_subdomain=54.204.208.138.xip.io&lt;/code&gt; - This
+setting is used to tell OpenShift what subdomain to apply to routes
+that are created when exposing services to the outside world.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Whew &amp;hellip; quite a bit to run through there! Most of them are relatively
+self-explanatory. but the &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt; might need
+a little more explanation. Basically, the value of this needs to be a
+&lt;a href="https://en.wikipedia.org/wiki/Wildcard_DNS_record"&gt;Wildcard DNS Record&lt;/a&gt;
+so that any domain can be prefixed onto the front of the record and it
+will still resolve to the same IP address. We have decided to use a free
+service called &lt;a href="http://xip.io/"&gt;xip.io&lt;/a&gt; so that we don&amp;rsquo;t have to set up
+wildcard DNS just for this example.&lt;/p&gt;
+
+&lt;p&gt;So for our example, a domain like &lt;code&gt;app1.54.204.208.138.xip.io&lt;/code&gt; will
+resolve to IP address &lt;code&gt;54.204.208.138&lt;/code&gt;. This needs to be the address
+of one of the worker nodes, because there will be no routers running
+on the master node. A domain like
+&lt;code&gt;app2.54.204.208.138.xip.io&lt;/code&gt; will also resolve to the same address.
+These requests will come in to node &lt;code&gt;54.204.208.138&lt;/code&gt;, which is one of
+our worker nodes where a &lt;em&gt;router&lt;/em&gt; (HAProxy) is running. HAProxy will
+route the traffic based on the domain used (&lt;code&gt;app1&lt;/code&gt; vs &lt;code&gt;app2&lt;/code&gt;, etc) to
+the appropriate service within OpenShift.&lt;/p&gt;
+
+&lt;p&gt;OK, next up in our inventory file we have some auth settings:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# enable htpasswd auth
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1', 'user': '$apr1$.gw8w9i1$ln9bfTRiD6OwuNTG5LvW50'}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use a &lt;a href="https://docs.openshift.com/enterprise/3.0/admin_guide/configuring_authentication.html"&gt;multitude of authentication
+providers&lt;/a&gt;
+with OpenShift. The above statements say that we want to use &lt;code&gt;htpasswd&lt;/code&gt;
+for authentication and we want to create two users. The password for the
+&lt;code&gt;admin&lt;/code&gt; user is &lt;code&gt;OriginAdmin&lt;/code&gt;, while the password for the &lt;code&gt;user&lt;/code&gt; user is
+&lt;code&gt;OriginUser&lt;/code&gt;. We generated these passwords by running &lt;code&gt;htpasswd&lt;/code&gt; on the
+command line like so:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ htpasswd -bc /dev/stdout admin OriginAdmin
+Adding password for admin user
+admin:$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1
+$ htpasswd -bc /dev/stdout user OriginUser
+Adding password for user user
+user:$apr1$.gw8w9i1$ln9bfTRiD6OwuNTG5LvW50
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK, now on to the host groups. First up, our &lt;code&gt;master&lt;/code&gt; nodes:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# host group for masters
+[masters]
+54.175.0.44 openshift_public_hostname=54.175.0.44 openshift_hostname=10.0.173.101
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have used &lt;code&gt;54.175.0.44&lt;/code&gt; as the hostname and also set
+&lt;code&gt;openshift_public_hostname&lt;/code&gt; to this same value so that certificates will
+use that hostname rather than a &lt;em&gt;detected&lt;/em&gt; hostname. We&amp;rsquo;re also setting
+&lt;code&gt;openshift_hostname=10.0.173.101&lt;/code&gt; because there is a
+&lt;a href="https://github.com/golang/go/issues/17967"&gt;bug&lt;/a&gt; where the golang
+resolver can&amp;rsquo;t resolve &lt;code&gt;*.ec2.internal&lt;/code&gt; addresses. This is also
+documented as an
+&lt;a href="https://github.com/openshift/origin/issues/11962"&gt;issue&lt;/a&gt; against
+Origin. Once this bug is resolved, you won&amp;rsquo;t have to set
+&lt;code&gt;openshift_hostname&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next up we have the &lt;code&gt;etcd&lt;/code&gt; host group. We&amp;rsquo;re simply re-using the master
+node for a single etcd node. In a production deployment, we&amp;rsquo;d have
+several:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# host group for etcd, should run on a node that is not schedulable
+[etcd]
+54.175.0.44
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, we have our worker nodes:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# host group for worker nodes, we list master node here so that
+# openshift-sdn gets installed. We mark the master node as not
+# schedulable.
+[nodes]
+54.175.0.44    openshift_hostname=10.0.173.101 openshift_schedulable=false
+52.91.115.81   openshift_hostname=10.0.156.20  openshift_node_labels="{'router':'true','registry':'true'}"
+54.204.208.138 openshift_hostname=10.0.251.101 openshift_node_labels="{'router':'true','registry':'true'}"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We include the master node in this group so that the &lt;code&gt;openshift-sdn&lt;/code&gt;
+will get installed and run there. However, we do set the master node as
+&lt;code&gt;openshift_schedulable=false&lt;/code&gt; because it is running &lt;code&gt;etcd&lt;/code&gt;. The last two
+nodes are our worker nodes and we have also added the &lt;code&gt;router=true&lt;/code&gt; and
+&lt;code&gt;registry=true&lt;/code&gt; node labels to them so that the registry and the router
+will run on them.&lt;/p&gt;
+
+&lt;h3&gt;Executing the Installer&lt;/h3&gt;
+
+&lt;p&gt;Now that we have the installer code and the inventory file named
+&lt;code&gt;myinventory&lt;/code&gt; in the same directory, let&amp;rsquo;s see if we can ping our hosts
+and check their state:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible -i myinventory nodes -a '/usr/bin/rpm-ostree status'
+54.175.0.44 | SUCCESS | rc=0 &amp;gt;&amp;gt;
+State: idle
+Deployments:
+● fedora-atomic:fedora-atomic/25/x86_64/docker-host
+       Version: 25.42 (2016-11-16 10:26:30)
+        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4
+        OSName: fedora-atomic
+
+54.204.208.138 | SUCCESS | rc=0 &amp;gt;&amp;gt;
+State: idle
+Deployments:
+● fedora-atomic:fedora-atomic/25/x86_64/docker-host
+       Version: 25.42 (2016-11-16 10:26:30)
+        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4
+        OSName: fedora-atomic
+
+52.91.115.81 | SUCCESS | rc=0 &amp;gt;&amp;gt;
+State: idle
+Deployments:
+● fedora-atomic:fedora-atomic/25/x86_64/docker-host
+       Version: 25.42 (2016-11-16 10:26:30)
+        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4
+        OSName: fedora-atomic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looks like they are up and all at the same state. The next step is to
+unleash the installer. Before we do, we should note that Fedora has moved
+to python3 by default. While Atomic Host still has python2 installed
+for legacy package support not all of the modules needed by the installer are
+supported in python2 on Atomic Host. Thus, we&amp;rsquo;ll forge ahead and use python3 as the
+interpreter for ansible by specifying
+&lt;code&gt;-e &amp;#39;ansible_python_interpreter=/usr/bin/python3&amp;#39;&lt;/code&gt; on the command line:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible-playbook -i myinventory playbooks/byo/config.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+Using /etc/ansible/ansible.cfg as config file
+....
+....
+PLAY RECAP *********************************************************************
+52.91.115.81               : ok=162  changed=49   unreachable=0    failed=0   
+54.175.0.44                : ok=540  changed=150  unreachable=0    failed=0   
+54.204.208.138             : ok=159  changed=49   unreachable=0    failed=0   
+localhost                  : ok=15   changed=9    unreachable=0    failed=0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We snipped pretty much all of the output. You can download the log
+file in its entirety from &lt;a href="../../../../images/2016-12-07_origin-install-output.txt.gz"&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;So now the installer has run, and our systems should be up and running.
+There is only one more thing we have to do before we can take this
+system for a spin.&lt;/p&gt;
+
+&lt;p&gt;We created two users &lt;code&gt;user&lt;/code&gt; and &lt;code&gt;admin&lt;/code&gt;. Currently there is no way to
+have the installer associate one of these users with the &lt;em&gt;cluster admin&lt;/em&gt;
+role in OpenShift (we opened a
+&lt;a href="https://github.com/openshift/openshift-ansible/issues/2877"&gt;request&lt;/a&gt;
+for that). We must run a command to associate the &lt;code&gt;admin&lt;/code&gt; user we
+created with cluster admin role for the cluster. The command is
+&lt;code&gt;oadm policy add-cluster-role-to-user cluster-admin admin&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll go ahead and run that command now on the master node via
+&lt;code&gt;ansible&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible -i myinventory masters -a '/usr/local/bin/oadm policy add-cluster-role-to-user cluster-admin admin'
+54.175.0.44 | SUCCESS | rc=0 &amp;gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And now we are ready to log in as either the &lt;code&gt;admin&lt;/code&gt; or &lt;code&gt;user&lt;/code&gt; users
+using &lt;code&gt;oc login https://54.175.0.44:8443&lt;/code&gt; from the command line or
+visiting the web frontend at &lt;code&gt;https://54.175.0.44:8443&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTE&lt;/strong&gt; To install the &lt;code&gt;oc&lt;/code&gt; CLI tool on your workstation follow &lt;a href="https://docs.openshift.org/latest/cli_reference/get_started_cli.html#installing-the-cli"&gt;these instructions&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;To Be Continued&lt;/h3&gt;
+
+&lt;p&gt;In this blog we brought up an OpenShift Origin cluster on three servers
+that were running Fedora 25 Atomic Host. We reviewed the inventory file
+in detail to explain exactly what options were used and why. In a &lt;a href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/"&gt;part 2&lt;/a&gt;,
+we&amp;rsquo;ll take the system for a spin, inspect some of the
+running system that was generated from the installer, and spin up an
+application that will run on and be hosted by the Origin cluster.&lt;/p&gt;
+
+&lt;p&gt;If you run into issues following these installation instructions, please report
+them in one of the following places:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic"&gt;Project Atomic mailing list&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The &lt;a href="https://lists.fedoraproject.org/admin/lists/cloud.lists.fedoraproject.org/"&gt;Fedora Cloud mailing list&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The #atomic channel on &lt;a href="https://freenode.net/"&gt;IRC.freenode.net&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;In the comments below&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/"&gt;Click to continue on to Part 2.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Cheers!&lt;/p&gt;
+
+&lt;p&gt;Dusty&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Origin on Fedora, Part 1</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/06/origin-on-fedora/"/>
+    <id>http://www.projectatomic.io/blog/2016/06/origin-on-fedora/</id>
+    <published>2016-06-10T12:41:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;This week was the &lt;a href="https://fedoraproject.org/wiki/FAD_Cloud_WG_2016"&gt;Fedora Cloud Working Group&amp;rsquo;s Activity &lt;q&gt;Day&lt;/q&gt;&lt;/a&gt; (FAD), where a dozen of us got together to work on the project&amp;rsquo;s adoption and innovation in the public and private cloud sectors. Discussions and decisions there covered a range of topics, including Fedora Atomic Host, public cloud images, Vagrant improvements, and automated testing of cloud base images, Atomic and container images. You&amp;rsquo;ll be seeing a bunch of changes resulting from this over the coming months.&lt;/p&gt;
+
+&lt;p&gt;One topic came up which is going to pretty much eat my time for at least a week, though: we don&amp;rsquo;t yet have a working, easy-to-deploy download of &lt;a href="https://github.com/openshift/origin"&gt;OpenShift Origin&lt;/a&gt; on Fedora Atomic Host.  Clearly, we need to fix this; my goal is to have something working by this time next week, for &lt;a href="http://dockercon.com/"&gt;DockerCon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;During the Hackathon period of the FAD, Adam Miller, Jason Brooks and I set to work on making Fedora Atomic Origin happen.  We quickly found that there were four major areas of work to be to get things up and running:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Packaging and testing using containerized &lt;a href="https://github.com/fedora-cloud/openshift-ansible/"&gt;Openshift-Ansible&lt;/a&gt; for configuring new clusters;&lt;/li&gt;
+&lt;li&gt;Replacing the container base images for the OpenShift container components with Fedora base images;&lt;/li&gt;
+&lt;li&gt;Recreating some components which currently pull from RHEL RPM and container repositories;&lt;/li&gt;
+&lt;li&gt;Polishing and testing deploying &lt;a href="https://github.com/fedora-cloud/openshift-ansible/blob/master/README_CONTAINERIZED_INSTALLATION.md"&gt;fully containerized OpenShift&lt;/a&gt; on Fedora Atomic Host.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;At the Hackathon, while Adam worked on item 2, Jason and I worked on Openshift-Ansible. One of the first issues we ran across was that Openshift-Ansible requires an older version of Ansible that isn&amp;rsquo;t available on current Fedora (an update is in progress).  Jason created &lt;a href="https://copr.fedorainfracloud.org/coprs/jasonbrooks/ansible1.9.4/"&gt;a new COPR&lt;/a&gt; to allow installing a compatible version into a Fedora Container.&lt;/p&gt;
+
+&lt;p&gt;In the meantime, I looked at running Openshift-Ansible in a container.  This is not currently the primary deployment method; today, OpenShift administrators generally run Ansible from a non-Atomic Host, installed as packages and source.  A containerized version, though, allows an Atomic OpenShift cluster to be self-bootstrapping, something we clearly want.  Thankfully, the OpenShift team has already done the lion&amp;rsquo;s share of the work required for containerizing it, and &lt;a href="https://github.com/fedora-cloud/openshift-ansible/blob/master/Dockerfile"&gt;example Dockerfiles are available on github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Like I said, though, this approach isn&amp;rsquo;t well-used, and hasn&amp;rsquo;t been tested at all on Fedora, just CentOS.  So my first task is revising the container definition, then testing and troubleshooting.  There&amp;rsquo;s a fair amount of work to do there; by the end of the hackathon, I didn&amp;rsquo;t yet have it working.&lt;/p&gt;
+
+&lt;p&gt;Once I have containerized Ansible working, my next task will be to design a way to run it in a &lt;a href="http://www.projectatomic.io/blog/2015/09/using-a-spc-to-troubleshoot-containers/"&gt;super-privileged container&lt;/a&gt; (SPC).  The reason we need to do that is that, among other things, Openshift-Ansible configures Docker and its networking overlay.  For self-bootstrapping, we need it to be able to configure Docker on the same host where Ansible is running, which means &lt;em&gt;not&lt;/em&gt; running it under Docker.  Besides, given the broad permissions Ansible needs, an SPC is appropriate. We&amp;rsquo;ll also want to convert some of the other standard OpenShift containers to SPCs, maybe all of them.&lt;/p&gt;
+
+&lt;p&gt;So, I guess I know what I&amp;rsquo;m doing for the next week.  Feel like helping out?  Our &lt;a href="https://github.com/fedora-cloud/openshift-ansible/"&gt;fork of OpenShift-Ansible is here&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Introducing Commissaire</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/05/introducing_commissaire/"/>
+    <id>http://www.projectatomic.io/blog/2016/05/introducing_commissaire/</id>
+    <published>2016-05-19T10:20:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stephen Milner</name>
+    </author>
+    <content type="html">&lt;p&gt;What the heck is commissaire? I&amp;rsquo;m glad you asked! Commissaire is a new
+component of Project Atomic that aims to simplify life for cluster
+administrators.  It provides a simple, script-friendly REST interface
+for cluster-wide maintenance operations like system upgrades and
+rolling restarts.&lt;/p&gt;
+
+&lt;p&gt;Instead of starting from scratch, Commissaire utilizes common
+technologies such as Ansible for communicating with cluster nodes, and
+interfaces with OpenShift and Kubernetes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Architecture" src="http://commissaire.readthedocs.io/en/latest/_images/commissaire-flow-diagram.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Current Features&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/endpoints.html"&gt;Simple REST interface&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/authentication_devel.html"&gt;Plug-in based authentication
+framework&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/operations.html#restart"&gt;Restart hosts in a container
+cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/operations.html#upgrade"&gt;Upgrade hosts in a container
+cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/operations.html#bootstrapping"&gt;Bootstrap new hosts into an existing
+cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/commctl"&gt;Command line interface&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Running The Service&lt;/h3&gt;
+
+&lt;p&gt;If you are curious to give the current development source a try check
+out the &lt;a href="http://commissaire.readthedocs.io/en/latest/gettingstarted.html"&gt;Manual
+Installation&lt;/a&gt;
+instructions.&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;The project is still young, making it a great time to get involved and
+help shape the service. Everyone is welcome to give ideas, feedback,
+patches, or just come say hi! For more information on contributing code
+see &lt;a href="http://commissaire.readthedocs.io/en/latest/development.html#development-setup"&gt;Development
+Setup&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Freenode IRC&lt;/strong&gt;: #atomic&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Email List&lt;/strong&gt;: &lt;a href="mailto:atomic-devel@projectatomic.io"&gt;atomic-devel@projectatomic.io&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/commissaire"&gt;Commissaire Source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/commctl"&gt;Commctl Source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/index.html"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

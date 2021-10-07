@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Build</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/build.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing Atomic Reactor</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/09/introduce-atomic-reactor/"/>
+    <id>http://www.projectatomic.io/blog/2015/09/introduce-atomic-reactor/</id>
+    <published>2015-09-14T17:27:26+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tomáš Tomeček</name>
+    </author>
+    <content type="html">&lt;p&gt;It&amp;rsquo;s been a while when we &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2015-July/msg00010.html"&gt;announced&lt;/a&gt; move of &lt;a href="https://github.com/projectatomic/atomic-reactor"&gt;atomic-reactor&lt;/a&gt; under Project Atomic.&lt;/p&gt;
+
+&lt;p&gt;Since the name is so cryptic, one could wonder about the purpose of the tool. Let&amp;rsquo;s go through a simple example&amp;hellip;&lt;/p&gt;
+
+&lt;h3&gt;What problem is atomic-reactor trying to solve?&lt;/h3&gt;
+
+&lt;p&gt;Imagine Bob, a software engineer who would like to ship company&amp;rsquo;s products as containers. Bob&amp;rsquo;s company has already pretty complex infrastructure with build system, source code management, product deployment and delivery.&lt;/p&gt;
+
+&lt;p&gt;So Bob starts the work on integrating docker into company&amp;rsquo;s infrastructure.&lt;/p&gt;
+
+&lt;p&gt;Bob knows it&amp;rsquo;s so easy to build a docker image:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;docker build --tag&lt;span class="o"&gt;=&lt;/span&gt;product-X .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Bob thinks he needs a Dockerfile&amp;hellip;&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;git clone https://example.com/git/dockerfile-product-x.git &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;cd &lt;/span&gt;dockerfile-product-x &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; docker build --tag&lt;span class="o"&gt;=&lt;/span&gt;product-X .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s not enough, artifacts are stored elsewhere.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;git clone https://example.com/git/dockerfile-product-x.git &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="nb"&gt;cd &lt;/span&gt;dockerfile-product-x &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    wget https://example.com/data/product-x.tar.gz &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker build --tag&lt;span class="o"&gt;=&lt;/span&gt;product-X .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to apply multiple tags, not just one.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;git clone https://example.com/git/dockerfile-product-x.git &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="nb"&gt;cd &lt;/span&gt;dockerfile-product-x &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    wget https://example.com/data/product-x.tar.gz &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker build --tag&lt;span class="o"&gt;=&lt;/span&gt;product-X . &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker tag product-X product-X:v1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker tag product-X product-X:v1.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And push it of course&amp;hellip;&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;git clone https://example.com/git/dockerfile-product-x.git &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    &lt;span class="nb"&gt;cd &lt;/span&gt;dockerfile-product-x &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    wget https://example.com/data/product-x.tar.gz &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker build --tag&lt;span class="o"&gt;=&lt;/span&gt;registry.example.com/product-X . &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker tag product-X registry.example.com/product-X:v1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker tag product-X registry.example.com/product-X:v1.1
+    docker push registry.example.com/product-X &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker push registry.example.com/product-X:v1 &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+    docker push registry.example.com/product-X:v1.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;and apply custom labels before build, have persistent build logs, garbage-collect build artifacts, squash layers, manage yum repositories during build&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;We were in Bob&amp;rsquo;s position and this is where we realized that simple script won&amp;rsquo;t be enough and we need to develop a tool.&lt;/p&gt;
+
+&lt;p&gt;So we developed atomic-reactor. A tool, which takes care of whole build process of creating a docker image. We knew we need plugins in it.&lt;/p&gt;
+
+&lt;h3&gt;Plugins&lt;/h3&gt;
+
+&lt;p&gt;The major feature of atomic-reactor is its plugin system. At the moment we have 4 types of plugins:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Plugins which are run before build (these are good for changing dockerfiles and managing base images).&lt;/li&gt;
+&lt;li&gt;Essential part of build process is to push the image to registry. Another place where reactor runs plugins (e.g. testing whether the image passed tests). These are called pre-publish plugins.&lt;/li&gt;
+&lt;li&gt;Since we have pre-build plugins, we also need to have post-build plugins.&lt;/li&gt;
+&lt;li&gt;And finally, exit plugins. These are run no matter what. Good for storing logs and cleaning environment.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;What can it do with those plugins then?&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Pull base image from custom registry.&lt;/li&gt;
+&lt;li&gt;Use &lt;a href="https://fedoraproject.org/wiki/Koji"&gt;koji&lt;/a&gt; tag as a source yum repository.&lt;/li&gt;
+&lt;li&gt;Add custom labels to dockerfile prior to build.&lt;/li&gt;
+&lt;li&gt;Add new yum repositories which will be available during build.&lt;/li&gt;
+&lt;li&gt;Squash layers of the image.&lt;/li&gt;
+&lt;li&gt;Tag image according to &lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;Version&lt;/code&gt; and &lt;code&gt;Release&lt;/code&gt; labels as specified in &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels"&gt;this document&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Push image to &lt;a href="http://www.pulpproject.org/"&gt;pulp&lt;/a&gt; registry.&lt;/li&gt;
+&lt;li&gt;Do additional tagging and pushing of the image to custom registries.&lt;/li&gt;
+&lt;li&gt;List all installed packages in the image.&lt;/li&gt;
+&lt;li&gt;Remove images after build — clean environment.&lt;/li&gt;
+&lt;li&gt;It is able to get input from &lt;a href="https://github.com/openshift/origin"&gt;OpenShift v3&lt;/a&gt; using &lt;a href="https://docs.openshift.org/latest/creating_images/custom.html"&gt;custom build&lt;/a&gt; and after build, stores metadata as &lt;a href="http://kubernetes.io/v1.0/docs/user-guide/annotations.html"&gt;annotations&lt;/a&gt; of build object.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Do you miss some? &lt;a href="https://github.com/projectatomic/atomic-reactor/issues/new"&gt;Just let us know!&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Isolated Builds&lt;/h3&gt;
+
+&lt;p&gt;There are 3 ways you can build your images:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Have atomic-reactor installed in a docker image, start new instance of docker (docker in docker) and build your image inside such container.&lt;/li&gt;
+&lt;li&gt;Similar, except you mount docker socket inside container and thus use docker engine from host.&lt;/li&gt;
+&lt;li&gt;Build image in current environment.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Hands On&lt;/h3&gt;
+
+&lt;p&gt;Enough theory, time to give it a go! Let&amp;rsquo;s install atomic-reactor first. It is packaged in Fedora, therefore installation is very simple.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;dnf install atomic-reactor
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s say we have a remote git repository with a dockerfile on branch &lt;code&gt;atomic-reactor-demo&lt;/code&gt; and we want to build it and squash all layers from the dockerfile to a single one. Fair request.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll write a &lt;a href="https://github.com/projectatomic/atomic-reactor/blob/master/docs/build_json.md"&gt;build.json&lt;/a&gt;, a recipe for the build:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat build.json
+{
+    "image": "ttomecek/hello-world",
+    "source": {
+        "provider": "git",
+        "uri": "https://github.com/TomasTomecek/docker-hello-world.git",
+        "provider_params": {
+            "git_commit": "atomic-reactor-demo"
+        }
+    },
+    "prepublish_plugins": [
+        {
+            "name": "squash"
+        }
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are building image &lt;code&gt;ttomecek/hello-world&lt;/code&gt; from git and are using just one plugin: &lt;a href="https://github.com/projectatomic/atomic-reactor/blob/master/atomic_reactor/plugins/prepub_squash.py"&gt;squash&lt;/a&gt; (the plugin uses &lt;a href="https://github.com/goldmann/docker-scripts"&gt;python-docker-scripts&lt;/a&gt; written by Marek Goldmann). This is the dockerfile:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora:latest
+LABEL purpose="atomic reactor demo"
+ENV x=y
+RUN uname -a &amp;amp;&amp;amp; env
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So let&amp;rsquo;s run it:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;atomic-reactor build json --method here build.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Method &lt;code&gt;here&lt;/code&gt; builds image in current environment, not in container.&lt;/p&gt;
+
+&lt;p&gt;As you might see, the output is really verbose so you know precisely what&amp;rsquo;s going on. After the build is done, let&amp;rsquo;s check our image:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;docker &lt;span class="nb"&gt;history &lt;/span&gt;ttomecek/hello-world
+IMAGE               CREATED             CREATED BY          SIZE                COMMENT
+da1a64eb6660        23 seconds ago                          241.3 MB
+511136ea3c5a        2 years ago                             0 B                 Imported from -
+
+&lt;span class="gp"&gt;$ &lt;/span&gt;docker inspect ttomecek/hello-world
+...
+    &lt;span class="s2"&gt;"Config"&lt;/span&gt;: &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="s2"&gt;"Env"&lt;/span&gt;: &lt;span class="o"&gt;[&lt;/span&gt;
+            &lt;span class="s2"&gt;"x=y"&lt;/span&gt;
+        &lt;span class="o"&gt;]&lt;/span&gt;,
+        &lt;span class="s2"&gt;"Labels"&lt;/span&gt;: &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="s2"&gt;"purpose"&lt;/span&gt;: &lt;span class="s2"&gt;"atomic reactor demo"&lt;/span&gt;
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our dockerfile has 4 instructions and the image has only 2 layers. It worked!&lt;/p&gt;
+
+&lt;p&gt;Since atomic-reactor is written in python, you can call &lt;a href="https://github.com/projectatomic/atomic-reactor/blob/master/docs/api.md"&gt;python api&lt;/a&gt; directly:&lt;/p&gt;
+&lt;pre class="highlight python"&gt;&lt;code&gt;&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;atomic_reactor&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;api&lt;/span&gt;
+
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"build.json"&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="n"&gt;In&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt; &lt;span class="n"&gt;api&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;build_image_here&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the basic introduction of atomic-reactor. We&amp;rsquo;ll be happy for any feedback. You can reach us at &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt; or via &lt;a href="https://github.com/projectatomic/atomic-reactor"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

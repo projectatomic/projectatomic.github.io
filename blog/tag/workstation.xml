@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Workstation</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/workstation.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>An Introduction to Fedora Atomic Workstation</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/"/>
+    <id>http://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/</id>
+    <published>2018-02-06T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jonathan Lebon</name>
+    </author>
+    <content type="html">&lt;p&gt;For the last few Fedora releases, the Workstation WG has been working on
+combining the best of the Project Atomic pattern with the Fedora Workstation
+Edition into a deliverable dubbed &amp;ldquo;Fedora Atomic Workstation&amp;rdquo;. In
+Fedora 27, we have reached a point where we feel comfortable inviting other
+developers and enthusiasts to try it out and even make it their daily driver.&lt;/p&gt;
+
+&lt;p&gt;Read on to discover what Fedora Atomic Workstation is, what its benefits are,
+and how you can get started today!&lt;/p&gt;
+
+&lt;p&gt;Note: this blog post is based on a talk I gave at
+&lt;a href="https://devconf.cz/cz/2018"&gt;DevConf.cz 2018&lt;/a&gt;. Head over to
+&lt;a href="https://www.youtube.com/watch?v=7c3GdfhWzcc"&gt;YouTube&lt;/a&gt; if you&amp;rsquo;d prefer listening
+to it.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;What is Atomic Workstation?&lt;/h3&gt;
+
+&lt;p&gt;Just like Atomic Host, Atomic Workstation uses RPM-OSTree as its update manager.
+However, Atomic Workstation is geared towards all the same use cases that the
+regular Workstation Edition is meant to fulfill. Though there are some
+differences between the two beyond the update model.&lt;/p&gt;
+
+&lt;p&gt;In an Atomic Workstation, desktop applications are shipped and run as
+&lt;a href="https://flatpak.org/"&gt;flatpaks&lt;/a&gt;, and development mostly happens inside
+containers. For example, you may have a pet container with your development
+environment set up as well as an &lt;code&gt;oc cluster up&lt;/code&gt; OpenShift cluster to develop
+server applications.&lt;/p&gt;
+
+&lt;h3&gt;Why should I use Atomic Workstation?&lt;/h3&gt;
+
+&lt;p&gt;So what are the advantages of this strategy? Many of the reasons below are
+shared with Atomic Host. Though I will try to give a more Workstation-centric
+point-of-view.&lt;/p&gt;
+
+&lt;h4&gt;1. Transactional Updates&lt;/h4&gt;
+
+&lt;p&gt;The main reason to use Atomic Workstation of course is transactional updates.
+This is as relevant in the server case as it is for desktops. Most people would
+consider their workstations to be the stereotypical pet system: set up and
+customized just the way they want them, and a huge hindrance to productivity if
+anything should happen to them. Using an update model which greatly reduces
+&lt;a href="https://www.happyassassin.net/2016/10/04/x-crash-during-fedora-update-when-system-has-hybrid-graphics-and-systemd-udev-is-in-update/"&gt;risks&lt;/a&gt;
+of
+&lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1398698"&gt;failures&lt;/a&gt; is thus well
+justified.&lt;/p&gt;
+
+&lt;p&gt;I will not stay on this subject any longer since I assume readers of this blog
+are familiar with the benefits there and what pitfalls the Atomic model helps us
+avoid. If you are not familiar with these ideas, definitely check out the
+&lt;a href="http://ostree.readthedocs.io/en/latest/manual/introduction/"&gt;OSTree docs&lt;/a&gt;
+and the
+&lt;a href="http://www.projectatomic.io/docs/os-updates/"&gt;Project Atomic update docs&lt;/a&gt; if
+you&amp;rsquo;d like more information.&lt;/p&gt;
+
+&lt;h4&gt;2. Immutability and Isolation&lt;/h4&gt;
+
+&lt;p&gt;As discussed in
+&lt;a href="../../../2016/07/hacking-and-extending-atomic-host/"&gt;a previous blog entry&lt;/a&gt;,
+all the great features of an OSTree-based system require immutability of the
+base OS. For example, &lt;code&gt;/usr&lt;/code&gt; is &lt;em&gt;not&lt;/em&gt; writable by default. This is equally true
+in Atomic Workstation as it is in Atomic Host. This is a &lt;em&gt;good&lt;/em&gt; thing, because
+(1) it protects you from
+&lt;a href="https://github.com/MrMEEE/bumblebee-Old-and-abbandoned/issues/123"&gt;accidental damage&lt;/a&gt;,
+and (2) it encourages a healthier workflow.&lt;/p&gt;
+
+&lt;p&gt;For example, on &lt;code&gt;yum/dnf&lt;/code&gt;-managed systems, RPM scriptlets run unconfined
+&lt;em&gt;as root&lt;/em&gt; during update transactions, which opens the door for accidental (or
+intentional) corruption. On &lt;code&gt;rpm-ostree&lt;/code&gt;-managed systems, all scriptlets are run
+on the server when composing the update. (As mentioned lower down, we do also
+support layering additional RPMs; their scriptlets are run in a locked down
+container and cannot affect the running system).&lt;/p&gt;
+
+&lt;p&gt;By running your applications in flatpaks and doing your development in
+containers, you not only help protect your base OS from harm but also minimize
+the number of packages standing between you and a successful boot.&lt;/p&gt;
+
+&lt;p&gt;Basing your development workflow around pet containers could warrant a blog post
+of its own. There have been some great talks around that area at DevConf.cz this
+year (linked below).&lt;/p&gt;
+
+&lt;h4&gt;3. Effortless Change Tracking&lt;/h4&gt;
+
+&lt;p&gt;Now, part of customizing your workstation will undoubtedly require installing
+packages that are not part of the base OSTree and aren&amp;rsquo;t quite fit for
+containerization (e.g. drivers, virtualization stacks, &lt;code&gt;$FAVOURITE_EDITOR&lt;/code&gt;).
+Because RPM-OSTree is a &lt;em&gt;hybrid&lt;/em&gt; model, it understands both RPMs and OSTrees.
+We can, for example, do &lt;code&gt;rpm-ostree install vim-enhanced libvirt-client&lt;/code&gt; to
+layer additional packages. &lt;code&gt;rpm-ostree status&lt;/code&gt; will then show:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ rpm-ostree status
+State: idle
+Deployments:
+● faw27:fedora/27/x86_64/workstation
+                   Version: 27.62 (2018-01-31 21:39:54)
+                BaseCommit: a052d7482a186f1979f8bba90cfe1a1d0c13e75a43a416b580d2f2a83c18fe5a
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: libvirt-client vim-enhanced
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In contrast to &lt;code&gt;dnf/yum&lt;/code&gt;-managed systems, which provide a &amp;ldquo;bag of
+packages&amp;rdquo; approach, &lt;code&gt;rpm-ostree status&lt;/code&gt; allows to know &lt;em&gt;exactly&lt;/em&gt; what we
+changed from the base OSTree commit, and how to go back to the initial state (in
+this case, &lt;code&gt;rpm-ostree uninstall libvirt-client vim-enhanced&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;For completeness, I will mention that RPM-OSTree not only supports pure
+additions, but also &lt;em&gt;replacing&lt;/em&gt; and &lt;em&gt;removing&lt;/em&gt; base packages. All these changes
+can equally be tracked in &lt;code&gt;rpm-ostree status&lt;/code&gt; and easily reverted.&lt;/p&gt;
+
+&lt;p&gt;Additionally, because in the OSTree model configuration defaults are stored in
+&lt;code&gt;/usr/etc&lt;/code&gt;, one can also perform a simple diff to figure out which defaults were
+changed (e.g. &lt;code&gt;diff /usr/etc /etc | less&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h4&gt;4. Upstream Testing&lt;/h4&gt;
+
+&lt;p&gt;Having updates delivered as concrete units allows the content provider to more
+easily test them, which translates into a more stable operating system for end
+users. In contrast, it&amp;rsquo;s effectively impossible in the &amp;ldquo;bag of
+packages&amp;rdquo; approach to sanely test all permutations. This mostly means that
+testing is limited to the package-level.&lt;/p&gt;
+
+&lt;p&gt;In an OSTree model however, it&amp;rsquo;s possible to gate updates on higher-level
+integration tests such as what we&amp;rsquo;ve been doing in the two-week releases of
+Fedora Atomic Host. Note though that Atomic Workstation updates are not
+currently being gated on tests; we are still at the onset of these discussions.&lt;/p&gt;
+
+&lt;h4&gt;5. Automatic Updates&lt;/h4&gt;
+
+&lt;p&gt;In RPM-OSTree, we are currently working on adding an
+&lt;a href="https://github.com/projectatomic/rpm-ostree/issues/247"&gt;automatic update feature&lt;/a&gt;.
+Similar functionality on &lt;code&gt;dnf&lt;/code&gt;-managed systems does
+&lt;a href="https://fedoraproject.org/wiki/AutoUpdates"&gt;exist&lt;/a&gt;. The difference is that the
+OSTree model allows us to eliminate or minimize
+&lt;a href="https://fedoraproject.org/wiki/AutoUpdates#Reasons_AGAINST_using_automatic_updates"&gt;many of the issues&lt;/a&gt;
+involved in such a scheme. For example, the ability to roll back updates is
+critical here, and this is something that RPM-OSTree does with ease.&lt;/p&gt;
+
+&lt;p&gt;In the future, we&amp;rsquo;d like to get to a point where (if enabled) the system
+automatically prepares updates in the background and &lt;q&gt;upgrading&lt;/q&gt; simply involves
+rebooting your computer for minimal downtime.&lt;/p&gt;
+
+&lt;h3&gt;How can I get started with Atomic Workstation?&lt;/h3&gt;
+
+&lt;p&gt;You can either
+&lt;a href="https://download.fedoraproject.org/pub/fedora/linux/releases/27/WorkstationOstree/x86_64/iso/"&gt;download the ISO&lt;/a&gt;
+and re-install from scratch, or you can convert your existing &lt;code&gt;dnf&lt;/code&gt;-based system
+using the steps from
+&lt;a href="https://pagure.io/workstation-ostree-config/blob/master/f/README-install-inside.md"&gt;this&lt;/a&gt;
+document. The latter also allows you to switch back and forth between the two
+models if you&amp;rsquo;re not yet ready to dive in.&lt;/p&gt;
+
+&lt;p&gt;Once booted into Atomic Workstation, check out the &amp;ldquo;Using the system&amp;rdquo;
+section &lt;a href="https://pagure.io/workstation-ostree-config"&gt;here&lt;/a&gt;. To learn more about
+how to manage upgrades, check out the Project Atomic
+&lt;a href="http://www.projectatomic.io/docs/os-updates/"&gt;docs&lt;/a&gt; and the RPM-OSTree
+&lt;a href="http://rpm-ostree.readthedocs.io/en/latest/manual/administrator-handbook/"&gt;docs&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you need any help, you can pop into the &lt;code&gt;freenode/#atomic&lt;/code&gt; channel, or send
+an email to the
+&lt;a href="http://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt;
+mailing list.&lt;/p&gt;
+
+&lt;h3&gt;More information&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://fedoraproject.org/wiki/Changes/WorkstationOstree"&gt;Fedora Change Proposal&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://pagure.io/workstation-ostree-config"&gt;workstation-ostree-config&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=Yc7lvkl5atE"&gt;Kalev Lember: Atomic Workstation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=a4IPWlfkJSo"&gt;Sanja Bonic and Colin Walters: You want a Clean Desktop OS? Containerize it.&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=eWoFpOoA-tE"&gt;Jan Pazdziora: Minimizing workstation installation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora 27 Atomic Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-features/"/>
+    <id>http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-features/</id>
+    <published>2017-11-14T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://getfedora.org/en/atomic/download/"&gt;Fedora 27 Atomic Host&lt;/a&gt; is now available.  Highlights of this version include multi-architecture support, containerized Kubernetes, a single OverlayFS volume by default, and new OSTree layering capabilities.&lt;/p&gt;
+
+&lt;p&gt;Over the next week or so, we will have additional posts on each of these features, giving technical details and use-cases.  But today, for the release, we&amp;rsquo;ll have quick summary of the major changes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Features&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Multi-Architecture Support&lt;/strong&gt;: Fedora 27 Atomic Host is available for &lt;a href="#"&gt;64-bit ARM&lt;/a&gt; and &lt;a href="#"&gt;Power8&lt;/a&gt; processor architectures as well as 64-bit Intel (i.e. AArch64, ppc64le and x86_64).  Not only are we distributing ISOs and cloud images for all three architectures, we will also be providing two-week OSTree updates for them as well.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Containerized Kubernetes&lt;/strong&gt;: As planned, the Kubernetes binaries have been removed from the base image for Atomic Host.  This change both shrinks the base image size, and allows users to install the container orchestration platform and version of their choice, whether it&amp;rsquo;s Kubernetes, OpenShift, or something else.  Look for a blog post tommorrow on how to migrate your Kubernetes install.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Atomic Workstation Updates&lt;/strong&gt;: For over a year, Fedora contributors have been experimenting with an RPM-OStree build of Fedora Workstation, with all of their applications running in containers or Flatpaks. This build, now called &lt;q&gt;Atomic Workstation&lt;/q&gt;, will be receiving regular updates starting with this release.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;One Big OverlayFS2 Volume&lt;/strong&gt;: New Atomic Host systems will now get a single filesystem volume by default, which will share binaries, system containers, and OCI/docker containers using OverlayFS2.  Users who need to partition container images and storage onto a separate volume can still do so using kickstart options and &lt;code&gt;container-storage-setup&lt;/code&gt; configuration.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OSTree Package Layering Improvements&lt;/strong&gt;: RPM-OStree has added two capabilities supporting modifying individula systems: &lt;a href="/blog/2017/07/rpm-ostree-v2017.7-released/"&gt;remove and replace overrides&lt;/a&gt;, and &lt;a href="/blog/2017/06/rpm-ostree-v2017.6-released/"&gt;LiveFS layering&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;With the release of Fedora 27 Atomic Host, updates to the Fedora 26 Atomic Host will be strictly on a best-effort basis.  As such, we strongly encourage users to upgrade to the new release soon. Our upgrade guide begins with &lt;a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/"&gt;this post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Release Details&lt;/h3&gt;
+
+&lt;p&gt;The OSTree update hash for Fedora 27 Atomic is:&lt;/p&gt;
+
+&lt;p&gt;Version: 27.1&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Commit(x86_64): d428d3ad8ecf44e53d138042bad56a10308883a0c5d64b9c51eff27fdc9da82c&lt;/li&gt;
+&lt;li&gt;Commit(aarch64): da1bd08012699a0aacaa11481d3ed617477858aab0f2ea7300168ce106202255&lt;/li&gt;
+&lt;li&gt;Commit(ppc64le): 362888edfac04f8848072ae4fb8193b3da2f4fd226bef450326faff4be290abd&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We are releasing images from multiple architectures but please note
+that x86_64 architecture is the only one that undergoes automated
+testing at this time.&lt;/p&gt;
+
+&lt;p&gt;Existing systems can be upgraded in place via &lt;code&gt;atomic host rebase&lt;/code&gt;, &lt;code&gt;atomic host upgrade&lt;/code&gt; or
+&lt;code&gt;atomic host deploy&lt;/code&gt;.  However, see the Upgrading post in this blog for &lt;a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/"&gt;more information
+about upgrading from Fedora 26&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Corresponding image media for new installations can be &lt;a href="https://getfedora.org/en/atomic/download/"&gt;downloaded from Fedora&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Respective signed CHECKSUM files can be found here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/aarch64/iso/Fedora-Atomic-27-20171110.1-aarch64-CHECKSUM"&gt;Aarch64  ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/ppc64le/iso/Fedora-Atomic-27-20171110.1-ppc64le-CHECKSUM"&gt;ppc64le ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/x86_64/iso/Fedora-Atomic-27-20171110.1-x86_64-CHECKSUM"&gt;x86_64 ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-CloudImages-27-20171110.1-aarch64-CHECKSUM"&gt;Aarch64 CloudImage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-CloudImages-27-20171110.1-ppc64le-CHECKSUM"&gt;ppc64le CloudImage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/x86_64/images/Fedora-CloudImages-27-20171110.1-x86_64-CHECKSUM"&gt;x86_64 CloudImage&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For direct download, the &lt;q&gt;latest&lt;/q&gt; targets are always available here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_iso_latest"&gt;ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_qcow2_latest"&gt;QCOW2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_raw_latest"&gt;Raw&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_libvirt_latest"&gt;Libvirt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_virtualbox_latest"&gt;VirtualBox&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Filename fetching URLs are available here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_iso_latest_filename"&gt;ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_qcow2_latest_filename"&gt;QCOW2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_raw_latest_filename"&gt;Raw&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename"&gt;Libvirt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename"&gt;VirtualBox&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Alternatively, image artifacts can be found at the following links:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/aarch64/iso/Fedora-Atomic-ostree-aarch64-27-20171110.1.iso"&gt;Fedora-Atomic-ostree-aarch64-27-20171110.1.iso&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/ppc64le/iso/Fedora-Atomic-ostree-ppc64le-27-20171110.1.iso"&gt;Fedora-Atomic-ostree-ppc64le-27-20171110.1.iso&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/x86_64/iso/Fedora-Atomic-ostree-x86_64-27-20171110.1.iso"&gt;Fedora-Atomic-ostree-x86_64-27-20171110.1.iso&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-Atomic-27-20171110.1.aarch64.qcow2"&gt;Fedora-Atomic-27-20171110.1.aarch64.qcow2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-Atomic-27-20171110.1.aarch64.raw.xz"&gt;Fedora-Atomic-27-20171110.1.aarch64.raw.xz&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20171110.1.ppc64le.qcow2"&gt;Fedora-Atomic-27-20171110.1.ppc64le.qcow2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20171110.1.ppc64le.raw.xz"&gt;Fedora-Atomic-27-20171110.1.ppc64le.raw.xz&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/x86_64/images/Fedora-Atomic-27-20171110.1.x86_64.qcow2"&gt;Fedora-Atomic-27-20171110.1.x86_64.qcow2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/x86_64/images/Fedora-Atomic-27-20171110.1.x86_64.raw.xz"&gt;Fedora-Atomic-27-20171110.1.x86_64.raw.xz&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/x86_64/images/Fedora-Atomic-Vagrant-27-20171110.1.x86_64.vagrant-libvirt.box"&gt;Fedora-Atomic-Vagrant-27-20171110.1.x86_64.vagrant-libvirt.box&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/x86_64/images/Fedora-Atomic-Vagrant-27-20171110.1.x86_64.vagrant-virtualbox.box"&gt;Fedora-Atomic-Vagrant-27-20171110.1.x86_64.vagrant-virtualbox.box&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more information about the latest targets, please reference the &lt;a href="https://fedoraproject.org/wiki/Atomic_WG#Fedora_Atomic_Image_Download_Links"&gt;Fedora
+Atomic Wiki space&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Do note that it can take some of the mirrors up to 12 hours to &lt;q&gt;check-in&lt;/q&gt; at
+their own discretion.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Thoughts on Project Photon &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Thoughts on Project Photon' property='og:title'>
+<meta content='Earlier this week, VMware launched its lightweight operating system tailored for running Linux containers. Naturally, I was interested to see what VMware was cooking up, since that’s the same target we have for Project Atomic.&#x000A;&#x000A;First, it’s great to see more interest in solving the problem of running Linux containers at scale. Even better, VMware seems to be interested in doing its work in the open. It’s always great to see companies that traditionally lean towards proprietary software taking steps towards doing more open source work. More open source work, even when it’s similar to other projects, is almost always a Good Thing™.&#x000A;&#x000A;That said, I’d like to encourage VMware to consider whether they need to start from scratch with Project Photon. Creating an operating system from scratch is not trivial in the least, and there’s a lot of work that could be shared between Photon and Atomic.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/04/thoughts-on-project-photon/' property='og:url'>
+<meta content='2015-04-22T21:19:07Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Open Source' property='article:tag'>
+<link href='/blog/tag/open source.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Rocket' property='article:tag'>
+<link href='/blog/tag/rocket.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='VMware' property='article:tag'>
+<link href='/blog/tag/vmware.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Thoughts on Project Photon' name='twitter:title'>
+<meta content='Earlier this week, VMware launched its lightweight operating system tailored for running Linux containers. Naturally, I was interested to see what VMware was cooking up, since that’s the same target we have for Project Atomic.&#x000A;&#x000A;First, it’s great to see more interest in solving the problem of running Linux containers at scale. Even better, VMware seems to be interested in doing its work in the open. It’s always great to see companies that traditionally lean towards proprietary software taking steps towards doing more open source work. More open source work, even when it’s similar to other projects, is almost always a Good Thing™.&#x000A;&#x000A;That said, I’d like to encourage VMware to consider whether they need to start from scratch with Project Photon. Creating an operating system from scratch is not trivial in the least, and there’s a lot of work that could be shared between Photon and Atomic.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_04 blog_2015_04_thoughts-on-project-photon blog_2015_04_thoughts-on-project-photon_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Thoughts on Project Photon
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-22T21:19:07Z'>
+Wednesday 22 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Earlier this week, VMware launched its lightweight operating system tailored for running Linux containers. Naturally, I was interested to see what VMware was cooking up, since that&rsquo;s the same target we have for Project Atomic.</p>
+
+<p>First, it&rsquo;s great to see more interest in solving the problem of running Linux containers at scale. Even better, VMware seems to be interested in doing its work in the open. It&rsquo;s always great to see companies that traditionally lean towards proprietary software taking steps towards doing more open source work. More open source work, even when it&rsquo;s similar to other projects, is almost always a Good Thing&trade;.</p>
+
+<p>That said, I&rsquo;d like to encourage VMware to consider whether they need to start from scratch with Project Photon. Creating an operating system from scratch is not trivial in the least, and there&rsquo;s a lot of work that could be shared between Photon and Atomic.</p>
+
+<p></p>
+
+<h3>A Common Base?</h3>
+
+<p>Naturally, I took Photon for a spin when it was announced Monday. It’s an RPM-based system, which is something we have a lot of experience in delivering &ndash; and we even make all of our tools for Fedora (e.g., Koji) public for folks who want to do it themselves. </p>
+
+<p>Looking at the source on GitHub and a running instance of Photon, it seems that VMware has taken on the task of packaging and maintaining a lot of components that add no value to Photon. What I mean by this is that they probably could re-use upwards of 85% of CentOS or Fedora packages (or even openSUSE packages) and still customize the components that they feel are strategic or have a need to diverge from the rest of the distribution.</p>
+
+<p>They also seem interested in rpm-ostree (judging by the fact it&rsquo;s installed, though not currently used), so why not join in the work we&rsquo;re already doing there? It&rsquo;d be fantastic to have VMware (and others) working with us on rpm-ostree and having it more widely deployed. We can accomplish more together!</p>
+
+<h3>Join Us in Making Atomic Even Better</h3>
+
+<p>I’d like to specifically invite VMware to join forces with us on Atomic. Maybe it&rsquo;s not clear, but we welcome <em>anybody</em> who wants to build on our open source work in Project Atomic, Fedora, CentOS, etc. Whether that consists of working directly with us to improve a shared project that everybody uses as shipped, or whether that consists of taking and making something like a <a href="https://fedoraproject.org/wiki/Remix">Fedora Remix</a> that uses most of the stock Fedora package set with some additional packages and customizations. We consider it a win when another community or company builds on the work we&rsquo;ve done, even if that work winds up in a product that competes with Red Hat&rsquo;s commercial offerings.</p>
+
+<p>Though Red Hat and VMware are competitors, we can (and should) stand shoulder to shoulder when doing work in the community. While we compete, we share a lot of users, and I’m sure they’d like to see us working together.</p>
+
+<p>When it makes sense, we&rsquo;re not shy about adopting excellent open source software being developed in the open &ndash; whether it&rsquo;s something led by a competitor to Red Hat or not. By the same token, we&rsquo;d encourage VMware and others to join us in building Atomic (and other tools) rather than having to wrestle with problems we&rsquo;ve already solved.</p>
+
+<p>One of the core tenets of open source is sharing your work so others don&rsquo;t have to re-do it, freeing people up to tackle new and interesting problems. Building an operating system? That&rsquo;s something we&rsquo;ve spent quite a lot of time getting right. That is why we chose to utilize Fedora, CentOS, and Red Hat Enterprise Linux to build Atomic Hosts instead of starting from scratch. Looking at the beginnings of Project Photon, it seems to me that VMware would be able to do its interesting work on top of a Fedora or CentOS set of packages rather than carrying that set on its own and duplicating our effort.</p>
+
+<p>It might sound crazy if you&rsquo;re used to proprietary development, having a competitor extend a hand and say &ldquo;hey, let&rsquo;s work together!&rdquo; But that&rsquo;s what open source is really about &ndash; being open to collaboration with a diverse community for the greater good, even while knowing the work you&rsquo;re doing will be shipped by other companies.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/open-source/">Open Source</a></li>
+<li><a href="/blog/tag/rocket/">Rocket</a></li>
+<li><a href="/blog/tag/vmware/">VMware</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/04/thoughts-on-project-photon/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/04/thoughts-on-project-photon/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/04/thoughts-on-project-photon/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

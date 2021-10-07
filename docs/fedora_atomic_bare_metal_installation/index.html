@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Performing a Bare Metal Installation of Fedora Atomic &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_fedora_atomic_bare_metal_installation docs_fedora_atomic_bare_metal_installation_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Performing a Bare Metal Installation of Fedora Atomic</h1>
+
+<p><em>Fedora Atomic</em> can be thought of as a Fedora instance of the Project Atomic pattern. This document shows how to perform a bare metal installation of Fedora Atomic from physical media. The installation is guided by the <strong>Anaconda</strong> tool that is also used in Fedora and Red Hat Enterprise Linux. If you are familiar with the Anaconda GUI, you will find the installation process very similar.</p>
+
+<h2>Getting the Installation Image and Creating Media</h2>
+
+<p>Download the <strong>boot.iso</strong> file from <a href="https://getfedora.org/atomic/download/">GetFedora.org</a> and use it to create installation media. For example, if you run the GNOME desktop, you can use the <em>Write to disk</em> capability of the Nautilus file browser to create an installation DVD. Alternatively, you can write the installation ISO image to a USB device with the <code>dd</code> command. For example, if you had a USB thumbdrive mounted as <code>/dev/sdb</code>, you might use this command (be careful to get the drive location right):</p>
+<pre class="highlight plaintext"><code>dd if=Fedora-AtomicHost-ostree-x86_64-28-20180515.1.iso of=/dev/sdb bs=4M&#x000A;</code></pre>
+
+<p>These procedures are described in the <a href="https://docs.fedoraproject.org/f28/install-guide/install/Preparing_for_Installation.html#sect-preparing-boot-media">Fedora Installation guide</a> in the section called <em>Preparing Boot Media</em>.</p>
+
+<h2>Installing Fedora Atomic with the Anaconda Installer</h2>
+
+<p>Disconnect any drives which you do not need for the installation, power on your computer system and insert the installation media you created from <em>boot.iso</em>. Then, power off the system with the boot media still inside, and power on the system again. Note that you might need to press a specific key or combination of keys to boot from the media or configure your system&rsquo;s <em>Basic Input/Output System</em> (BIOS) to boot from the media.</p>
+
+<p>Once your system has completed booting, the boot screen is displayed:</p>
+
+<p><img title="Fedora Atomic Boot Screen" alt="Fedora Atomic Boot Screen" width="640" height="480" src="/images/boot_screen1.png?1633620578" /></p>
+
+<p>The boot media displays a graphical boot menu with three options:</p>
+
+<ul>
+<li><p><em>Install Fedora-Atomic 28</em> - Choose this option to install Fedora Atomic onto your computer system using the graphical installation program.</p></li>
+<li><p><em>Test this media &amp; install Fedora-Atomic 28</em> - With this option, the integrity of the installation media is tested before installing Fedora Atomic onto your computer system using the graphical installation program. This option is selected by default.</p></li>
+<li><p><em>Troubleshooting</em> - This item opens a menu with additional boot options. From this screen you can launch a rescue mode for Fedora Atomic, or run a memory test. Also, you can start the installation in the basic graphics mode as well as boot the installation from local media.</p></li>
+</ul>
+
+<p>If no key is pressed within 60 seconds, the default boot option runs. Press <em>Enter</em> to proceed.</p>
+
+<p>After media check, you are directed to the welcome screen. This interactive install is exactly the same as installing standard Fedora Server, so you can use <a href="https://docs.fedoraproject.org/f28/install-guide/install/Installing_Using_Anaconda.html#sect-installation-graphical-mode">Fedora&rsquo;s guide to the Anaconda GUI</a>.</p>
+
+<p>The one thing which is different is disk partitioning.  Post-install, Atomic will automatically use some of the unused space on your primary LVM partition to create a Docker pool partition. You will need this partition in order to have space for containers. As such, we recommend leaving half your available disk space as unallocated LVM partition space.</p>
+
+<p>Once you configured all required settings, the orange warning signs disappear and you can start the installation by pressing <em>Begin Installation</em>.</p>
+
+<p>While the installation proceeds, you can specify user settings, such as a root password and adding one or more system users. We strongly recommend that you do both, as Atomic Host has no GUI login and you will be unable to log in without one or more valid user logins. When the installation is finished, you are prompted to reboot the system by pressing <em>Reboot</em>.</p>
+
+<h2>Unattended Installation</h2>
+
+<p>Kickstart installations offer a means to automate the installation process, either partially or fully. Kickstart files contain answers to all questions normally asked by the installation program, such as what time zone do you want the system to use, how should the drives be partitioned or which packages should be installed.</p>
+
+<p>The installer ISO contains embedded content, and thus works offline. However, to do a PXE installation, you must download the content dynamically.  We strongly recommend mirroring the OSTree repository, rather than having each machine contact the upstream provider.</p>
+
+<p>So, for unattended installation you need to specify your own kickstart configuration and load it from the boot prompt as described below. Use the <code>ostreesetup</code> command in your custom configuration, which is what configures anaconda to consume the rpm-ostree generated content.</p>
+
+<p>For example, create <em>atomic-ks.cfg</em> file with the following content, for Fedora Atomic 28:</p>
+<pre class="highlight plaintext"><code>lang en_US.UTF-8&#x000A;keyboard us&#x000A;timezone America/New_York&#x000A;zerombr&#x000A;clearpart --all --initlabel&#x000A;autopart&#x000A;# sudo user with an ssh key (use your key)&#x000A;user --name=atomic --groups=wheel --sshkey="ssh-rsa AAAAB3NzaC1yc2EAAAA ..."&#x000A;&#x000A;# NOTICE: This will download the the latest release from upstream, which could be slow.&#x000A;ostreesetup --nogpg --osname="fedora-atomic" --remote="fedora-atomic-28" --url="https://kojipkgs.fedoraproject.org/atomic/repo" --ref="fedora/28/x86_64/atomic-host"&#x000A;&#x000A;# Alternately, install from the ISO media:&#x000A;# ostreesetup --osname="fedora-atomic" --remote="fedora-atomic-28" --url="file:///ostree/repo" --ref="fedora/28/x86_64/atomic-host" --nogpg&#x000A;# however, you will need to reset ostree setup afterwards in %post&#x000A;</code></pre>
+
+<p>There are several other options you can specify in the kickstart file, see <em>Kickstart Options</em> in the <a href="https://docs.fedoraproject.org/f28/install-guide/advanced/Kickstart_Installations.html">Fedora Installation guide</a>, or this <a href="/blog/2017/07/fedora-atomic-26-kickstarts">blog post</a> which shows a more complex configuration with disk partitioning.</p>
+
+<p>After creating the configuration file, you have to ensure that it will be available during the installation. Place the file on hard drive, network, or removable media as described in the <a href="https://docs.fedoraproject.org/en-US/Fedora/24/html/Installation_Guide/chap-kickstart-installations.html">Fedora Installation guide</a>. As a simple example, if the kickstart file is on another machine in the same network, you could serve it using a simple HTTP server:</p>
+<pre class="highlight plaintext"><code>cd kickstart/&#x000A;python -m SimpleHTTPServer&#x000A;</code></pre>
+
+<p>Start the installation as described above. On the grub menu screen, press the up arrow to select <q>Install Fedora</q>. Then press <q>e</q> to edit this option. You will see a <code>linux</code> or <code>linuxefi</code> line which boots the install kernel; edit this line to add a kickstart file location after the directive <code>inst.ks</code>. If we were serving the kickstarter file on the network with SimpleHTTPServer as above, for example, we would do this:</p>
+<pre class="highlight plaintext"><code>linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=Fedora-Atomic-28-x86_64 inst.ks=http://192.168.1.105:8000/atomic-ks.cfg inst.text quiet&#x000A;</code></pre>
+
+<p>See the [Fedora Installation guide]<a href="https://docs.fedoraproject.org/f28/install-guide/advanced/Kickstart_Installations.html">https://docs.fedoraproject.org/f28/install-guide/advanced/Kickstart_Installations.html</a>) for more information on how to start a kickstart installation.</p>
+
+<p>With the kickstart file described above, the installation proceeds automatically until Anaconda reboots the system after finishing the installation. This can be more fully automated if you use a PXEboot server, which can serve up both the OS images and the kickstart file.</p>
+
+<p>There is also a kickstart file in repository <a href="https://pagure.io/fedora-kickstarts/tree/master">https://pagure.io/fedora-kickstarts</a></p>
+
+<h2>Updating and Reverting Fedora Atomic</h2>
+
+<p>NOTE: If you&rsquo;ve used a different <code>ostreesetup</code> URL or reference, you&rsquo;ll want to make sure you set the appropriate repository to get updates. If the <code>ostreesetup</code> URL is where you&rsquo;d like to receive updates, you can skip the <code>rebase</code> section.</p>
+
+<p>To receive updates for your Fedora Atomic installation, specify the location of the remote OSTree repository. Execute:</p>
+<pre class="highlight plaintext"><code># ostree remote add --if-not-exists \&#x000A;# --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-28-primary \&#x000A;# fedora-atomic-28 https://kojipkgs.fedoraproject.org/atomic/repo&#x000A;</code></pre>
+
+<p>Here, <em>fedora-atomic-28</em> is used as a name for the remote repository. The URL is stored in the <em>/etc/ostree/remotes.d/fedora-atomic.conf</em> configuration file. While GPG key checking is optional, it&rsquo;s highly recommended to prevent spoofing of installation files. A new GPG key is required for each major Fedora release at this time, but that will change when Atomic shifts to rolling upgrades.</p>
+
+<p>Now you are able to update your system with the following command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree rebase fedora-atomic:&#x000A;</code></pre>
+
+<p>The <code>rebase</code> command, that is an extension of the <code>upgrade</code> command, switches to a newer version of the current tree. In the above syntax, <em>fedora-atomic:</em> stands for the full branch name (in this case <em>fedora-atomic/rawhide/x86_64/server/docker-host</em>). Reboot the system to start the updated version of Fedora Atomic:</p>
+<pre class="highlight plaintext"><code># systemctl reboot&#x000A;</code></pre>
+
+<p>To determine what version of the operating system is running, execute:</p>
+<pre class="highlight plaintext"><code># atomic host status&#x000A;</code></pre>
+
+<p>To revert to a previous installation, execute the following commands:</p>
+<pre class="highlight plaintext"><code># atomic host rollback&#x000A;# systemctl reboot&#x000A;</code></pre>
+
+<!---
+## Uninstalling Fedora Atomic
+
+To remove Fedora Atomic from your computer, you must remove its boot loader information from your master boot record (MBR) and remove any partitions that contain the operating system. Please do not forget to back up any data you want to keep before proceeding.
+
+The removal process varies depending on whether Fedora Atomic is the only operating system installed, or whether the computer is configured to dual-boot Fedora Atomic and another operating system. Fedora Installation guide describes both the [stand-alone](http://docs.fedoraproject.org/en-US/Fedora/20/html/Installation_Guide/ch-x86-uninstall.html#sn-x86-uninstall-single) and [dual-boot](http://docs.fedoraproject.org/en-US/Fedora/20/html/Installation_Guide/sn-x86-uninstall-dual.html) case for Fedora, and these instructions are applicable to Fedora Atomic too.
+
+-->
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='active nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/fedora_atomic_bare_metal_installation.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

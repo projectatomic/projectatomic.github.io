@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Composing custom OSTree update for Fedora 27 Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Sinny Kumari' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Composing custom OSTree update for Fedora 27 Atomic Host' property='og:title'>
+<meta content='With Fedora 27, we ship Atomic Host on multiple architectures which includes aarch64, ppc64le, and x86_64. We also provide Atomic Host updates for these arches every two weeks so that we can provide a tested, stable, and up-to-date OS. Fedora Atomic Host is built using traditional RPM packages available in the Fedora repository. For example, Fedora 27 Atomic Host is formed using  packages from the Fedora 27 repository which are further composed into OSTree repository using rpm-ostree. It is possible to compose and host your own custom-built OSTree repository containing additional features. This article will further guide you on how to compose your own custom OSTree repository and update system from your own hosted OSTree repo.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/12/compose-custom-ostree/' property='og:url'>
+<meta content='2017-12-19T12:00:00Z' property='article:published_time'>
+<meta content='sinnykumari' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='multi-arch' property='article:tag'>
+<link href='/blog/tag/multi-arch.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Composing custom OSTree update for Fedora 27 Atomic Host' name='twitter:title'>
+<meta content='With Fedora 27, we ship Atomic Host on multiple architectures which includes aarch64, ppc64le, and x86_64. We also provide Atomic Host updates for these arches every two weeks so that we can provide a tested, stable, and up-to-date OS. Fedora Atomic Host is built using traditional RPM packages available in the Fedora repository. For example, Fedora 27 Atomic Host is formed using  packages from the Fedora 27 repository which are further composed into OSTree repository using rpm-ostree. It is possible to compose and host your own custom-built OSTree repository containing additional features. This article will further guide you on how to compose your own custom OSTree repository and update system from your own hosted OSTree repo.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_12 blog_2017_12_compose-custom-ostree blog_2017_12_compose-custom-ostree_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Composing custom OSTree update for Fedora 27 Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/sinnykumari/">Sinny Kumari</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-12-19T12:00:00Z'>
+Tuesday 19 December 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With Fedora 27, we ship <a href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/">Atomic Host on multiple architectures</a> which includes aarch64, ppc64le, and x86_64. We also provide Atomic Host updates for these arches every two weeks so that we can provide a tested, stable, and up-to-date OS. Fedora Atomic Host is built using traditional RPM packages available in the Fedora repository. For example, Fedora 27 Atomic Host is formed using  packages from the Fedora 27 repository which are further composed into <a href="https://ostree.readthedocs.io/en/latest/manual/introduction/">OSTree repository</a> using rpm-ostree. It is possible to compose and host your own custom-built OSTree repository containing additional features. This article will further guide you on how to compose your own custom OSTree repository and update system from your own hosted OSTree repo.</p>
+
+<p></p>
+
+<h3>Composing and hosting custom Atomic OSTree</h3>
+
+<p>We will be composing a custom Fedora 27 OSTree repository on x86_64. For ease of use, we will compose and host OSTree repo in a Docker container. You can also compose it on a Virtual Machine or bare metal.</p>
+
+<blockquote>
+<p><code>Note:</code> If you are trying this on aarch64 or ppc64le, replace any mention of x86_64 with the right architecture value wherever used in commands.</p>
+</blockquote>
+
+<h4>Requirement</h4>
+
+<ul>
+<li>A virtual machine or bare metal system with Fedora installed, preferably Fedora 27 which is the latest stable release.</li>
+<li>Docker installed and service running on the machine.</li>
+</ul>
+
+<p>Install Docker and run its service on the system where you are planning to run the container:</p>
+<pre class="highlight plaintext"><code>$ sudo dnf install docker&#x000A;$ sudo systemctl start docker&#x000A;</code></pre>
+
+<h4>Dockerfile</h4>
+
+<p>Create a Dockerfile with the following content which we will use to build a Docker container using Fedora27 as its base and on top of it some additional setup is being done.</p>
+<pre class="highlight plaintext"><code>$ cat Dockerfile&#x000A;FROM fedora:27&#x000A;&#x000A;# Update, install specified packages and clean cached information&#x000A;RUN dnf update -y &amp;&amp; dnf install -y git python rpm-ostree; \&#x000A;dnf clean all&#x000A;&#x000A;# Create specified directories&#x000A;RUN mkdir -p /srv /srv/repo /srv/cache&#x000A;&#x000A;# Set /srv as working directory and clone fedora-atomic repository into it&#x000A;WORKDIR /srv&#x000A;RUN git clone https://pagure.io/fedora-atomic.git&#x000A;&#x000A;# Initialize a new empty repository in /srv/repo/ directory in archive mode&#x000A;RUN ostree --repo=repo init --mode=archive-z2&#x000A;&#x000A;# Expose default SimpleHTTPServer port and start SimpleHTTPServer&#x000A;EXPOSE 8000&#x000A;CMD python -m SimpleHTTPServer&#x000A;</code></pre>
+
+<blockquote>
+<p><code>Note:</code> If you are trying to compose OSTree on aarch64 or ppc64le then modify the first line of your Dockerfile from <code>FROM fedora:27</code> to <code>FROM docker.io/fedora:27</code>. This is needed because Docker first tries to pull in the Fedora 27 image from registry.fedoraproject.org which only contains x86_64 images for now.</p>
+</blockquote>
+
+<h4>Build Docker image and run container</h4>
+
+<p>Now, we will build a Docker image from the Dockerfile we just created. In this example, our Dockerfile is available in the current directory.</p>
+<pre class="highlight plaintext"><code>$ sudo docker build --rm -t $USER/atomicrepo .&#x000A;</code></pre>
+
+<p>The Docker image has been created in the system which can be accessed with name $USER/atomicrepo. To view available images, run:</p>
+<pre class="highlight plaintext"><code>$ sudo docker images&#x000A;</code></pre>
+
+<p>Launch a container in the background from image $USER/atomicrepo we just created which listens on port 8000.</p>
+<pre class="highlight plaintext"><code>$ sudo docker run --privileged -d -p 8000:8000 --name atomicrepo $USER/atomicrepo&#x000A;</code></pre>
+
+<p>We now have a running container with SimpleHTTPServer running inside it. Let&rsquo;s get shell access to this container to work further:</p>
+<pre class="highlight plaintext"><code>$ sudo docker exec -it atomicrepo bash&#x000A;</code></pre>
+
+<p>We are now inside a running container with current working directory set to /srv.</p>
+<pre class="highlight plaintext"><code># pwd&#x000A;/srv&#x000A;</code></pre>
+
+<h4>Composing OSTree repository</h4>
+
+<p>While building the image, we cloned fedora-atomic repository into <code>/srv/</code> directory. We will use content from the fedora-atomic repository as reference to build custom OSTree. Let&rsquo;s checkout f27 branch of the fedora-atomic repo:</p>
+<pre class="highlight plaintext"><code># cd fedora-atomic&#x000A;# git checkout f27&#x000A;</code></pre>
+
+<p>File <code>fedora-atomic-host-base.json</code> in the <code>fedora-atomic</code> repo is the <a href="https://rpm-ostree.readthedocs.io/en/latest/manual/treefile/">treefile</a> containing details about the target system. It has a list of packages which will be composed into our new OSTree. Add or remove package names as required in your custom OSTree repo. In this example, I have added <code>elfutils</code> in the <code>packages</code> list.</p>
+
+<p>Also, feel free to give your own ref name if desired by editing the content of the <code>ref</code> section. rpm-ostree will automatically replace <code>${basearch}</code> by architecture name (x86_64, ppc64le or aarch64) on which you are composing your OSTree.
+In this example, I have changed <code>ref</code> to <code>fedora/27/${basearch}/atomic-host-custom</code>.</p>
+
+<p>Let&rsquo;s compose ostree using rpm-ostree:</p>
+<pre class="highlight plaintext"><code># rpm-ostree compose tree  --cachedir=/srv/cache  --repo=/srv/repo fedora-atomic-host-base.json&#x000A;</code></pre>
+
+<p>On successful compose, you will see this at the end:</p>
+<pre class="highlight plaintext"><code>Committing: [=======================================================================================================================================] 100%&#x000A;Metadata Total: 7915&#x000A;Metadata Written: 3585&#x000A;Content Total: 32682&#x000A;Content Written: 25647&#x000A;Content Bytes Written: 1083483773&#x000A;fedora/27/x86_64/atomic-host-custom =&gt; 93b1d9f8b929916762260bfd31e1b5b9568c0da83110df9425f41e4b44115fc4&#x000A;</code></pre>
+
+<p>The last line contains the OSTree ref name followed by a commit number.</p>
+
+<p>To view available commits, run:</p>
+<pre class="highlight plaintext"><code># ostree log --repo=/srv/repo/ fedora/27/x86_64/atomic-host-custom&#x000A;commit 93b1d9f8b929916762260bfd31e1b5b9568c0da83110df9425f41e4b44115fc4&#x000A;Date:  2017-12-10 13:11:50 +0000&#x000A;Version: 27&#x000A;(no subject)&#x000A;</code></pre>
+
+<p>In the commit log,  the <code>Version</code> value gets updated with additional commits made in ref fedora/27/x86_64/atomic-host-custom. Values are in incremental fashion, i.e. 27.1, 27.2, 27.3, and so on.</p>
+
+<h3>Updating Atomic Host system with custom OSTree</h3>
+
+<p>Now, if you have a host machine or virtual machine with Atomic Host already running, let&rsquo;s try to update the system with the custom update repository we just created.</p>
+<pre class="highlight plaintext"><code>$ sudo ostree remote add fedora-atomic-custom http://YOUR_IP:8000/repo --no-gpg-verify&#x000A;$ cat /etc/ostree/remotes.d/fedora-atomic-custom.conf&#x000A;[remote "fedora-atomic-custom"]&#x000A;url=http://YOUR_IP:8000/repo&#x000A;gpg-verify=false&#x000A;</code></pre>
+
+<p>Here, YOUR_IP is the IP address of the system on which your <code>atomicrepo</code> container is running. Make sure that the IP address is reachable from the target system where the update process will take place.</p>
+
+<p>Now, update the Atomic Host system with our locally hosted ostree repo using <code>rpm-ostree rebase</code>.</p>
+<pre class="highlight plaintext"><code>$ sudo rpm-ostree rebase fedora-atomic-custom:fedora/27/x86_64/atomic-host-custom&#x000A;</code></pre>
+
+<p>In our example, fedora-atomic-custom is the remote name which we previously added. Reboot your system to apply changes.</p>
+<pre class="highlight plaintext"><code>$ sudo systemctl reboot&#x000A;$ sudo rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic-custom:fedora/27/x86_64/atomic-host-custom&#x000A;                   Version: 27 (2017-12-10 13:11:50)&#x000A;                BaseCommit: 93b1d9f8b929916762260bfd31e1b5b9568c0da83110df9425f41e4b44115fc4&#x000A;           LayeredPackages: libabigail&#x000A;&#x000A;  fedora-atomic:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.16 (2017-11-28 23:08:35)&#x000A;                BaseCommit: 86727cdbc928b7f7dd0e32f62d3b973a8395d61e0ff751cfea7cc0bc5222142f&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: libabigail&#x000A;</code></pre>
+
+<h4>Rollback to previous tree</h4>
+
+<p>In case you didn&rsquo;t like updating to your custom OSTree, no worries. It&rsquo;s very easy to switch back to a previous commit using the Atomic rollback feature:</p>
+<pre class="highlight plaintext"><code>$ sudo rpm-ostree rollback&#x000A;</code></pre>
+
+<p>Reboot your system and it will be back to what you had earlier.</p>
+
+<h3>Conclusion</h3>
+
+<p>Now you know how easy it is to create your own custom OSTree repository and serve it as update to all Atomic Host systems you want to keep in sync. All you have to do is keep updating the treefile and re-run the <code>rpm-ostree compose</code> process on the server side, then run <code>rpm-ostree upgrade</code> on client side once you have rebased the client system to the right ref. If something goes wrong, use the <code>rpm-ostree rollback</code> feature and it will take you to the previous working Atomic Host system.</p>
+
+<p>So, give it a try and let us know how it worked for you in the #atomic IRC channel.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/multi-arch/">multi-arch</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/12/compose-custom-ostree/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/12/compose-custom-ostree/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/12/compose-custom-ostree/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

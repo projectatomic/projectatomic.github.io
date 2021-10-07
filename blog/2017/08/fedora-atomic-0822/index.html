@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 26 Atomic Host August 22 Release &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 26 Atomic Host August 22 Release' property='og:title'>
+<meta content='A new Fedora Atomic Host update is available via an OSTree commit:&#x000A;Commit: 13ed0f241c9945fd5253689ccd081b5478e5841a71909020e719437bbeb74424&#x000A;Version: 26.110&#x000A;&#x000A;&#x000A;Warnings&#x000A;&#x000A;Hardware Issue: During our testing phase we found an issue where on a specific hardware platform we could not boot after installing from the ISO images, or after updating to this release. If you experience similar behavior please use the previous ISO image.  For existing machines, users with affected hardware should either wait for the next two-week release to upgrade, or switch to the updates ref where the issue is already fixed.&#x000A;&#x000A;Kubernetes: We have also been notified by users that there are firewall issues with Docker 1.13 and Kubernetes.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/08/fedora-atomic-0822/' property='og:url'>
+<meta content='2017-08-24T18:00:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 26 Atomic Host August 22 Release' name='twitter:title'>
+<meta content='A new Fedora Atomic Host update is available via an OSTree commit:&#x000A;Commit: 13ed0f241c9945fd5253689ccd081b5478e5841a71909020e719437bbeb74424&#x000A;Version: 26.110&#x000A;&#x000A;&#x000A;Warnings&#x000A;&#x000A;Hardware Issue: During our testing phase we found an issue where on a specific hardware platform we could not boot after installing from the ISO images, or after updating to this release. If you experience similar behavior please use the previous ISO image.  For existing machines, users with affected hardware should either wait for the next two-week release to upgrade, or switch to the updates ref where the issue is already fixed.&#x000A;&#x000A;Kubernetes: We have also been notified by users that there are firewall issues with Docker 1.13 and Kubernetes.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_08 blog_2017_08_fedora-atomic-0822 blog_2017_08_fedora-atomic-0822_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 26 Atomic Host August 22 Release
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-24T18:00:00Z'>
+Thursday 24 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit:</p>
+<pre class="highlight plaintext"><code>Commit: 13ed0f241c9945fd5253689ccd081b5478e5841a71909020e719437bbeb74424&#x000A;Version: 26.110&#x000A;</code></pre>
+
+<h3>Warnings</h3>
+
+<p><strong>Hardware Issue</strong>: During our testing phase we found an issue where on a specific hardware platform <a href="https://pagure.io/atomic-wg/issue/324">we could not boot</a> after installing from the ISO images, or after updating to this release. If you experience similar behavior please use <a href="https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-26-20170807.0/Atomic/x86_64/iso/Fedora-Atomic-ostree-x86_64-26-20170807.0.iso">the previous ISO image</a>.  For existing machines, users with affected hardware should either wait for the next two-week release to upgrade, or switch to the updates ref where the issue is already fixed.</p>
+
+<p><strong>Kubernetes</strong>: We have also been notified by users that there <a href="https://github.com/projectatomic/atomic-site/issues/467">are firewall issues</a> with Docker 1.13 and Kubernetes.</p>
+
+<p></p>
+
+<p>The diff between this and the previous released version is:</p>
+
+<ul>
+<li> ostree diff commit old: f6331bcd14577e0ee43db3ba5a44e0f63f74a86e3955604c20542df0b7ad8ad6</li>
+<li>ostree diff commit new: 13ed0f241c9945fd5253689ccd081b5478e5841a71909020e719437bbeb74424</li>
+</ul>
+
+<p>Upgraded:</p>
+
+<ul>
+<li>bash 4.4.12-6.fc26.x86_64 -&gt; 4.4.12-7.fc26.x86_64</li>
+<li>boost-iostreams 1.63.0-5.fc26.x86_64 -&gt; 1.63.0-6.fc26.x86_64</li>
+<li>boost-program-options 1.63.0-5.fc26.x86_64 -&gt; 1.63.0-6.fc26.x86_64</li>
+<li>boost-random 1.63.0-5.fc26.x86_64 -&gt; 1.63.0-6.fc26.x86_64</li>
+<li>boost-regex 1.63.0-5.fc26.x86_64 -&gt; 1.63.0-6.fc26.x86_64</li>
+<li>boost-system 1.63.0-5.fc26.x86_64 -&gt; 1.63.0-6.fc26.x86_64</li>
+<li>boost-thread 1.63.0-5.fc26.x86_64 -&gt; 1.63.0-6.fc26.x86_64</li>
+<li>curl 7.53.1-9.fc26.x86_64 -&gt; 7.53.1-10.fc26.x86_64</li>
+<li>docker 2:1.13.1-19.git27e468e.fc26.x86_64 -&gt; 2:1.13.1-21.git27e468e.fc26.x86_64</li>
+<li>docker-common 2:1.13.1-19.git27e468e.fc26.x86_64 -&gt; 2:1.13.1-21.git27e468e.fc26.x86_64</li>
+<li>docker-rhel-push-plugin 2:1.13.1-19.git27e468e.fc26.x86_64 -&gt; 2:1.13.1-21.git27e468e.fc26.x86_64</li>
+<li>dracut 044-183.fc26.x86_64 -&gt; 046-2.git20170811.fc26.x86_64</li>
+<li>dracut-config-generic 044-183.fc26.x86_64 -&gt; 046-2.git20170811.fc26.x86_64</li>
+<li>dracut-network 044-183.fc26.x86_64 -&gt; 046-2.git20170811.fc26.x86_64</li>
+<li>expat 2.2.1-1.fc26.x86_64 -&gt; 2.2.3-1.fc26.x86_64</li>
+<li>file 5.30-8.fc26.x86_64 -&gt; 5.30-9.fc26.x86_64</li>
+<li>file-libs 5.30-8.fc26.x86_64 -&gt; 5.30-9.fc26.x86_64</li>
+<li>glibc 2.25-7.fc26.x86_64 -&gt; 2.25-8.fc26.x86_64</li>
+<li>glibc-all-langpacks 2.25-7.fc26.x86_64 -&gt; 2.25-8.fc26.x86_64</li>
+<li>glibc-common 2.25-7.fc26.x86_64 -&gt; 2.25-8.fc26.x86_64</li>
+<li>glusterfs 3.10.4-2.fc26.x86_64 -&gt; 3.10.5-1.fc26.x86_64</li>
+<li>glusterfs-client-xlators 3.10.4-2.fc26.x86_64 -&gt; 3.10.5-1.fc26.x86_64</li>
+<li>glusterfs-fuse 3.10.4-2.fc26.x86_64 -&gt; 3.10.5-1.fc26.x86_64</li>
+<li>glusterfs-libs 3.10.4-2.fc26.x86_64 -&gt; 3.10.5-1.fc26.x86_64</li>
+<li>gnupg2 2.1.21-2.fc26.x86_64 -&gt; 2.1.22-1.fc26.x86_64</li>
+<li>gnupg2-smime 2.1.21-2.fc26.x86_64 -&gt; 2.1.22-1.fc26.x86_64</li>
+<li>kernel 4.11.11-300.fc26.x86_64 -&gt; 4.12.5-300.fc26.x86_64</li>
+<li>kernel-core 4.11.11-300.fc26.x86_64 -&gt; 4.12.5-300.fc26.x86_64</li>
+<li>kernel-modules 4.11.11-300.fc26.x86_64 -&gt; 4.12.5-300.fc26.x86_64</li>
+<li>krb5-libs 1.15.1-17.fc26.x86_64 -&gt; 1.15.1-22.fc26.x86_64</li>
+<li>libcrypt-nss 2.25-7.fc26.x86_64 -&gt; 2.25-8.fc26.x86_64</li>
+<li>libcurl 7.53.1-9.fc26.x86_64 -&gt; 7.53.1-10.fc26.x86_64</li>
+<li>oci-umount 2:1.13.1-19.git27e468e.fc26.x86_64 -&gt; 2:1.13.1-21.git27e468e.fc26.x86_64</li>
+<li>python-rhsm-certificates 1.19.4-1.fc26.x86_64 -&gt; 1.20.1-1.fc26.x86_64</li>
+<li>python2-cryptography 1.7.2-1.fc26.x86_64 -&gt; 2.0.2-1.fc26.x86_64</li>
+<li>python2-setuptools 36.2.0-1.fc26.noarch -&gt; 36.2.0-2.fc26.noarch</li>
+<li>python3 3.6.2-1.fc26.x86_64 -&gt; 3.6.2-5.fc26.x86_64</li>
+<li>python3-cryptography 1.7.2-1.fc26.x86_64 -&gt; 2.0.2-1.fc26.x86_64</li>
+<li>python3-docker 2.4.2-1.fc26.noarch -&gt; 2.4.2-3.fc26.noarch</li>
+<li>python3-libs 3.6.2-1.fc26.x86_64 -&gt; 3.6.2-5.fc26.x86_64</li>
+<li>python3-setuptools 36.2.0-1.fc26.noarch -&gt; 36.2.0-2.fc26.noarch</li>
+<li>selinux-policy 3.13.1-260.3.fc26.noarch -&gt; 3.13.1-260.4.fc26.noarch</li>
+<li>selinux-policy-targeted 3.13.1-260.3.fc26.noarch -&gt; 3.13.1-260.4.fc26.noarch</li>
+<li>sqlite-libs 3.19.3-1.fc26.x86_64 -&gt; 3.20.0-1.fc26.x86_64</li>
+<li>system-python 3.6.2-1.fc26.x86_64 -&gt; 3.6.2-5.fc26.x86_64</li>
+<li>system-python-libs 3.6.2-1.fc26.x86_64 -&gt; 3.6.2-5.fc26.x86_64</li>
+<li>tmux 2.5-1.fc26.x86_64 -&gt; 2.5-4.fc26.x86_64</li>
+<li>vim-minimal 2:8.0.823-1.fc26.x86_64 -&gt; 2:8.0.946-1.fc26.x86_64</li>
+</ul>
+
+<p>Removed:</p>
+
+<ul>
+<li>python2-pyasn1-0.2.3-1.fc26.noarch</li>
+<li>python3-pyasn1-0.2.3-1.fc26.noarch</li>
+</ul>
+
+<p>Added:</p>
+
+<ul>
+<li>microcode_ctl-2:2.1-16.fc26.x86_64</li>
+<li>python2-asn1crypto-0.22.0-4.fc26.noarch</li>
+<li>python3-asn1crypto-0.22.0-4.fc26.noarch</li>
+</ul>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or
+<code>atomic host deploy</code>.  Systems on Fedora Atomic 25 can be upgraded using <code>rpm-ostree rebase</code>.
+Refer to the <a href="http://www.projectatomic.io/blog/2017/08/fedora-atomic-25-to-26-upgrade/">upgrade guide</a>
+for more details.</p>
+
+<p>Corresponding image media for new installations can be
+<a href="https://getfedora.org/en/atomic/download/">downloaded from GetFedora.org</a>.</p>
+
+<p>Respective signed CHECKSUM files can be found here:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-26-20170821.0/CloudImages/x86_64/images/Fedora-CloudImages-26-20170821.0-x86_64-CHECKSUM">Cloud image checksums</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-26-20170821.0/Atomic/x86_64/iso/Fedora-Atomic-26-20170821.0-x86_64-CHECKSUM">ISO Checksum</a></li>
+</ul>
+
+<p>For direct download, the <q>latest</q> targets are always available at the following URLs:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest">Latest ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest">Latest QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest">Latest raw image</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest">Latest LibVirt VM</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest">Latest VirtualBox VM</a></li>
+</ul>
+
+<p>Filename fetching URLs for downloading to remote systems are available by querying the following links:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest_filename">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest_filename">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest_filename">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename">VirtualBox</a></li>
+</ul>
+
+<p>For more information about the latest targets, please reference <a href="https://fedoraproject.org/wiki/Atomic_WG#Fedora_Atomic_Image_Download_Links">the Fedora
+Atomic Wiki space</a>.</p>
+
+<p>The Vagrant Cloud page with the new atomic host:</p>
+
+<ul>
+<li><a href="https://app.vagrantup.com/fedora/">All Fedora boxes</a></li>
+<li><a href="https://app.vagrantup.com/fedora/boxes/26-atomic-host/versions/26.20170807.0">Fedora Atomic 26</a></li>
+</ul>
+<pre class="highlight plaintext"><code>vagrant init fedora/26-atomic-host; vagrant up&#x000A;</code></pre>
+
+<p>or, if you already have the box, to get the new one:</p>
+<pre class="highlight plaintext"><code>vagrant box update --box fedora/26-atomic-host&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/08/fedora-atomic-0822/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/08/fedora-atomic-0822/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/08/fedora-atomic-0822/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

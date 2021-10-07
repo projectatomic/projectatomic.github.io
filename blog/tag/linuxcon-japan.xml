@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Linux Con Japan</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/linuxcon-japan.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic Comes to Japan</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/05/project-atomic-comes-to-japan/"/>
+    <id>http://www.projectatomic.io/blog/2015/05/project-atomic-comes-to-japan/</id>
+    <published>2015-05-28T17:56:10+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;In case you missed the news on Twitter, we&amp;rsquo;re taking this show on the road! Specifically, we have a few opportunities to learn more about Project Atomic in Tokyo, Japan. &lt;/p&gt;
+
+&lt;p&gt;Next week, I&amp;rsquo;ll be attending &lt;a href="http://events.linuxfoundation.org/events/linuxcon-japan"&gt;LinuxCon Japan&lt;/a&gt; to &lt;a href="http://events.linuxfoundation.org/events/linuxcon-japan/program/schedule"&gt;speak about Project Atomic&lt;/a&gt; and the traditional package problems. &lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll also be hosting a &lt;a href="https://redhat.smartseminar.jp/public/seminar/view/231"&gt;Meetup in Ebisu&lt;/a&gt; on 2 June at the Red Hat Tokyo office! If you&amp;rsquo;re local to Tokyo (or can get there easily) then you should definitely sign up and check out the Meetup!&lt;/p&gt;
+
+&lt;p&gt;Have a meetup, talk, or event where you&amp;rsquo;re discussing Project Atomic and want to spread the word? Shoot me an email to jzb at Red Hat or find me &lt;a href="http://twitter.com/jzb"&gt;on Twitter&lt;/a&gt;.  &lt;/p&gt;
+</content>
+  </entry>
+</feed>

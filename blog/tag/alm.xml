@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Alm</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/alm.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Atomic App 0.4.3 Release with New Logging UI</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/atomic-app-0-4-3/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/atomic-app-0-4-3/</id>
+    <published>2016-03-02T23:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;We&amp;rsquo;ve now released &lt;a href="https://github.com/projectatomic/atomicapp/releases"&gt;0.4.3&lt;/a&gt; of &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;This will probably be our last release before 1.0.0.&lt;/p&gt;
+
+&lt;p&gt;With this release, we&amp;rsquo;ve re-factored our logging formatter making it easier to decipher between information, debug, warnings, and errors.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="logger" width="2417" height="620" src="/images/atomicapp-logger.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;You are also able to now specify the logging format you&amp;rsquo;d like to output via the command line:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  --logtype {cockpit,color,nocolor,none}
+                        Override the default logging output. The options are:
+                        nocolor: we will only log to stdout; color: log to
+                        stdout with color; cockpit: used with cockpit
+                        integration; none: atomicapp will disable any logging.
+                        If nothing is set and logging to file then 'nocolor'
+                        by default. If nothing is set and logging to tty then
+                        'color' by default.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The main changes to &lt;code&gt;atomicapp&lt;/code&gt; in this week&amp;rsquo;s release are:&lt;/p&gt;
+
+&lt;h3&gt;Features&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A new logging mechanism that outputs color-coordinated logging messages&lt;/li&gt;
+&lt;li&gt;Added CLI commands for color, nocolor, cockpit and &amp;lsquo;none&amp;rsquo; output&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;UI&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Failure on finding no artifacts&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Other&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;README.md / doc updates&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Atomic App&lt;/h3&gt;
+
+&lt;p&gt;Many thanks for everyone who committed to this release!&lt;/p&gt;
+
+&lt;p&gt;As we continue to push towards a 1.0.0 release, we highly appreciate any comments or contributions to the Atomic App &lt;a href="https://github.com/projectatomic/atomicapp"&gt;repo&lt;/a&gt;. If you have any questions about Atomic App or Nulecule, visit the #nulecule channel on Freenode or ask on the &lt;a href="https://www.redhat.com/mailman/listinfo/container-tools"&gt;container-tools&lt;/a&gt; mailing list.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.4.2 Released!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/02/atomic-app-0-4-2/"/>
+    <id>http://www.projectatomic.io/blog/2016/02/atomic-app-0-4-2/</id>
+    <published>2016-02-19T20:30:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;We&amp;rsquo;ve now released &lt;a href="https://github.com/projectatomic/atomicapp/releases"&gt;0.4.2&lt;/a&gt; of &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;As we get closer to 1.0.0, we are focusing on testing and bug fixes before our grand release.&lt;/p&gt;
+
+&lt;p&gt;The changes to &lt;code&gt;atomicapp&lt;/code&gt; in this week&amp;rsquo;s release are:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Features:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Meta data is now an optional requirement when building Nuleculized applications&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;User Interaction:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Relative paths are now supported for provider configuration data&lt;/li&gt;
+&lt;li&gt;Raise on missing artifact folders or files&lt;/li&gt;
+&lt;li&gt;Raise on failure of Docker image retrieval&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Bug Fixes:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Label fixes for &lt;code&gt;atomic&lt;/code&gt; cli interaction&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Miscellaneous:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Unneeded Dockerfiles and redundant licenses removed from testing suite&lt;/li&gt;
+&lt;li&gt;All references to &lt;code&gt;install&lt;/code&gt; have now been removed in favor of &lt;code&gt;fetch&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Atomic App&lt;/h3&gt;
+
+&lt;p&gt;Many thanks for everyone who committed to this release!&lt;/p&gt;
+
+&lt;p&gt;As we continue to push towards a 1.0.0 release, we highly appreciate any comments or contributions to the Atomic App &lt;a href="https://github.com/projectatomic/atomicapp"&gt;repo&lt;/a&gt;. If you have any questions about Atomic App or Nulecule, visit the #nulecule channel on Freenode or ask on the &lt;a href="https://www.redhat.com/mailman/listinfo/container-tools"&gt;container-tools&lt;/a&gt; mailing list.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.4.0 Released!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/01/atomic-app-0-4-0/"/>
+    <id>http://www.projectatomic.io/blog/2016/01/atomic-app-0-4-0/</id>
+    <published>2016-01-22T15:53:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;A fast release since 0.3.1, we&amp;rsquo;ve now released &lt;a href="https://github.com/projectatomic/atomicapp/releases"&gt;0.4.0&lt;/a&gt; of &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Our biggest change is the renaming of &lt;code&gt;atomicapp install&lt;/code&gt; to &lt;code&gt;atomicapp fetch&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In order to fetch the container from the &lt;code&gt;atomic&lt;/code&gt; cli, you are required to use the &lt;code&gt;run&lt;/code&gt; command and pass the &lt;code&gt;--mode=fetch&lt;/code&gt; parameters.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;  atomic run projectatomic/myapp --mode&lt;span class="o"&gt;=&lt;/span&gt;fetch --destination ./
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within &lt;code&gt;atomicapp&lt;/code&gt; you may simply use fetch.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;  atomicapp fetch projectatomic/myapp --destination ./
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The main features of this release are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Renaming install to fetch&lt;/li&gt;
+&lt;li&gt;Enabling users to pass an answers file as a URL &lt;code&gt;atomicapp run projectatomic/atomicapp -a https://foobar.com/answers.conf&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Atomic App&lt;/h3&gt;
+
+&lt;p&gt;Many thanks for everyone who committed to this release!&lt;/p&gt;
+
+&lt;p&gt;As we continue to push towards a 1.0.0 release, we highly appreciate any comments or contributions to the Atomic App &lt;a href="https://github.com/projectatomic/atomicapp"&gt;repo&lt;/a&gt;. If you have any questions about Atomic App or Nulecule, visit the #nulecule channel on Freenode or ask on the &lt;a href="https://www.redhat.com/mailman/listinfo/container-tools"&gt;container-tools&lt;/a&gt; mailing list.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.3.1 Release Features Persistent Storage, More OpenShift Support</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/01/atomic-app-0-3-1/"/>
+    <id>http://www.projectatomic.io/blog/2016/01/atomic-app-0-3-1/</id>
+    <published>2016-01-19T19:20:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;Today we&amp;rsquo;ve released &lt;a href="https://github.com/projectatomic/atomicapp/releases"&gt;0.3.1&lt;/a&gt; of &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;!  This is our first release since the holiday break, as well as the first release since 0.3.0. We&amp;rsquo;ve got quite a lot of new features added as well.&lt;/p&gt;
+
+&lt;p&gt;The main features of this release are:
+  * Native persistent storage integration. (Kubernetes only support for now)
+  * HTTPS (TLS) verification and support for OpenShift
+  * OpenShift &lt;code&gt;stop&lt;/code&gt; added
+  * Nested Nulecule application support for OpenShift&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Bug fixes and changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Refactor of our OpenShift provider&lt;/li&gt;
+&lt;li&gt;Compatibility fixes with Atomic CLI and Atomic App integration&lt;/li&gt;
+&lt;li&gt;Addition of several CLI parameters to allow for passing provider options on the command line&lt;/li&gt;
+&lt;li&gt;Additional unit tests for OpenShift&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Persistent Storage&lt;/h3&gt;
+
+&lt;p&gt;The integration of native persistent storage support allows a persistent volume to be defined within the &lt;code&gt;Nulecule&lt;/code&gt; file rather than the &lt;code&gt;/artifact&lt;/code&gt; folder of the Nuleculized container. Atomic App will define and create the persistent storage volume claim before proceeding further in deploying the application.&lt;/p&gt;
+
+&lt;p&gt;Currently, Kubernetes is the only provider with support for launching a persistent storage volume.&lt;/p&gt;
+
+&lt;p&gt;For example, a persistent volume can be claimed within the Nulecule file as follows:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;yaml
+graph:
+    ...
+    requirements:
+      - persistentVolume:
+          name: "var-log-httpd"
+          accessMode: "ReadWrite"
+          size: 4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A full example would be:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;yaml
+---
+specversion: 0.0.2
+id: helloapache-app
+
+metadata:
+  name: Hello Apache App
+  appversion: 0.0.1
+  description: Atomic app for deploying a really basic Apache HTTP server
+graph:
+  - name: helloapache-app
+    params:
+      - name: image
+        description: The webserver image
+        default: centos/httpd
+      - name: hostport
+        description: The host TCP port as the external endpoint
+        default: 80
+    artifacts:
+      docker:
+        - file://artifacts/docker/hello-apache-pod_run
+      kubernetes:
+        - file://artifacts/kubernetes/hello-apache-pod.json
+    requirements:
+      - persistentVolume:
+          name: "var-log-httpd"
+          accessMode: "ReadWrite"
+          size: 4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And running it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;bash
+docker build -t projectatomic/helloapache-ps
+atomic run projectatomic/helloapache-ps --provider=docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When you deploy your application, Atomic App will automatically take the &lt;code&gt;persistentVolume&lt;/code&gt; claim under requirements and deploy it to it&amp;rsquo;s respective provider. In the case of Kubernetes, a &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/docs/design/persistent-storage.md"&gt;persistent volume claim&lt;/a&gt; will be defined before proceeding in launching a &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/docs/user-guide/replication-controller.md"&gt;replication controller&lt;/a&gt; or &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/docs/user-guide/pods.md"&gt;pod&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;OpenShift Stop&lt;/h3&gt;
+
+&lt;p&gt;Compatibility for stopping deployed Atomic App containers on OpenShift has now been added.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;atomic stop projectatomic/helloapache /var/lib/atomicapp/yournuleculedir
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;HTTPS (TLS) Support for OpenShift&lt;/h3&gt;
+
+&lt;p&gt;With version 0.3.1 of Atomic App, we enable https/tls support by default.&lt;/p&gt;
+
+&lt;p&gt;Certificates are validated against the Mozilla CA Certificate List using the &lt;a href="https://certifi.io/en/latest/"&gt;certifi&lt;/a&gt; project.&lt;/p&gt;
+
+&lt;p&gt;Both options can be set using &lt;code&gt;answers.conf&lt;/code&gt; file or via command line options.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;providercafile&lt;/code&gt; - If your https API endpoint isn&amp;rsquo;t signed by trusted CA. You can use this option to provide path to your CA certificate.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;providertlsverify&lt;/code&gt; - By setting this to False you can disable TLS/SSL verification. (default is True)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example answers.conf:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[general]
+provider = openshift
+providerapi = https://127.0.0.1:8443
+accesstoken = sadfasdfasfasfdasfasfasdfsafasfd
+namespace = mynamespace
+providertlsverify = True
+providercafile = /etc/myca/ca.pem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;An example of disabling verification using command line argument:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;atomic run myapp --provider=openshift --providertlsverify=False
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When using &lt;a href="https://github.com/kadel/atomicapp/blob/master/docs/providers/openshift/overview_native.md"&gt;native execution&lt;/a&gt; (&lt;code&gt;oc new-app&lt;/code&gt;) to run Nulecule application on OpenShift you can pass command line arguments via environment variables &lt;code&gt;ATOMICAPP_APPEND_ARGS&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;oc new-app myapp --grant-install-rights -e ATOMICAPP_APPEND_ARGS='--providertlsverify=False'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Nested Nulecule Support for OpenShift&lt;/h3&gt;
+
+&lt;p&gt;Native support for launching Nulecules within OpenShift has been added. You can now pull from a library of Atomic App&amp;rsquo;s (Nuleculized applications) that exist in the Docker hub and launch them into OpenShift.&lt;/p&gt;
+
+&lt;p&gt;Using the &lt;a href="https://github.com/projectatomic/nulecule-library/tree/master/guestbookgo-atomicapp"&gt;guestbookgo-atomicapp&lt;/a&gt; example you can now start the container via the &lt;code&gt;oc new-app&lt;/code&gt; command.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;oc new-app projectatomic/guestbookgo-atomicapp --grant-install-rights
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Atomic App will now evaluate what environment the container is being ran from and communicate with OpenShift in order to bring up the Nuleculized application.&lt;/p&gt;
+
+&lt;p&gt;To see a more complete example of running a Nulecule via &lt;code&gt;oc new-app&lt;/code&gt; see Dusty Mabe&amp;rsquo;s &lt;a href="http://dustymabe.com/2016/01/18/running-nulecules-in-openshift-via-oc-new-app/"&gt;post&lt;/a&gt; on the subject.&lt;/p&gt;
+
+&lt;h3&gt;Atomic App&lt;/h3&gt;
+
+&lt;p&gt;Many thanks for everyone who committed to this large release!&lt;/p&gt;
+
+&lt;p&gt;As we continue to push towards a 1.0.0 release, we highly appreciate any comments or contributions to the Atomic App &lt;a href="https://github.com/projectatomic/atomicapp"&gt;repo&lt;/a&gt;. If you have any questions about Atomic App or Nulecule, visit the #nulecule channel on Freenode or ask on the &lt;a href="https://www.redhat.com/mailman/listinfo/container-tools"&gt;container-tools&lt;/a&gt; mailing list.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.3.0 release!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/12/atomic-app-0-3/"/>
+    <id>http://www.projectatomic.io/blog/2015/12/atomic-app-0-3/</id>
+    <published>2015-12-17T17:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;Today we&amp;rsquo;ve released &lt;a href="https://github.com/projectatomic/atomicapp/releases"&gt;0.3.0&lt;/a&gt; of &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;! We&amp;rsquo;ve crossed a few things on our roadmap as well as introduced a brand-new provider; &lt;a href="https://mesosphere.github.io/marathon/"&gt;&lt;strong&gt;Marathon!&lt;/strong&gt;&lt;/a&gt; For those new to Marathon, it&amp;rsquo;s a cluster-wide init and control system for services in cgroups or Docker containers, that usually runs on top of Apache Mesos.&lt;/p&gt;
+
+&lt;p&gt;The main features of this release are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Marathon provider (thank you &lt;a href="https://github.com/kadel"&gt;@kadel&lt;/a&gt; and &lt;a href="https://github.com/dharmit"&gt;@dharmit&lt;/a&gt;!)&lt;/li&gt;
+&lt;li&gt;A complete refactor of our OpenShift provider (using the HTTP API rather than oc command)&lt;/li&gt;
+&lt;li&gt;Support for &lt;code&gt;oc new-app&lt;/code&gt; deployment&lt;/li&gt;
+&lt;li&gt;CLI options (ex. &amp;ndash;answers-conf) may now be used anywhere on the command line&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Bug fixes and changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A refactor of CLI commands and options&lt;/li&gt;
+&lt;li&gt;Fix on deploying multiple inherited applications&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For a quick introduction to Marathon, feel free to examine the &lt;a href="https://github.com/projectatomic/nulecule-library/tree/master/helloapache"&gt;helloapache&lt;/a&gt; Nulecule example with Marathon already built in.&lt;/p&gt;
+
+&lt;p&gt;Simply add Marathon as a respective provider within &lt;code&gt;Nulecule&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="nn"&gt;---&lt;/span&gt;
+&lt;span class="nn"&gt;...&lt;/span&gt;
+    &lt;span class="s"&gt;artifacts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="s"&gt;docker&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;file://artifacts/docker/hello-apache-pod_run&lt;/span&gt;
+      &lt;span class="s"&gt;kubernetes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;file://artifacts/kubernetes/hello-apache-pod.json&lt;/span&gt;
+      &lt;span class="s"&gt;marathon&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;file://artifacts/marathon/helloapache.json&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then provide the JSON within the artifacts folder:&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"id"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"helloapache"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"container"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"type"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"DOCKER"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"docker"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+      &lt;/span&gt;&lt;span class="s2"&gt;"network"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"BRIDGE"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+      &lt;/span&gt;&lt;span class="s2"&gt;"image"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"$image"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+      &lt;/span&gt;&lt;span class="s2"&gt;"portMappings"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+          &lt;/span&gt;&lt;span class="s2"&gt;"containerPort"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+          &lt;/span&gt;&lt;span class="s2"&gt;"servicePort"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;$hostport&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+          &lt;/span&gt;&lt;span class="s2"&gt;"hostPort"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+          &lt;/span&gt;&lt;span class="s2"&gt;"protocol"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"tcp"&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+      &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"cpus"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"mem"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;128&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Build, and launch!&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;docker build -t helloapache .
+atomic run helloapache --provider&lt;span class="o"&gt;=&lt;/span&gt;marathon
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As we continue to push towards a 1.0.0 release we highly appreciate any comments or contributions to the Atomic App &lt;a href="https://github.com/projectatomic/atomicapp"&gt;repo&lt;/a&gt;. If you have any questions about Atomic App or Nulecule, visit the #nulecule channel on Freenode or ask on the &lt;a href="https://www.redhat.com/mailman/listinfo/container-tools"&gt;container-tools&lt;/a&gt; mailing list.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

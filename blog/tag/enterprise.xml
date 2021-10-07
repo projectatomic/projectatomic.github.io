@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Enterprise</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/enterprise.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Why The Operating System Will Never Die</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/05/why-the-operating-system-will-never-die/"/>
+    <id>http://www.projectatomic.io/blog/2014/05/why-the-operating-system-will-never-die/</id>
+    <published>2014-05-23T14:35:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian Proffitt</name>
+    </author>
+    <content type="html">&lt;p&gt;A strange thing is going on in IT these days, an unintentional fake out that on the surface could lead people to wonder if operating systems are becoming more and more irrelevant&amp;ndash;when actually the opposite is going on.&lt;/p&gt;
+
+&lt;p&gt;In 2011, I &lt;a href="http://www.itworld.com/it-managementstrategy/230479/return-operating-system"&gt;addressed this topic from the perspective of the desktop&lt;/a&gt;, arguing that while the software as a service (SaaS) way of doing things would seem to suggest that applications that run in the browser don&amp;rsquo;t really need to care about the desktop operating system, the then-rising app-store model of application deployment made the choice of operating system all the more important. Native apps installed on operating systems kept the notion of operating systems alive (even if those apps were merely tricked-up portals to the same web services to which a browser could link).&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Interestingly, three years later I hear many familiar-sounding arguments about operating systems when it comes to platform as a service (PaaS) and DevOps. Get enough consistency in your operating systems, the arguments go, and then, for most intents and purposes, the operating system becomes more abstracted.&lt;/p&gt;
+
+&lt;p&gt;And when you get into containers, that argument becomes even more compelling: containers hold the applications and just the libraries and tools those applications need to work. That could be a whole operating system inside that container or (more likely) a smaller set of tools that is more portable for sysadmins to work with and more stable and easier to code for developers. &lt;/p&gt;
+
+&lt;p&gt;Big or small, containers are application-centric and would seem to free both sides of the DevOps equation from the shackles of operating systems. &lt;/p&gt;
+
+&lt;p&gt;Has the arrival of containers heralded the departure of operating systems?&lt;/p&gt;
+
+&lt;p&gt;As you might expect from someone working for a company that distributes an operating system, the answer is pretty much &lt;q&gt;no.&lt;/q&gt;&lt;/p&gt;
+
+&lt;p&gt;While it is difficult to unwind the need for self-preservation from this discussion, there is a huge reason why operating systems are not going to fade into nothing: they are the foundation on which all of these powerful tools must run.&lt;/p&gt;
+
+&lt;p&gt;Yes, containers can abstract the operating system away from developers and system administrators, but containers can&amp;rsquo;t run on bare metal. There has to be something on which they sit. Or, in the case of Atomic, something on which &lt;a href="http://openshift.github.io/geard/"&gt;geard&lt;/a&gt; can sit and manage containers alongside &lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt; and &lt;a href="http://selinuxproject.org/"&gt;SELinux&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The missing element here is innovation. Containers are great for creating individual applications and services, but for broader frameworks, we still very much need stable operating systems to put those frameworks together. In other words, I can cook a meal in my cast-iron skillet, but there still needs to be a foundry to cast that skillet in the first place. And engineers and craftsworkers to create better skillets.&lt;/p&gt;
+
+&lt;p&gt;Operating systems may be taking less of a role in day-to-day IT operations, and that&amp;rsquo;s a good thing sometimes, because you just need to code fast and deploy faster without worrying about what the latest security update did to your libraries.&lt;/p&gt;
+
+&lt;p&gt;There will always be a place for operating systems in our IT environments, to help create the Next New Thing. Container technology itself, for instance, is not derived solely from the efforts of &lt;a href="https://www.docker.io/"&gt;Docker&lt;/a&gt; for their containers and &lt;a href="https://www.openshift.com/"&gt;OpenShift&lt;/a&gt; for their gears. The core foundation for containers lies directly within the Linux kernel, where technologies like OpenShift, Docker, and &lt;a href="https://linuxcontainers.org/"&gt;LXC&lt;/a&gt; can make use of it.&lt;/p&gt;
+
+&lt;p&gt;Operating systems are not going away; the emphasis on them is changing. But their presence is needed just as much as before, running the latest and greatest software to keep information flowing.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>The Difference Between Project Atomic and Atomic Hosts</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/"/>
+    <id>http://www.projectatomic.io/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/</id>
+    <published>2014-05-15T20:18:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier, Lars Herrmann</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic has been getting a great deal of attention since it was announced at Red Hat Summit this April. We saw a lot of enthusiasm at Summit for the concept of Atomic Hosts that are focused on running Docker containers, but still built from a well-known, well-tested distribution. &lt;/p&gt;
+
+&lt;p&gt;One thing we&amp;rsquo;ve seen, though, is a little confusion about the separation between Project Atomic and &lt;strong&gt;Atomic Hosts&lt;/strong&gt;. Project Atomic, itself, does not produce Linux OS releases. Instead, those will come from CentOS, Fedora, Red Hat, and potentially others.&lt;/p&gt;
+
+&lt;h3&gt;The Value of Upstream First&lt;/h3&gt;
+
+&lt;p&gt;Red Hat&amp;rsquo;s philosophy on driving technology innovation in upstream communities that then gets into the hand of customers in the form of robust products can be summarized as &lt;q&gt;upstream first.&lt;/q&gt; &lt;/p&gt;
+
+&lt;p&gt;Over the last decade this philosophy has spurred rapid technology innovation, fueled by user needs, that is ultimately delivered in supportable enterprise-grade products. This ensures that the best-suited technical solution is generated in the open source development community. &lt;/p&gt;
+
+&lt;p&gt;Project Atomic is designed around this philosophy. Not only does it strive to be a community for the technology behind optimized container hosts, it is also designed to feed requirements back into the respective upstream communities. By leaving the downstream release of Atomic Hosts to the Fedora community, CentOS community and Red Hat, it can focus on driving technology innovation.&lt;/p&gt;
+
+&lt;h3&gt;The Atomic Family&lt;/h3&gt;
+
+&lt;p&gt;This is important to understand, because each of the offerings will differ in important ways, though they&amp;rsquo;ll also be very similar.&lt;/p&gt;
+
+&lt;p&gt;First, the release cycle will vary depending on where you&amp;rsquo;re getting your host. Release cycles are defined as a balance between the desire to deliver new features and enhancements and the ability of the target users to consume new releases. The release cycle for Red Hat Enterprise Linux Atomic Host (RHEL Atomic Host) will not match up with the release cycle for the Atomic offering from the Fedora Project. The RHEL Atomic Host release cycle will be suited for enterprise deployments, while the Fedora cycle will be more attuned to those doing leading edge development and testing newer technologies.&lt;/p&gt;
+
+&lt;p&gt;It also goes without saying that the actual content of the releases will also differ. Fedora&amp;rsquo;s offering will likely move faster, include newer and consequently less proven and robust technologies. These technologies may then work their way into future productized versions of RHEL Atomic Host, in the same way that Fedora feeds into future versions of Red Hat Enterprise Linux. &lt;/p&gt;
+
+&lt;p&gt;How Fedora and CentOS Atomic offerings evolve is also up to the respective communities. The &lt;a href="https://fedoraproject.org/wiki/Cloud_SI"&gt;Fedora Cloud Special Interest Group&lt;/a&gt; (SIG) is still discussing exactly what packages will be included, how frequently releases will be generated, what type of images should be produced, and more. There&amp;rsquo;s plenty of room for the larger community to be involved in those projects, and we welcome participation. (See the &lt;a href="https://fedoraproject.org/wiki/Cloud_SIG"&gt;Fedora wiki&lt;/a&gt; for more info, or join us on IRC (#fedora-cloud) on Freenode, or join the mailing list.)&lt;/p&gt;
+
+&lt;p&gt;Similar community discussion is happening in the &lt;a href="http://wiki.centos.org/GettingHelp/ListInfo"&gt;CentOS community&lt;/a&gt; to land the optimal balance for their users. &lt;/p&gt;
+
+&lt;h3&gt;The Role of Project Atomic&lt;/h3&gt;
+
+&lt;p&gt;Project Atomic gives the larger community a place and tools to collaborate on related technologies that are vital to Atomic Hosts, such as SELinux (&lt;a href="http://www.projectatomic.io/docs/docker-and-selinux/"&gt;http://www.projectatomic.io/docs/docker-and-selinux/&lt;/a&gt;) to secure your containers, GearD (&lt;a href="http://www.projectatomic.io/docs/geard/"&gt;http://www.projectatomic.io/docs/geard/&lt;/a&gt;) for container wiring and systemd integration and Cockpit (&lt;a href="http://www.projectatomic.io/docs/cockpit/"&gt;http://www.projectatomic.io/docs/cockpit/&lt;/a&gt;) to help manage containers. It also gives users of the various releases a forum to solve problems on using the technologies, keep tabs on important developments, and to participate in developing the technologies. &lt;/p&gt;
+
+&lt;p&gt;The project will also serve to disseminate news about Atomic Host distributions and important changes in the upstreams like Docker, rpm-ostree, SELinux, and others. So be sure to keep an eye on this site and &lt;a href="http://twitter.com/projectatomic"&gt;@projectatomic&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Setting Up Storage &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_docker-storage-recommendation docs_docker-storage-recommendation_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Setting Up Storage</h1>
+
+<h2>Introduction</h2>
+
+<p>The Atomic host is a minimal distribution and as such is distributed on a 6GB image to keep the footprint small. However, that amount of storage doesn&rsquo;t support building and storing lots of Docker images. It is an expected practice that external storage of sufficient size will be attached to the Atomic Host host in order to provide enough space to build and store Docker images.</p>
+
+<p>Docker uses <code>/var/lib/docker</code> as the default directory where all Docker related files, including the images, are stored. Atomic hosts however use direct LVM volumes via the devicemapper backend to store Docker images and metadata <code>/dev/atomicos/docker-data</code> and <code>/dev/atomicos/docker-meta</code>. Adding storage to an Atomic host therefore requires a different procedure to grow the LVM volume than adding more storage to a device mounted at <code>/var/lib/docker</code>.   </p>
+
+<p>This document provides instructions for using an attached device with your Atomic host so that you can build and store lots of Docker images. The basic procedure is the same as extending any other LVM volume. Add the new device to the host, create a physical volume using the new device, add the physical volume to the volume group, and then extend the LVM volumes. Since we are directly accessing the thin pool within docker, we won&rsquo;t need to create or extend a filesystem or mount the LVM volumes.</p>
+
+<h2>Using the docker-storage-setup LVM helper</h2>
+
+<p><em>In this example, we&rsquo;ll be using a virt-manager installed Atomic host</em>.<br>
+Create a new VirtIO drive for use by the virtual machine and attach the volume to the Atomic host virtual machine in virt-manager. On the Atomic host, ensure the device is available. You may need to reboot the virtual machine. Make sure no partitions are listed on the device, as we&rsquo;ll be adding this as a physical volume in LVM and get the appropriate device name.  </p>
+
+<p>In the example, you can see a new 5GB volume available at <code>/dev/vdb</code>.  This is the disk we&rsquo;ll add to the available pool.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-host-001 ~]$ sudo fdisk -l&#x000A;&#x000A;Disk /dev/vda: 6 GiB, 6442450944 bytes, 12582912 sectors&#x000A;Units: sectors of 1 * 512 = 512 bytes&#x000A;Sector size (logical/physical): 512 bytes / 512 bytes&#x000A;I/O size (minimum/optimal): 512 bytes / 512 bytes&#x000A;Disklabel type: dos&#x000A;Disk identifier: 0x0e409ce2&#x000A;&#x000A;Device     Boot  Start      End  Sectors  Size Id Type&#x000A;/dev/vda1  *      2048   411647   409600  200M 83 Linux&#x000A;/dev/vda2       411648 12582911 12171264  5.8G 8e Linux LVM&#x000A;&#x000A;Disk /dev/vdb: 5 GiB, 5368709120 bytes, 10485760 sectors&#x000A;Units: sectors of 1 * 512 = 512 bytes&#x000A;Sector size (logical/physical): 512 bytes / 512 bytes&#x000A;I/O size (minimum/optimal): 512 bytes / 512 bytes&#x000A;Disklabel type: dos&#x000A;Disk identifier: 0x00000000&#x000A;</code></pre>
+
+<h2>Setting Up /etc/sysconfig/docker-storage-setup</h2>
+
+<p>Atomic hosts are delivered with a helper script to configure the direct LVM storage, <code>docker-storage-setup</code>.  The script reads from configuration options in <code>/etc/sysconfig/docker-storage-setup</code>.</p>
+
+<p>We&rsquo;ll set up a very basic configuration file to add the new device to the docker data storage pool.  The two options we&rsquo;ll deal with are <code>DEVS</code> and <code>VG</code>.  </p>
+
+<p>The <code>DEVS</code> option is a space separated list of the devices you want to add to the pool.  The <code>docker-storage-setup</code> script will automatically calculate the required amount of meta-data space from the overall size of the volume group, grow that volume, and then grow the data volume with the remaining space.</p>
+
+<p>The <code>VG</code> option allows you to control the volume group used for Docker storage. By default, Atomic uses the same volume group as the root device. This means that you can set or change the root volume size with this utility as well.  You can also change the group if you so choose.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-host-001 ~]$ sudo vi /etc/sysconfig/docker-storage-setup&#x000A;DEVS="/dev/vdb"&#x000A;</code></pre>
+
+<p>Once you&rsquo;ve added the new storage device or devices in the configuration file, you can run the helper script.  If you are adding more than one device at a time, you&rsquo;ll see some of these steps more than once.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-host-001 ~]$ sudo docker-storage-setup&#x000A;0&#x000A;sfdisk: Checking that no-one is using this disk right now ...&#x000A;sfdisk: OK&#x000A;&#x000A;Disk /dev/vdb: 6241 cylinders, 16 heads, 63 sectors/track&#x000A;sfdisk:  /dev/vdb: unrecognized partition table type&#x000A;Old situation:&#x000A;sfdisk: No partitions found&#x000A;New situation:&#x000A;Units: sectors of 512 bytes, counting from 0&#x000A;&#x000A;Device Boot    Start       End   #sectors  Id  System&#x000A;/dev/vdb1          2048   6291455    6289408  8e  Linux LVM&#x000A;/dev/vdb2             0         -          0   0  Empty&#x000A;/dev/vdb3             0         -          0   0  Empty&#x000A;/dev/vdb4             0         -          0   0  Empty&#x000A;sfdisk: Warning: partition 1 does not start at a cylinder boundary&#x000A;sfdisk: Warning: partition 1 does not end at a cylinder boundary&#x000A;sfdisk: Warning: no primary partition is marked bootable (active)&#x000A;This does not matter for LILO, but the DOS MBR will not boot this disk.&#x000A;Successfully wrote the new partition table&#x000A;&#x000A;Re-reading the partition table ...&#x000A;&#x000A;sfdisk: If you created or changed a DOS partition, /dev/foo7, say, then use     dd(1)&#x000A;to zero the first 512 bytes:  dd if=/dev/zero of=/dev/foo7 bs=512 count=1&#x000A;(See fdisk(8).)&#x000A;Physical volume "/dev/vdb1" successfully created&#x000A;Volume group "atomicos" successfully extended&#x000A;NOCHANGE: partition 2 could only be grown by -48 [fudge=20480]&#x000A;Physical volume "/dev/vda2" changed&#x000A;1 physical volume(s) resized / 0 physical volume(s) not resized&#x000A;NOCHANGE: partition 1 could only be grown by -16 [fudge=20480]&#x000A;Physical volume "/dev/vdc1" changed&#x000A;  1 physical volume(s) resized / 0 physical volume(s) not resized&#x000A;Rounding size to boundary between physical extents: 12.00 MiB&#x000A;Size of logical volume atomicos/docker-meta changed from 8.00 MiB (2 extents) to 12.00 MiB (3 extents).&#x000A;Logical volume docker-meta successfully resized&#x000A;Size of logical volume atomicos/docker-data changed from 3.84 GiB (1494   extents) to 8.83 GiB (2260 extents).&#x000A;  Logical volume docker-data successfully resized&#x000A;</code></pre>
+
+<p>You can verify that Docker can see the new storage with <code>docker info</code>:</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-host-001 ~]$ sudo docker info&#x000A;Containers: 0&#x000A;Images: 0&#x000A;Storage Driver: devicemapper&#x000A; Pool Name: docker-253:0-4655104-pool&#x000A; Pool Blocksize: 65.54 kB&#x000A; Backing Filesystem: &lt;unknown&gt;&#x000A; Data file: /dev/atomicos/docker-data&#x000A; Metadata file: /dev/atomicos/docker-meta&#x000A; Data Space Used: 11.8 MB&#x000A; Data Space Total: 4.123 GB&#x000A; Metadata Space Used: 53.25 kB&#x000A; Metadata Space Total: 8.389 MB&#x000A; Udev Sync Supported: true&#x000A; Library Version: 1.02.93 (2015-01-30)&#x000A;Execution Driver: native-0.2&#x000A;Kernel Version: 3.18.7-200.fc21.x86_64&#x000A;Operating System: Fedora 21 (Twenty One)&#x000A;CPUs: 1&#x000A;Total Memory: 1.955 GiB&#x000A;Name: atomic-host-001.localdomain&#x000A;ID: QN7L:2FJ5:CZXS:265G:JVIF:2CB3:35EE:T5KJ:7HXN:OXGG:MEW2:XLC2&#x000A;</code></pre>
+
+<h2>Looking Forward</h2>
+
+<p>In order to add a new device using the <code>docker-storage-setup</code> script, you will need to make sure that the configuration file only contains references to devices and sizes for this particular run of the tool.  </p>
+
+<p>For example, if you add a new device to host and to the <code>DEVS</code> line, the <code>docker-storage-setup</code> script will exit as the existing device has a partition and physical volume already created.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-host-002 ~]$ sudo vi /etc/sysconfig/docker-storage-setup&#x000A;DEVS="/dev/vdb /dev/vdc"&#x000A;&#x000A;[fedora@atomic-host-002 ~]$ sudo docker-storage-setup&#x000A;0&#x000A;/dev/vdb has partitions: vdb1&#x000A;</code></pre>
+
+<p>Since Atomic is using the devicemapper backend and direct LVM pools, you can also add new devices manually, as you would with any other LVM configuration.  When adding data storage, you should also calculate the needed space for meta-data, the <code>docker-storage-setup</code> helper reserves 0.1% of the size of the volume group as meta-data space.  </p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='active nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/docker-storage-recommendation.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

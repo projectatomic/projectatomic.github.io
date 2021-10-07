@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Rhel Atomic</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/rhel-atomic.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Addressing Problems with Ping in Containers on Atomic Hosts</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/"/>
+    <id>http://www.projectatomic.io/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/</id>
+    <published>2015-04-02T15:44:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Having problems with &lt;code&gt;ping&lt;/code&gt; in your containers? It might not be what you think! &lt;/p&gt;
+
+&lt;h4&gt;Problem Statement&lt;/h4&gt;
+
+&lt;p&gt;We received a bug report the other day with the following comment:&lt;/p&gt;
+
+&lt;p&gt;On a RHEL 7 host (registered and subscribed), I can use Yum to install additional packages from &lt;code&gt;docker run ...&lt;/code&gt; or in a Docker file.  If I install the &lt;code&gt;iputils&lt;/code&gt; package (and any dependencies), the basic &lt;code&gt;ping&lt;/code&gt; command does not work.  However, if I use the &lt;code&gt;busybox&lt;/code&gt; image from the public Docker index, its ping command works perfectly fine (on same RHEL 7 host).&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Steps to Reproduce:&lt;/h3&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -i -t registry.access.redhat.com/rhel7:0-21 bash
+# yum install -y iputils
+# ping 127.0.0.1
+bash: /usr/bin/ping: Operation not permitted
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -ti --rm busybox /bin/sh
+# editor
+# ping google.com
+PING google.com (74.125.226.4): 56 data bytes
+64 bytes from 74.125.226.4: seq=0 ttl=52 time=44.923 ms
+64 bytes from 74.125.226.4: seq=1 ttl=52 time=46.181 ms
+^C
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Don&amp;rsquo;t Blame SELinux!&lt;/h4&gt;
+
+&lt;p&gt;This was not an SELinux issue, since it happened if you put the machine in permissive mode.&lt;/p&gt;
+
+&lt;p&gt;My first idea when I saw this was that ping needs a set of capabilities enabled: &lt;code&gt;net_raw&lt;/code&gt; and &lt;code&gt;net_admin&lt;/code&gt;. By default our containers run without the net_admin capability.&lt;/p&gt;
+
+&lt;p&gt;What if I added &lt;code&gt;net_admin&lt;/code&gt; capability, would the container work?&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -i -t --cap-add net_raw --cap-add net_admin registry.access.redhat.com/rhel7:0-21 bash
+# ping google.com
+PING google.com (74.125.228.3) 56(84) bytes of data.
+64 bytes from iad23s05-in-f3.1e100.net (74.125.228.3): icmp_seq=1 ttl=47 time=11.0 ms
+64 bytes from iad23s05-in-f3.1e100.net (74.125.228.3): icmp_seq=2 ttl=47 time=11.1 ms
+^C
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But I really do not want to have to run a &lt;code&gt;privileged&lt;/code&gt; container, just so ping will work. But then we got more information on the bugzilla, where someone just copied the executable to another name and it worked.&lt;/p&gt;
+
+&lt;p&gt;Then another engineer tried to just copy the ping command to another name, &lt;strong&gt;and it worked&lt;/strong&gt;!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -i -t registry.access.redhat.com/rhel7:0-21 bash
+# yum install -y iputils
+# ping 127.0.0.1
+bash: /usr/bin/ping: Operation not permitted
+# mkdir -p /opt/ping
+# cp /usr/bin/ping /opt/ping/
+# /opt/ping/ping -c1 10.3.1.1
+PING 10.3.1.1 (10.3.1.1) 56(84) bytes of data.
+64 bytes from 10.3.1.1: icmp_seq=1 ttl=62 time=0.358 ms
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This told us their must be something about the permissions on the &lt;code&gt;ping&lt;/code&gt; command itself.&lt;/p&gt;
+
+&lt;p&gt;We eventually figured out the problem was caused by using with File Capabilities.&lt;/p&gt;
+
+&lt;p&gt;In Red Hat based distributions we are using File Capabilties which allow applications to start up with a limited number of capabilities, even if launched by root. In other distributions like busybox and Ubuntu, the ping command is shipped as setuid root.  If we executed &lt;code&gt;chcon 4755 /usr/bin/ping&lt;/code&gt; in the container, ping would start to work.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# getcap  /usr/bin/ping
+/usr/bin/ping = cap_net_admin,cap_net_raw+ep
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s take a look at the man page to see what it has to say about capabilities:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;man capabilities
+...
+   File capabilities
+       Since kernel 2.6.24, the kernel supports associating capability sets with an executable file using setcap(8).  The file capability sets are stored in an extended attribute (see setxattr(2)) named security.capability.  Writing  to  this  extended  attribute  requires  the CAP_SETFCAP capability.  The file capability sets, in conjunction with the capability sets of the thread, determine the capabilities of a thread after an execve(2).
+
+       The three file capability sets are:
+
+       Permitted (formerly known as forced):
+              These capabilities are automatically permitted to the thread, regardless of the thread's inheritable capabilities.
+
+       Inheritable (formerly known as allowed):
+              This set is ANDed with the thread's inheritable set to determine which inheritable capabilities are enabled in the permitted set of the thread after the execve(2).
+
+       Effective:
+              This is not a set, but rather just a single bit.  If this bit is set, then during an execve(2) all of the new permitted capabilities for the thread are also raised in the effective set.  If this bit is not set, then after an execve(2),  none  of  the  new permitted capabilities is in the new effective set.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By setting the file capabilities on ping to &lt;code&gt;cap_net_admin,cap_net_raw+ep&lt;/code&gt;, this means when a user executes the ping command the kernel will attempt to gain cap_net_admin and cap_net_raw capabilities when it gets executed. If both capabilities are not available to the user, the execution will fail.  &lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s the &lt;code&gt;execve()&lt;/code&gt; of &lt;code&gt;/usr/bin/ping&lt;/code&gt; in the first place that is failing:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# strace ping -h
+execve("/usr/bin/ping", ["ping", "-h"], [/* 12 vars */]) = -1 EPERM (Operation not permitted)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If however we removed the &lt;code&gt;Effective&lt;/code&gt; bit, the application will execute and would only fail if it tried to execute a system call that requires the &lt;code&gt;cap_net_raw&lt;/code&gt; capability, due to it attempting to raise capabilities that are not available.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# setcap cap_net_raw,cap_net_admin+p /usr/bin/ping
+# ping -c1 10.3.1.1
+PING 10.3.1.1 (10.3.1.1) 56(84) bytes of data.
+64 bytes from 10.3.1.1: icmp_seq=1 ttl=62 time=0.358 ms
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Remove +e from binaries calling &lt;q&gt;capset()&lt;/q&gt;&lt;/h4&gt;
+
+&lt;p&gt;The short answer is, +e should be removed from all binaries which call &lt;code&gt;capset()&lt;/code&gt;.  &lt;/p&gt;
+
+&lt;p&gt;There is no need for the kernel to automatically add those capabilities on &lt;code&gt;execve()&lt;/code&gt;.  The ping application is doing that step itself.&lt;/p&gt;
+
+&lt;p&gt;We have opened up Bugzilla on iputils to fix this in the package for RHEL and Fedora. In the meantime, if your application is blowing up for strange reasons within a container, you might want to check out its file capabilities.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

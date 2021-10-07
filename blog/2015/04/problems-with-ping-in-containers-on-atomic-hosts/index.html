@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Addressing Problems with Ping in Containers on Atomic Hosts &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Addressing Problems with Ping in Containers on Atomic Hosts' property='og:title'>
+<meta content='Having problems with ping in your containers? It might not be what you think! &#x000A;&#x000A;Problem Statement&#x000A;&#x000A;We received a bug report the other day with the following comment:&#x000A;&#x000A;On a RHEL 7 host (registered and subscribed), I can use Yum to install additional packages from docker run ... or in a Docker file.  If I install the iputils package (and any dependencies), the basic ping command does not work.  However, if I use the busybox image from the public Docker index, its ping command works perfectly fine (on same RHEL 7 host).' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/' property='og:url'>
+<meta content='2015-04-02T15:44:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Ping' property='article:tag'>
+<link href='/blog/tag/ping.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='RHEL Atomic' property='article:tag'>
+<link href='/blog/tag/rhel atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Addressing Problems with Ping in Containers on Atomic Hosts' name='twitter:title'>
+<meta content='Having problems with ping in your containers? It might not be what you think! &#x000A;&#x000A;Problem Statement&#x000A;&#x000A;We received a bug report the other day with the following comment:&#x000A;&#x000A;On a RHEL 7 host (registered and subscribed), I can use Yum to install additional packages from docker run ... or in a Docker file.  If I install the iputils package (and any dependencies), the basic ping command does not work.  However, if I use the busybox image from the public Docker index, its ping command works perfectly fine (on same RHEL 7 host).' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_04 blog_2015_04_problems-with-ping-in-containers-on-atomic-hosts blog_2015_04_problems-with-ping-in-containers-on-atomic-hosts_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Addressing Problems with Ping in Containers on Atomic Hosts
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-02T15:44:00Z'>
+Thursday  2 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Having problems with <code>ping</code> in your containers? It might not be what you think! </p>
+
+<h4>Problem Statement</h4>
+
+<p>We received a bug report the other day with the following comment:</p>
+
+<p>On a RHEL 7 host (registered and subscribed), I can use Yum to install additional packages from <code>docker run ...</code> or in a Docker file.  If I install the <code>iputils</code> package (and any dependencies), the basic <code>ping</code> command does not work.  However, if I use the <code>busybox</code> image from the public Docker index, its ping command works perfectly fine (on same RHEL 7 host).</p>
+
+<p></p>
+
+<h3>Steps to Reproduce:</h3>
+<pre class="highlight plaintext"><code># docker run -i -t registry.access.redhat.com/rhel7:0-21 bash&#x000A;# yum install -y iputils&#x000A;# ping 127.0.0.1&#x000A;bash: /usr/bin/ping: Operation not permitted&#x000A;</code></pre>
+<pre class="highlight plaintext"><code># docker run -ti --rm busybox /bin/sh&#x000A;# editor&#x000A;# ping google.com&#x000A;PING google.com (74.125.226.4): 56 data bytes&#x000A;64 bytes from 74.125.226.4: seq=0 ttl=52 time=44.923 ms&#x000A;64 bytes from 74.125.226.4: seq=1 ttl=52 time=46.181 ms&#x000A;^C&#x000A;</code></pre>
+
+<h4>Don&rsquo;t Blame SELinux!</h4>
+
+<p>This was not an SELinux issue, since it happened if you put the machine in permissive mode.</p>
+
+<p>My first idea when I saw this was that ping needs a set of capabilities enabled: <code>net_raw</code> and <code>net_admin</code>. By default our containers run without the net_admin capability.</p>
+
+<p>What if I added <code>net_admin</code> capability, would the container work?</p>
+<pre class="highlight plaintext"><code># docker run -i -t --cap-add net_raw --cap-add net_admin registry.access.redhat.com/rhel7:0-21 bash&#x000A;# ping google.com&#x000A;PING google.com (74.125.228.3) 56(84) bytes of data.&#x000A;64 bytes from iad23s05-in-f3.1e100.net (74.125.228.3): icmp_seq=1 ttl=47 time=11.0 ms&#x000A;64 bytes from iad23s05-in-f3.1e100.net (74.125.228.3): icmp_seq=2 ttl=47 time=11.1 ms&#x000A;^C&#x000A;</code></pre>
+
+<p>But I really do not want to have to run a <code>privileged</code> container, just so ping will work. But then we got more information on the bugzilla, where someone just copied the executable to another name and it worked.</p>
+
+<p>Then another engineer tried to just copy the ping command to another name, <strong>and it worked</strong>!</p>
+<pre class="highlight plaintext"><code># docker run -i -t registry.access.redhat.com/rhel7:0-21 bash&#x000A;# yum install -y iputils&#x000A;# ping 127.0.0.1&#x000A;bash: /usr/bin/ping: Operation not permitted&#x000A;# mkdir -p /opt/ping&#x000A;# cp /usr/bin/ping /opt/ping/&#x000A;# /opt/ping/ping -c1 10.3.1.1&#x000A;PING 10.3.1.1 (10.3.1.1) 56(84) bytes of data.&#x000A;64 bytes from 10.3.1.1: icmp_seq=1 ttl=62 time=0.358 ms&#x000A;...&#x000A;</code></pre>
+
+<p>This told us their must be something about the permissions on the <code>ping</code> command itself.</p>
+
+<p>We eventually figured out the problem was caused by using with File Capabilities.</p>
+
+<p>In Red Hat based distributions we are using File Capabilties which allow applications to start up with a limited number of capabilities, even if launched by root. In other distributions like busybox and Ubuntu, the ping command is shipped as setuid root.  If we executed <code>chcon 4755 /usr/bin/ping</code> in the container, ping would start to work.</p>
+<pre class="highlight plaintext"><code># getcap  /usr/bin/ping&#x000A;/usr/bin/ping = cap_net_admin,cap_net_raw+ep&#x000A;</code></pre>
+
+<p>Let&rsquo;s take a look at the man page to see what it has to say about capabilities:</p>
+<pre class="highlight plaintext"><code>man capabilities&#x000A;...&#x000A;   File capabilities&#x000A;       Since kernel 2.6.24, the kernel supports associating capability sets with an executable file using setcap(8).  The file capability sets are stored in an extended attribute (see setxattr(2)) named security.capability.  Writing  to  this  extended  attribute  requires  the CAP_SETFCAP capability.  The file capability sets, in conjunction with the capability sets of the thread, determine the capabilities of a thread after an execve(2).&#x000A;&#x000A;       The three file capability sets are:&#x000A;&#x000A;       Permitted (formerly known as forced):&#x000A;              These capabilities are automatically permitted to the thread, regardless of the thread's inheritable capabilities.&#x000A;&#x000A;       Inheritable (formerly known as allowed):&#x000A;              This set is ANDed with the thread's inheritable set to determine which inheritable capabilities are enabled in the permitted set of the thread after the execve(2).&#x000A;&#x000A;       Effective:&#x000A;              This is not a set, but rather just a single bit.  If this bit is set, then during an execve(2) all of the new permitted capabilities for the thread are also raised in the effective set.  If this bit is not set, then after an execve(2),  none  of  the  new permitted capabilities is in the new effective set.&#x000A;</code></pre>
+
+<p>By setting the file capabilities on ping to <code>cap_net_admin,cap_net_raw+ep</code>, this means when a user executes the ping command the kernel will attempt to gain cap_net_admin and cap_net_raw capabilities when it gets executed. If both capabilities are not available to the user, the execution will fail.  </p>
+
+<p>It&rsquo;s the <code>execve()</code> of <code>/usr/bin/ping</code> in the first place that is failing:</p>
+<pre class="highlight plaintext"><code># strace ping -h&#x000A;execve("/usr/bin/ping", ["ping", "-h"], [/* 12 vars */]) = -1 EPERM (Operation not permitted)&#x000A;</code></pre>
+
+<p>If however we removed the <code>Effective</code> bit, the application will execute and would only fail if it tried to execute a system call that requires the <code>cap_net_raw</code> capability, due to it attempting to raise capabilities that are not available.</p>
+<pre class="highlight plaintext"><code># setcap cap_net_raw,cap_net_admin+p /usr/bin/ping&#x000A;# ping -c1 10.3.1.1&#x000A;PING 10.3.1.1 (10.3.1.1) 56(84) bytes of data.&#x000A;64 bytes from 10.3.1.1: icmp_seq=1 ttl=62 time=0.358 ms&#x000A;...&#x000A;</code></pre>
+
+<h4>Remove +e from binaries calling <q>capset()</q></h4>
+
+<p>The short answer is, +e should be removed from all binaries which call <code>capset()</code>.  </p>
+
+<p>There is no need for the kernel to automatically add those capabilities on <code>execve()</code>.  The ping application is doing that step itself.</p>
+
+<p>We have opened up Bugzilla on iputils to fix this in the package for RHEL and Fedora. In the meantime, if your application is blowing up for strange reasons within a container, you might want to check out its file capabilities.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/ping/">Ping</a></li>
+<li><a href="/blog/tag/rhel-atomic/">RHEL Atomic</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

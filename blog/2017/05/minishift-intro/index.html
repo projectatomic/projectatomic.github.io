@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Introducing Minishift - Run OpenShift locally &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Budh Ram Gurung' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Introducing Minishift - Run OpenShift locally' property='og:title'>
+<meta content='We are happy to introduce you to Minishift, providing a better user experience than our original Atomic Developer Bundle (ADB). We have shifted our development effort from ADB to Minishift, both to improve user experience, and to address the issues caused by depending on Vagrant. We’ll explain this more in a later blog post.&#x000A;&#x000A;Minishift is a CLI tool that helps you run OpenShift locally by running a single-node cluster inside a VM. You can try out OpenShift or develop with it, day-to-day, on your local host.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/05/minishift-intro/' property='og:url'>
+<meta content='2017-05-04T20:00:00Z' property='article:published_time'>
+<meta content='budhram' property='article:author:username'>
+<meta content='atomic-developer-bundle' property='article:tag'>
+<link href='/blog/tag/atomic-developer-bundle.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='minishift' property='article:tag'>
+<link href='/blog/tag/minishift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift-local' property='article:tag'>
+<link href='/blog/tag/openshift-local.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Introducing Minishift - Run OpenShift locally' name='twitter:title'>
+<meta content='We are happy to introduce you to Minishift, providing a better user experience than our original Atomic Developer Bundle (ADB). We have shifted our development effort from ADB to Minishift, both to improve user experience, and to address the issues caused by depending on Vagrant. We’ll explain this more in a later blog post.&#x000A;&#x000A;Minishift is a CLI tool that helps you run OpenShift locally by running a single-node cluster inside a VM. You can try out OpenShift or develop with it, day-to-day, on your local host.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_05 blog_2017_05_minishift-intro blog_2017_05_minishift-intro_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Introducing Minishift - Run OpenShift locally
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/budhram/">Budh Ram Gurung</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-05-04T20:00:00Z'>
+Thursday  4 May 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We are happy to introduce you to <a href="https://github.com/minishift/minishift">Minishift</a>, providing a better user experience than our original <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">Atomic Developer Bundle (ADB)</a>. We have shifted our development effort from ADB to Minishift, both to improve user experience, and to address the issues caused by depending on Vagrant. We&rsquo;ll explain this more in a later blog post.</p>
+
+<p>Minishift is a CLI tool that helps you run OpenShift locally by running a single-node cluster inside a VM. You can try out OpenShift or develop with it, day-to-day, on your local host.</p>
+
+<p></p>
+
+<p>We have implemented Minishift as single binary that uses <a href="https://github.com/docker/machine/tree/master/libmachine">libmachine</a> to provision a VM with a local, single node, <a href="https://github.com/openshift/origin">OpenShift Origin</a> cluster. It uses <a href="https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md">OpenShift local cluster management</a> underneath to bring up this single node cluster.</p>
+
+<p>Minishift supports multiple OSes and hypervisors, including KVM for Linux, Xhyve for Mac OS, HyperV for Windows and VirtualBox in all OS platforms. Detailed instructions on setting up prerequisites for installation can be found in the <a href="https://github.com/Minishift/minishift#prerequisites">Minishift documentation</a>.</p>
+
+<h3>Installing Minishift</h3>
+
+<ol>
+<li><p>Install your preferred VM platform on your workstation.</p>
+
+<p><strong>Note</strong>: You need to install the additional docker-machine driver for &lsquo;kvm&rsquo; or &#39;xhyve&rsquo;. See the <a href="https://docs.openshift.org/latest/minishift/getting-started/docker-machine-drivers.html">Docker Machine drivers</a> guide.</p></li>
+<li><p>Download the compressed file for your OS from the Minishift <a href="https://github.com/minishift/minishift/releases/tag/v1.0.0">releases page</a> and unpack it.</p></li>
+<li><p>Copy the contents of the directory to your preferred location.</p></li>
+<li><p>Add the minishift binary to your <em>PATH</em> environment variable.</p></li>
+</ol>
+
+<p>For OS-specific tips, refer to the <a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html">minishift installation guide</a>.</p>
+
+<h3>Quickstart with Minishift</h3>
+
+<ol>
+<li><p>Get started as follows:</p>
+<pre class="highlight plaintext"><code>$ minishift start&#x000A; Starting local OpenShift cluster using 'kvm' hypervisor...&#x000A; ...&#x000A;    OpenShift server started.&#x000A;    The server is accessible via web console at:&#x000A;        https://192.168.99.128:8443&#x000A;&#x000A;    You are logged in as:&#x000A;        User:     developer&#x000A;        Password: developer&#x000A;&#x000A;    To login as administrator:&#x000A;        oc login -u system:admin&#x000A;</code></pre>
+
+<p>This will:</p>
+
+<ul>
+<li>Download the latest <a href="https://github.com/Minishift/minishift-b2d-iso"><em>minishift-b2d-iso</em></a> (~40 MB)</li>
+<li>Start a VM using libmachine</li>
+<li>Download OpenShift client binary (<code>oc</code>)</li>
+<li>Cache both <code>oc</code> and ISO into your <code>$HOME/.minishift/cache</code> folder</li>
+<li>Finally provisions OpenShift single node cluster in your workstation</li>
+</ul>
+
+<p><strong>Note:</strong> This step also logs you in as <code>developer</code> in the <code>myproject</code> default project.</p></li>
+<li><p>Use <code>minishift oc-env</code> to display the command you need to type into your shell in order to add the oc binary to your <em>PATH</em>.
+The output of <code>oc-env</code> will differ depending on OS and shell type.</p>
+<pre class="highlight plaintext"><code>$ minishift oc-env&#x000A;export PATH="/Users/john/.minishift/cache/oc/v1.5.0:$PATH"&#x000A;# Run this command to configure your shell:&#x000A;# eval $(minishift oc-env)&#x000A;</code></pre></li>
+<li><p>Run <code>eval $(minishift oc-env)</code> as per above instructions to setup your shell (this my differ depending on OS and shell).</p>
+<pre class="highlight plaintext"><code>$ eval $(minishift oc-env)&#x000A;</code></pre></li>
+<li><p>Create a Nodejs example application:</p>
+<pre class="highlight plaintext"><code>$ oc new-app https://github.com/openshift/nodejs-ex -l name=myapp&#x000A;</code></pre></li>
+<li><p>Track the build log until the app is built and deployed:</p>
+<pre class="highlight plaintext"><code>$ oc logs -f bc/nodejs-ex&#x000A;</code></pre></li>
+<li><p>Expose a route to the service:</p>
+<pre class="highlight plaintext"><code>$ oc expose svc/nodejs-ex&#x000A;</code></pre></li>
+<li><p>Open the application in a browser:</p>
+<pre class="highlight plaintext"><code>$ minishift openshift service nodejs-ex -n myproject&#x000A;</code></pre></li>
+<li><p>When done with building the application for the day, stop the cluster as follows:</p>
+<pre class="highlight plaintext"><code> $ minishift stop&#x000A; Stopping local OpenShift cluster...&#x000A; Stopping "minishift"...&#x000A;</code></pre>
+
+<p>If you want to access the same cluster again, use <code>minishift start</code>.</p></li>
+<li><p>At anytime if you want to delete the cluster, use the following command:</p>
+<pre class="highlight plaintext"><code>$ minishift delete&#x000A;</code></pre></li>
+</ol>
+
+<p>Refer to the <a href="https://docs.openshift.org/latest/minishift/index.html">Minishift documentation</a> to get more detailed description of getting started with a single node OpenShift cluster.</p>
+
+<h3>Feedback</h3>
+
+<p>Try Minishift!</p>
+
+<p>We would love to get your feedback. If you hit a problem, please raise an issue in <a href="https://github.com/minishift/minishift/issues">minishift issue tracker</a> but please search through the listed issues before creating it. It&rsquo;s possible that a similar issue is already open.</p>
+
+<h3>Community</h3>
+
+<p>The Minishift community hangs out on the IRC channel <code>#minishift</code> on Freenode (<a href="https://freenode.net">https://freenode.net</a>). You are welcome to join, participate in the discussions, and contribute.</p>
+
+<h3>Resources</h3>
+
+<ul>
+<li><a href="https://github.com/minishift/minishift">Github Repo</a></li>
+<li><a href="https://github.com/minishift/minishift/issues">Issue tracker</a></li>
+<li><a href="https://docs.openshift.org/latest/minishift/index.html">Minishift Home Page</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-developer-bundle/">atomic-developer-bundle</a></li>
+<li><a href="/blog/tag/minishift/">minishift</a></li>
+<li><a href="/blog/tag/openshift-local/">openshift-local</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/05/minishift-intro/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/05/minishift-intro/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/05/minishift-intro/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

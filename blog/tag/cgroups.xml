@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Cgroups</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/cgroups.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Running systemd in a Docker Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/05/running-systemd-in-a-docker-container/"/>
+    <id>http://www.projectatomic.io/blog/2014/05/running-systemd-in-a-docker-container/</id>
+    <published>2014-05-06T19:50:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Ever wondered if you can get &lt;code&gt;systemd&lt;/code&gt; running in a Docker container? Apparently Dan Walsh did, &lt;a href="http://rhatdan.wordpress.com/2014/04/30/running-systemd-within-a-docker-container/"&gt;and spent some time getting it to work&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;While working with Docker, I looked at the great work that Scott Collier was doing for getting services to run within a container.  Scott provides the fedora-dockerfiles package in docker with lots of “Dockerfile” examples. You can build Docker images by running “docker build” on these examples.&lt;/p&gt;
+
+&lt;p&gt;It seemed a little difficult, and wondered if getting systemd to run within a docker container, as I did with virt-sandbox-service, might make this simpler.&lt;/p&gt;
+
+&lt;p&gt;The Docker Model suggests that it is better to run a single service within a container.  If you wanted to build an application that required an Apache service and a MariaDB database, you should generate two different containers.   Some people insist on running multiple services within a container, and for this Docker suggested using the supervisord tool.  In RHEL we do not want to support supervisord, since it is written in Python, and do not want to pull a Python requirement into containers, and it is just a package used to monitor multiple services.  We already have a tool for monitoring multiple services called systemd.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;After a little trial and error, Dan got &lt;code&gt;systemd&lt;/code&gt; working within a container on Fedora Rawhide, and expects it will work on Fedora 20 or RHEL 7 (when it&amp;rsquo;s released). Give it a spin and &lt;a href="http://rhatdan.wordpress.com/2014/04/30/running-systemd-within-a-docker-container/"&gt;let Dan know&lt;/a&gt; how it works out for you.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

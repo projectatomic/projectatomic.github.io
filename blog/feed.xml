@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle/>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/feed.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Fedora Atomic Host Nearing End Of Life</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2019/11/fedora-atomic-host-nearing-eol/"/>
+    <id>http://www.projectatomic.io/blog/2019/11/fedora-atomic-host-nearing-eol/</id>
+    <published>2019-11-21T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; &lt;em&gt;Fedora 29 will be End Of Life &lt;a href="https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/VUK3CJ5LO4ROUH3JTCDVHYAVVYAOCU62/"&gt;soon&lt;/a&gt;.&lt;/em&gt;
+          &lt;em&gt;With it Fedora Atomic Host will have its last incremental release (based on&lt;/em&gt;
+          &lt;em&gt;the Fedora 29 stream). Please move to the Fedora CoreOS preview if you can.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Last year we &lt;a href="https://fedoramagazine.org/announcing-fedora-coreos/"&gt;introduced the plans for Fedora CoreOS&lt;/a&gt;
+including that Fedora CoreOS would be the successor to Fedora Atomic Host 
+and Container Linux (from CoreOS Inc.). As part of that succession
+plan we decided that Fedora 29 Atomic Host would be the last stream of
+Fedora Atomic Host to be released.&lt;/p&gt;
+
+&lt;p&gt;Fedora 29 Atomic Host has served us well, but with Fedora 29 End of
+Life &lt;a href="https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/VUK3CJ5LO4ROUH3JTCDVHYAVVYAOCU62/"&gt;coming soon&lt;/a&gt;
+, so will the last release of Fedora 29 Atomic Host.
+The next release of Fedora 29 Atomic Host (in the next few weeks) will be
+the last two-week release. It will contain all of the latest content
+from Fedora 29. After that release, Fedora 29, and Fedora 29 Atomic
+Host will no longer receive any updates.&lt;/p&gt;
+
+&lt;p&gt;Please try out the Fedora CoreOS preview to help us get it towards
+stable. Documentation and download links can be found at
+&lt;a href="https://getfedora.org/coreos/"&gt;https://getfedora.org/coreos/&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora 28-&gt;29 Atomic Host Upgrade Guide</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/"/>
+    <id>http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/</id>
+    <published>2018-10-31T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;This week we put out the &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-October/msg00006.html"&gt;first&lt;/a&gt;
+release of Fedora 29 Atomic Host. This will be the last major release
+of Fedora Atomic Host as we prepare for &lt;a href="https://coreos.fedoraproject.org/"&gt;Fedora CoreOS&lt;/a&gt;
+which will be released in Fedora 30.&lt;/p&gt;
+
+&lt;p&gt;In this post we&amp;rsquo;ll quickly list some known issues and then talk about updating 
+an existing Fedora 28 Atomic Host system to Fedora 29. We&amp;rsquo;ll cover preparing
+the system for upgrade and performing the upgrade.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; If you really don&amp;rsquo;t want to upgrade to Fedora 29 see the
+          later section: &lt;em&gt;Appendix B: Fedora 28 Atomic Host Life Support&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Known Issues&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Device timeout when installing from ISO with swap space. &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We found &lt;a href="https://pagure.io/atomic-wg/issue/513"&gt;an issue&lt;/a&gt;
+where instances installed via the ISO image via anaconda were
+having long boot times because of device timeouts. We traced
+this down to &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1641268"&gt;a bug in dracut&lt;/a&gt;
+and this will be fixed in the next release.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Incompatibilities with OpenShift Origin &amp;gt;= 3.11 and Kubernetes &amp;gt;= 1.10.4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In newer versions of &lt;code&gt;systemd&lt;/code&gt; an API was removed that was needed by
+older versions of OpenShift/Kubernetes. It is recommended that you
+upgrade to Origin 3.11 or Kubernetes &amp;gt; 1.10.4 before moving to Fedora
+29 Atomic Host. If you must use an older version of OpenShift/Kubernetes
+with Fedora 29 Atomic Host please see the later section: 
+&lt;em&gt;Appendix A: Using older versions of Kubernetes/OpenShift on Fedora 29 Atomic Host&lt;/em&gt;.
+Discussion of this issue can be found in the &lt;a href="https://pagure.io/atomic-wg/issue/512"&gt;pagure ticket&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Preparing for Upgrade&lt;/h3&gt;
+
+&lt;p&gt;Before we update to Fedora 29 Atomic Host we should check to
+see that we have at least a few GiB of free space in our root
+filesystem. The update to Fedora 29 can cause your system to
+retrieve more than 1 GiB of new content (not shared with Fedora
+28) and thus we&amp;rsquo;ll need to make sure we have plenty of free space.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Luckily if you skip this step OSTree will perform
+          &lt;a href="https://github.com/ostreedev/ostree/pull/987"&gt;filesystem checks&lt;/a&gt;
+          to make sure that upgrade will error gracefully before filling
+          up the filesystem.&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;Now we should be ready for the upgrade. If you are hosting any services
+on your instance you may want to prepare for them to have some downtime.&lt;/p&gt;
+
+&lt;p&gt;Currently we are on Fedora 28 Atomic Host using the
+&lt;code&gt;fedora/28/x86_64/atomic-host&lt;/code&gt; ref.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[vagrant@host ~]$ rpm-ostree status
+State: idle
+AutomaticUpdates: disabled
+Deployments:
+● ostree://fedora-atomic:fedora/28/x86_64/atomic-host
+                   Version: 28.20181007.0 (2018-10-07 20:43:44)
+                    Commit: 8df48fa2e70ad1952153ae00edbba08ed18b53c3d4095a22985d1085f5203ac6
+              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to do the upgrade we need to add the location of
+the Fedora 29 repository as a new remote (similar to a
+git remote) for &lt;code&gt;ostree&lt;/code&gt; to know about:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[vagrant@host ~]$ sudo ostree remote add --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary fedora-atomic-29 https://dl.fedoraproject.org/atomic/repo/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see from the command that we are adding a new remote known as
+&lt;code&gt;fedora-atomic-29&lt;/code&gt; with a remote url of &lt;code&gt;https://dl.fedoraproject.org/atomic/repo/&lt;/code&gt;
+We are also setting the &lt;code&gt;gpgkeypath&lt;/code&gt; variable in the configuration for
+the remote. This tells OSTree that we want commit signatures to be
+verified when we download from a remote.&lt;/p&gt;
+
+&lt;p&gt;Now that we have our &lt;code&gt;fedora-atomic-29&lt;/code&gt; remote we can do the upgrade!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[vagrant@host ~]$ sudo rpm-ostree rebase fedora-atomic-29:fedora/29/x86_64/atomic-host
+26 delta parts, 9 loose fetched; 264197 KiB transferred in 44 seconds        
+Upgraded:                                      
+  NetworkManager 1:1.10.12-1.fc28 -&amp;gt; 1:1.12.4-1.fc29        
+  NetworkManager-libnm 1:1.10.12-1.fc28 -&amp;gt; 1:1.12.4-1.fc29
+  NetworkManager-team 1:1.10.12-1.fc28 -&amp;gt; 1:1.12.4-1.fc29
+  acl 2.2.53-1.fc28 -&amp;gt; 2.2.53-2.fc29                
+  atomic 1.22.1-2.fc28 -&amp;gt; 1.22.1-27.gitb507039.fc29       
+  atomic-devmode 0.3.7-4.fc28 -&amp;gt; 0.3.7-6.fc29        
+  atomic-registries 1.22.1-2.fc28 -&amp;gt; 1.22.1-27.gitb507039.fc29
+  attr 2.4.48-3.fc28 -&amp;gt; 2.4.48-3.fc29              
+...
+  python-unversioned-command-2.7.15-10.fc29.noarch
+  python3-pyyaml-4.2-0.1.b4.fc29.x86_64
+Run "systemctl reboot" to start a reboot
+[vagrant@host ~]$ sudo systemctl reboot
+[vagrant@host ~]$ Connection to 192.168.121.95 closed by remote host.
+Connection to 192.168.121.95 closed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After reboot we can log in and see the status:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant ssh 
+Last login: Wed Oct 31 21:14:44 2018 from 192.168.121.1
+[vagrant@host ~]$ rpm-ostree status
+State: idle
+AutomaticUpdates: disabled
+Deployments:
+● ostree://fedora-atomic-29:fedora/29/x86_64/atomic-host
+                   Version: 29.20181025.1 (2018-10-25 14:46:54)
+                    Commit: 4a999b4b303b47468ff1464051a14fd075d2e7b8bb647584b7cc80fed48cf27b
+              GPGSignature: Valid signature by 5A03B4DD8254ECA02FDA1637A20AA56B429476B4
+
+  ostree://fedora-atomic:fedora/28/x86_64/atomic-host
+                   Version: 28.20181007.0 (2018-10-07 20:43:44)
+                    Commit: 8df48fa2e70ad1952153ae00edbba08ed18b53c3d4095a22985d1085f5203ac6
+              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1
+[vagrant@host ~]$
+[vagrant@host ~]$ cat /etc/os-release | head -n 2
+NAME=Fedora
+VERSION="29.20181025.1 (Atomic Host)"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are now on Fedora 29 Atomic Host. Now is a good time to check your
+services (most likely running in containers) to see if they are still
+working. If not, then you always have the rollback command: &lt;code&gt;sudo
+rpm-ostree rollback&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Over time you can see updated commands for upgrading Atomic
+          Host between releases by visiting &lt;a href="https://fedoraproject.org/wiki/Atomic_Host_upgrade"&gt;this&lt;/a&gt;
+          wiki page.&lt;/p&gt;
+
+&lt;h3&gt;Appendix A: Using older versions of Kubernetes/OpenShift on Fedora 29 Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;Due to &lt;a href="https://pagure.io/atomic-wg/issue/512"&gt;an issue&lt;/a&gt; that arises from the
+combination of the version of systemd that ships with Fedora 29 Atomic Host,
+and the version of runc that&amp;rsquo;s bundled with Kubernetes and with OpenShift
+Origin, users of certain Kubernetes and OpenShift Origin releases must take
+steps to keep their Kubernetes or Origin clusters running following an upgrade to 29.&lt;/p&gt;
+
+&lt;p&gt;Users running Kubernetes releases older than v1.10.4 or OpenShift Origin
+releases older than v3.11 would do best to upgrade their Kubernetes or
+Origin clusters to a more recent version before undertaking an upgrade
+to Fedora 29 Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;For users who prefer to upgrade to 29 without changing their cluster
+version, it&amp;rsquo;s possible to work around the issue by changing the
+&lt;code&gt;cgroupdriver&lt;/code&gt; for both docker and for either the kubelet or the
+orgin-node component from its default value of &lt;code&gt;systemd&lt;/code&gt; to &lt;code&gt;cgroupfs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4&gt;For docker (applies to both Kubernetes and OpenShift Origin clusters):&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cp /usr/lib/systemd/system/docker.service /etc/systemd/system/
+# sed -i 's/cgroupdriver=systemd/cgroupdriver=cgroupfs/' /etc/systemd/system/docker.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;For kubelet (applies to Kubeadm-based Kubernetes clusters):&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/' /etc/systemd/system/kubelet.service.d/kubeadm.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;For origin-node (applies to OpenShift Origin clusters):&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# vi /etc/origin/node/node-config.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add the following element to the &lt;code&gt;kubeletArguments:&lt;/code&gt; section:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cgroup-driver:
+  - "cgroupfs"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After making these changes, rebase to 29 as directed above. After reboot
+the nodes should return in &lt;code&gt;Ready&lt;/code&gt; state as expected.&lt;/p&gt;
+
+&lt;h3&gt;Appendix B: Fedora 28 Atomic Host Life Support&lt;/h3&gt;
+
+&lt;p&gt;As with Fedora 27 we will keep updating the Fedora 28 Atomic Host tree
+but we won&amp;rsquo;t be performing regular testing on that tree and there will
+be no more formal releases for Fedora 28. Please move to Fedora 29 to
+take advantage of regular testing and formal releases every two weeks.&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;As in the past, the transition to Fedora 29 Atomic Host should be an
+easy process. If you have issues please join us in IRC (#atomic on
+&lt;a href="https://freenode.net/"&gt;freenode&lt;/a&gt;) or on the
+&lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt;
+mailing list.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Buildah version 1.2 Release Announcement</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/07/Buildah-version-v1.2/"/>
+    <id>http://www.projectatomic.io/blog/2018/07/Buildah-version-v1.2/</id>
+    <published>2018-07-14T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;h3&gt;Buildah version 1.2 Release Announcement&lt;/h3&gt;
+
+&lt;p&gt;&lt;img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re pleased to announce the release of Buildah version 1.2 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.  &lt;/p&gt;
+
+&lt;p&gt;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix.  The highlights of this release are the added ability to control image layers when building an image, CVE’s Fixes, the initial support for user namespace handling and several other enhancements and bug fixes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;The major highlights for this release are:&lt;/h4&gt;
+
+&lt;h5&gt;Allow the user to control the layers of the image when the image is built with the ‘buildah bud’ command.&lt;/h5&gt;
+
+&lt;p&gt;A container is comprised of a final readable/writeable layer and when the layers are cached, a number of intermediate read only layers.  The read only layers are created with each step in the Dockerfile and the final readable/writeable layer contains the intermediate layers.  Prior to these changes Buildah did not cache these intermediate read only layers.&lt;/p&gt;
+
+&lt;p&gt;This release has a new environment variable ‘BUILDAH_LAYERS’ and a new ‘buildah bud’ &amp;ndash;layers parameter.  When either is set to true, the image layers are cached during the ‘buildah bud’ processing and not discarded.  The disadvantage to retaining layers is the space that they use.  The advantage to retaining them is if you make a change to your Dockerfile, only the layers for that change and the ones following it will need to be regenerated.  &lt;/p&gt;
+
+&lt;p&gt;The &amp;ndash;nocache parameter has also been added to the ‘buildah bud’ command.  When this parameter is set to true the ‘buildah bud’ command ignores any existing layers and creates all of the image layers anew.&lt;/p&gt;
+
+&lt;h5&gt;Added initial user namespace support.&lt;/h5&gt;
+
+&lt;p&gt;To isolate the container’s processes from running as root on the host machine, user namespaces are used by container technologies.  This allows the administrator to configure the containers processes that must run as root to remap the user to a less privileged user on the container’s host machine.  This remapping is handled in part by settings in the /etc/subuid and /etc/subgid files on the host machine.&lt;/p&gt;
+
+&lt;p&gt;The changes for this release does not yet provide full support for user namespaces, but does set up the options to control the mapping with the &amp;ndash;userns-uid-map and &amp;ndash;userns-gid-map options.   Changes have also been made to prevent the container from modifying the /etc/host or /etc/resolv.conf files on the host.&lt;/p&gt;
+
+&lt;p&gt;Also with this release if a user with a uid that’s not equal to zero creates a container, a namespace is now created based on the users uid and gid and the container will be reexec’d using that namespace.   In addition, the storage driver, storage root directory and storage state directory will all be created under alternate locations.  Please reference the buildah (1) man page for more details.  Further information will be published in upcoming blogs and additional changes are in progress to provide full support of user namespaces in future versions of Buildah.&lt;/p&gt;
+
+&lt;h5&gt;CVE security issues with /proc/acpi and /proc/keys have been addressed.&lt;/h5&gt;
+
+&lt;p&gt;The /proc/acpi and /proc/keys were added to the list of blocked kernel files.  This prevents the container from manipulating these files on the container’s host.&lt;/p&gt;
+
+&lt;h4&gt;Release Changes&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Added the ability to remove or retain image layers for ‘buildah bud’:
+
+&lt;ul&gt;
+&lt;li&gt;Add &amp;ndash;layers and &amp;ndash;no-cache options to &amp;lsquo;buildah bud&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Add &amp;ndash;rm and &amp;ndash;force-rm options to &amp;#39;buildah bud&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Fixed the buildah bud &amp;ndash;layers option.&lt;/li&gt;
+&lt;li&gt;Added environment variable BUILDAH_LAYERS to control image layers creation.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Added environment variable BUILDAH_RUNTIME to setup alternate runtimes.&lt;/li&gt;
+&lt;li&gt;build-using-dockerfile: let -t include transports again.&lt;/li&gt;
+&lt;li&gt;Block the use of /proc/acpi and /proc/keys from inside containers. These address potential CVE Security issues.&lt;/li&gt;
+&lt;li&gt;Add &amp;ndash;cidfile option to &amp;#39;buildah from`.&lt;/li&gt;
+&lt;li&gt;Add a &amp;ndash;loglevel option to build-with-dockerfile.&lt;/li&gt;
+&lt;li&gt;Begin supporting specification of user namespace for container separation:
+
+&lt;ul&gt;
+&lt;li&gt;Allow &amp;ndash;userns-uid-map/&amp;ndash;userns-gid-map to be global options.&lt;/li&gt;
+&lt;li&gt;If unprivileged, reexec in a user namespace.&lt;/li&gt;
+&lt;li&gt;Force ownership of /etc/hosts and /etc/resolv.conf to 0:0.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Recognize committing to second storage locations with &amp;#39;buildah commit&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Add the &amp;ndash;all option to &amp;#39;buildah unmount&amp;rsquo; to unmount all mounted containers.&lt;/li&gt;
+&lt;li&gt;When doing multiple mounts, output all pertinent errors, not just the last error.&lt;/li&gt;
+&lt;li&gt;Implement basic recognition of the &lt;q&gt;&amp;ndash;isolation&lt;/q&gt; option for &amp;#39;buildah from&amp;rsquo; and &amp;#39;buildah run&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Fix ARGS parsing for run commands.&lt;/li&gt;
+&lt;li&gt;When building a container the HTTP User-Agent is set to the Buildah version.&lt;/li&gt;
+&lt;li&gt;Makefile: add the uninstall command.&lt;/li&gt;
+&lt;li&gt;Support multiple inputs to &amp;#39;buildah mount&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Use the right formatting when adding entries to /etc/hosts.&lt;/li&gt;
+&lt;li&gt;A number of minor performance improvements for &amp;#39;buildah run&amp;rsquo; and &amp;#39;buildah bud&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Change RunOptions.Stdin/Stdout/Stderr to just be Reader/Writers.&lt;/li&gt;
+&lt;li&gt;Use conversion code from containers/image instead of converting configs manually.&lt;/li&gt;
+&lt;li&gt;Do not ignore any parsing errors during initialization.&lt;/li&gt;
+&lt;li&gt;Explicitly handle &lt;q&gt;from scratch&lt;/q&gt; images in Builder.initConfig.&lt;/li&gt;
+&lt;li&gt;Fix parsing of OCI images.&lt;/li&gt;
+&lt;li&gt;Don&amp;rsquo;t ignore v2s1 history if docker_version is not set.&lt;/li&gt;
+&lt;li&gt;Add &amp;ndash;all,-a flags to &amp;#39;buildah images&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Remove tty check from buildah images &amp;ndash;format.&lt;/li&gt;
+&lt;li&gt;Fix usage information for &amp;#39;buildah images&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Documentation changes:
+
+&lt;ul&gt;
+&lt;li&gt;Add registries.conf link to a few man pages.&lt;/li&gt;
+&lt;li&gt;Add information about the configuration files to the install documentation.&lt;/li&gt;
+&lt;li&gt;Follow man-pages(7) suggestions for SYNOPSIS in all man pages.&lt;/li&gt;
+&lt;li&gt;Minor update to buildah config documentation for entrypoint.&lt;/li&gt;
+&lt;li&gt;ONBUILD tutorial created.&lt;/li&gt;
+&lt;li&gt;Touch up images man page.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Plus a number of smaller fixes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Try it Out.&lt;/h4&gt;
+
+&lt;p&gt;If you haven’t yet, install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&amp;rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!&lt;/p&gt;
+
+&lt;p&gt;For those of you who contributed to this release, thank you very much for your contributions!  If you haven&amp;rsquo;t joined our community yet, don&amp;rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.&lt;/p&gt;
+
+&lt;h4&gt;Buildah == Simplicity&lt;/h4&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Announcing the Fedora CoreOS community!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/welcome-to-fedora-coreos/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/welcome-to-fedora-coreos/</id>
+    <published>2018-06-20T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Welcome to Fedora CoreOS&lt;/h3&gt;
+
+&lt;p&gt;Earlier this year Red Hat acquired &lt;a href="https://www.redhat.com/en/about/press-releases/red-hat-acquire-coreos-expanding-its-kubernetes-and-containers-leadership"&gt;CoreOS, Inc.&lt;/a&gt;.
+In the past few
+months we have been working hard to evaluate the different technologies 
+in the CoreOS Container Linux and Project Atomic spaces. Since Container 
+Linux and Atomic Host overlap in functionality quite a bit we have decided
+to merge future development of the two projects so that we can combine
+our efforts and bring two great communities of people together to solve
+future challenges in the transactional update and container operating
+system landscape.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;What does this mean for Atomic Host?&lt;/h3&gt;
+
+&lt;p&gt;The last major release of Fedora Atomic Host will most likely be Fedora
+29 Atomic Host. After Fedora 29 we&amp;rsquo;ll recommend you use Fedora CoreOS for
+any deployments. The use cases for Fedora CoreOS should overlap with the
+existing use cases for Atomic Host, but there may be some use cases that
+are left behind as we narrow our focus. Hopefully disruptions will be minimal.&lt;/p&gt;
+
+&lt;h3&gt;What will happen to the Project Atomic community channels?&lt;/h3&gt;
+
+&lt;p&gt;The mailing lists, IRC channels, and GitHub organization will mostly
+be retired once the last releases are End Of Life. Please join us on the
+new community spaces (more details below)!&lt;/p&gt;
+
+&lt;h3&gt;Where can I learn more about Fedora CoreOS and get involved?&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There is a new website and FAQ at &lt;a href="https://coreos.fedoraproject.org"&gt;https://coreos.fedoraproject.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;There is a mailing list at &lt;a href="mailto:coreos@lists.fedoraproject.org"&gt;coreos@lists.fedoraproject.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;There is an IRC channel #fedora-coreos on freenode.&lt;/li&gt;
+&lt;li&gt;There is a new Discourse board at &lt;a href="https://discussion.fedoraproject.org/c/coreos"&gt;https://discussion.fedoraproject.org/c/coreos&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For future blog posts around containers, please refer to the new website
+that is currently under active development.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re excited to have the existing Container Linux and Atomic Host
+communities working together and we hope you&amp;rsquo;ll join us in making
+Fedora CoreOS a success.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Buildah version 1.1 Release Announcement</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/</id>
+    <published>2018-06-12T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;h3&gt;Buildah version 1.1 Release Announcement&lt;/h3&gt;
+
+&lt;p&gt;&lt;img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re pleased to announce the release of Buildah version 1.1 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.&lt;/p&gt;
+
+&lt;p&gt;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.  &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;The major highlights for this release are:&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Drop capabilities if running container processes as non root&lt;/li&gt;
+&lt;li&gt;Print Warning message if cmd will not be used based on entrypoint&lt;/li&gt;
+&lt;li&gt;Add OnBuild support for Dockerfiles&lt;/li&gt;
+&lt;li&gt;Add support for buildah bud &amp;ndash;label&lt;/li&gt;
+&lt;li&gt;Report errors on bad transports specification when pushing images&lt;/li&gt;
+&lt;li&gt;Add registry errors for pull&lt;/li&gt;
+&lt;li&gt;Give better messages to users when image can not be found&lt;/li&gt;
+&lt;li&gt;Add environment variable to buildah &amp;ndash;format&lt;/li&gt;
+&lt;li&gt;Accept json array input for config entrypoint&lt;/li&gt;
+&lt;li&gt;buildah bud now requires a context directory or URL&lt;/li&gt;
+&lt;li&gt;buildah bud picks up ENV from base image&lt;/li&gt;
+&lt;li&gt;Run: set supplemental group IDs&lt;/li&gt;
+&lt;li&gt;Use CNI to configure container networks&lt;/li&gt;
+&lt;li&gt;add/secrets/commit: Use mappings when setting permissions on added content&lt;/li&gt;
+&lt;li&gt;Add CLI options for specifying namespace and cgroup setup&lt;/li&gt;
+&lt;li&gt;Always set mappings when using user namespaces&lt;/li&gt;
+&lt;li&gt;Read UID/GID mapping information from containers and images&lt;/li&gt;
+&lt;li&gt;build-using-dockerfile: add &amp;ndash;annotation&lt;/li&gt;
+&lt;li&gt;Implement &amp;ndash;squash for build-using-dockerfile and commit&lt;/li&gt;
+&lt;li&gt;Manage &lt;q&gt;Run&lt;/q&gt; containers more closely&lt;/li&gt;
+&lt;li&gt;Handle /etc/hosts and /etc/resolv.conf properly in container&lt;/li&gt;
+&lt;li&gt;Make &lt;q&gt;run &amp;ndash;terminal&lt;/q&gt; and &lt;q&gt;run -t&lt;/q&gt; aliases for &lt;q&gt;run &amp;ndash;tty&lt;/q&gt;&lt;/li&gt;
+&lt;li&gt;buildah push/from can push and pull images with no reference&lt;/li&gt;
+&lt;li&gt;Attempt to download file from url, if fails assume Dockerfile&lt;/li&gt;
+&lt;li&gt;builder-inspect: fix format option&lt;/li&gt;
+&lt;li&gt;buildah-from: add effective value to mount propagation&lt;/li&gt;
+&lt;li&gt;Documentation Changes&lt;/li&gt;
+&lt;li&gt;Change freenode chan to buildah&lt;/li&gt;
+&lt;li&gt;Add example CNI configurations&lt;/li&gt;
+&lt;li&gt;Touch Up tutorial for run changes&lt;/li&gt;
+&lt;li&gt;Update 01-intro.md tutorial&lt;/li&gt;
+&lt;li&gt;Update troubleshooting with new run workaround&lt;/li&gt;
+&lt;li&gt;Add console syntax highlighting to troubleshooting page&lt;/li&gt;
+&lt;li&gt;Touchup man page short options across man pages&lt;/li&gt;
+&lt;li&gt;Demo Changes
+
+&lt;ul&gt;
+&lt;li&gt;Added demo dir and a demo.&lt;/li&gt;
+&lt;li&gt;Added Docker compatibility demo &lt;/li&gt;
+&lt;li&gt;Added a bud demo and tidied up&lt;/li&gt;
+&lt;li&gt;Update buildah scratch demo to support el7&lt;/li&gt;
+&lt;li&gt;Quick fix on demo readme&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Test Changes
+
+&lt;ul&gt;
+&lt;li&gt;Add tests for namespace control flags&lt;/li&gt;
+&lt;li&gt;CI tests and minor fix for cache related noop flags&lt;/li&gt;
+&lt;li&gt;Add cpu-shares short flag (-c) and cpu-shares CI tests&lt;/li&gt;
+&lt;li&gt;Add buildah bud CI tests for ENV variables&lt;/li&gt;
+&lt;li&gt;Additional bud CI tests&lt;/li&gt;
+&lt;li&gt;Run integration tests under travis_wait in Travis&lt;/li&gt;
+&lt;li&gt;Re-enable rpm .spec version check and new commit test&lt;/li&gt;
+&lt;li&gt;Update to F28 and new run format in baseline test&lt;/li&gt;
+&lt;li&gt;Add context dir to bud command in baseline test&lt;/li&gt;
+&lt;li&gt;add test to inspect&lt;/li&gt;
+&lt;li&gt;Test with Go 1.10, too&lt;/li&gt;
+&lt;li&gt;rmi, rm: add test&lt;/li&gt;
+&lt;li&gt;add mount test&lt;/li&gt;
+&lt;li&gt;Fix SELinux test errors when SELinux is enabled&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Vendor changes
+
+&lt;ul&gt;
+&lt;li&gt;Vendor in latest container/storage for devicemapper support&lt;/li&gt;
+&lt;li&gt;Vendor github.com/onsi/ginkgo and github.com/onsi/gomega&lt;/li&gt;
+&lt;li&gt;Vendor github.com/containernetworking/cni v0.6.0&lt;/li&gt;
+&lt;li&gt;Update github.com/containers/storage&lt;/li&gt;
+&lt;li&gt;Update github.com/projectatomic/libpod&lt;/li&gt;
+&lt;li&gt;Vendor in latest containers/image&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Plus a number of smaller fixes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Try it Out.&lt;/h4&gt;
+
+&lt;p&gt;If you haven’t yet, install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&amp;rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!&lt;/p&gt;
+
+&lt;p&gt;For those of you who contributed to this release, thank you very much for your contributions!  If you haven&amp;rsquo;t joined our community yet, don&amp;rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.&lt;/p&gt;
+
+&lt;h4&gt;Buildah == Simplicity&lt;/h4&gt;
+</content>
+  </entry>
+</feed>

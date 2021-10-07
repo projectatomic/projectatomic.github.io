@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Granting Rights to Users to Use Docker in Fedora &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Granting Rights to Users to Use Docker in Fedora' property='og:title'>
+<meta content='I saw on the docker-dev list someone was asking about Fedora documentation that described how you add a user to the docker group. The user wanted to allow his users to do docker search to try to find images that they could use.&#x000A;&#x000A;From the Docker installation documentation regarding Fedora: &#x000A;&#x000A;&#x000A;Granting rights to users to use Docker&#x000A;&#x000A;Fedora 19 and 20 shipped with Docker 0.11. The package has already been updated to 1.0 in Fedora 20. If you are still using the 0.11 version you will need to grant rights to users of Docker.&#x000A;&#x000A;The docker command line tool contacts the docker daemon process via a socket file /var/run/docker.sock owned by group docker. One must be member of that group in order to contact the docker -d process.&#x000A;&#x000A;&#x000A;Luckily this documentation is somewhat wrong, you still need to add users to the docker group in order for them to use docker from a non-root account.  I would hope that all Distributions have this policy.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/' property='og:url'>
+<meta content='2014-09-24T14:47:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Granting Rights to Users to Use Docker in Fedora' name='twitter:title'>
+<meta content='I saw on the docker-dev list someone was asking about Fedora documentation that described how you add a user to the docker group. The user wanted to allow his users to do docker search to try to find images that they could use.&#x000A;&#x000A;From the Docker installation documentation regarding Fedora: &#x000A;&#x000A;&#x000A;Granting rights to users to use Docker&#x000A;&#x000A;Fedora 19 and 20 shipped with Docker 0.11. The package has already been updated to 1.0 in Fedora 20. If you are still using the 0.11 version you will need to grant rights to users of Docker.&#x000A;&#x000A;The docker command line tool contacts the docker daemon process via a socket file /var/run/docker.sock owned by group docker. One must be member of that group in order to contact the docker -d process.&#x000A;&#x000A;&#x000A;Luckily this documentation is somewhat wrong, you still need to add users to the docker group in order for them to use docker from a non-root account.  I would hope that all Distributions have this policy.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_09 blog_2014_09_granting-rights-to-users-to-use-docker-in-fedora blog_2014_09_granting-rights-to-users-to-use-docker-in-fedora_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Granting Rights to Users to Use Docker in Fedora
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-24T14:47:00Z'>
+Wednesday 24 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I saw on the docker-dev list someone was asking about Fedora documentation that described how you add a user to the <code>docker</code> group. The user wanted to allow his users to do <code>docker search</code> to try to find images that they could use.</p>
+
+<p>From the <a href="http://docs.docker.com/installation/fedora/">Docker installation documentation regarding Fedora</a>: </p>
+
+<blockquote>
+<p>Granting rights to users to use Docker</p>
+
+<p>Fedora 19 and 20 shipped with Docker 0.11. The package has already been updated to 1.0 in Fedora 20. If you are still using the 0.11 version you will need to grant rights to users of Docker.</p>
+
+<p>The <code>docker</code> command line tool contacts the <code>docker</code> daemon process via a socket file <code>/var/run/docker.sock</code> owned by group <code>docker</code>. One must be member of that group in order to contact the <code>docker -d</code> process.</p>
+</blockquote>
+
+<p>Luckily this documentation is somewhat wrong, you still need to add users to the <code>docker</code> group in order for them to use <code>docker</code> from a non-root account.  I would hope that all Distributions have this policy.</p>
+
+<p></p>
+
+<p>On Fedora and RHEL we have the following permissions on the <code>docker.sock</code>:</p>
+<pre class="highlight plaintext"><code># ls -l /run/docker.sock &#x000A;srw-rw----. 1 root docker 0 Sep 19 12:54 /run/docker.sock&#x000A;</code></pre>
+
+<p>This means that only the root user or the users in the <code>docker</code> group can talk to this socket.  Also since <code>docker</code> runs as<code>docker_t</code> SELinux prevents all confined domains from connecting to this <code>docker.sock</code>.</p>
+
+<h3>No Authorization controls from docker.</h3>
+
+<p>Docker currently does not have any Authorization controls. If you can talk to the <code>docker</code> socket or if <code>docker</code> is listening on a network port and you can talk to it, you are allowed to execute all <code>docker</code> commands.</p>
+
+<p>For example, if I add dwalsh to the <code>docker</code> group on my machine, I can execute.</p>
+<pre class="highlight plaintext"><code>&gt; docker run -ti --rm --privileged --net=host -v /:/host fedora /bin/sh&#x000A;# chroot /host&#x000A;# &#x000A;</code></pre>
+
+<p>At which point you, or any user that has these permissions, have total control on your system. </p>
+
+<p>Adding a user to the docker group should be considered the same as adding:</p>
+<pre class="highlight plaintext"><code>USERNAME    ALL=(ALL)   NOPASSWD: ALL&#x000A;</code></pre>
+
+<p>to the /etc/sudoers file. Any application the user runs on his machine can become root, even without him knowing. I believe a better more secure solution would be to write scripts to allow the user the access you want to allow.</p>
+<pre class="highlight plaintext"><code>cat /usr/bin/dockersearch&#x000A;#!/bin/sh&#x000A;docker search $@&#x000A;</code></pre>
+
+<p>Then set up sudo with</p>
+<pre class="highlight plaintext"><code>USERNAME    ALL=(ALL)   NOPASSWD: /usr/bin/dockersearch&#x000A;</code></pre>
+
+<p>I hope to eventually add some kind of authorization database to <code>docker</code> to allow admins to configure which commands you would allow a user to execute, and which containers you might allow them to start/stop.</p>
+
+<p>First eliminating the ability to execute <code>docker run --privileged</code> or <code>docker run --cap-remove</code> would be a step in the right direction. But, if you have read my other posts, you know that a lot more needs to be done to make <a href="http://www.projectatomic.io/blog/2014/09/keeping-up-with-docker-security/">containers contain</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

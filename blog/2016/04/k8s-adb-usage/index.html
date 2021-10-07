@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using Kubernetes with ADB (Atomic Developer Bundle) &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Suraj Deshmukh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Using Kubernetes with ADB (Atomic Developer Bundle)' property='og:title'>
+<meta content='The easiest way to get started with Kubernetes is to start using the Vagrant Box provided under ADB (Atomic Developer Bundle). All you need to do to get started is have Vagrant installed and Vagrantfile, which configures the Kubernetes on the Vagrant box.&#x000A;&#x000A;Make sure you have basic setup ready. For that follow these installation instructions.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/04/k8s-adb-usage/' property='og:url'>
+<meta content='2016-04-27T14:30:00Z' property='article:published_time'>
+<meta content='SurajD' property='article:author:username'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Using Kubernetes with ADB (Atomic Developer Bundle)' name='twitter:title'>
+<meta content='The easiest way to get started with Kubernetes is to start using the Vagrant Box provided under ADB (Atomic Developer Bundle). All you need to do to get started is have Vagrant installed and Vagrantfile, which configures the Kubernetes on the Vagrant box.&#x000A;&#x000A;Make sure you have basic setup ready. For that follow these installation instructions.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_04 blog_2016_04_k8s-adb-usage blog_2016_04_k8s-adb-usage_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Using Kubernetes with ADB (Atomic Developer Bundle)
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/surajd/">Suraj Deshmukh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-04-27T14:30:00Z'>
+Wednesday 27 April 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The easiest way to get started with <a href="http://kubernetes.io/docs/whatisk8s/">Kubernetes</a> is to start using the <a href="https://www.vagrantup.com/docs/boxes.html">Vagrant Box</a> provided under <a href="https://github.com/projectatomic/adb-atomic-developer-bundle#what-is-the-atomic-developer-bundle-adb">ADB (Atomic Developer Bundle)</a>. All you need to do to get started is have Vagrant installed and <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-k8s-singlenode-setup/Vagrantfile">Vagrantfile</a>, which configures the Kubernetes on the Vagrant box.</p>
+
+<p>Make sure you have basic setup ready. For that follow these <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst">installation instructions</a>.</p>
+
+<p></p>
+
+<p>Now all you need to do is clone the repository that has Vagrantfile and start the Vagrantbox:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>git clone https://github.com/projectatomic/adb-atomic-developer-bundle.git&#x000A;<span class="gp">$ </span><span class="nb">cd </span>adb-atomic-developer-bundle/components/centos/centos-k8s-singlenode-setup/&#x000A;<span class="gp">$ </span>vagrant up --provider libvirt&#x000A;</code></pre>
+
+<p>You can also choose <code>provider</code> as <code>virtualbox</code> with the command <code>vagrant up --provider virtualbox</code></p>
+
+<p>This will start the box. But, if the box is not available, then Vagrant will download it for you. Once the box is up and running, ssh into the box and you will have a running Kubernetes all-in-one cluster. This cluster is set up as a Kubernetes Master and Kubernetes Node running on the same host.</p>
+<pre class="highlight shell"><code>vagrant ssh&#x000A;</code></pre>
+
+<p>When you are in the machine, try using Kubernetes with <code>kubectl</code> commands. If you are already familiar with Kubernetes, you can skip the following steps and test if the cluster has everything you need. For someone new to Kubernetes, keep following along here.</p>
+
+<p>To test to see if Kubernetes is working, let&rsquo;s create a pod. For that create a file named <code>pod.json</code> with the following data:</p>
+<pre class="highlight json"><code><span class="err">$</span><span class="w"> </span><span class="err">cat</span><span class="w"> </span><span class="err">pod.json</span><span class="w">&#x000A;</span><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pod"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;        </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;            </span><span class="s2">"app"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apache-centos7"</span><span class="w">&#x000A;        </span><span class="p">},</span><span class="w">&#x000A;        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apache-centos7"</span><span class="w">&#x000A;    </span><span class="p">},</span><span class="w">&#x000A;    </span><span class="s2">"spec"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;        </span><span class="s2">"containers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">&#x000A;            </span><span class="p">{</span><span class="w">&#x000A;                </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"centos/httpd"</span><span class="p">,</span><span class="w">&#x000A;                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"apache-centos7"</span><span class="p">,</span><span class="w">&#x000A;                </span><span class="s2">"ports"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">&#x000A;                    </span><span class="p">{</span><span class="w">&#x000A;                        </span><span class="s2">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w">&#x000A;                        </span><span class="s2">"hostPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w">&#x000A;                        </span><span class="s2">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TCP"</span><span class="w">&#x000A;                    </span><span class="p">}</span><span class="w">&#x000A;                </span><span class="p">]</span><span class="w">&#x000A;            </span><span class="p">}</span><span class="w">&#x000A;        </span><span class="p">]</span><span class="w">&#x000A;    </span><span class="p">}</span><span class="w">&#x000A;</span><span class="p">}</span><span class="w">&#x000A;</span></code></pre>
+
+<p>To create a pod running on Kubernetes out of this file, use</p>
+<pre class="highlight shell"><code>kubectl create -f pod.json&#x000A;</code></pre>
+
+<p>See if the pod is running by entering</p>
+<pre class="highlight shell"><code>kubectl get pods&#x000A;</code></pre>
+
+<p>You may see a pod named <code>apache-centos7</code> there, but the <code>STATUS</code> might be <code>Pending</code> so wait for a while and keep checking the output. Once it&rsquo;s changed to <code>Running</code> we can test if its running, but first we will need the IP address of the pod. To get the IP:</p>
+<pre class="highlight shell"><code>kubectl describe pod apache-centos7 | grep <span class="s1">'IP:'</span>&#x000A;</code></pre>
+
+<p>Note the IP and curl on it</p>
+<pre class="highlight shell"><code>curl IP_ADDRESS_OBTAINED&#x000A;</code></pre>
+
+<p>Unless you get any errors, the pod is running, which also signifies Kubernetes cluster is running. Now you can explore more options in Kubernetes on your own.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+<li><a href="/blog/tag/vagrant/">Vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/04/k8s-adb-usage/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/04/k8s-adb-usage/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/04/k8s-adb-usage/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Open Source, What a Concept! &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tom Sweeney' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Open Source, What a Concept!' property='og:title'>
+<meta content='I recently joined Red Hat after many years working for another tech company whose three character symbol most would recognize, but I won’t name. While there, I developed a number of different software products that were all very successful in their spaces, but all very proprietary.  Not only were we legally compelled to not share the software outside of the company, we often times didn’t share it within the company. To me at the time, that made complete sense. The company spent the time, energy and budget on developing the software, so they should then protect and then claim the rewards that were garnered for it.  &#x000A;&#x000A;Fast forward to a year ago when I joined Red Hat, and developed a completely different mindset. One of the first things I jumped into was the Buildah project. It facilitates building Open Container Initiative (OCI) images and it is especially good at allowing you to tailor the size of the image that is created.  At that time Buildah was in its very early stages and there were some warts here and there that weren’t quite production ready.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/04/open-source-what-a-concept/' property='og:url'>
+<meta content='2018-04-02T00:00:00Z' property='article:published_time'>
+<meta content='tsweeney' property='article:author:username'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='open source' property='article:tag'>
+<link href='/blog/tag/open source.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Open Source, What a Concept!' name='twitter:title'>
+<meta content='I recently joined Red Hat after many years working for another tech company whose three character symbol most would recognize, but I won’t name. While there, I developed a number of different software products that were all very successful in their spaces, but all very proprietary.  Not only were we legally compelled to not share the software outside of the company, we often times didn’t share it within the company. To me at the time, that made complete sense. The company spent the time, energy and budget on developing the software, so they should then protect and then claim the rewards that were garnered for it.  &#x000A;&#x000A;Fast forward to a year ago when I joined Red Hat, and developed a completely different mindset. One of the first things I jumped into was the Buildah project. It facilitates building Open Container Initiative (OCI) images and it is especially good at allowing you to tailor the size of the image that is created.  At that time Buildah was in its very early stages and there were some warts here and there that weren’t quite production ready.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_04 blog_2018_04_open-source-what-a-concept blog_2018_04_open-source-what-a-concept_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Open Source, What a Concept!
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-04-02T00:00:00Z'>
+Monday  2 April 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I recently joined Red Hat after many years working for another tech company whose three character symbol most would recognize, but I won’t name. While there, I developed a number of different software products that were all very successful in their spaces, but all very proprietary.  Not only were we legally compelled to not share the software outside of the company, we often times didn&rsquo;t share it within the company. To me at the time, that made complete sense. The company spent the time, energy and budget on developing the software, so they should then protect and then claim the rewards that were garnered for it.  </p>
+
+<p>Fast forward to a year ago when I joined Red Hat, and developed a completely different mindset. One of the first things I jumped into was the Buildah project. It facilitates building Open Container Initiative (OCI) images and it is especially good at allowing you to tailor the size of the image that is created.  At that time Buildah was in its very early stages and there were some warts here and there that weren&rsquo;t quite production ready.</p>
+
+<p></p>
+
+<p>Being new on the project, I made a few minor changes then asked where the company&rsquo;s internal git repository was that I could push my changes to.  The answer was nothing internal, just push your changes to GitHub.  I was baffled, sending my changes out to GitHub would mean anyone could look at that code and use it for their own projects!  Plus the code still had a few warts, so that just seemed so counter-intuitive.  But being the new guy, I shook my head in wonder and pushed the changes out.</p>
+
+<p>Now a year later, I’m very convinced of the power and value of Open Source software. I’m still working on Buildah and we recently had an issue that really illustrates that power and value.  The issue titled <a href="https://github.com/projectatomic/buildah/issues/532"><q>Buildah images not so small</q></a>, was raised by Tim Dudgeion (@tdudgeon). To summarize, he noted that images created by Buildah were bigger than those created by Docker even though the Buildah images didn’t contain the extra “fluff” he saw in the Docker images.</p>
+
+<p>For comparison he first did:</p>
+<pre class="highlight plaintext"><code>$ docker pull centos:7&#x000A;$ docker images&#x000A;REPOSITORY            TAG              IMAGE ID                 CREATED             SIZE&#x000A;docker.io/centos          7                   2d194b392dd1        2 weeks ago         195 MB&#x000A;</code></pre>
+
+<p>He noted that the size of the Docker image was <code>195 MB</code>.  Tim then went and created a minimal (scratch) image using Buildah, with only the <code>coreutils</code> and <code>bash</code> packages added to the image, using the following script.</p>
+<pre class="highlight plaintext"><code>$ cat  ./buildah-base.sh&#x000A;#!/bin/bash&#x000A;&#x000A;set -x&#x000A;&#x000A;# build a minimal image&#x000A;newcontainer=$(buildah from scratch)&#x000A;scratchmnt=$(buildah mount $newcontainer)&#x000A;&#x000A;# install the packages&#x000A;yum install --installroot $scratchmnt bash coreutils --releasever 7 --setopt install_weak_deps=false -y&#x000A;yum clean all -y --installroot $scratchmnt --releasever 7&#x000A;&#x000A;sudo buildah config --cmd /bin/bash $newcontainer&#x000A;&#x000A;# set some config info&#x000A;buildah config --label name=centos-base $newcontainer&#x000A;&#x000A;# commit the image&#x000A;buildah unmount $newcontainer&#x000A;buildah commit $newcontainer centos-base&#x000A;&#x000A;$ sudo ./buildah-base.sh&#x000A;&#x000A;$ sudo buildah images&#x000A;IMAGE ID               IMAGE NAME                                             CREATED AT            SIZE&#x000A;8379315d3e3e     docker.io/library/centos-base:latest           Mar 25, 2018 17:08   212.1 MB&#x000A;</code></pre>
+
+<p>Tim wondered why the image was <code>17 MB larger</code>, because <code>python</code> and <code>yum</code> were not installed in the Buildah image. Whereas they were installed in the Docker image.  Needless to say, this set off quite the discussion in the GitHub issue, as it was not at all an expected result.</p>
+
+<p>What was great to see about the discussion was not only were Red Hat folks involved, but several others from outside of Red Hat were also involved.  In particular, a lot of great discussion and investigation was led by GitHub user @pixdrift.  Pixdrift noted that the documentation and locale-archive was chewing up a little over <code>100 MB</code> of space in the Buildah image.  Pixdrift  suggested forcing locale in the yum installer and provided this updated <code>buildah-bash.sh</code> script with those changes:</p>
+<pre class="highlight shell"><code><span class="c">#!/bin/bash</span>&#x000A;&#x000A;<span class="nb">set</span> -x&#x000A;&#x000A;<span class="c"># build a minimal image</span>&#x000A;<span class="nv">newcontainer</span><span class="o">=</span><span class="k">$(</span>buildah from scratch<span class="k">)</span>&#x000A;<span class="nv">scratchmnt</span><span class="o">=</span><span class="k">$(</span>buildah mount <span class="nv">$newcontainer</span><span class="k">)</span>&#x000A;&#x000A;<span class="c"># install the packages</span>&#x000A;yum install --installroot <span class="nv">$scratchmnt</span> bash coreutils --releasever 7 --setopt<span class="o">=</span><span class="nv">install_weak_deps</span><span class="o">=</span><span class="nb">false</span> --setopt<span class="o">=</span><span class="nv">tsflags</span><span class="o">=</span>nodocs --setopt<span class="o">=</span><span class="nv">override_install_langs</span><span class="o">=</span>en_US.utf8 -y&#x000A;yum clean all -y --installroot <span class="nv">$scratchmnt</span> --releasever 7&#x000A;&#x000A;sudo buildah config --cmd /bin/bash <span class="nv">$newcontainer</span>&#x000A;&#x000A;<span class="c"># set some config info</span>&#x000A;buildah config --label <span class="nv">name</span><span class="o">=</span>centos-base <span class="nv">$newcontainer</span>&#x000A;&#x000A;<span class="c"># commit the image</span>&#x000A;buildah unmount <span class="nv">$newcontainer</span>&#x000A;buildah commit <span class="nv">$newcontainer</span> centos-base&#x000A;</code></pre>
+
+<p>When Tim ran this new script, the image size was shrunk down to <code>92 MB</code>, shedding <code>120 MB</code> from the original Buildah image size and getting more to the expected size.  However engineers being engineers, a savings in size of <code>56%</code> just wasn’t enough.   The discussion went further talking about how to remove individual locale packages to save even further space.  If you’d like to see more details of the discussion about the <a href="https://github.com/projectatomic/buildah/issues/532"><q>Buildah images not so small</q></a> issue, click on the link.  Who knows maybe you’ll have a helpful tip too or better yet, you’ll become a contributor for Buildah.</p>
+
+<p>On a side note, this solution really illustrates how the Buildah software can be used to create a minimally sized container quickly and easily that fit your needs.  You can create a container loaded up only with the software that you need to get your job done efficiently.  As a bonus, it doesn’t require a daemon to be running….</p>
+
+<p>This image sizing issue really drove home the power of Open Source software for me.  A number of people from different companies all collaborated to solve a problem through open discussion in a little over a day.  Although no code changes were created to address this particular issue, there have been many code contributions to Buildah from contributors outside of Red Hat and this has helped to make the project even better than if only a few of us had hands on it.  These contributions have served to get a lot more eyes onto the code from a wider variety of talented people than it ever would have if it was a proprietary piece of software stuck on a very private git repository.  It’s taken only a year to convert me to the <a href="https://twitter.com/opensourceway">@opensourceway</a>, I don’t think I could ever go back.  Come join us!</p>
+
+<p><strong>Buildah == Simplicity</strong></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/community/">community</a></li>
+<li><a href="/blog/tag/open-source/">open source</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/04/open-source-what-a-concept/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/04/open-source-what-a-concept/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/04/open-source-what-a-concept/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

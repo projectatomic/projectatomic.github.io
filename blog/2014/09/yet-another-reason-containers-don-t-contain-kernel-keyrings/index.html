@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Yet Another Reason Containers Don't Contain: Kernel Keyrings &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content="Yet Another Reason Containers Don't Contain: Kernel Keyrings" property='og:title'>
+<meta content='I see people rushing to set up Web sites and PaaS Servers that allow random people to upload Docker container images, and I feel like I am the voice in the wilderness. Remember, containers do not contain!&#x000A;&#x000A;Containers Do Not Contain&#x000A;&#x000A;As I stated in my posts on OpenSource.com, not all of the operating system is namespaced. Parts that are not namespaced can potentially allow containers to attack each other, or the host, or at the very least will allow leakage of information into the containers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/' property='og:url'>
+<meta content='2014-09-15T17:39:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Kernel' property='article:tag'>
+<link href='/blog/tag/kernel.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='SELinux' property='article:tag'>
+<link href='/blog/tag/selinux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content="Yet Another Reason Containers Don't Contain: Kernel Keyrings" name='twitter:title'>
+<meta content='I see people rushing to set up Web sites and PaaS Servers that allow random people to upload Docker container images, and I feel like I am the voice in the wilderness. Remember, containers do not contain!&#x000A;&#x000A;Containers Do Not Contain&#x000A;&#x000A;As I stated in my posts on OpenSource.com, not all of the operating system is namespaced. Parts that are not namespaced can potentially allow containers to attack each other, or the host, or at the very least will allow leakage of information into the containers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_09 blog_2014_09_yet-another-reason-containers-don-t-contain-kernel-keyrings blog_2014_09_yet-another-reason-containers-don-t-contain-kernel-keyrings_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Yet Another Reason Containers Don't Contain: Kernel Keyrings
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-15T17:39:00Z'>
+Monday 15 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I see people rushing to set up Web sites and PaaS Servers that allow random people to upload Docker container images, and I feel like I am the voice in the wilderness. Remember, containers do not contain!</p>
+
+<h3>Containers Do Not Contain</h3>
+
+<p>As I stated in <a href="http://opensource.com/business/14/7/docker-security-selinux">my posts</a> <a href="https://opensource.com/business/14/9/security-for-docker">on OpenSource.com</a>, not all of the operating system is namespaced. Parts that are not namespaced can potentially allow containers to attack each other, or the host, or at the very least will allow leakage of information into the containers.</p>
+
+<p></p>
+
+<h3>Another Example</h3>
+
+<p>I got a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1138601">Bugzilla report on an SELinux issue</a> about one container attempting to use the kernel keyring of another container. Kernel keyrings are separated based on UID. That means there is one kernel keyring for root.  </p>
+
+<p>The kernel&rsquo;s keyring is <strong>not</strong> namespaced.</p>
+
+<p>By Default in RHEL7 and Fedora 20/21 Kerberos is storing the credential cache, KEYS, in the kernel keyring.</p>
+
+<p>This means that if root in one container attempts to contact Kerberos and stores its keys in the kernel keyring, the other containers can look at the content, <strong>only</strong> if you have disabled SELinux. (And I have heard that some of you do!)</p>
+
+<p>If you have not disabled SELinux, the second container will not be allowed to use the keyring, meaning that Kerberos will break in the second container.</p>
+
+<p>Sadly if you create a keyring as root on the host then this will leak into any container you have running on in the future.  And this keyring potentially would not be blocked by SELinux.</p>
+
+<p>This is a bigger problem than just root using containers.  If you wanted to set up multiple Apache services each running within a container, they would run as UID=60, but only one UID=60 kernel keyring would exist.  This means these would have all of the same problems.  </p>
+
+<p>What other parts of the kernel are we going to see this problem?  I don&rsquo;t know, but I figure they&rsquo;re out there. Abstract namespaces would be my guess at a probable problem.</p>
+
+<p>Remember, we are just in our infancy of building these container environments. Let&rsquo;s crawl before we walk.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kernel/">Kernel</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

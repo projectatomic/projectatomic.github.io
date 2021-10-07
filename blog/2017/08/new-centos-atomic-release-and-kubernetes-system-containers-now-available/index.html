@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+New CentOS Atomic Release and Kubernetes System Containers Now Available &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='New CentOS Atomic Release and Kubernetes System Containers Now Available' property='og:title'>
+<meta content='Last week, the CentOS Atomic SIG released an updated version of CentOS Atomic Host (7.1707), a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host.&#x000A;&#x000A;The release, which came as part of the monthly CentOS release stream, was a modest one, including only a single glibc bugfix update. The next Atomic Host release will be based on the RHEL 7.4 source code and will include support for overlayfs container storage, among other enhancements.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/' property='og:url'>
+<meta content='2017-08-11T19:22:35Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='New CentOS Atomic Release and Kubernetes System Containers Now Available' name='twitter:title'>
+<meta content='Last week, the CentOS Atomic SIG released an updated version of CentOS Atomic Host (7.1707), a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host.&#x000A;&#x000A;The release, which came as part of the monthly CentOS release stream, was a modest one, including only a single glibc bugfix update. The next Atomic Host release will be based on the RHEL 7.4 source code and will include support for overlayfs container storage, among other enhancements.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_08 blog_2017_08_new-centos-atomic-release-and-kubernetes-system-containers-now-available blog_2017_08_new-centos-atomic-release-and-kubernetes-system-containers-now-available_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+New CentOS Atomic Release and Kubernetes System Containers Now Available
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-11T19:22:35Z'>
+Friday 11 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Last week, the CentOS Atomic SIG released an <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">updated version</a> of CentOS Atomic Host (7.1707), a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host.</p>
+
+<p>The release, which came as part of the monthly CentOS release stream, was a modest one, including only a single <a href="https://lists.centos.org/pipermail/centos-announce/2017-July/022505.html">glibc bugfix update</a>. The next Atomic Host release will be based on the <a href="https://seven.centos.org/2017/08/centos-linux-7-1708-based-on-rhel-7-4-source-code/">RHEL 7.4 source code</a> and will include support for overlayfs container storage, among other enhancements.</p>
+
+<p></p>
+
+<p>Outside of the Atomic Host itself, the SIG has updated its Kubernetes container images to be usable as <a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">system containers</a>. What&rsquo;s more, in addition to the Kubernetes 1.5.x-based containers that derive from RHEL, the Atomic SIG is now producing packages and containers that provide the current 1.7.x version of Kubernetes.</p>
+
+<h3>Containerized Master</h3>
+
+<p>The downstream release of CentOS Atomic Host ships without the kubernetes-master package built into the image. You can install the master kubernetes components (apiserver, scheduler, and controller-manager) as system containers, using the following commands:</p>
+<pre class="highlight shell"><code><span class="c"># atomic install --system --system-package=no --name kube-apiserver registry.centos.org/centos/kubernetes-apiserver:latest</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-scheduler registry.centos.org/centos/kubernetes-scheduler:latest</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-controller-manager registry.centos.org/centos/kubernetes-controller-manager:latest</span>&#x000A;</code></pre>
+
+<h3>Kubernetes 1.7.x</h3>
+
+<p>The CentOS Virt SIG is now producing Kubernetes 1.7.x rpms, available through <a href="https://github.com/CentOS/CentOS-Dockerfiles/blob/master/kubernetes-sig/master/virt7-container-common-candidate.repo">this yum repo</a>. The Atomic SIG is maintaining system containers based on these rpms that can be installed as as follows:</p>
+
+<h4>on your master</h4>
+<pre class="highlight shell"><code><span class="c"># atomic install --system --system-package=no --name kube-apiserver registry.centos.org/centos/kubernetes-sig-apiserver:latest</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-scheduler registry.centos.org/centos/kubernetes-sig-scheduler:latest</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-controller-manager registry.centos.org/centos/kubernetes-sig-controller-manager:latest</span>&#x000A;</code></pre>
+
+<h4>on your node(s)</h4>
+<pre class="highlight shell"><code><span class="c"># atomic install --system --system-package=no --name kubelet registry.centos.org/centos/kubernetes-sig-kubelet:latest</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-proxy registry.centos.org/centos/kubernetes-sig-proxy:latest</span>&#x000A;</code></pre>
+
+<p>Both the 1.5.x and 1.7.x sets of containers have been tested with the <a href="https://github.com/kubernetes/contrib/tree/master/ansible">kubernetes ansible scripts</a> provided in the upstream contrib repository, and function as drop-in replacements for the installed rpms. If you prefer to run Kubernetes from installed rpms, you can layer the master components onto your Atomic Host image using rpm-ostree package layering with the command: <code>atomic host install kubernetes-master</code>.</p>
+
+<p>The containers referenced in these systemd service files are built in and hosted from the <a href="https://wiki.centos.org/ContainerPipeline">CentOS Community Container Pipeline</a>, based on Dockerfiles from
+the <a href="https://github.com/CentOS/CentOS-Dockerfiles/tree/master/kubernetes">CentOS-Dockerfiles repository</a>.</p>
+
+<h3>Download CentOS Atomic Host</h3>
+
+<p>CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image. For links to media, see the <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">CentOS wiki</a>.</p>
+
+<h3>Upgrading</h3>
+
+<p>If you&rsquo;re running a previous version of CentOS Atomic Host, you can upgrade to the current image by running the following command:</p>
+<pre class="highlight plaintext"><code>$ sudo atomic host upgrade&#x000A;</code></pre>
+
+<h3>Release Cycle</h3>
+
+<p>The CentOS Atomic Host image follows the upstream Red Hat Enterprise Linux Atomic Host cadence. After sources are released, they&rsquo;re rebuilt and included in new images. After the images are tested by the SIG and deemed ready, we announce them.</p>
+
+<h3>Getting Involved</h3>
+
+<p>CentOS Atomic Host is produced by the <a href="http://wiki.centos.org/SpecialInterestGroup/Atomic">CentOS Atomic SIG</a>, based on upstream work from  <a href="http://www.projectatomic.io/">Project Atomic</a>. If you&rsquo;d like to work on testing images, help with packaging, documentation &ndash; join us!</p>
+
+<p>The SIG meets every two weeks on Tuesday at 04:00 UTC in #centos-devel, and on the alternating weeks, meets as part of the Project Atomic community meeting at 16:00 UTC on Monday in the #atomic channel. You&rsquo;ll often find us in #atomic and/or #centos-devel if you have questions. You can also join the <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel</a> mailing list if you&rsquo;d like to discuss the direction of Project Atomic, its components, or have other questions.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

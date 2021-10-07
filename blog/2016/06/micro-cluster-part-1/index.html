@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Building a Sub-Atomic Cluster, Part 1 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Building a Sub-Atomic Cluster, Part 1' property='og:title'>
+<meta content='While a lot of people use Atomic Host and OpenShift on public clouds, one of the ideas behind Project Atomic is to enable you to create your own container cloud. So for both testing and demos, we needed a container stack on real hardware, letting us test things like bare-metal deployment, Foreman integration, power-loss failover, and high availability in general. And this cluster needed to be small enough to bring with us to events.  Given that, introducing the Sub-Atomic cluster:' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/06/micro-cluster-part-1/' property='og:url'>
+<meta content='2016-06-07T12:41:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='events' property='article:tag'>
+<link href='/blog/tag/events.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Building a Sub-Atomic Cluster, Part 1' name='twitter:title'>
+<meta content='While a lot of people use Atomic Host and OpenShift on public clouds, one of the ideas behind Project Atomic is to enable you to create your own container cloud. So for both testing and demos, we needed a container stack on real hardware, letting us test things like bare-metal deployment, Foreman integration, power-loss failover, and high availability in general. And this cluster needed to be small enough to bring with us to events.  Given that, introducing the Sub-Atomic cluster:' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_06 blog_2016_06_micro-cluster-part-1 blog_2016_06_micro-cluster-part-1_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Building a Sub-Atomic Cluster, Part 1
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-06-07T12:41:00Z'>
+Tuesday  7 June 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>While a lot of people use Atomic Host and OpenShift on public clouds, one of the ideas behind Project Atomic is to enable you to create your own container cloud. So for both testing and demos, we needed a container stack on <q>real hardware,</q> letting us test things like bare-metal deployment, Foreman integration, power-loss failover, and high availability in general. And this cluster needed to be small enough to bring with us to events.  Given that, introducing the Sub-Atomic cluster:</p>
+
+<p><img alt="picture of minnowboard cluster" src="https://photos.smugmug.com/Computers/ContanersContainersContainers/i-Q7wJtsG/0/M/P1020636-M.jpg" /></p>
+
+<p></p>
+
+<p>This micro-cluster contains four hosts (proton, electron, neutron, and photon), and is a fully functioning Atomic cluster.  If you want to see it in person, I will be demoing it at <a href="http://2016.dockercon.com/">DockerCon in Seattle</a> at the Red Hat booth, where I will also be raffling off one of the minnowboards with Atomic Host pre-installed.  I will also be showing it off in the Community Central pavilion at <a href="https://www.redhat.com/en/summit">Red Hat Summit</a>.  For my fellow Portlanders, you can get a look at the Sub-Atomic Cluster early if you come to <a href="http://www.meetup.com/PDXPUG-Portland-PostgreSQL-Users-Group/events/231259650/">PDXPUG</a>, where I will use it to demo high-availability containerized Postgres.</p>
+
+<p>On this blog, I&rsquo;ll show you how I built it, so that you can create your own.  More usefully, most of the steps and techniques used for creating the cluster are the same as what you&rsquo;d need on real hardware, so consider this your introduction to bare-metal deployment of the Atomic platform.</p>
+
+<p>First, let&rsquo;s talk about the hardware.  The four boards are <a href="http://wiki.minnowboard.org/MinnowBoard_Turbot">Minnowboard Turbots</a>, which are small <q>maker</q> boards, similar to the Raspberry Pi, but using an Intel x86 chipset (Atom E3826).  That means that we can run Atomic Host and other software without needing to recompile it for ARM, and makes it a much better testbed for real Atomic. Currently, one of the boards has a helper board (<q>lure</q>) with an SSD; the remaining cards are running off SD cards.  I&rsquo;ll be adding more SSDs to the cluster later so that I can demonstrate Kubernetes HA configurations.</p>
+
+<p>The boards are <q>stacked</q> using 3mm brass standoffs, and capped at either end with &frac14;&quot; craft plywood.  As you can see, those plywood boards are there to hold two things: a mini power strip for the Minnowboard power, and an 8-port router to connect the cluster.  We need the latter in order to assign fixed IP addresses to all four boards, since Kubernetes is a lot happier configured that way.  I&rsquo;m using a TP-Link TL-R860. Amusingly, the power and networking are larger and heavier than the boards themselves. You could slim this down by using wireless networking, but since I&rsquo;ll be taking this cluster to conventions, that wasn&rsquo;t really an option.</p>
+
+<p>Once everything was plugged in, it was time to install Atomic Host on all the nodes.  Ideally, I&rsquo;d use <a href="https://theforeman.org/">Foreman</a> for this, but I had constraints setting up a Foreman image server which would have required another board with SSD, so using Foreman will need to be a blog post for later.  I also thought about establishing a <a href="http://docs.fedoraproject.org/en-US/Fedora/20/html/Installation_Guide/s1-kickstart2-putkickstarthere.html">kickstarter file</a> on the local network, but with only four boards it didn&rsquo;t seem worth it. Instead, I installed manually.  After some experimentation with installation methods, it turns out that installing from a USB key with an ISO image is really the best way; while you can write a raw host image directly to an SD card, it won&rsquo;t be sized right and you&rsquo;ll need to take a bunch of manual steps to make all of the space on the SD card available.</p>
+
+<p>So, I downloaded the <a href="https://getfedora.org/en/cloud/download/atomic.html">Fedora Atomic Host ISO</a> from Fedora downloads. I then wrote this to a bootable USB key, from my Fedora laptop:</p>
+<pre class="highlight plaintext"><code>wget https://download.fedoraproject.org/pub/alt/atomic/stable/Cloud_Atomic/x86_64/iso/Fedora-Cloud_Atomic-x86_64-23-20160420.iso&#x000A;dd if=Fedora-Cloud_Atomic-x86_64-23-20160420.iso of=/dev/sdc&#x000A;</code></pre>
+
+<p>I plugged in the key and a USB keyboard into the first host, proton.  Since this board is my initial kube-master, it&rsquo;s the one with the SSD. Since I&rsquo;m doing a manual install, that also required me to plug an HDMI monitor into the board, which I&rsquo;d be using just long enough to get the Anaconda remote VNC installer started.  Since we didn&rsquo;t plug in a mouse (which would have required a powered USB hub), we won&rsquo;t want to use the GUI installer.  Instead, at boot time, hit F2 to bring up the boot menu, and choose the USB key to boot from.  Then quickly hit TAB when the GRUB boot menu comes up, followed by <q>e</q> to edit the boot options for the the installer.  You&rsquo;ll want to add the following commands to the <em>end</em> of the boot line, which will be the first of two or three lines in the boot config:</p>
+<pre class="highlight plaintext"><code>  boot: linux ... inst.vnc inst.vncpassword=FedoraAH&#x000A;</code></pre>
+
+<p>Then save to boot it up.  In a few minutes, the screen will display the VNC server address, which you can then connect to using a VNC client (Remote Desktop or TigerVNC on Fedora), giving the password you set in the boot line.  Beyond this, installation is rather simple; just accept the defaults for everything. This will create an Atomic Host with 40% of the disk given over to the docker pool, which is what you want. If you&rsquo;re installing to an SD card on the board, you&rsquo;ll want to <q>make space</q> by reformatting the card through the installer.  Also, set a root password, and an administrator user named <q>atomic</q> for sudo access.</p>
+
+<p>One thing you&rsquo;ll notice is that you don&rsquo;t choose packages to be installed.  That&rsquo;s because this is Atomic Host, and you don&rsquo;t install individual packages on it.  Instead, you are installing an image of a filesystem tree which comes from a central RPM-ostree server; in this instance, one run by the Fedora project.  Specific applications are installed as containers.</p>
+
+<p>Once everything is installed, remove the USB key and reboot.  Note that you will need to choose the SD card or SSD from the BIOS boot menu on the first reboot, so that the Minnowboard will remember it thereafter.  </p>
+
+<p>When you&rsquo;ve rebooted, there&rsquo;s one more thing to do: run rpm-ostree upgrade to bring the host up to date with the latest filesystem image available.  You&rsquo;ll notice above that I installed the April 20th image, so this will bring me up to the latest image available (May 24th), updating all software.</p>
+<pre class="highlight shell"><code><span class="gp">-bash-4.3# </span>rpm-ostree upgrade&#x000A;Updating from: fedora-atomic:fedora-atomic/f23/x86_64/docker-host&#x000A;&#x000A;820 metadata, 3820 content objects fetched; 192708 KiB transferred <span class="k">in </span>122 seconds&#x000A;Copying /etc changes: 19 modified, 0 removed, 40 added&#x000A;Bootloader updated; bootconfig swap: yes deployment count change: 1&#x000A;Changed:&#x000A;  avahi-autoipd 0.6.32-0.4.rc.fc23 -&gt; 0.6.32-1.fc23&#x000A;  avahi-libs 0.6.32-0.4.rc.fc23 -&gt; 0.6.32-1.fc23&#x000A;&#x000A;...&#x000A;&#x000A;Run <span class="s2">"systemctl reboot"</span> to start a reboot&#x000A;</code></pre>
+
+<p>For this reason it doesn&rsquo;t really matter if you install an image that isn&rsquo;t the latest.</p>
+
+<p>Now, we&rsquo;re up and running and ready to build a cluster. Next step: configuring the cluster with Ansible.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/events/">events</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/06/micro-cluster-part-1/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/06/micro-cluster-part-1/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/06/micro-cluster-part-1/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

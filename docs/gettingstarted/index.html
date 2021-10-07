@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic Getting Started Guide &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_gettingstarted docs_gettingstarted_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Project Atomic Getting Started Guide</h1>
+
+<h2>About this Guide</h2>
+
+<p>Project Atomic provides a platform to deploy and manage containers on bare-metal, virtual, or cloud-based servers.  Project Atomic hosts are designed to be minimal hosts focused on the delivery of container services.  Project Atomic hosts ship with Docker, Flannel, and Kubernetes to build clusters for container based services.  Docker provides the container runtime, Flannel provides overlay networking, and Kubernetes provides scheduling and coordination of containers on hosts.</p>
+
+<h3>Objectives of the guide</h3>
+
+<p>You will configure:</p>
+
+<ul>
+<li>Flannel to provide overlay networks</li>
+<li>Docker to use Flannel bridges</li>
+<li>Kubernetes to schedule Docker containers</li>
+<li>Service pods to run on the Atomic cluster</li>
+</ul>
+
+<p>At the end of this guide, you will have:</p>
+
+<ul>
+<li>a cluster of 4 Atomic hosts running containers from Kubernetes called <strong>nodes</strong></li>
+<li>an Atomic host running a local Docker cache called <strong>master</strong></li>
+<li>a web accessible service for demonstration purposes</li>
+</ul>
+
+<h3>Used in this guide</h3>
+
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Platform Host OS</td>
+<td>Fedora 28 Workstation</td>
+</tr>
+<tr>
+<td>Virtualization</td>
+<td>KVM with virt-manager</td>
+</tr>
+<tr>
+<td>Atomic Host OS</td>
+<td>Fedora 28 Atomic v 25.89</td>
+</tr>
+<tr>
+<td>Additional Storage</td>
+<td>10G per Atomic host</td>
+</tr>
+</tbody></table>
+
+<h4>Installing using virt-manager</h4>
+
+<p>See the <a href="http://www.projectatomic.io/docs/quickstart/">Quick Start Guide</a> for instructions on how to launch an Atomic host using virt-manager.  Be sure to create a new cloud-init ISO source for each host with an updated meta-data file with an incremented instance-id and correct local-hostname.</p>
+
+<h2>Atomic cluster concepts</h2>
+
+<p>Clusters of Atomic hosts under control of a Kubernetes master server is the expected operating arrangement of an Atomic environment.  Kubernetes distributes and orchestrates the construction of pods on the Atomic hosts.  Pods are collections of docker containers that logically separate services in an application.  The principle of single responsibility is an important design pattern when looking at building scalable applications with Kubernetes.</p>
+
+<p>Flannel provides a distributed, tunneled overlay network for Atomic hosts.  This overlay network is used for inter-container networking only, while a Kubernetes proxy service provides for service level access to the host IP space. Etcd is used to distribute configurations for both Kubernetes and Flannel.</p>
+
+<p>One host should be nominated to be the Atomic Kubernetes master server, with the other Atomic hosts providing node container services.  Since Kubernetes and Flannel use etcd as the distributed store, multiple Atomic clusters would need to replicate a complete cluster to separate workloads.  For this guide, we&rsquo;re using 1 master host and 4 nodes in the cluster.</p>
+
+<p>In this guide we&rsquo;ll be using the following networking settings:</p>
+<pre class="highlight plaintext"><code>Physical interfaces for hosts:&#x000A;atomic-master 192.168.122.10 kubernetes master&#x000A;atomic0[1-4] 192.168.122.1[1-4] kubernetes nodes&#x000A;&#x000A;Overlay Docker networking range:&#x000A;172.16.0.0/12&#x000A;</code></pre>
+
+<p>Of course, you need to replace <q>192.168.122.X</q> with the addresses of your actual machines.  You should be able to use the overlay and application networks as-is, though.</p>
+
+<h2>Building the cluster master</h2>
+
+<p>Launch an Atomic host to act as the master node for the cluster.  We&rsquo;ll be creating the local docker cache, the etcd source, and the Kubernetes master services here.</p>
+
+<p>As a good practice, update to the latest available Atomic tree.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo atomic host upgrade --reboot&#x000A;</code></pre>
+
+<h3>Local Docker registry</h3>
+
+<p>Normally when you want to bring up a docker container it uses <a href="https://hub.docker.com/">Docker Hub</a> images. This&rsquo;s the default. However, you may want your images stay on your own Infrastructure what ensures privacy, availability, speed, ease of integration, and continuous delivery. Configure a local registry is an <strong>optional</strong> procedure, you may want to acquire, and manipulate images from a remote repository.</p>
+
+<p>The Atomic cluster will use a local Docker registry mirror for caching with a local volume for persistence.  You may need to look at the amount of storage available to the Docker storage pool on the master host.  We don&rsquo;t want the container recreated every time the service gets restarted, so we&rsquo;ll create the container locally then set up a systemd unit file that will only start and stop the container.</p>
+
+<p>Create a named container from the Docker Hub registry image, exposing the standard Docker Hub port from the container via the host.  We&rsquo;re using a local host directory as a persistence layer for the images that get cached for use.  The other environment variables passed in to the registry set the source registry.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master~]$ sudo docker run -d -p 5000:5000 --restart always \&#x000A;-v /var/lib/local-registry:/var/lib/registry \&#x000A;-e REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry \&#x000A;-e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io \&#x000A;--name local-registry registry:2&#x000A;</code></pre>
+
+<p><strong>Note:</strong> We need to change the SELinux context on the directory that docker created for our persistence volume.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo mkdir -p /var/lib/local-registry&#x000A;[fedora@atomic-master ~]$ sudo chcon -Rvt svirt_sandbox_file_t /var/lib/local-registry&#x000A;</code></pre>
+
+<h3>Configuring Kubernetes master</h3>
+
+<h4>Configure etcd</h4>
+
+<p>We&rsquo;re using a single etcd server, not a replicating cluster in this guide.  This makes etcd simple, we just need to listen for client connections, then enable and start the daemon with all the rest of the Kubernetes services.  For simplicity, we&rsquo;ll have etcd listen on all IP addresses.  The official port for etcd clients is 2379, but we&rsquo;ll add 4001 as well since that was widely used in guides to this point.</p>
+
+<p>We first install the etcd package:</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo rpm-ostree install etcd&#x000A;</code></pre>
+
+<p><strong>Note:</strong> If you have installed etcd <a href="https://www.projectatomic.io/blog/2017/11/migrating-kubernetes-on-fedora-atomic-host-27/">as a system container</a>, do not perform this step.</p>
+
+<p>Then edit the configuration file:</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo vi /etc/etcd/etcd.conf&#x000A;ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379,http://0.0.0.0:4001"&#x000A;ETCD_ADVERTISE_CLIENT_URLS="http://192.168.122.10:2379,http://192.168.122.10:4001"&#x000A;</code></pre>
+
+<h4>Generating certificates</h4>
+
+<p>Multiple Kubernetes services rely on certificates for authentication. There are lots of ways to configure this aspect of a cluster, the following method is based on <a href="https://kubernetes.io/docs/admin/authentication/#easyrsa">these steps</a> from the upstream Kubernetes project.</p>
+
+<p>Download, unpack, and initialize the patched version of easyrsa3.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ curl -L -O https://storage.googleapis.com/kubernetes-release/easy-rsa/easy-rsa.tar.gz&#x000A;[fedora@atomic-master ~]$ tar xzf easy-rsa.tar.gz&#x000A;[fedora@atomic-master ~]$ cd easy-rsa-master/easyrsa3&#x000A;[fedora@atomic-master ~]$ ./easyrsa init-pki&#x000A;</code></pre>
+
+<p>Generate a CA. (&ndash;batch set automatic mode. &ndash;req-cn default CN to use.)</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ MASTER_IP=192.168.122.10&#x000A;[fedora@atomic-master ~]$ ./easyrsa --batch "--req-cn=${MASTER_IP}@`date +%s`" build-ca nopass&#x000A;</code></pre>
+
+<p>Generate server certificate and key. (build-server-full [filename]: Generate a keypair and sign locally for a client or server)</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ ./easyrsa --subject-alt-name="IP:${MASTER_IP}" build-server-full server nopass&#x000A;</code></pre>
+
+<p>Copy pki/ca.crt, pki/issued/kubernetes-master.crt, and pki/private/kubernetes-master.key to <code>/etc/kubernetes/certs</code>.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo mkdir /etc/kubernetes/certs&#x000A;[fedora@atomic-master ~]$ for i in {pki/ca.crt,pki/issued/server.crt,pki/private/server.key}; do sudo cp $i /etc/kubernetes/certs; done&#x000A;[fedora@atomic-master ~]$ sudo chown -R kube:kube /etc/kubernetes/certs&#x000A;</code></pre>
+
+<h4>Configure services</h4>
+
+<p>For Kubernetes, there&rsquo;s a few config files in /etc/kubernetes we need to set up for this host to act as a master.  First off is the general config file used by all of the services.  Then we&rsquo;ll add service specific variables to those service config files.</p>
+<pre class="highlight plaintext"><code>Services&#x000A;    config&#x000A;    apiserver&#x000A;    controller-manager&#x000A;    scheduler&#x000A;</code></pre>
+
+<p><strong>Note:</strong> If you&rsquo;ve been following this documentation starting from CentOs, it is essential to know that the current versions of CentOS Atomic have the kubernetes-master pkg removed from the image, to be run from containers. There&rsquo;s info on that here: <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/ContainerizedMaster">instructions on the CentOS wiki</a>.</p>
+
+<h4>Common service configurations</h4>
+
+<p>We&rsquo;ll be setting up the etcd store that Kubernetes will use.  We&rsquo;re using a single local etcd service, so we&rsquo;ll point that at the master on the standard port.  We&rsquo;ll also set up how the services find the apiserver.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo vi /etc/kubernetes/config&#x000A;# Comma separated list of nodes in the etcd cluster&#x000A;KUBE_ETCD_SERVERS="--etcd-servers=http://192.168.122.10:2379"&#x000A;&#x000A;# How the controller-manager, scheduler, and proxy find the kube-apiserver&#x000A;KUBE_MASTER="--master=http://192.168.122.10:8080"&#x000A;</code></pre>
+
+<h4>Apiserver service configuration</h4>
+
+<p>The apiserver needs to be set to listen on all IP addresses, instead of just localhost.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo vi /etc/kubernetes/apiserver&#x000A;# The address on the local server to listen to.&#x000A;KUBE_API_ADDRESS="--insecure-bind-address=0.0.0.0"&#x000A;</code></pre>
+
+<p>If you need to modify the set of IPs that Kubernetes assigns to services, change the KUBE_SERVICE_ADDRESSES value. Since this guide is using the 192.168.122.0/24 and 172.16.0.0/12 networks, we can leave the default.  This address space needs to be unused elsewhere, but doesn&rsquo;t need to be reachable from either of the other networks.</p>
+<pre class="highlight plaintext"><code># Address range to use for services&#x000A;KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"&#x000A;</code></pre>
+
+<p>We&rsquo;ll also add parameters for the certificates we generated earlier.</p>
+<pre class="highlight plaintext"><code># Add your own!&#x000A;KUBE_API_ARGS="--tls-cert-file=/etc/kubernetes/certs/server.crt --tls-private-key-file=/etc/kubernetes/certs/server.key --client-ca-file=/etc/kubernetes/certs/ca.crt --service-account-key-file=/etc/kubernetes/certs/server.crt"&#x000A;</code></pre>
+
+<h4>Controller-manager service configuration</h4>
+
+<p>The controller-manager also needs parameters for the certificates we generated.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo vi /etc/kubernetes/controller-manager&#x000A;# Add your own!&#x000A;KUBE_CONTROLLER_MANAGER_ARGS="--service-account-private-key-file=/etc/kubernetes/certs/server.key --root-ca-file=/etc/kubernetes/certs/ca.crt"&#x000A;</code></pre>
+
+<p>Enable, start and check the Kubernetes services.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ sudo for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler; do systemctl enable $SERVICES; systemctl start $SERVICES; systemctl status $SERVICES ; done&#x000A;</code></pre>
+
+<h3>Configuring the Flannel overlay network</h3>
+
+<p>Flanneld provides a tunneled network configuration via etcd.  To push the desired config into etcd, we&rsquo;ll create a JSON file with the options we want and use curl to push the data.  We&rsquo;ve selected a /12 network to create a /24 subnet per node.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ vi flanneld-conf.json&#x000A;{&#x000A;  "Network": "172.16.0.0/12",&#x000A;  "SubnetLen": 24,&#x000A;  "Backend": {&#x000A;    "Type": "vxlan"&#x000A;  }&#x000A;}&#x000A;</code></pre>
+
+<p>We&rsquo;ll create a keyname specific to this cluster to store the network configuration.  While we&rsquo;re using a single etcd server in a single cluster for this example, setting non-overlapping keys allows us to have a multiple flannel configs for several Atomic clusters.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ curl -L http://localhost:2379/v2/keys/atomic.io/network/config -XPUT --data-urlencode value@flanneld-conf.json&#x000A;</code></pre>
+
+<p>Just to make sure we have the right config, we&rsquo;ll pull it via curl and parse the JSON return.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ curl -L http://localhost:2379/v2/keys/atomic.io/network/config | python -m json.tool&#x000A;{&#x000A;    "action": "get",&#x000A;    "node": {&#x000A;        "createdIndex": 11,&#x000A;        "key": "/atomic.io/network/config",&#x000A;        "modifiedIndex": 11,&#x000A;        "value": "{\n  \"Network\": \"172.16.0.0/12\",\n  \"SubnetLen\": 24,\n  \"Backend\": {\n    \"Type\": \"vxlan\"\n  }\n}\n\n"&#x000A;    }&#x000A;}&#x000A;</code></pre>
+
+<h2>Atomic Nodes</h2>
+
+<p>We&rsquo;ll be configuring Docker to use Flannel and our cache for configuring the Kubernetes services.  These nodes will act as the workers and run Pods and containers.  You can repeat this on as many nodes as you like to provide resources to the cluster.  In this guide, we&rsquo;ll set up 4 nodes.</p>
+
+<p>As a good practice, update to the latest available Atomic tree.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo atomic host upgrade&#x000A;[fedora@atomic01 ~]$ sudo systemctl reboot&#x000A;</code></pre>
+
+<h3>Configuring Docker to use the cluster registry cache</h3>
+
+<p>Add the local cache registry running on the master to the docker options that get pulled into the systemd unit file.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo vi /etc/sysconfig/docker&#x000A;OPTIONS='--registry-mirror=http://192.168.122.10:5000 --selinux-enabled --log-driver=journald'&#x000A;</code></pre>
+
+<h3>Configuring Docker to use the Flannel overlay</h3>
+
+<p>To set up flanneld, we need to tell the local flannel service where to find the etcd service serving up the config. We also give it the right key to find the networking values for this cluster.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo vi /etc/sysconfig/flanneld&#x000A;# etcd url location.  Point this to the server where etcd runs&#x000A;FLANNEL_ETCD_ENDPOINTS="http://192.168.122.10:2379"&#x000A;&#x000A;# etcd config key.  This is the configuration key that flannel queries&#x000A;# For address range assignment&#x000A;FLANNEL_ETCD_PREFIX="/atomic.io/network"&#x000A;</code></pre>
+
+<h3>Configuring Kubernetes nodes</h3>
+
+<p>The address entry in the kubelet config file must match the KUBLET_ADDRESSES entry on the master.   If hostnames are used, this also must match output of <code>hostname -f</code> on the node.  We&rsquo;re using the eth0 IP address like we did on the master.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo vi /etc/kubernetes/kubelet&#x000A;# The address for the info server to serve on (set to 0.0.0.0 or "" for all interfaces)&#x000A;KUBELET_ADDRESS="--address=192.168.122.11"&#x000A;&#x000A;# You may leave this blank to use the actual hostname&#x000A;KUBELET_HOSTNAME="--hostname-override=192.168.122.11"&#x000A;&#x000A;# location of the api-server&#x000A;KUBELET_API_SERVER="--api-servers=http://192.168.122.10:8080"&#x000A;</code></pre>
+
+<p>Set the location of the etcd server, here we&rsquo;ve got the single service on the master.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo vi /etc/kubernetes/config&#x000A;# How the controller-manager, scheduler, and proxy find the kube-apiserver&#x000A;KUBE_MASTER="--master=http://192.168.122.10:8080"&#x000A;</code></pre>
+
+<p>Set the cluster CIDR for Kubernetes Proxy.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo vi /etc/kubernetes/proxy&#x000A;# Add your own!&#x000A;KUBE_PROXY_ARGS="--cluster-cidr=10.254.0.0/16"&#x000A;</code></pre>
+
+<p>If you created the drop-in, reload systemd and then enable the node services.  Reboot the node to make sure everything starts on boot correctly.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo iptables --policy FORWARD ACCEPT&#x000A;[fedora@atomic01 ~]$ sudo systemctl daemon-reload&#x000A;[fedora@atomic01 ~]$ sudo systemctl enable flanneld kubelet kube-proxy&#x000A;[fedora@atomic01 ~]$ sudo systemctl reboot&#x000A;</code></pre>
+
+<h3>Confirm network configuration and cluster health</h3>
+
+<p>Once all of your services are started, the networking should look something like what&rsquo;s below.  You&rsquo;ll see the Flannel device that shows the selected range for this host and the docker0 bridge that has a specific subnet assigned.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic01 ~]$ sudo systemctl status flanneld docker kubelet kube-proxy&#x000A;[fedora@atomic01 ~]$ ip a&#x000A;2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 9001 qdisc pfifo_fast state UP group default qlen 1000&#x000A;    link/ether 0a:45:46:8d:6a:de brd ff:ff:ff:ff:ff:ff&#x000A;    inet 10.4.0.120/24 brd 10.4.0.255 scope global dynamic eth0&#x000A;       valid_lft 3570sec preferred_lft 3570sec&#x000A;    inet6 fe80::845:46ff:fe8d:6ade/64 scope link&#x000A;       valid_lft forever preferred_lft forever&#x000A;3: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 8951 qdisc noqueue state UNKNOWN group default&#x000A;    link/ether 1a:50:6d:23:5d:a2 brd ff:ff:ff:ff:ff:ff&#x000A;    inet 172.16.36.0/12 scope global flannel.1&#x000A;       valid_lft forever preferred_lft forever&#x000A;    inet6 fe80::1850:6dff:fe23:5da2/64 scope link&#x000A;       valid_lft forever preferred_lft forever&#x000A;5: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default&#x000A;    link/ether 56:84:7a:fe:97:99 brd ff:ff:ff:ff:ff:ff&#x000A;    inet 172.16.36.1/24 scope global docker0&#x000A;       valid_lft forever preferred_lft forever&#x000A;</code></pre>
+
+<p>Repeat these steps on the other 3 nodes to complete the cluster configuration.</p>
+
+<p>Once you&rsquo;ve created all the nodes for your cluster, you can check to make sure the cluster is communicating properly.  On the cluster master, check to the visibility of the nodes.  A Ready status on all nodes means you&rsquo;re ready to start scheduling pods.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ kubectl get node&#x000A;NAME             LABELS    STATUS&#x000A;192.168.122.11   &lt;none&gt;    Ready&#x000A;192.168.122.12   &lt;none&gt;    Ready&#x000A;192.168.122.13   &lt;none&gt;    Ready&#x000A;192.168.122.14   &lt;none&gt;    Ready&#x000A;</code></pre>
+
+<h2>Exploring Kubernetes</h2>
+
+<p>We can now create a simple Kubernetes pod to schedule a workload.</p>
+
+<p>We&rsquo;ll create a simple nginx pod definition on the master.  You can use JSON or YAML to create pods, we&rsquo;ll use YAML.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ vi kube-nginx.yml&#x000A;apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: www&#x000A;spec:&#x000A;  containers:&#x000A;    - name: nginx&#x000A;      image: nginx&#x000A;      ports:&#x000A;        - containerPort: 80&#x000A;          hostPort: 8080&#x000A;</code></pre>
+
+<p>To get the pod up and running, use <code>kubectl create</code></p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ kubectl create -f kube-nginx.yml&#x000A;pod "www" created&#x000A;</code></pre>
+
+<p>To check the status of the containers using <code>kubectl get</code>.  At this point, the Nginx container will be downloaded and running on your nodes.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ kubectl get pod&#x000A;NAME      READY     STATUS    RESTARTS   AGE&#x000A;www       1/1       Running   0          1m&#x000A;</code></pre>
+
+<p>Once you see the pod status is Running, you can check to see which node it&rsquo;s running on.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-master ~]$ kubectl describe pods www | grep Node&#x000A;Node:       192.168.122.11/192.168.122.11&#x000A;</code></pre>
+
+<p>Point a web browser at the host Kubernetes created the container on. Use port 8080, since that was the host port we connected to the container port 80 in the pod definition. You should see the nginx welcome page.</p>
+
+<p>You&rsquo;ve now created and scheduled your first kubernetes pod.  You can explore the kubernetes documentation for more information on how to build pods and services, and checkout <a href="https://github.com/kubernetes/contrib/tree/master/ansible">these ansible scripts</a> for a fuller-featured cluster that includes kubernetes addons such as dns.</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/gettingstarted.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

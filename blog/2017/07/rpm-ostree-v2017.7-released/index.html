@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+rpm-ostree v2017.7 released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='rpm-ostree v2017.7 released' property='og:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version&#x000A;v2017.7,&#x000A;including PolicyKit and experimental overrides support.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/07/rpm-ostree-v2017.7-released/' property='og:url'>
+<meta content='2017-07-25T14:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm' property='article:tag'>
+<link href='/blog/tag/rpm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='rpm-ostree v2017.7 released' name='twitter:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version&#x000A;v2017.7,&#x000A;including PolicyKit and experimental overrides support.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_07 blog_2017_07_rpm-ostree-v2017 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+rpm-ostree v2017.7 released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-07-25T14:00:00Z'>
+Tuesday 25 July 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://rpm-ostree.readthedocs.org/">rpm-ostree</a> is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host. Here are some highlights from
+version
+<a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2017.7">v2017.7</a>,
+including PolicyKit and experimental overrides support.</p>
+
+<p></p>
+
+<p>As usual, you can test out this release by
+<a href="https://fedoraproject.org/wiki/QA:Updates_Testing#Using_it_with_Atomic_Host_.28Fedora_24_and_later.29">rebasing your Fedora Atomic Host</a>
+onto the testing branch. Feel free to also leave karma in
+the pending Bodhi updates:</p>
+
+<ul>
+<li><a href="https://bodhi.fedoraproject.org/updates/FEDORA-2017-45adcbb9a3">Fedora 25 update</a></li>
+<li><a href="https://bodhi.fedoraproject.org/updates/FEDORA-2017-483c7979ee">Fedora 26 update</a></li>
+</ul>
+
+<p>Note that this is the final release of rpm-ostree on Fedora
+25 as we focus our efforts on Fedora 26.</p>
+
+<h3>Experimental support for overrides</h3>
+
+<p>The most visible change in this release is the addition of a
+new <code>ex</code> subcommand: <code>rpm-ostree ex override</code> (the <code>ex</code>
+command groups new features that are not ready to be
+declared stable; details of how these commands work may
+change in the future).</p>
+
+<p>Whereas the <code>install</code> command allows you to overlay packages
+on top of the base commit received from your content
+provider, the <code>override</code> command allows you to modify the
+set of packages in the base commit itself. For example, you
+may want to remove a package that conflicts with an overlay,
+or more interestingly, update a package to a newer version
+to fix a bug.</p>
+
+<p>Of course, such modifications should be done with care,
+since they in effect <q>void</q> the warranty implied by an
+ostree commit. However, these powerful semantics enable us
+to take the image/package hybrid paradigm to a new level.
+Thanks to rpm-ostree, you can easily keep track of every
+deviation from the base image.</p>
+
+<p>The <code>override</code> command supports two subcommands: <code>remove</code>
+and <code>replace</code>.</p>
+
+<h3>Removal overrides</h3>
+
+<p>Not surprisingly, the <code>remove</code> subcommand allows you remove
+a base package. Let&rsquo;s see it in action!</p>
+
+<p>The host below has <code>strace</code> installed and no packages
+layered:</p>
+<pre class="highlight plaintext"><code># rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                    Commit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;&#x000A;# rpm -q strace&#x000A;strace-4.18-1.fc26.x86_64&#x000A;# strace -V&#x000A;strace -- version 4.18&#x000A;Copyright (c) 1991-2017 The strace developers &lt;https://strace.io&gt;.&#x000A;This is free software; see the source for copying conditions.  There is NO&#x000A;warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.&#x000A;</code></pre>
+
+<p>Let&rsquo;s now add an override to remove <code>strace</code>:</p>
+<pre class="highlight plaintext"><code># rpm-ostree ex override remove strace&#x000A;Checking out tree 20431e5... done&#x000A;Enabled rpm-md repositories: updates fedora&#x000A;rpm-md repo 'updates' (cached); generated: 2017-07-23 22:35:15&#x000A;rpm-md repo 'fedora' (cached); generated: 2016-11-15 19:49:18&#x000A;&#x000A;Importing metadata [===========================================] 100%&#x000A;Resolving dependencies... done&#x000A;Applying 1 override... done&#x000A;Writing rpmdb... done&#x000A;Writing OSTree commit... done&#x000A;Copying /etc changes: 25 modified, 0 removed, 628 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1&#x000A;Removed:&#x000A;  strace-4.18-1.fc26.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;</code></pre>
+
+<p>Let&rsquo;s confirm that <code>strace</code> is truly gone:</p>
+<pre class="highlight plaintext"><code># reboot&#x000A;...&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                BaseCommit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;       RemovedBasePackages: strace-4.18-1.fc26.x86_64&#x000A;&#x000A;  fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                    Commit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;# rpm -q strace&#x000A;package strace is not installed&#x000A;# strace -V&#x000A;bash: strace: command not found&#x000A;</code></pre>
+
+<p>We can remove the override by using the <code>reset</code> command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree ex override reset strace&#x000A;Copying /etc changes: 25 modified, 0 removed, 630 added&#x000A;Transaction complete; bootconfig swap: no deployment count change: 0&#x000A;Added:&#x000A;  strace-4.18-1.fc26.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;  fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                    Commit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;&#x000A;* fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                BaseCommit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;       RemovedBasePackages: strace-4.18-1.fc26.x86_64&#x000A;</code></pre>
+
+<h3>Replacement overrides</h3>
+
+<p>Similarly, the <code>replace</code> subcommand allows you to replace a
+base package with a different version. For now, you can only
+replace packages using local RPMs.</p>
+
+<p>In this example, instead of removing <code>strace</code>, we will
+upgrade it. On this machine, I&rsquo;ve got v4.17 installed:</p>
+<pre class="highlight plaintext"><code># rpm -q strace&#x000A;strace-4.17-1.fc26.x86_64&#x000A;</code></pre>
+
+<p>I&rsquo;ve also got the build for the next version, v4.18, handy:</p>
+<pre class="highlight plaintext"><code># ls -l strace-*.rpm&#x000A;-rw-r--r--. 1 root root 659434 Jul 24 16:58 strace-4.18-1.fc26.x86_64.rpm&#x000A;</code></pre>
+
+<p>And now, we can add an override to replace <code>strace</code>:</p>
+<pre class="highlight plaintext"><code># rpm-ostree ex override replace strace-4.18-1.fc26.x86_64.rpm&#x000A;Checking out tree 6f3c6a2... done&#x000A;Enabled rpm-md repositories: updates fedora&#x000A;rpm-md repo 'updates' (cached); generated: 2017-07-23 22:35:15&#x000A;rpm-md repo 'fedora' (cached); generated: 2016-11-15 19:49:18&#x000A;&#x000A;Importing metadata [===========================================] 100%&#x000A;Resolving dependencies... done&#x000A;Applying 1 override... done&#x000A;Writing rpmdb... done&#x000A;Writing OSTree commit... done&#x000A;Copying /etc changes: 25 modified, 0 removed, 636 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1&#x000A;Upgraded:&#x000A;  strace 4.17-1.fc26 -&gt; 4.18-1.fc26&#x000A;Run "systemctl reboot" to start a reboot&#x000A;</code></pre>
+
+<p>And finally, let&rsquo;s reboot to check that it worked:</p>
+<pre class="highlight plaintext"><code># reboot&#x000A;...&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                BaseCommit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;      ReplacedBasePackages: strace 4.17-1.fc26 -&gt; 4.18-1.fc26&#x000A;&#x000A;  fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                    Commit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;[root@f25-ros-dev2 ~]# rpm -q strace&#x000A;strace-4.18-1.fc26.x86_64&#x000A;[root@f25-ros-dev2 ~]# strace -V | grep version&#x000A;strace -- version 4.18&#x000A;</code></pre>
+
+<p>Of course, this can be used for more meaningful packages as
+well, like <code>docker</code> and <code>kubernetes</code>. For example, here I&rsquo;m
+updating <code>kubernetes</code> to the latest build I could find in
+Koji (with complete disregard to matching the distro):</p>
+<pre class="highlight plaintext"><code># rpm -q kubernetes&#x000A;kubernetes-1.5.3-1.fc26.x86_64&#x000A;# kube-apiserver --version&#x000A;Kubernetes v1.5.3&#x000A;# # ls -l kubernetes-*.rpm&#x000A;-rw-r--r--. 1 root root    43446 Jul 24 17:12 kubernetes-1.7.1-1.fc27.x86_64.rpm&#x000A;-rw-r--r--. 1 root root 22750546 Jul 24 17:54 kubernetes-client-1.7.1-1.fc27.x86_64.rpm&#x000A;-rw-r--r--. 1 root root 39959790 Jul 24 17:13 kubernetes-master-1.7.1-1.fc27.x86_64.rpm&#x000A;-rw-r--r--. 1 root root 22432058 Jul 24 17:55 kubernetes-node-1.7.1-1.fc27.x86_64.rpm&#x000A;# rpm-ostree ex override replace kubernetes-*.rpm&#x000A;...&#x000A;Upgraded:&#x000A;  kubernetes 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27&#x000A;  kubernetes-client 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27&#x000A;  kubernetes-master 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27&#x000A;  kubernetes-node 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27&#x000A;Run "systemctl reboot" to start a reboot&#x000A;# reboot&#x000A;...&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                BaseCommit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;      ReplacedBasePackages: kubernetes-client 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27, kubernetes 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27, kubernetes-node 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27, kubernetes-master 1.5.3-1.fc26 -&gt; 1.7.1-1.fc27&#x000A;&#x000A;  fedora-atomic:fedora/26/x86_64/testing/atomic-host&#x000A;                   Version: 26.91 (2017-07-23 09:39:09)&#x000A;                    Commit: d2ef5e5b1e3803a9e79ecf6a005e6ad80d3b69632b7f3ee7fcb6a46174a9bbf3&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;# rpm -q kubernetes&#x000A;kubernetes-1.7.1-1.fc27.x86_64&#x000A;# kube-apiserver --version&#x000A;Kubernetes v1.7.1&#x000A;</code></pre>
+
+<p>We&rsquo;ll look to cleaning up the status output in the future in
+cases where multiple related subpackages are updated.</p>
+
+<h3>PolicyKit support for D-Bus API</h3>
+
+<p>rpm-ostree now ships with a polkit policy. This is primarily
+motivated by work underway to support rpm-ostree in GNOME
+Software, though it&rsquo;s useful in the server case as well.
+It is currently visible only at the D-Bus API level; for
+now, the rpm-ostree CLI tool still needs to be run as root
+for most operations. In the future, users will be able to
+authenticate directly from the terminal and thus avoid
+having to use <code>sudo</code> completely.</p>
+
+<h3>Other minor fixes and improvements</h3>
+
+<p>There are many other small improvements, here are a few:</p>
+
+<ul>
+<li><p>rpm-ostree now logs even more information to the journal.</p></li>
+<li><p>rpm-ostree now shows GPG signatures only in the output of
+<code>status</code> and does so in a less verbose way.</p></li>
+</ul>
+
+<p>Instead of this output:</p>
+<pre class="highlight plaintext"><code>  GPGSignature: 1 signature&#x000A;                Signature made Fri Jul  7 13:19:06 2017 using RSA key ID 812A6B4B64DAB85D&#x000A;                Good signature from "Fedora 26 Primary &lt;fedora-26-primary@fedoraproject.org&gt;"&#x000A;</code></pre>
+
+<p>rpm-ostree now prints this:</p>
+<pre class="highlight plaintext"><code>  GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;</code></pre>
+
+<p>As usual, you can see the full list of changes in the
+<a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2017.7">release notes</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm/">rpm</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/07/rpm-ostree-v2017.7-released/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/07/rpm-ostree-v2017.7-released/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/07/rpm-ostree-v2017.7-released/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

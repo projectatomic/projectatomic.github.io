@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+New CentOS Atomic Host Release, with Docker 1.9.1 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='New CentOS Atomic Host Release, with Docker 1.9.1' property='og:title'>
+<meta content='An updated version of CentOS Atomic Host (version 7.20160404) is now available for download, featuring significant updates to Docker (1.9.1) and to the atomic run tool.&#x000A;&#x000A;CentOS Atomic Host is a lean...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/04/new-centos-atomic-host-release-with-docker-1-9-1/' property='og:url'>
+<meta content='2016-04-11T18:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='New CentOS Atomic Host Release, with Docker 1.9.1' name='twitter:title'>
+<meta content='An updated version of CentOS Atomic Host (version 7.20160404) is now available for download, featuring significant updates to Docker (1.9.1) and to the atomic run tool.&#x000A;&#x000A;CentOS Atomic Host is a lean...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_04 blog_2016_04_new-centos-atomic-host-release-with-docker-1-9-1 blog_2016_04_new-centos-atomic-host-release-with-docker-1-9-1_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+New CentOS Atomic Host Release, with Docker 1.9.1
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-04-11T18:00:00Z'>
+Monday 11 April 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>An updated version of CentOS Atomic Host (version 7.20160404) is now available for <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">download</a>, featuring significant updates to Docker (1.9.1) and to the <a href="https://github.com/projectatomic/atomic">atomic run tool</a>.</p>
+
+<p>CentOS Atomic Host is a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host.</p>
+
+<p>Version 1.9 of the atomic run tool now includes support for <a href="https://github.com/projectatomic/atomic/blob/master/docs/atomic-migrate.1.md">storage backend migration</a>, for downloading and deploying <a href="https://github.com/projectatomic/atomic/blob/master/docs/atomic-host.1.md">specific atomic</a> <a href="http://blog.verbum.org/2015/12/15/new-atomic-host-verb-rpm-ostree-deploy/">tree versions</a>, and for displaying process information from all containers running on a host.</p>
+
+<p>CentOS Atomic Host includes these core component versions:</p>
+
+<ul>
+<li>docker-1.9.1-25.el7.centos.x86_64</li>
+<li>kubernetes-1.2.0-0.9.alpha1.gitb57e8bd.el7.x86_64</li>
+<li>kernel-3.10.0-327.13.1.el7.x86_64</li>
+<li>atomic-1.9-4.gitff44c6a.el7.x86_64</li>
+<li>flannel-0.5.3-9.el7.x86_64</li>
+<li>ostree-2016.1-2.atomic.el7.x86_64</li>
+<li>etcd-2.2.5-1.el7.x86_64</li>
+<li>cloud-init-0.7.5-10.el7.centos.1.x86_64</li>
+</ul>
+
+<p>For more information on the new release, check out <a href="http://seven.centos.org/2016/04/download-updated-centos-atomic-host-today/">this post</a> on the <a href="http://seven.centos.org/">CentOS blog</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/04/new-centos-atomic-host-release-with-docker-1-9-1/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/04/new-centos-atomic-host-release-with-docker-1-9-1/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/04/new-centos-atomic-host-release-with-docker-1-9-1/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

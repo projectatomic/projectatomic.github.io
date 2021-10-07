@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Setting up SkyDNS  &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Setting up SkyDNS ' property='og:title'>
+<meta content='Kubernetes exposes DNS for service discovery, but the DNS server itself must be configured after you install Kubernetes. In the future it will be integrated into kubernetes as part of the platform (see PR11599) but for now you have to setup and run the SkyDNS container yourself.&#x000A;&#x000A;I have seen some tutorials on how to get skydns working, but almost all of them are rather involved. However, if you just want a simple setup on a single node for testing then it is actually rather easy to get skydns set up.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/10/setting-up-skydns/' property='og:url'>
+<meta content='2015-10-05T08:17:14Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='dns' property='article:tag'>
+<link href='/blog/tag/dns.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='etcd' property='article:tag'>
+<link href='/blog/tag/etcd.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='skydns' property='article:tag'>
+<link href='/blog/tag/skydns.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Setting up SkyDNS ' name='twitter:title'>
+<meta content='Kubernetes exposes DNS for service discovery, but the DNS server itself must be configured after you install Kubernetes. In the future it will be integrated into kubernetes as part of the platform (see PR11599) but for now you have to setup and run the SkyDNS container yourself.&#x000A;&#x000A;I have seen some tutorials on how to get skydns working, but almost all of them are rather involved. However, if you just want a simple setup on a single node for testing then it is actually rather easy to get skydns set up.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_10 blog_2015_10_setting-up-skydns blog_2015_10_setting-up-skydns_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Setting up SkyDNS 
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-10-05T08:17:14Z'>
+Monday  5 October 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Kubernetes exposes DNS for service discovery, but the DNS server itself must be configured after you install Kubernetes. In the future it will be integrated into <code>kubernetes</code> as part of the platform (see <a href="https://github.com/kubernetes/kubernetes/pull/11599">PR11599</a>) but for now you have to setup and run the <a href="https://github.com/skynetservices/skydns">SkyDNS</a> container yourself.</p>
+
+<p>I have seen some tutorials on how to get <code>skydns</code> working, but almost all of them are rather involved. However, if you just want a simple setup on a single node for testing then it is actually rather easy to get <code>skydns</code> set up.</p>
+
+<p></p>
+
+<h3>Setting it up</h3>
+
+<p><strong>NOTE:</strong> This tutorial assumes that you already have a machine with <code>docker</code> and <code>kubernetes</code> set up and working. This has been tested on Fedora 22 and CentOS 7. It should work on other platforms but YMMV.</p>
+
+<p>So the way <code>kubernetes</code>/<code>skydns</code> work together is by having two parts:</p>
+
+<ul>
+<li>  kube2sky - listens on the kubernetes api for new services and adds information into etcd.</li>
+<li>  skydns - listens for dns requests and responds based on information in etcd.</li>
+</ul>
+
+<p>The easiest way to get <code>kube2sky</code> and <code>skydns</code> up and running is to just kick off a few <code>docker</code> containers. We&rsquo;ll start with <code>kube2sky</code> like so:</p>
+<pre class="highlight plaintext"><code>[root@f22 ~]$ docker run -d --net=host --restart=always          \&#x000A;                gcr.io/google_containers/kube2sky:1.11           \&#x000A;                -v=10 -logtostderr=true -domain=kubernetes.local \&#x000A;                -etcd-server="http://127.0.0.1:2379"&#x000A;</code></pre>
+
+<p><strong>NOTE:</strong> We are re-using the same <code>etcd</code> that <code>kubernetes</code> is using.</p>
+
+<p>The next step is to start <code>skydns</code> to respond to dns queries:</p>
+<pre class="highlight plaintext"><code>[root@f22 ~]$ docker run -d --net=host --restart=always         \&#x000A;                -e ETCD_MACHINES="http://127.0.0.1:2379"        \&#x000A;                -e SKYDNS_DOMAIN="kubernetes.local"             \&#x000A;                -e SKYDNS_ADDR="0.0.0.0:53"                     \&#x000A;                -e SKYDNS_NAMESERVERS="8.8.8.8:53,8.8.4.4:53"   \&#x000A;                gcr.io/google_containers/skydns:2015-03-11-001&#x000A;</code></pre>
+
+<p>The final step is to modify your <code>kubelet</code> configuration to let it know where the dns for the cluster is. You can do this by adding <code>--cluster_dns</code> and <code>--cluster_domain</code> to <code>KUBELET_ARGS</code> in <code>/etc/kubernetes/kubelet</code>:</p>
+<pre class="highlight plaintext"><code>[root@f22 ~]$ grep KUBELET_ARGS /etc/kubernetes/kubelet&#x000A;KUBELET_ARGS="--cluster_dns=192.168.121.174 --cluster_domain=kubernetes.local"&#x000A;[root@f22 ~]$ systemctl restart kubelet.service&#x000A;</code></pre>
+
+<p><strong>NOTE:</strong> I used the ip address of the machine that we are using for this single node cluster.</p>
+
+<p>And finally we can see our two containers running:</p>
+<pre class="highlight plaintext"><code>[root@f22 ~]$ docker ps --format "table {{.ID}}\t{{.Status}}\t{{.Image}}"&#x000A;CONTAINER ID        STATUS              IMAGE&#x000A;d229442f533c        Up About a minute   gcr.io/google_containers/skydns:2015-03-11-001&#x000A;76d51770b240        Up About a minute   gcr.io/google_containers/kube2sky:1.11&#x000A;</code></pre>
+
+<h3>Testing it out</h3>
+
+<p>Now lets see if it works! Taking a page out of the <a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns#1-create-a-simple-pod-to-use-as-a-test-environment">kubernetes github</a> we&rsquo;ll start a busybox container and then do an <code>nslookup</code> on the <em><q>kubernetes service</q></em>:</p>
+<pre class="highlight plaintext"><code>[root@f22 ~]$ cat &gt; /tmp/busybox.yaml &lt;&lt;EOF&#x000A;apiVersion: v1&#x000A;kind: Pod&#x000A;metadata:&#x000A;  name: busybox&#x000A;  namespace: default&#x000A;spec:&#x000A;  containers:&#x000A;  - image: busybox&#x000A;    command:&#x000A;      - sleep&#x000A;      - "3600"&#x000A;    imagePullPolicy: IfNotPresent&#x000A;    name: busybox&#x000A;  restartPolicy: Always&#x000A;EOF&#x000A;[root@f22 ~]$ kubectl create -f /tmp/busybox.yaml&#x000A;pod "busybox" created&#x000A;[root@f22 ~]$ kubectl get pods&#x000A;NAME      READY     STATUS    RESTARTS   AGE&#x000A;busybox   1/1       Running   0          16s&#x000A;[root@f22 ~]$ kubectl exec busybox -- nslookup kubernetes&#x000A;Server:    192.168.121.174&#x000A;Address 1: 192.168.121.174&#x000A;&#x000A;Name:      kubernetes&#x000A;Address 1: 10.254.0.1&#x000A;</code></pre>
+
+<p><strong>NOTE:</strong> The <em><q>kubernetes service</q></em> is the one that is shown from the <code>kubectl get services kubernetes</code> command.</p>
+
+<p>Now you have a single node <code>k8s</code> setup with dns. In the future <a href="https://github.com/kubernetes/kubernetes/pull/11599">PR11599</a> should satisfy this need but this works for now.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/dns/">dns</a></li>
+<li><a href="/blog/tag/etcd/">etcd</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/skydns/">skydns</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/10/setting-up-skydns/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/10/setting-up-skydns/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/10/setting-up-skydns/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Red Hat Summit</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/red-hat-summit.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Speak at Red Hat Summit: Proposals Due 7 January 2015</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/01/speak-at-red-hat-summit-proposals-due-7-january-2015/"/>
+    <id>http://www.projectatomic.io/blog/2015/01/speak-at-red-hat-summit-proposals-due-7-january-2015/</id>
+    <published>2015-01-05T15:04:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;With just a few days into 2015, it may not seem like it &amp;ndash; but &lt;a href="http://www.redhat.com/summit/"&gt;Red Hat Summit&lt;/a&gt; and DevNation are &lt;em&gt;just&lt;/em&gt; around the corner. The call for proposals &lt;a href="https://rhs2015.smarteventscloud.com/portal/cfp/cfpLogin.ww"&gt;is due to close on 7 January&lt;/a&gt;, and we&amp;rsquo;d like to encourage folks who are doing interesting things with Atomic and containers to submit proposals before the CfP closes. &lt;/p&gt;
+
+&lt;p&gt;We really want to hear from you, so if you&amp;rsquo;re working with Atomic and have something interesting to say &amp;ndash; get those proposals in today! Whether you&amp;rsquo;re working with CentOS, Fedora, or RHEL Atomic Host, we&amp;rsquo;d like to hear from you.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re submitting a proposal around Project Atomic, please drop me a line at jzb at RedHat.com &amp;ndash; and feel free to ping me if you would like some help with the proposal or want to bounce a few ideas around. See you at Red Hat Summit in Boston!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

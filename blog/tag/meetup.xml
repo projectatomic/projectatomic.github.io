@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Meetup</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/meetup.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Docker Brno -- Summer is OVER</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/docker-brno-meetup-20160914/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/docker-brno-meetup-20160914/</id>
+    <published>2016-10-11T12:00:20+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian (bex) Exelbierd</name>
+    </author>
+    <content type="html">&lt;p&gt;Summer is over and school is back in session.  These events mark a
+change of seasons, a change in lifestyle, and a return to the
+&lt;a href="https://www.meetup.com/Docker-Brno/"&gt;meetups&lt;/a&gt; of Docker Brno. &lt;a href="https://www.twitter.com/TomasTomec"&gt;Tomáš
+Tomeček&lt;/a&gt; guided 45 of us through
+presentations by three speakers as well as a news and updates presentation.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Tomáš Tomeček" width="400" height="300" src="/images/docker-brno-2016-09/ttomecek.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Tomas started us off with a news and updates presentation about recent changes in Docker
+(&lt;a href="https://tomastomecek.github.io/brno-docker-meetup-september-2016/#/"&gt;Slides&lt;/a&gt;).
+He briefly covered a lot of the features in the latest releases of docker,
+versions 1.12.0 and 1.12.1.&lt;/p&gt;
+
+&lt;p&gt;These versions include the new orchestration components bundled into
+the daemon. The addition of the components is particularly controversial
+and has caused some people to wonder why they are part of docker-engine.&lt;/p&gt;
+
+&lt;p&gt;Along with the orchestration components, a new abstraction called the
+service API was added along with load balancing using IPVS in Linux
+Kernel.  Additional features include a plugin API, a new HEALTHCHECK
+instruction, and the &lt;code&gt;--live-restore&lt;/code&gt; daemon flag that allows for
+auto-restarting of your containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Joseph Karasek" width="400" height="300" src="/images/docker-brno-2016-09/jkarasek.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://www.twitter.com/Pepe_CZ"&gt;Josef Karásek&lt;/a&gt; presented &amp;ldquo;Rolling Down
+the Upgrade River doesn&amp;rsquo;t need to be a White Water Experience.&amp;rdquo; This
+demonstration of rolling updates used a Java application running in
+docker containers on &lt;a href="http://www.openshift.org"&gt;OpenShift Origin&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The demo was a &amp;ldquo;canary-style&amp;rdquo; rolling upgrade,
+allowing an application to be upgraded in-place, on a live service, with
+no interruption for client sessions. While the demo used a monolithic
+application, many of the &lt;a href="https://12factor.net/"&gt;Twelve-Factor App&lt;/a&gt;
+principles were satisfied.&lt;/p&gt;
+
+&lt;p&gt;In both a show of demo-bravery and zero-to-hero magic, he started his
+demo with a clean install of OpenShift Origin.  This was done using the
+new &lt;code&gt;oc cluster up&lt;/code&gt; command which started a local single node OpenShift
+environment on his laptop.  His secondary goal was to show how he could
+go from nothing to a fully launched Java application in less that 15
+minutes, including build time and downloads.&lt;/p&gt;
+
+&lt;p&gt;To build the demo application he performed the following actions in the
+web console and with the CLI.  He alternated between them to show off
+OpenShift during the build process.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Created a project to hold a git forge.  OpenShift lives behind a NAT
+by default, so he needed a git forge that could send a webhook to the
+rest of OpenShift.  This project contains one container that provides a
+&lt;a href="https://gogs.io/"&gt;Gogs - Go Git Service&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Created a second project to hold the actual application.  Into this
+project he loaded:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;A Java application based on a JBoss EAP Quickstart example.
+The application is built using maven and is able to create and
+greet users and store session IDs in a replicated cache. The
+greeting page displays the cached session key information and
+reports what node is serving it. The session key was stored in
+a cache replicated over all EAP nodes. The application ran on a
+tiny cluster of two EAP servers (on a laptop!).&lt;/li&gt;
+&lt;li&gt;A Postgres database to store user information.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Configured Image Streams and other administrative components of
+OpenShift so that new builds can be automatically triggered and
+deployed.  This would normally be done by the operations team and
+not the developer.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Added the URL for the webhook to Gogs.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Started the application and let it build.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;While the build was finishing, he talked about how
+there are models for using OpenShift that include full
+&lt;a href="https://blog.openshift.com/cicd-with-openshift/"&gt;CI/CD&lt;/a&gt; systems, like
+Jenkins. These models allow code changes to be built, tested, merged
+and deployed automatically. Today, he changed the code and merged it
+by hand because he was on his laptop and had memory constraints.&lt;/p&gt;
+
+&lt;p&gt;Then it was demo breaking time! Karásek scaled the application to two replicas
+and showed how a specific pod was assigned to serve it.  A &amp;ldquo;pod&amp;rdquo; is a
+Kubernetes abstraction that represents one or more related containers.
+The containers are managed as a single group for administrative
+purposes, including replication. In this example, each pod consists
+of one Java application container. Once we were convinced that the HAProxy
+router used by OpenShift would not allow us to be served by any other
+pod, he deleted the pod. The other pod was able to pick up the session
+without a user visible failure because of the auto-spawn capabilities
+of OpenShift and the session ID cache.&lt;/p&gt;
+
+&lt;p&gt;Next, it was time for a code change. A quick &lt;code&gt;git clone&lt;/code&gt; later and the
+code was modified and pushed to the Gogs service.  Less than a second
+later OpenShift reacted to the git webhook notification and kicked
+of a new build of the code.  Using the web console and &lt;code&gt;oc get pod&lt;/code&gt;,
+we watched the builds progress. When complete, they seamlessly and
+invisibly replaced the original pods with zero downtime.&lt;/p&gt;
+
+&lt;p&gt;This demonstration provided insight into how an existing application can
+be migrated to containers to gain scale-out and management features from
+an orchestrator like OpenShift Origin in a way that preserves all of
+the hard-won existing functionality.  Take a look at the &lt;a href="https://github.com/josefkarasek/eap-rolling-update"&gt;demo script
+and code&lt;/a&gt; and try
+it yourself.&lt;/p&gt;
+
+&lt;p&gt;We took breaks between every talk and enjoyed the fine facilities provided
+by &lt;a href="http://www.jobsatkiwi.com/"&gt;kiwi.com&lt;/a&gt;.  They arranged for the use
+of their wine cellar for the meetup and a large supply of beverages and
+food for the attendees.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Vadim Rutkovsky" width="400" height="300" src="/images/docker-brno-2016-09/vladim.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://www.twitter.com/vrutkovs"&gt;Vadim Rutkovsky&lt;/a&gt; was next with his
+presentation, &lt;q&gt;Ansible Container: Look mom, no Dockerfile!&lt;/q&gt;
+(&lt;a href="https://vrutkovs.github.io/dockerbrno-ansible-container"&gt;Slides&lt;/a&gt;)
+His need for a new way to build containers was driven by his use of
+&lt;a href="http://grafana.org/"&gt;grafana&lt;/a&gt;.  He started with a container from
+DockerHub, but quickly hit some limitations that would mean he needed
+a custom built version.&lt;/p&gt;
+
+&lt;p&gt;This should be easy to do as the Dockerfiles are online next to
+the containers. Unfortunately, the Dockerfile in question, while
+successfully able to build a container, was crazy-pants and not easy to
+maintain or modify. In particular its handling of plugins was not
+elegant.&lt;/p&gt;
+
+&lt;p&gt;This got him thinking about traditional application
+installment concepts and he decided to use &lt;a href="https://www.github.com/ansible/ansible-container"&gt;Ansible
+Container&lt;/a&gt;.  Ansible
+Container has ability to build docker images and orchestrate containers
+using only Ansible playbooks + shell + docker-compose. It allows the
+container builder to leverage the power of Ansible features like vars,
+templates and roles.&lt;/p&gt;
+
+&lt;p&gt;Getting started is easy thanks to the &lt;code&gt;ansible-container init&lt;/code&gt; command.
+This generates the basic files of:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;main.yml&lt;/code&gt;: that describes the images&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;container.yml&lt;/code&gt;: that describes orchestration&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;requirements.txt&lt;/code&gt;: which can load additional Ansible modules,
+if required&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A huge win came with the &lt;code&gt;main.yml&lt;/code&gt; file structure because the container
+could be built using traditional application and system installation
+idioms.&lt;/p&gt;
+
+&lt;p&gt;A build using Ansible Container creates a &amp;ldquo;builder image&amp;rdquo;
+which allows building and deploying one or more images.&lt;br&gt;
+Ansible Container can then launch the container using &lt;code&gt;docker-compose&lt;/code&gt;,
+ or it can create a playbook and ship it to Kubernetes and OpenShift.&lt;/p&gt;
+
+&lt;p&gt;The project is fairly new and the next round of features
+will include build caching, detached execution, custom
+volumes and build variables, and rkt and OCI support.  Full
+&lt;a href="https://docs.ansible.com/ansible-container"&gt;documentation&lt;/a&gt; is online
+as well as an active community in #ansible-container on Freenode.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Tomas Kral" width="400" height="300" src="/images/docker-brno-2016-09/tkral.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://www.twitter.com/kadel"&gt;Tomáš Král&lt;/a&gt;
+presented the final talk of the evening, &lt;q&gt;Kompose:
+from your local machine to the cloud with one command.&lt;/q&gt;
+(&lt;a href="https://github.com/kadel/kompose-demo/blob/master/slides/docker_meetup_20160915.pdf"&gt;Slides&lt;/a&gt;)
+&lt;a href="https://github.com/skippbox/kompose"&gt;Kompose&lt;/a&gt; can convert a Docker Compose
+file into a full Kubernetes or OpenShift configuration.  It is a golang
+open source project supported by Skippbox, Google and Red Hat.&lt;/p&gt;
+
+&lt;p&gt;Kral&amp;rsquo;s demo used the golang guestbook application which he had decomposed
+into two containerized services.  First he started the application
+just using a pair of &lt;code&gt;docker run&lt;/code&gt; commands that started each service.
+Next he showed and used a Docker Compose file that was equivalent to
+the same pair of commands.  Kompose showed up at this point and with one
+command allowed us to deploy our application to a local Minikube cluster.&lt;/p&gt;
+
+&lt;p&gt;As a final demo step, he made a live deployment to &lt;a href="https://console.preview.openshift.com"&gt;OpenShift 3 Online
+(dev-preview)&lt;/a&gt; to show how to
+go from a Docker Compose file on your local machine to a live production
+deployment in the cloud.&lt;/p&gt;
+
+&lt;p&gt;Kompose allows you to easily move from a development environment using
+Docker Compose or an application delivered with a distributed application
+bundle (DAB) file to a production quality environment based on Kubernetes
+and OpenShift. The output of Kompose allows you to quickly bootstrap
+to the rich Kubernetes and OpenShift environments with a standard
+configuration that can then be tuned and configured.  Download the &lt;a href="https://github.com/kadel/kompose-demo"&gt;demo
+code and script&lt;/a&gt; and try it out.&lt;/p&gt;
+
+&lt;p&gt;This meetup was a fantastic event showing of some really cool technology.
+I want to thank our speakers, attendees and sponsors for an making this
+such an awesome event.  I personally walked away motivated to play
+with both Ansible Container and Kompose to solve some challenges in
+my tech-life.&lt;/p&gt;
+
+&lt;p&gt;The meetup was made possible through the generosity of our sponsors:
+&lt;a href="http://www.jobsatkiwi.com/"&gt;kiwi.com&lt;/a&gt;, who provided space and
+refreshments, and &lt;a href="https://community.redhat.com"&gt;Red Hat&lt;/a&gt;, who provided
+administrative support and funding.&lt;/p&gt;
+
+&lt;p&gt;Our &lt;a href="https://www.meetup.com/Docker-Brno/events/234091097/"&gt;next meetup&lt;/a&gt;
+will be on 1 December 2016.  We are looking for speakers and hope
+you&amp;rsquo;ll contact us at &lt;a href="https://twitter.com/DockerBrno"&gt;@DockerBrno&lt;/a&gt; or
+on our &lt;a href="https://www.meetup.com/Docker-Brno"&gt;meetup page&lt;/a&gt;.  If you&amp;rsquo;re not local to Brno and
+are interested in talking, contact us too.  We may able to invite and
+sponsor you.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Docker Brno&amp;mdash;Back in the Saddle Again</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/06/docker-brno-meetup-20160615/"/>
+    <id>http://www.projectatomic.io/blog/2016/06/docker-brno-meetup-20160615/</id>
+    <published>2016-06-21T18:40:20+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian (bex) Exelbierd</name>
+    </author>
+    <content type="html">&lt;p&gt;On the 15th of June, over 60 brave souls gathered together and in defiance of an absolutely gorgeous summer day, talked about containers. Four speakers presented a very different set of talks covering all areas of containers from development to management to deployment.&lt;/p&gt;
+
+&lt;p&gt;Jiří Sedláček, an agile QA specialist and developer at &lt;a href="https://www.wandera.com/"&gt;Wandera&lt;/a&gt;, presented &amp;ldquo;Development and Deployment Simplification with Containers&amp;rdquo; (&lt;a href="http://www.projectatomic.io/images/docker_brno_20160615.pdf"&gt;slides&lt;/a&gt;). At a previous company, he and the team implemented a docker-driven development environment that helped change the operational philosophy from the bottom up.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="picture of Jiří Sedláček" width="800" height="533" src="/images/jiri.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After covering some background material on the benefits of containers over virtual machines for some applications, Jiří started the bulk of his talk by making it clear that his team wasn&amp;rsquo;t doing &amp;ldquo;rocket science.&amp;rdquo; &lt;em&gt;(Note to self: I wonder if anyone at the European Space Agency is using containers&amp;hellip;)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The development teams initially considered docker, with the goals of unifying the development environment for developers spread across multiple workstation operating systems and making bootstrapping the application environment easier. The environment was a RESTful API-based web service using Apache Tomcat, MongoDB, Apache ActiveMQ, MariaDB, and other data-warehousing technologies. Not rocket science, as he noted, but difficult for a developer to cleanly and easily configure and bring up without becoming &amp;ldquo;grump cat.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Initially operations was resistant to the move to containers, as they were concerned about the maturity of the technology and deployment issues. These were resolved two ways: first, the container build pipeline was automated and logical base images were built for each stage reducing management overhead; second, a configuration management tool, &lt;a href="http://github.com/markround/tiller"&gt;Tiller&lt;/a&gt; was implemented. The configuration tool was a big win because it solved complexity problems for the developers and eased the transition of the Ops team from traditional management methods to containers and put them on the road to orchestration. His slides include ten big learnings from this project and I encourage you to give them a read.&lt;/p&gt;
+
+&lt;p&gt;We took a break and when we resumed, we heard from &lt;a href="https://twitter.com/janbleha"&gt;Jan Bleha&lt;/a&gt; from &lt;a href="http://kiwi.com"&gt;Kiwi.com&lt;/a&gt;, one of our sponsors. Kiwi.com provided us with 128 (a significant number!) units of our favorite cold carbonated beverages to help us stay ready to ask questions and network. Jan also talked about several other local meetup groups that Kiwi.com helps to sponsor, including meetings around Python, Golang, JS, Reactive, and more. They are also organizing a Czech Language-intensive Python weekend in July. If you&amp;rsquo;ve never visited Brno, I strongly encourage you visit. There is a &lt;strong&gt;huge&lt;/strong&gt; open source and technology community here and I guarantee you will find a group of really smart people with whom to interact.&lt;/p&gt;
+
+&lt;p&gt;Our next two speakers both presented lightning talks. We are using this format to encourage everyone to speak at future meetings (&lt;em&gt;hint, hint&lt;/em&gt;) because now length isn&amp;rsquo;t a challenge!&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="picture of sen" src="https://raw.githubusercontent.com/TomasTomecek/june-2016-docker-meetup-talk/master/img/sen-container-info.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/TomasTomec"&gt;Tomáš Tomeček&lt;/a&gt;, a senior software engineer at &lt;a href="http://www.redhat.com/"&gt;Red Hat&lt;/a&gt; presented &amp;ldquo;sen: Easy Management of Containers in the Terminal&amp;rdquo; (&lt;a href="http://pub.tomecek.net/slides/june-2016-docker-meetup-talk/#/"&gt;slides&lt;/a&gt;). &lt;a href="http://github.com/tomastomecek/sen"&gt;sen&lt;/a&gt; is a classic open-source tool that was developed by Tomáš to &amp;ldquo;scratch his own itch.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Specifically, sen (the Czech word for dream) is the result of a dream Tomáš had about a better management interface for working with docker containers. Tomáš loves python and text user interfaces and has combined these with his love containers to build a control/dashboard for a docker daemon that provides instant access to information and commands. His top-like user interface provides easy access to the old docker-tree display for image layers, filtering and searching for images and containers, real time log access, event notifications, and more all with vim key bindings. This has replaced hacky aliases and long docker commands for his use cases.&lt;/p&gt;
+
+&lt;p&gt;Pavel Odvody, our second lighting talk speaker and also a senior software engineer at Red Hat presented &amp;ldquo;Host Integrated Container Applications (HICA)&amp;rdquo; (&lt;a href="https://podvody.fedorapeople.org/HICA_%20Host%20Integrated%20Container%20Applications.pdf"&gt;slides&lt;/a&gt;). Developed originally as part the third Docker Global Hack Day, &lt;a href="http://github.com/shaded-enmity/docker-hica"&gt;HICA&lt;/a&gt; is designed to make it easy to run non-server containers.&lt;/p&gt;
+
+&lt;p&gt;Pavel started his talk by asking how many people had ever tried to run a desktop application in a container. He then asked how many people had tried to run a utility, like a command line tool that processes input and returns output. These use cases while possible typically require an arcane spell book of incantations on the command line. HICA uses a secure, SELinux-compatible interface that turns labels on a docker image into a series of feature injectors to make it easy for a container to self-describe its needs. These injectors can allow a container to easily access the current working directory or the XServer on the host, or 13 other commonly needed features without requiring the user to specify them on the command line. The whole thing is wrapped in an easy-to-use CLI that has multiple levels of security and permissions and verification baked in.&lt;/p&gt;
+
+&lt;p&gt;HICA turns this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -i -u 1000:1000 --security-opt label:disable --volume /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --volume=/lib64/libX11.so.6:/external_libs/libX11.so.6 --volume=/lib64/libxcb-dri2.so.0:/external_libs/libxcb-dri2.so.0 --volume=/usr/lib64/dri/i965_dri.so:/external_libs/i965_dri.so --volume=/lib64/libGL.so.1:/external_libs/libGL.so.1 --volume=/lib64/libdrm_intel.so.1:/external_libs/libdrm_intel.so.1 --volume=/lib64/libxcb.so.1:/external_libs/libxcb.so.1 -e LD_LIBRARY_PATH=/external_libs -e LIBGL_DRIVERS_PATH=/external_libs --device /dev/dri/card0:/dev/dri/card0 --device /dev/dri/renderD128:/dev/dri/renderD128 --device /dev/dri/controlD64:/dev/dri/controlD64 opengl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;into this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;hica opengl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After the lightning talks, we took our final break and returned to small presentation from our second sponsor, Red Hat. &lt;a href="https://twitter.com/JiriFolta"&gt;Jiří Folta&lt;/a&gt; told about Red Hat&amp;rsquo;s continuing involvement in technologies encompassing the entire stack all the way through to the hybrid public/private cloud. He also let us know that a milestone has been reach with just over 1,000 people now working for Red Hat in Brno, continuing its position as Red Hat&amp;rsquo;s largest engineering site in the world.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="picture of Adam Skotnický" width="800" height="533" src="/images/adam.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/ada_sko"&gt;Adam Skotnický&lt;/a&gt; and &lt;a href="https://twitter.com/MCeloud"&gt;Marek Čeloud&lt;/a&gt; from &lt;a href="http://tcpcloud.eu"&gt;tcp ◕ cloud&lt;/a&gt; presented &amp;ldquo;SmartCity IoT on Kubernetes.&amp;rdquo; Adam is the CEO and Marek is a network engineer. Their presentation brought together work they have been doing combining Kubernetes, OpenStack, and the Internet of Things to enable Smart City/Industry-4.0 infrastructures.&lt;/p&gt;
+
+&lt;p&gt;Adam began the talk by providing an overview of a collaborative pilot smart-streetlight project being worked on in the southern Boehemian town of Písek. He then transitioned to a demo-architecture based on the same principals they have that links together carbon-dioxide sensors in a conference hall. The sensor network communicates with IQRF to a Raspberry PI running Kubernetes-managed containers. The containers utilize an OpenContrail SDN to connect back to a Kubernetes managed application that relies on virtual machines managed in OpenStack (also containerized). The SDN allows the sensor network and gateway Raspberry Pi to be relocated anywhere in the world and not need any reconfiguration.&lt;/p&gt;
+
+&lt;p&gt;While the underlying physical unit IPs may change, the separation of networks renders this invisible to the application while simultaneously introducing security separation. Marek continued the talk with a demonstration of their internal network, the several layers of SDN in use, and how they can use a salt driven configuration to do a rolling version change of OpenStack from Kilo to Liberty. In the final conversation they talked about their need to develop their own CI/CD pipelines to build the upstream source of the fast moving Kubernetes and OpenContrail projects (amongst others). The container architecture has enabled easy distribution of the application and made it scale horizontally to the point that neither IQRF or the use of a Raspberry Pi as a gateway are limiting factors for sensor networks in urban areas.&lt;/p&gt;
+
+&lt;p&gt;Our speakers all did an excellent job and I am thankful for all of them. I personally walked away enlightened and with new tools I want to go play with. I also walked away with a reminder of just how wicked smart my co-workers at Red Hat are and how fantastic the skill level of my community is. I need to keep bringing my A-game to my adopted city.&lt;/p&gt;
+
+&lt;p&gt;The meetup was made possible through the generosity of our sponsors: Red Hat, who provided funding to rent the venue and Kiwi.com, who provided 128 &lt;q&gt;bits&lt;/q&gt; of refreshment to keep us engaged.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(Photos by &lt;a href="https://photos.google.com/share/AF1QipPEXXzTVSUQpvqjCnz0Vd8Eaef26q5sayjI4-vx-ZxvLfya3I02N0Kfivy6wo5-xA?key=R0pCNVR2cWxoOFJUekFNbVoyYV83TmhPNElOc2tR"&gt;Eliska Slobodova&lt;/a&gt;.  Sen screenshot by &lt;a href="https://twitter.com/TomasTomec"&gt;Tomáš Tomeček&lt;/a&gt;.)&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Project Atomic Online Meetup Wednesday</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/project-atomic-online-meetup-wednesday/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/project-atomic-online-meetup-wednesday/</id>
+    <published>2015-06-15T20:55:57+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Still wondering what this Atomic stuff is all about? Want a quick primer on Project Atomic?&lt;/p&gt;
+
+&lt;p&gt;Join us on Wednesday at 2 p.m. Eastern for a high level introduction to Project Atomic and its components. We&amp;rsquo;ll look at all the &lt;q&gt;pieces&lt;/q&gt; of Atomic, from Atomic Host, to rpm-ostree, the Atomic command (/usr/bin/atomic), Nulecule, and Atomic App. &lt;/p&gt;
+
+&lt;p&gt;The event is hosted on BlueJeans, you can view the event using your Browser (a plugin is required for Firefox) or using the BlueJeans app on iOS or Android.&lt;/p&gt;
+
+&lt;p&gt;To join, visit &lt;a href="https://a2m.bluejeans.com/a2m/live-event/ch34638"&gt;https://a2m.bluejeans.com/a2m/live-event/ch34638&lt;/a&gt; on Wednesday, 17 June at 2 p.m. Eastern.&lt;/p&gt;
+
+&lt;p&gt;This will be part of a regular series of online events about Project Atomic and its components. Keep your eyes on the Project Atomic blog for upcoming events!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Project Atomic Comes to Japan</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/05/project-atomic-comes-to-japan/"/>
+    <id>http://www.projectatomic.io/blog/2015/05/project-atomic-comes-to-japan/</id>
+    <published>2015-05-28T17:56:10+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;In case you missed the news on Twitter, we&amp;rsquo;re taking this show on the road! Specifically, we have a few opportunities to learn more about Project Atomic in Tokyo, Japan. &lt;/p&gt;
+
+&lt;p&gt;Next week, I&amp;rsquo;ll be attending &lt;a href="http://events.linuxfoundation.org/events/linuxcon-japan"&gt;LinuxCon Japan&lt;/a&gt; to &lt;a href="http://events.linuxfoundation.org/events/linuxcon-japan/program/schedule"&gt;speak about Project Atomic&lt;/a&gt; and the traditional package problems. &lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll also be hosting a &lt;a href="https://redhat.smartseminar.jp/public/seminar/view/231"&gt;Meetup in Ebisu&lt;/a&gt; on 2 June at the Red Hat Tokyo office! If you&amp;rsquo;re local to Tokyo (or can get there easily) then you should definitely sign up and check out the Meetup!&lt;/p&gt;
+
+&lt;p&gt;Have a meetup, talk, or event where you&amp;rsquo;re discussing Project Atomic and want to spread the word? Shoot me an email to jzb at Red Hat or find me &lt;a href="http://twitter.com/jzb"&gt;on Twitter&lt;/a&gt;.  &lt;/p&gt;
+</content>
+  </entry>
+</feed>

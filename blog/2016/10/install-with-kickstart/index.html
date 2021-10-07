@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Subatomic cluster install with Kickstart &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Subatomic cluster install with Kickstart' property='og:title'>
+<meta content='Look, new case!  3D printed, thanks to Spot Callaway.&#x000A;&#x000A;&#x000A;&#x000A;In my previous install of the Subatomic Cluster, I simply did the manual Ananconda install.  However, since this cluster is for testing, I wanted...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/10/install-with-kickstart/' property='og:url'>
+<meta content='2016-10-12T12:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='administration' property='article:tag'>
+<link href='/blog/tag/administration.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='microcluster' property='article:tag'>
+<link href='/blog/tag/microcluster.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Subatomic cluster install with Kickstart' name='twitter:title'>
+<meta content='Look, new case!  3D printed, thanks to Spot Callaway.&#x000A;&#x000A;&#x000A;&#x000A;In my previous install of the Subatomic Cluster, I simply did the manual Ananconda install.  However, since this cluster is for testing, I wanted...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_10 blog_2016_10_install-with-kickstart blog_2016_10_install-with-kickstart_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Subatomic cluster install with Kickstart
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-12T12:00:00Z'>
+Wednesday 12 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Look, new case!  3D printed, thanks to <a href="https://twitter.com/spotrh">Spot Callaway</a>.</p>
+
+<p><img alt="new subatomic cluster" width="800" height="600" src="/images/subatomic_cluster_new_case.jpg?1633620578" /></p>
+
+<p>In my previous install of the <a href="/blog/2016/06/micro-cluster-part-1/">Subatomic Cluster</a>, I simply did the manual Ananconda install.  However, since this cluster is for testing, I wanted a way to re-install it rapidly so that I can test out various builds of Atomic.  This time, I was installing CentOS Atomic so that I could test things out on <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">CentOS Atomic Continuous</a>.</p>
+
+<p>I also wanted to fix the disk allocation.  Due to various limitations, the initial root partition for a new Atomic Host is of fixed size (3GB) regardless of the amount of disk space available.  I wanted to increase that to 1/3 of the 64GB size of each SSD.  </p>
+
+<p>Enter Kickstart, which is the standard installation automation system used by Fedora, CentOS, RHEL, and other Linux distributions.  I was more familiar with Kickstart as part of a PXEboot network install, and re-installing the cluster required something simpler.  In this case, a Kickstart file on the network, combined with editing the boot line for install.  Since <a href="https://docs.fedoraproject.org/en-US/Fedora/24/html/Installation_Guide/chap-kickstart-installations.html">the Kickstart documentation</a> is extensive enough to be confusing, here&rsquo;s some simple examples.  </p>
+
+<p>First, I created an atomic-ks.cfg file and dropped it on my laptop; see below for the full file.  I&rsquo;ve added comments in the example file so that you can understand what it&rsquo;s doing and modify it for your own use.  I then served this file on the local network just using <code>python -m SimpleHTTPServer</code>.  I&rsquo;ve annotated the atomic-ks.cfg file so that you can use it as a base for your own.</p>
+<pre class="highlight plaintext"><code># usual setup&#x000A;install&#x000A;reboot&#x000A;lang en_US.UTF-8&#x000A;keyboard us&#x000A;timezone --utc America/Los_Angeles&#x000A;selinux --enforcing&#x000A;&#x000A;# clear the disk and create a new mbr partition for boot&#x000A;zerombr&#x000A;clearpart --all --initlabel&#x000A;bootloader --location=mbr --boot-drive=sda&#x000A;reqpart --add-boot&#x000A;&#x000A;# create a new logical volume and group for everything lese&#x000A;part pv.01 --grow --ondisk=sda&#x000A;volgroup atomicos pv.01&#x000A;&#x000A;# add a 20GB XFS partition for root&#x000A;logvol / --size=20000 --fstype="xfs" --name=root --vgname=atomicos&#x000A;&#x000A;# add a 2GB swap partition&#x000A;logvol swap --fstype swap --name=lv_swap --vgname=atomicos --size=2048&#x000A;&#x000A;# disable cloud-init, enable ntp, docker and ssh&#x000A;services --disabled="cloud-init,cloud-config,cloud-final,cloud-init-local" --enabled="systemd-timesyncd,network,sshd,docker"&#x000A;&#x000A;# set up OSTree to pull a tree from the USB key&#x000A;ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --url="file:///install/ostree" --ref="centos-atomic-host/7/x86_64/standard" --nogpg&#x000A;&#x000A;# create static network interface, for Kubernetes setup.  Requires changing this line&#x000A;# for each machine&#x000A;network --device=link --bootproto=static --ip=192.168.1.102 --netmask=255.255.255.0 --gateway=192.168.1.1 --nameserver=192.168.1.1&#x000A;&#x000A;# create sudo user.&#x000A;user --name=atomic --groups=wheel --password=atomic&#x000A;&#x000A;# reset ostree to upstream&#x000A;%post --erroronfail&#x000A;rm -f /etc/ostree/remotes.d/centos-atomic-host.conf&#x000A;ostree remote add --set=gpg-verify=true centos-atomic-host 'http://mirror.centos.org/centos/7/atomic/x86_64/repo'&#x000A;%end&#x000A;</code></pre>
+
+<p>I then booted each minnowboard off the USB.  There was one manual step: I had to edit the grub boot menu and tell it to use the kickstart file.  When the boot menu comes up, I selected <q>Install Centos 7</q>, pressed <q>e</q> and edited the linuxefi boot line:</p>
+<pre class="highlight plaintext"><code>linuxefi /images/pxeboot/vmlinuz inst.ks=http://192.168.1.105:8000/atomic-ks.cfg inst.stage2=hd:LABEL=Centos-Atomic-Host-7-x86_64 quiet&#x000A;</code></pre>
+
+<p>After that, it&rsquo;s all automatic.  Anaconda will partition, install, and boot the system.  </p>
+
+<p>Want to see the sub-atomic cluster running?  Join us at <a href="http://www.containerdaysaustin.com/2016/">ContainerDays Austin</a> or <a href="http://events.linuxfoundation.org/events/kubecon">KubeCon</a>.</p>
+
+<p><em>Thanks to Dusty Mabe and Matthew Micene for helping me create this Kickstart config and troubleshoot it</em></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/administration/">administration</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/microcluster/">microcluster</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/10/install-with-kickstart/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/10/install-with-kickstart/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/10/install-with-kickstart/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

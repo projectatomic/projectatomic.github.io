@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic Host and Docker Survey &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic Host and Docker Survey' property='og:title'>
+<meta content='The Fedora Atomic Working Group needs your help to decide how Docker will be included in Fedora Atomic Host in the future.  If you’re already familiar with this issue, you can skip straight to the survey.  Otherwise, read on for some background.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/11/docker-usage-survey/' property='og:url'>
+<meta content='2017-11-08T14:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='CRI-O' property='article:tag'>
+<link href='/blog/tag/cri-o.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic Host and Docker Survey' name='twitter:title'>
+<meta content='The Fedora Atomic Working Group needs your help to decide how Docker will be included in Fedora Atomic Host in the future.  If you’re already familiar with this issue, you can skip straight to the survey.  Otherwise, read on for some background.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_11 blog_2017_11_docker-usage-survey blog_2017_11_docker-usage-survey_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic Host and Docker Survey
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-11-08T14:00:00Z'>
+Wednesday  8 November 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The Fedora Atomic Working Group needs your help to decide how Docker will be included in Fedora Atomic Host in the future.  If you&rsquo;re already familiar with this issue, you can <a href="https://goo.gl/forms/2WTX3EHTX6IxVldp1">skip straight to the survey</a>.  Otherwise, read on for some background.</p>
+
+<p></p>
+
+<p>Currently, the Docker container runtime and tools ship as a part of Fedora Atomic Host in the base cloud image and ISO.  Docker is also part of the base OSTree and thus gets included in all atomic updates to the system (<code>atomic host upgrade</code>).  This has clearly been useful to a lot of people, but there&rsquo;s some problems with it:</p>
+
+<ul>
+<li>Docker and its dependencies add around 180MB to the base image;</li>
+<li>Upstream updates to Docker increase the number of updates users need to apply to the base OS;</li>
+<li>No one version of Docker satisfies all users;</li>
+<li>Some users don&rsquo;t want Docker at all, they want CRI-O or containerd or just runc;</li>
+<li>Docker upgrades complicate Fedora Atomic&rsquo;s plan to move to rolling upgrades.</li>
+</ul>
+
+<p>The potential alternative to this is removing Docker from the base image and OSTree, and instead having users install it as a system container.  This would mean, on each new Fedora Atomic Host, adding the extra step of running:</p>
+<pre class="highlight plaintext"><code>atomic install --system docker&#x000A;</code></pre>
+
+<p>&hellip; for each system.  Updates to Docker would also be on an independent cycle from the base OS, which is both extra work for admins, and an advantage for those who want to update Docker frequently.  There are some other disadvantages to moving to Docker in system containers:</p>
+
+<ul>
+<li>The upgrade from Fedora 27 Atomic Host to Fedora 28 Atomic Host would be more complicated;</li>
+<li>It would be up to the user to keep kernel versions and Docker versions compatible;</li>
+<li>Rollback of a bad Docker upgrade would require more steps;</li>
+<li>Admins who have Atomic Host in production will need to update all their system automation.</li>
+</ul>
+
+<p>Given this tradeoff, we need to know how this possible change would affect Atomic Host users.  Will it make life simpler for you, not affect you at all, or blow up your infrastructure and cause you to migrate to RancherOS?  Let us know by filling out our <a href="#">survey</a> on your Docker and Atomic Host usage.</p>
+
+<p>If you want to express additional opinions about this change, you can talk to Atomic Host developers directly, either on channel <a href="https://webchat.freenode.net/">#atomic on irc.freenode.net</a>, or on email at <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel@projectatomic.io</a>.  Or you can comment on <a href="https://pagure.io/atomic-wg/issue/360">this Pagure issue</a>.</p>
+
+<p><em>Note that we are currently only discussing this change for Fedora Atomic Host.  CentOS Atomic Host and Red Hat Atomic host might or might not adopt the same change at some later date, depending on their strategies.  To support this change, we would also simplify the commands for installing system containers.</em></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/cri-o/">CRI-O</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/11/docker-usage-survey/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/11/docker-usage-survey/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/11/docker-usage-survey/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

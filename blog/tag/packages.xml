@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Packages</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/packages.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Exploring the Atomic in Project Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/06/exploring-the-atomic-in-project-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2014/06/exploring-the-atomic-in-project-atomic/</id>
+    <published>2014-06-18T19:51:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian Proffitt</name>
+    </author>
+    <content type="html">&lt;p&gt;As Project Atomic continues to lift off, a lot of attention has been focused on the container aspects of Atomic, and our consumption of the popular Docker container technology. Atomic, however, is not just about container technology, nor is it solely about the &lt;a href="http://openshift.github.io/geard/"&gt;GearD&lt;/a&gt; container management that will also be a part of Project Atomic host. Nor just about about &lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt;. It&amp;rsquo;s about all of those technologies and more.&lt;/p&gt;
+
+&lt;p&gt;But what makes Atomic &lt;q&gt;atomic&lt;/q&gt;? I&amp;rsquo;ve had some people come up to me and ask if we are making a word-play on the container/size thing and using the label Atomic to describe container technology. In actuality, the &lt;q&gt;atomic&lt;/q&gt; in Atomic describes the one bit of technology that makes Project Atomic very unique: &lt;a href="https://github.com/projectatomic/rpm-ostree"&gt;rpm-ostree&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;While Docker is all about delivering applications, rpm-ostree is about updating the Project Atomic host itself. If you aren&amp;rsquo;t familiar with rpm-ostree, it&amp;rsquo;s the brainchild of Colin Walters, Senior Software Engineer in Red Hat&amp;rsquo;s Server Experience group. Walters has described this project, which was recently relocated to &lt;a href="https://github.com/projectatomic"&gt;Project Atomic&amp;rsquo;s GitHub&lt;/a&gt; repository set, as &lt;q&gt;git for operating system binaries.&lt;/q&gt;&lt;/p&gt;
+
+&lt;p&gt;To understand rpm-ostree, it&amp;rsquo;s important to understand there is more than one layer to this new approach. At the core is ostree, which deviates from the traditional package-by-package update model found in modern operating systems. Instead of package by package, ostree delivers a complete filesystem tree as an update. This is easy to roll out, and also very easy to roll back if something goes wrong with your update.&lt;/p&gt;
+
+&lt;h3&gt;A Package Lovely as a Tree&lt;/h3&gt;
+
+&lt;p&gt;&lt;q&gt;Trees,&lt;/q&gt; in this context, are also somewhat new to many peoples&amp;rsquo; understanding. Walters explains software update systems these days as parts of a spectrum. On one end of the spectrum, there are package systems (such as RPM and DEB), which are very flexible and independent of storage filesystems. You can install RPMs on btrfs, XFS, or ext4, whatever you like. On the other end of the spectrum, there are image-based updates, but these will be locked into a partition layout. &lt;/p&gt;
+
+&lt;p&gt;The trees of ostree are between. Trees are like packages in that they are filesystem and block independent, but they are like image updates in that you get a tree all as one unit instead of package by package. It&amp;rsquo;s this &lt;q&gt;one unit&lt;/q&gt; idea that forms the idea of &lt;q&gt;atomic&lt;/q&gt;&amp;ndash;one solid unit of updates delivered atomically.&lt;/p&gt;
+
+&lt;p&gt;But ostree is not enough, because it just delivers content in a rote fashion, much like rsync does for files&amp;ndash;ostree just replicates content from a compose server. Generating unique content is where rpm-ostree comes in: users can select a compose server&amp;rsquo;s RPMs&amp;ndash;any RPMs that are needed&amp;ndash;and commit them to a tree. From which clients can just replicate.&lt;/p&gt;
+
+&lt;p&gt;For Walters, this is the best of both worlds, because all of the effort and work that went into creating the packages is preserved, but now there is a more efficient delivery system to push the software out to servers and clients. This is an important distinction, because rpm-ostree is not meant to supplant RPMs and package systems in general.&lt;/p&gt;
+
+&lt;h3&gt;Seeing the Forest for the Trees&lt;/h3&gt;
+
+&lt;p&gt;rpm-ostree was not invented just for Project Atomic, though it&amp;rsquo;s a very strong compliment to other tools in the Atomic software. &lt;/p&gt;
+
+&lt;p&gt;rpm-ostree is something Walters has been working on for quite some time. ostree had its origins from a project known as &lt;a href="https://wiki.gnome.org/Projects/GnomeContinuous"&gt;gnome-continuous&lt;/a&gt;, where it was a high-performance continuous-delivery system that would ensure that a couple of minutes after a git commit, GNOME developers would be testing the changes that had landed in GNOME. &lt;/p&gt;
+
+&lt;p&gt;But Walters had always kept ostree as a separate layer so anyone could feed RPM content into it. And not just RPMs, there&amp;rsquo;s are people feeding DEB packages into ostree as well. The core ostree, in actuality, is very content independent.&lt;/p&gt;
+
+&lt;p&gt;Atomic also compliments some aspects of rpm-ostree that could be seen as short-term limitations. One such trade off with the ostree model is that once a tree is replicated, that tree is immutable in the client. ostree itself doesn&amp;rsquo;t give you a way to add or remove packages within the tree on the client side; rpm-ostree is what does that, and only from the compose server. Docker, then, is a way to add or remove apps dynamically, where you can get applications as an image inside a container. Systemd will facilitate starting and stopping these containers, and GearD will enable orchestration of these containers.&lt;/p&gt;
+
+&lt;p&gt;Project Atomic is about best practices for deployment of servers and applications on servers. That is what the combination of these particular tools is all about.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

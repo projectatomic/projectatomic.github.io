@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Buildah version 1.1 Release Announcement &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tom Sweeney' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Buildah version 1.1 Release Announcement' property='og:title'>
+<meta content='Buildah version 1.1 Release Announcement&#x000A;&#x000A;&#x000A;&#x000A;We’re pleased to announce the release of Buildah version 1.1 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.&#x000A;&#x000A;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/' property='og:url'>
+<meta content='2018-06-12T00:00:00Z' property='article:published_time'>
+<meta content='tsweeney' property='article:author:username'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='open source' property='article:tag'>
+<link href='/blog/tag/open source.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Buildah version 1.1 Release Announcement' name='twitter:title'>
+<meta content='Buildah version 1.1 Release Announcement&#x000A;&#x000A;&#x000A;&#x000A;We’re pleased to announce the release of Buildah version 1.1 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.&#x000A;&#x000A;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_06 blog_2018_06_Buildah-version-v1 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Buildah version 1.1 Release Announcement
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-12T00:00:00Z'>
+Tuesday 12 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Buildah version 1.1 Release Announcement</h3>
+
+<p><img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /></p>
+
+<p>We&rsquo;re pleased to announce the release of Buildah version 1.1 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.</p>
+
+<p>The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.  </p>
+
+<p></p>
+
+<h4>The major highlights for this release are:</h4>
+
+<ul>
+<li>Drop capabilities if running container processes as non root</li>
+<li>Print Warning message if cmd will not be used based on entrypoint</li>
+<li>Add OnBuild support for Dockerfiles</li>
+<li>Add support for buildah bud &ndash;label</li>
+<li>Report errors on bad transports specification when pushing images</li>
+<li>Add registry errors for pull</li>
+<li>Give better messages to users when image can not be found</li>
+<li>Add environment variable to buildah &ndash;format</li>
+<li>Accept json array input for config entrypoint</li>
+<li>buildah bud now requires a context directory or URL</li>
+<li>buildah bud picks up ENV from base image</li>
+<li>Run: set supplemental group IDs</li>
+<li>Use CNI to configure container networks</li>
+<li>add/secrets/commit: Use mappings when setting permissions on added content</li>
+<li>Add CLI options for specifying namespace and cgroup setup</li>
+<li>Always set mappings when using user namespaces</li>
+<li>Read UID/GID mapping information from containers and images</li>
+<li>build-using-dockerfile: add &ndash;annotation</li>
+<li>Implement &ndash;squash for build-using-dockerfile and commit</li>
+<li>Manage <q>Run</q> containers more closely</li>
+<li>Handle /etc/hosts and /etc/resolv.conf properly in container</li>
+<li>Make <q>run &ndash;terminal</q> and <q>run -t</q> aliases for <q>run &ndash;tty</q></li>
+<li>buildah push/from can push and pull images with no reference</li>
+<li>Attempt to download file from url, if fails assume Dockerfile</li>
+<li>builder-inspect: fix format option</li>
+<li>buildah-from: add effective value to mount propagation</li>
+<li>Documentation Changes</li>
+<li>Change freenode chan to buildah</li>
+<li>Add example CNI configurations</li>
+<li>Touch Up tutorial for run changes</li>
+<li>Update 01-intro.md tutorial</li>
+<li>Update troubleshooting with new run workaround</li>
+<li>Add console syntax highlighting to troubleshooting page</li>
+<li>Touchup man page short options across man pages</li>
+<li>Demo Changes
+
+<ul>
+<li>Added demo dir and a demo.</li>
+<li>Added Docker compatibility demo </li>
+<li>Added a bud demo and tidied up</li>
+<li>Update buildah scratch demo to support el7</li>
+<li>Quick fix on demo readme</li>
+</ul></li>
+<li>Test Changes
+
+<ul>
+<li>Add tests for namespace control flags</li>
+<li>CI tests and minor fix for cache related noop flags</li>
+<li>Add cpu-shares short flag (-c) and cpu-shares CI tests</li>
+<li>Add buildah bud CI tests for ENV variables</li>
+<li>Additional bud CI tests</li>
+<li>Run integration tests under travis_wait in Travis</li>
+<li>Re-enable rpm .spec version check and new commit test</li>
+<li>Update to F28 and new run format in baseline test</li>
+<li>Add context dir to bud command in baseline test</li>
+<li>add test to inspect</li>
+<li>Test with Go 1.10, too</li>
+<li>rmi, rm: add test</li>
+<li>add mount test</li>
+<li>Fix SELinux test errors when SELinux is enabled</li>
+</ul></li>
+<li>Vendor changes
+
+<ul>
+<li>Vendor in latest container/storage for devicemapper support</li>
+<li>Vendor github.com/onsi/ginkgo and github.com/onsi/gomega</li>
+<li>Vendor github.com/containernetworking/cni v0.6.0</li>
+<li>Update github.com/containers/storage</li>
+<li>Update github.com/projectatomic/libpod</li>
+<li>Vendor in latest containers/image</li>
+</ul></li>
+<li>Plus a number of smaller fixes.</li>
+</ul>
+
+<h4>Try it Out.</h4>
+
+<p>If you haven’t yet, install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!</p>
+
+<p>For those of you who contributed to this release, thank you very much for your contributions!  If you haven&rsquo;t joined our community yet, don&rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.</p>
+
+<h4>Buildah == Simplicity</h4>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/community/">community</a></li>
+<li><a href="/blog/tag/open-source/">open source</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

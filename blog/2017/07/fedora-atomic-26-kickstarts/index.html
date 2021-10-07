@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Changes to Kickstarts for Fedora Atomic 26 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Changes to Kickstarts for Fedora Atomic 26' property='og:title'>
+<meta content='As you know, I’m all about installing Atomic on bare metal using kickstarts.  And one of the things which has changed with Fedora Atomic 26 is some of the tags and locations you need for your kickstarts.  You’ll find that your old kickstarts no longer work.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-kickstarts/' property='og:url'>
+<meta content='2017-07-17T14:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora 26' property='article:tag'>
+<link href='/blog/tag/fedora 26.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Changes to Kickstarts for Fedora Atomic 26' name='twitter:title'>
+<meta content='As you know, I’m all about installing Atomic on bare metal using kickstarts.  And one of the things which has changed with Fedora Atomic 26 is some of the tags and locations you need for your kickstarts.  You’ll find that your old kickstarts no longer work.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_07 blog_2017_07_fedora-atomic-26-kickstarts blog_2017_07_fedora-atomic-26-kickstarts_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Changes to Kickstarts for Fedora Atomic 26
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-07-17T14:00:00Z'>
+Monday 17 July 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As you know, I&rsquo;m all about <a href="blog/2016/10/install-with-kickstart/">installing Atomic on bare metal using kickstarts</a>.  And one of the things which has changed with Fedora Atomic 26 is some of the tags and locations you need for your kickstarts.  You&rsquo;ll find that your old kickstarts no longer work.</p>
+
+<p></p>
+
+<p>First, your <code>ostreesetup</code> line needs to change. Here&rsquo;s my new one:</p>
+<pre class="highlight plaintext"><code>ostreesetup --osname="fedora-atomic" --remote="fedora-atomic-26" --url="file:///ostree/repo" --ref="fedora/26/x86_64/atomic-host" --nogpg&#x000A;</code></pre>
+
+<p>Three things changed here.  First, the <code>remote</code> is now &ldquo;fedora-atomic-26&rdquo; instead of just &ldquo;fedora-atomic&rdquo; (<code>osname</code> can really be whatever you want). This is a temporary measure until we <a href="https://fedoramagazine.org/upcoming-fedora-atomic-lifecycle-changes/">merge all of the repos for continuous upgrade</a>.  Second, the <code>url</code> to install from local media has changed to the simpler &ldquo;file:///ostree/repo&rdquo;.  Third, the upstream <code>ref</code> is now &ldquo;fedora/26/x86_64/atomic-host&rdquo;, which both removes the reference to a specific container runtime from the edition and makes the urls consistent with other Fedora Editions.</p>
+
+<p>We can also stop disabling cloud-init for Anaconda (bare metal) installs:</p>
+<pre class="highlight plaintext"><code>services --enabled="systemd-timesyncd"&#x000A;</code></pre>
+
+<p>Previously, we&rsquo;d have added <code>--disabled=&quot;cloud-init,cloud-config,cloud-final,cloud-init-local&quot;</code> in that line, but Anaconda now automatically disables cloud-init since it won&rsquo;t be used for a local install, so we don&rsquo;t have to.  </p>
+
+<p>In <code>%post</code> where I add in the final configuration for ostree, I also had to change the <code>url</code> and <code>remote</code>:</p>
+<pre class="highlight plaintext"><code>ostree remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-26-primary fedora-atomic-26 https://kojipkgs.fedoraproject.org/atomic/26&#x000A;</code></pre>
+
+<p>There&rsquo;s also some other nice improvements there. First, gpg-signing of upgrades and rebases works consistently, so we&rsquo;re adding in gpg checking.  Second, <code>--if-not-exists</code> is a nice ostree feature which lets us add remotes idempotently, to better work with Ansible and other config management software.  It&rsquo;s not actually useful here since we&rsquo;re deleting the prior remote, but it&rsquo;s a good idea to get into using it in general (and naming your remotes uniquely).</p>
+
+<p>Below is a completed example kickstart, with all of the changes, which installs Fedora Atomic with OverlayFS to One Big Volume of 60GB and static networking.  Note that in Fedora Atomic 27, One Big Volume will be the default.</p>
+<pre class="highlight plaintext"><code>install&#x000A;reboot&#x000A;lang en_US.UTF-8&#x000A;keyboard us&#x000A;timezone --utc America/Los_Angeles&#x000A;selinux --enforcing&#x000A;zerombr&#x000A;clearpart --all --initlabel&#x000A;bootloader --location=mbr --boot-drive=sda&#x000A;reqpart --add-boot&#x000A;#part /boot --size=300 --fstype="ext4" --ondisk=sda&#x000A;part pv.01 --grow --ondisk=sda&#x000A;volgroup atomicos pv.01&#x000A;logvol / --size=57000 --fstype="xfs" --name=root --vgname=atomicos&#x000A;logvol swap --fstype swap --name=lv_swap --vgname=atomicos --size=2048&#x000A;services --enabled="systemd-timesyncd"&#x000A;ostreesetup --osname="fedora-atomic" --remote="fedora-atomic-26" --url="file:///ostree/repo" --ref="fedora/26/x86_64/atomic-host" --nogpg&#x000A;&#x000A;network --device=link --bootproto=static --ip=192.168.1.101 --netmask=255.255.255.0 --hostname=node1.projectatomic.rocks --gateway=192.168.1.1 --nameserver=192.168.1.100&#x000A;&#x000A;user --name=atomic --groups=wheel --password=atomic&#x000A;&#x000A;%post --erroronfail&#x000A;rm -f /etc/ostree/remotes.d/fedora-atomic.conf&#x000A;ostree remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-26-primary fedora-atomic-26 https://kojipkgs.fedoraproject.org/atomic/26&#x000A;echo -e "\nSTORAGE_DRIVER='overlay2'\nCONTAINER_ROOT_LV_MOUNT_PATH=''\n" &gt;&gt; /etc/sysconfig/docker-storage-setup&#x000A;%end&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/fedora-26/">fedora 26</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-kickstarts/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-kickstarts/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-kickstarts/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

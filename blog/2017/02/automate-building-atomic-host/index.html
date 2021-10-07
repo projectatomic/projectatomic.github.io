@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Automate Building Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Trishna Guha' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Automate Building Atomic Host' property='og:title'>
+<meta content='Project Atomic hosts are built from standard RPM packages that have been composed into filesystem trees using rpm-ostree. This guide provides an example of automating building and testing new Atomic Host ostrees.&#x000A;&#x000A;One of the primary benefits to Atomic Host and OSTree has been the ability to configure once, deploy many times using custom OSTree images. But the process for doing so wasn’t streamlined or well-documented. I’m helping change that. I’m going to describe how to build atomic host in automated way. At the end of the article you’ll be able to create VM from QCOW2 image which is going to boot your own OSTree.  The VM can also be used for testing Atomic Host releases (please feel free to open an issue if you find anything).' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/02/automate-building-atomic-host/' property='og:url'>
+<meta content='2017-02-27T18:00:00Z' property='article:published_time'>
+<meta content='trishnag' property='article:author:username'>
+<meta content='ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='automation' property='article:tag'>
+<link href='/blog/tag/automation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Automate Building Atomic Host' name='twitter:title'>
+<meta content='Project Atomic hosts are built from standard RPM packages that have been composed into filesystem trees using rpm-ostree. This guide provides an example of automating building and testing new Atomic Host ostrees.&#x000A;&#x000A;One of the primary benefits to Atomic Host and OSTree has been the ability to configure once, deploy many times using custom OSTree images. But the process for doing so wasn’t streamlined or well-documented. I’m helping change that. I’m going to describe how to build atomic host in automated way. At the end of the article you’ll be able to create VM from QCOW2 image which is going to boot your own OSTree.  The VM can also be used for testing Atomic Host releases (please feel free to open an issue if you find anything).' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_02 blog_2017_02_automate-building-atomic-host blog_2017_02_automate-building-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Automate Building Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/trishnag/">Trishna Guha</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-02-27T18:00:00Z'>
+Monday 27 February 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="http://www.projectatomic.io/">Project Atomic</a> hosts are built from standard RPM packages that have been composed into filesystem trees using rpm-ostree. This guide provides an example of automating building and testing new Atomic Host ostrees.</p>
+
+<p>One of the primary benefits to Atomic Host and OSTree has been the ability to <q>configure once, deploy many times</q> using custom OSTree images. But the process for doing so wasn&rsquo;t streamlined or well-documented. I&rsquo;m helping change that. I&rsquo;m going to describe how to build atomic host in automated way. At the end of the article you&rsquo;ll be able to create VM from QCOW2 image which is going to boot your own OSTree.  The VM can also be used for testing Atomic Host releases (please feel free to <a href="https://pagure.io/atomic-wg/issues">open an issue if you find anything</a>).</p>
+
+<p></p>
+
+<p>The procedure and Ansible playbook below will enable you to create your own Atomic Host OSTree image. This is the first step in creating your own <q>distributions</q> of Atomic Host to install on your cloud servers. Note that it will install a bunch of requirements on your local server, as well as using system resources heavily. As such, you may want to run it on a development machine instead of your personal laptop.</p>
+
+<p>If you just want to compose an ostree, and don&rsquo;t need the playbook automation or testing, see <a href="http://www.projectatomic.io/docs/compose-your-own-tree/">the documentation for composing ostrees</a>.</p>
+
+<h3>Requirements</h3>
+
+<ul>
+<li>Fedora Atomic QCOW2 Image. The image can be downloaded from here: <a href="https://getfedora.org/en/atomic/download/">Fedora-Atomic</a></li>
+<li>Make sure that Ansible is installed on your system. Note that I am installing it on my <a href="https://getfedora.org/en/workstation/download">Fedora-Workstation</a>.</li>
+</ul>
+<pre class="highlight plaintext"><code>$ sudo dnf install ansible python2-dnf&#x000A;</code></pre>
+
+<h4>Process</h4>
+
+<p>Clone the <a href="https://github.com/trishnaguha/build-atomic-host/">Build-Atomic-Host</a> git repo on your working machine/</p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/trishnaguha/build-atomic-host.git&#x000A;$ cd build-atomic-host&#x000A;</code></pre>
+
+<h4>Create VM from the QCOW2 Image</h4>
+
+<p>The following creates a VM from QCOW2 Image where the username is <code>atomic-user</code> and password is <code>atomic</code>.
+Here <code>atomic-node</code> is the instance name.</p>
+<pre class="highlight plaintext"><code>$ sudo sh create-vm.sh atomic-node /path/to/fedora-atomic25.qcow2&#x000A;# For example: /var/lib/libvirt/images/Fedora-Atomic-25-20170131.0.x86_64.qcow2&#x000A;</code></pre>
+
+<h4>Install Requirements and Start the HTTP Server</h4>
+
+<p>The custom ostree is made available via a simple web server. The following playbook installs requirements, creates directory structure, initializes the OSTree repository and starts the HTTP server on TCP Port 35000.</p>
+<pre class="highlight plaintext"><code>$ ansible-playbook setup.yml --ask-sudo-pass&#x000A;</code></pre>
+
+<p>Use <code>ip addr</code> to check for the IP Address of the HTTP server.  This needs to be the interface by which your workstations communicates with virtual machines running on it, such as <q>virbr0</q> for LibVirt on Linux:</p>
+<pre class="highlight plaintext"><code>$ ip addr&#x000A;7: virbr0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000&#x000A;    link/ether 52:54:00:37:7f:e9 brd ff:ff:ff:ff:ff:ff&#x000A;    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0&#x000A;</code></pre>
+
+<p>In our example, the IP Address of the running HTTP server is <code>192.168.122.1</code>.</p>
+
+<h4>Give the ostree a name and add HTTP Server IP Address</h4>
+
+<p>Replace the variables given in <a href="https://github.com/trishnaguha/build-atomic-host/tree/master/vars/atomic.yml">vars/atomic.yml</a> with your choice of ostree name and the HTTP server IP address.
+For Instance:</p>
+<pre class="highlight plaintext"><code># Variables for Atomic host&#x000A;atomicname: my-atomic&#x000A;httpserver: 192.168.122.1&#x000A;</code></pre>
+
+<p>Here <code>my-atomic</code> is the ostree name and <code>192.168.122.1</code> is HTTP Server IP Address.</p>
+
+<h4>Run All-in-one Playbook</h4>
+
+<p>The following playbook composes the ostree, performs SSH-setup and rebases on the created tree:</p>
+<pre class="highlight plaintext"><code>$ ansible-playbook main.yml --ask-sudo-pass&#x000A;</code></pre>
+
+<h4>Check IP Address of the Atomic instance</h4>
+
+<p>The following command returns the IP Address of the running Atomic instance:</p>
+<pre class="highlight plaintext"><code>$ sudo virsh domifaddr atomic-node&#x000A;</code></pre>
+
+<h4>Reboot</h4>
+
+<p>Now SSH to the Atomic Host and reboot it so that it can reboot into the created ostree:</p>
+<pre class="highlight plaintext"><code>$ ssh atomic-user@&lt;atomic-hostIP&gt;&#x000A;$ sudo systemctl reboot&#x000A;</code></pre>
+
+<p>Wait for few minutes after the reboot so that you do not get connection refused by the host while SSH-ing.</p>
+
+<h4>Verify: SSH to the Atomic Host</h4>
+<pre class="highlight plaintext"><code>$ ssh atomic-user@192.168.122.221&#x000A;[atomic-user@atomic-node ~]$ sudo rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● my-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.1 (2017-02-07 05:34:46)&#x000A;        Commit: 15b70198b8ec7fd54271f9672578544ff03d1f61df8d7f0fa262ff7519438eb6&#x000A;        OSName: fedora-atomic&#x000A;&#x000A;  fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.51 (2017-01-30 20:09:59)&#x000A;        Commit: f294635a1dc62d9ae52151a5fa897085cac8eaa601c52e9a4bc376e9ecee11dd&#x000A;        OSName: fedora-atomic&#x000A;</code></pre>
+
+<p>Now you have the updated tree and can test it in the VM.</p>
+
+<p>If you are interested in composing your own tree that includes addition or deletion of packages of your choice, please follow <a href="http://www.projectatomic.io/docs/compose-your-own-tree/">Compose-your-own-tree</a> by <a href="https://twitter.com/jasonbrooks">Jason Brooks</a>.</p>
+
+<p>Shout-Out for the following folks:</p>
+
+<ul>
+<li><a href="http://gbraad.nl">Gerard Braad</a> who mentored me for the project.</li>
+<li><a href="https://github.com/jlebon">Jonathan Lebon</a> who demonstrated Building Atomic host workshop in <a href="https://devconf.cz/">DevConf.CZ</a>, 2017 at Brno. His slides are here: <a href="http://jlebon.com/devconf/slides.pdf">jlebon-devconf-slides</a>.</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/ansible/">ansible</a></li>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/automation/">automation</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/02/automate-building-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/02/automate-building-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/02/automate-building-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

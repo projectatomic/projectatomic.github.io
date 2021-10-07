@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Getting started with cloud-init &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Matthew Micene' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Getting started with cloud-init' property='og:title'>
+<meta content='Colin Walters recently announced a new cloud image for Atomic that includes support for cloud-init and Kubernetes.  Supporting cloud-init is a great move but running this image locally with KVM needs a different set up than previous images.  Here’s a walk through to get started with this latest image and the Fedora Atomic Cloud releases.  This was the first time I needed to work with cloud-init, and there was a bit of a learning curve.  There are a few different examples floating around the web and none of them seemed to work quite right.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/' property='og:url'>
+<meta content='2014-10-21T00:00:00Z' property='article:published_time'>
+<meta content='mmicene' property='article:author:username'>
+<meta content='cloud-init' property='article:tag'>
+<link href='/blog/tag/cloud-init.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Getting started with cloud-init' name='twitter:title'>
+<meta content='Colin Walters recently announced a new cloud image for Atomic that includes support for cloud-init and Kubernetes.  Supporting cloud-init is a great move but running this image locally with KVM needs a different set up than previous images.  Here’s a walk through to get started with this latest image and the Fedora Atomic Cloud releases.  This was the first time I needed to work with cloud-init, and there was a bit of a learning curve.  There are a few different examples floating around the web and none of them seemed to work quite right.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_10 blog_2014_10_getting-started-with-cloud-init blog_2014_10_getting-started-with-cloud-init_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Getting started with cloud-init
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/mmicene/">Matthew Micene</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-10-21T00:00:00Z'>
+Tuesday 21 October 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Colin Walters <a href="https://lists.projectatomic.io/projectatomic-archives/atomic/2014-October/msg00000.html">recently announced</a> a new cloud image for Atomic that includes support for cloud-init and Kubernetes.  Supporting cloud-init is a great move but running this image locally with KVM needs a different set up than previous images.  Here&rsquo;s a walk through to get started with this latest image and the Fedora Atomic Cloud releases.  This was the first time I needed to work with cloud-init, and there was a bit of a learning curve.  There are a few different examples floating around the web and none of them seemed to work quite right.</p>
+
+<p></p>
+
+<p>First things first, I&rsquo;ll grab the new image from the alt.fp.org link in Colin&rsquo;s message and expand it.</p>
+<pre class="highlight plaintext"><code>$ wget https://alt.fedoraproject.org/pub/alt/fedora-atomic/testing/rawhide/20141008.0/cloud/fedora-atomic-rawhide-20141008.0.qcow2.xz&#x000A;$ xz -d fedora-atomic-rawhide-20141008.0.qcow2.xz&#x000A;</code></pre>
+
+<p>Since this image is using cloud-init, it will be looking for somewhere to pull two kinds of information: metadata and userdata.  Metadata is cloud specific host information like instance ID numbers, hostname, IP address, etc.  Userdata is pretty much everything else: adding and modifying users, adding packages, calling configuration management systems, etc.  This information is injected into the host the first time it boots.  The cloud-init package supports several different drivers to inject this information for different cloud APIs, including a &lsquo;No Cloud&rsquo; driver.  Running this locally in KVM, I&rsquo;ll be using that driver.</p>
+
+<p>You can see from <a href="http://cloudinit.readthedocs.org/en/latest/topics/datasources.html#no-cloud">the docs</a> that the &#39;No Cloud&rsquo; driver needs two YAML files provided at the root of an ISO to the booting instance.  The meta-data file I&rsquo;m going to provide is just enough to get the system started and set a hostname.  Add these two lines to a file called <code>meta-data</code></p>
+<pre class="highlight plaintext"><code>instance-id: Atomic01&#x000A;local-hostname: atomic-host-001&#x000A;</code></pre>
+
+<p>One important note about making iterative changes during testing.  If you change the user-data or meta-data files and rebuild the ISO, you will need to update the instance-id.  This is how <code>cloud-init</code> knows if this is the first boot of a specific instantiated host.</p>
+
+<p>For our user-data file, I&rsquo;m going to set a password and inject a ssh key for the default user &#39;fedora&rsquo;.  I don&rsquo;t want to use my normal key here, so I&rsquo;ll build one for this example.  I&rsquo;ve also set ssh up to accept a password.  You can skip that if you want key only authentication.  </p>
+<pre class="highlight plaintext"><code>$ ssh-keygen -f atomic_rsa&#x000A;Generating public/private rsa key pair.&#x000A;&lt;truncating output&gt;&#x000A;$ cat atomic_rsa.pub &#x000A;$ vim user-data&#x000A;&#x000A;#cloud-config&#x000A;password: redhat&#x000A;chpasswd: { expire: False }&#x000A;ssh_pwauth: True&#x000A;ssh_authorized_keys:&#x000A;   - ... ssh-rsa new public key here user@host ...&#x000A;</code></pre>
+
+<p>If you want to add more ssh keys, just add a new line starting with a - under the <code>ssh_authorized_keys:</code> stanza.  This is YAML, so you want to use white spaces not tabs to indent.  The <code>#cloud-init</code> line is not a comment in the user-data file.  This is acutally a keyword that needs to be there.  Anything else preceded with a <code>#</code> is a comment.  </p>
+
+<p>I&rsquo;ve got the two files ready, so now I need to make a ISO to provide during the boot process.  If you&rsquo;ve got a favorite method, you can use that, I&rsquo;ll use <code>genisoimage</code>.</p>
+<pre class="highlight plaintext"><code>$ genisoimage -output atomic01-cidata.iso -volid cidata -joliet -rock user-data meta-data&#x000A;</code></pre>
+
+<p>Now I&rsquo;ve got everything I need to boot the qcow2 image, log in via the console and ssh as the default <code>fedora</code> user.  I&rsquo;m using the downloaded image as the primary disk, the cloud-init ISO as the CD-ROM and attaching it to an existing bridge that virt-manager created previously.</p>
+<pre class="highlight plaintext"><code>$ qemu-kvm -name atomic-cloud-host -m 768 -hda fedora-atomic-rawhide-20141008.0.qcow2 -cdrom atomic01-cidata.iso -netdev bridge,br=virbr0,id=net0 -device virtio-net-pci,netdev=net0 -display sdl&#x000A;</code></pre>
+
+<p>As you watch the console you&rsquo;ll see cloud-init do it&rsquo;s work, including getting an IP from the bridge and setting up the authorized key for the <code>fedora</code> user.  I can log in using the key I created and injected, switch to root and set the host up for updates from the repo.</p>
+<pre class="highlight plaintext"><code>$ ssh -i atomic_rsa fedora@192.168.122.92&#x000A;The authenticity of host '192.168.122.92 (192.168.122.92)' can't be established.&#x000A;ECDSA key fingerprint is 9f:6a:4f:2c:b0:78:ca:7e:ba:0d:af:e5:0b:d3:15:a6.&#x000A;Are you sure you want to continue connecting (yes/no)? yes&#x000A;Warning: Permanently added '192.168.122.92' (ECDSA) to the list of known hosts.&#x000A;[fedora@atomic-host-001 ~]$ &#x000A;&#x000A;[fedora@atomic-host-001 ~]$ sudo su -&#x000A;-bash-4.3# ostree remote add alt.fp.org --set=gpg-verify=false https://alt.fedoraproject.org/pub/alt/fedora-atomic/repo/&#x000A;-bash-4.3# atomic rebase alt.fp.org:&#x000A;&#x000A;631 metadata, 2770 content objects fetched; 90536 KiB transferred in 34 seconds&#x000A;&#x000A;Copying /etc changes: 11 modified, 0 removed, 15 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1)&#x000A;Deleting ref 'fedora-atomic:fedora-atomic/rawhide/x86_64/docker-host'&#x000A;Changed:&#x000A;</code></pre>
+
+<p>I can see now that I have a new ostree with a different refspec that will be active on reboot.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# atomic status&#x000A;  TIMESTAMP (UTC)         ID             OSNAME            REFSPEC                                                    &#x000A;  2014-10-17 17:29:43     8392c7b6cd     fedora-atomic     alt.fp.org:fedora-atomic/rawhide/x86_64/docker-host        &#x000A;* 2014-10-08 20:12:21     9a56faf008     fedora-atomic     fedora-atomic:fedora-atomic/rawhide/x86_64/docker-host   &#x000A;-bash-4.3# reboot&#x000A;[fedora@atomic-host-001 ~]$ atomic status&#x000A;  TIMESTAMP (UTC)         ID             OSNAME            REFSPEC                                                    &#x000A;* 2014-10-17 17:29:43     8392c7b6cd     fedora-atomic     alt.fp.org:fedora-atomic/rawhide/x86_64/docker-host        &#x000A;  2014-10-08 20:12:21     9a56faf008     fedora-atomic     fedora-atomic:fedora-atomic/rawhide/x86_64/docker-host &#x000A;</code></pre>
+
+<p>You can use this as a starting point to add more users, add the new repo from the user-data file, add additional keys to the default fedora user, etc.  If you&rsquo;d like to check out Kubernetes, the GuestBook example in the Kubernetes Github repo works with some minor changes.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cloud-init/">cloud-init</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

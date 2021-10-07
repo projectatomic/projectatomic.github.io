@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Introducing Atomic Reactor &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tomáš Tomeček' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Introducing Atomic Reactor' property='og:title'>
+<meta content='It’s been a while when we announced move of atomic-reactor under Project Atomic.&#x000A;&#x000A;Since the name is so cryptic, one could wonder about the purpose of the tool. Let’s go through a simple example…&#x000A;&#x000A;What problem is atomic-reactor trying to solve?&#x000A;&#x000A;Imagine Bob, a software engineer who would like to ship company’s products as containers. Bob’s company has already pretty complex infrastructure with build system, source code management, product deployment and delivery.&#x000A;&#x000A;So Bob starts the work on integrating docker into company’s infrastructure.&#x000A;&#x000A;Bob knows it’s so easy to build a docker image:&#x000A;$ docker build --tag=product-X .' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/09/introduce-atomic-reactor/' property='og:url'>
+<meta content='2015-09-14T17:27:26Z' property='article:published_time'>
+<meta content='ttomecek' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='build' property='article:tag'>
+<link href='/blog/tag/build.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Introducing Atomic Reactor' name='twitter:title'>
+<meta content='It’s been a while when we announced move of atomic-reactor under Project Atomic.&#x000A;&#x000A;Since the name is so cryptic, one could wonder about the purpose of the tool. Let’s go through a simple example…&#x000A;&#x000A;What problem is atomic-reactor trying to solve?&#x000A;&#x000A;Imagine Bob, a software engineer who would like to ship company’s products as containers. Bob’s company has already pretty complex infrastructure with build system, source code management, product deployment and delivery.&#x000A;&#x000A;So Bob starts the work on integrating docker into company’s infrastructure.&#x000A;&#x000A;Bob knows it’s so easy to build a docker image:&#x000A;$ docker build --tag=product-X .' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_09 blog_2015_09_introduce-atomic-reactor blog_2015_09_introduce-atomic-reactor_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Introducing Atomic Reactor
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/ttomecek/">Tomáš Tomeček</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-09-14T17:27:26Z'>
+Monday 14 September 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>It&rsquo;s been a while when we <a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2015-July/msg00010.html">announced</a> move of <a href="https://github.com/projectatomic/atomic-reactor">atomic-reactor</a> under Project Atomic.</p>
+
+<p>Since the name is so cryptic, one could wonder about the purpose of the tool. Let&rsquo;s go through a simple example&hellip;</p>
+
+<h3>What problem is atomic-reactor trying to solve?</h3>
+
+<p>Imagine Bob, a software engineer who would like to ship company&rsquo;s products as containers. Bob&rsquo;s company has already pretty complex infrastructure with build system, source code management, product deployment and delivery.</p>
+
+<p>So Bob starts the work on integrating docker into company&rsquo;s infrastructure.</p>
+
+<p>Bob knows it&rsquo;s so easy to build a docker image:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>docker build --tag<span class="o">=</span>product-X .&#x000A;</code></pre>
+
+<p></p>
+
+<p>Bob thinks he needs a Dockerfile&hellip;</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>git clone https://example.com/git/dockerfile-product-x.git <span class="o">&amp;&amp;</span> <span class="nb">cd </span>dockerfile-product-x <span class="o">&amp;&amp;</span> docker build --tag<span class="o">=</span>product-X .&#x000A;</code></pre>
+
+<p>That&rsquo;s not enough, artifacts are stored elsewhere.</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>git clone https://example.com/git/dockerfile-product-x.git <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    <span class="nb">cd </span>dockerfile-product-x <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    wget https://example.com/data/product-x.tar.gz <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker build --tag<span class="o">=</span>product-X .&#x000A;</code></pre>
+
+<p>We need to apply multiple tags, not just one.</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>git clone https://example.com/git/dockerfile-product-x.git <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    <span class="nb">cd </span>dockerfile-product-x <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    wget https://example.com/data/product-x.tar.gz <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker build --tag<span class="o">=</span>product-X . <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker tag product-X product-X:v1 <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker tag product-X product-X:v1.1&#x000A;</code></pre>
+
+<p>And push it of course&hellip;</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>git clone https://example.com/git/dockerfile-product-x.git <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    <span class="nb">cd </span>dockerfile-product-x <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    wget https://example.com/data/product-x.tar.gz <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker build --tag<span class="o">=</span>registry.example.com/product-X . <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker tag product-X registry.example.com/product-X:v1 <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker tag product-X registry.example.com/product-X:v1.1&#x000A;    docker push registry.example.com/product-X <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker push registry.example.com/product-X:v1 <span class="o">&amp;&amp;</span> <span class="se">\</span>&#x000A;    docker push registry.example.com/product-X:v1.1&#x000A;</code></pre>
+
+<p>&hellip;and apply custom labels before build, have persistent build logs, garbage-collect build artifacts, squash layers, manage yum repositories during build&hellip;</p>
+
+<p>We were in Bob&rsquo;s position and this is where we realized that simple script won&rsquo;t be enough and we need to develop a tool.</p>
+
+<p>So we developed atomic-reactor. A tool, which takes care of whole build process of creating a docker image. We knew we need plugins in it.</p>
+
+<h3>Plugins</h3>
+
+<p>The major feature of atomic-reactor is its plugin system. At the moment we have 4 types of plugins:</p>
+
+<ol>
+<li>Plugins which are run before build (these are good for changing dockerfiles and managing base images).</li>
+<li>Essential part of build process is to push the image to registry. Another place where reactor runs plugins (e.g. testing whether the image passed tests). These are called pre-publish plugins.</li>
+<li>Since we have pre-build plugins, we also need to have post-build plugins.</li>
+<li>And finally, exit plugins. These are run no matter what. Good for storing logs and cleaning environment.</li>
+</ol>
+
+<h4>What can it do with those plugins then?</h4>
+
+<ul>
+<li>Pull base image from custom registry.</li>
+<li>Use <a href="https://fedoraproject.org/wiki/Koji">koji</a> tag as a source yum repository.</li>
+<li>Add custom labels to dockerfile prior to build.</li>
+<li>Add new yum repositories which will be available during build.</li>
+<li>Squash layers of the image.</li>
+<li>Tag image according to <code>Name</code>, <code>Version</code> and <code>Release</code> labels as specified in <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels">this document</a>.</li>
+<li>Push image to <a href="http://www.pulpproject.org/">pulp</a> registry.</li>
+<li>Do additional tagging and pushing of the image to custom registries.</li>
+<li>List all installed packages in the image.</li>
+<li>Remove images after build — clean environment.</li>
+<li>It is able to get input from <a href="https://github.com/openshift/origin">OpenShift v3</a> using <a href="https://docs.openshift.org/latest/creating_images/custom.html">custom build</a> and after build, stores metadata as <a href="http://kubernetes.io/v1.0/docs/user-guide/annotations.html">annotations</a> of build object.</li>
+</ul>
+
+<p>Do you miss some? <a href="https://github.com/projectatomic/atomic-reactor/issues/new">Just let us know!</a></p>
+
+<h3>Isolated Builds</h3>
+
+<p>There are 3 ways you can build your images:</p>
+
+<ol>
+<li>Have atomic-reactor installed in a docker image, start new instance of docker (docker in docker) and build your image inside such container.</li>
+<li>Similar, except you mount docker socket inside container and thus use docker engine from host.</li>
+<li>Build image in current environment.</li>
+</ol>
+
+<h3>Hands On</h3>
+
+<p>Enough theory, time to give it a go! Let&rsquo;s install atomic-reactor first. It is packaged in Fedora, therefore installation is very simple.</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>dnf install atomic-reactor&#x000A;</code></pre>
+
+<p>Let&rsquo;s say we have a remote git repository with a dockerfile on branch <code>atomic-reactor-demo</code> and we want to build it and squash all layers from the dockerfile to a single one. Fair request.</p>
+
+<p>We&rsquo;ll write a <a href="https://github.com/projectatomic/atomic-reactor/blob/master/docs/build_json.md">build.json</a>, a recipe for the build:</p>
+<pre class="highlight plaintext"><code>$ cat build.json&#x000A;{&#x000A;    "image": "ttomecek/hello-world",&#x000A;    "source": {&#x000A;        "provider": "git",&#x000A;        "uri": "https://github.com/TomasTomecek/docker-hello-world.git",&#x000A;        "provider_params": {&#x000A;            "git_commit": "atomic-reactor-demo"&#x000A;        }&#x000A;    },&#x000A;    "prepublish_plugins": [&#x000A;        {&#x000A;            "name": "squash"&#x000A;        }&#x000A;    ]&#x000A;}&#x000A;</code></pre>
+
+<p>We are building image <code>ttomecek/hello-world</code> from git and are using just one plugin: <a href="https://github.com/projectatomic/atomic-reactor/blob/master/atomic_reactor/plugins/prepub_squash.py">squash</a> (the plugin uses <a href="https://github.com/goldmann/docker-scripts">python-docker-scripts</a> written by Marek Goldmann). This is the dockerfile:</p>
+<pre class="highlight plaintext"><code>FROM fedora:latest&#x000A;LABEL purpose="atomic reactor demo"&#x000A;ENV x=y&#x000A;RUN uname -a &amp;&amp; env&#x000A;</code></pre>
+
+<p>So let&rsquo;s run it:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>atomic-reactor build json --method here build.json&#x000A;</code></pre>
+
+<p>Method <code>here</code> builds image in current environment, not in container.</p>
+
+<p>As you might see, the output is really verbose so you know precisely what&rsquo;s going on. After the build is done, let&rsquo;s check our image:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>docker <span class="nb">history </span>ttomecek/hello-world&#x000A;IMAGE               CREATED             CREATED BY          SIZE                COMMENT&#x000A;da1a64eb6660        23 seconds ago                          241.3 MB&#x000A;511136ea3c5a        2 years ago                             0 B                 Imported from -&#x000A;&#x000A;<span class="gp">$ </span>docker inspect ttomecek/hello-world&#x000A;...&#x000A;    <span class="s2">"Config"</span>: <span class="o">{</span>&#x000A;        <span class="s2">"Env"</span>: <span class="o">[</span>&#x000A;            <span class="s2">"x=y"</span>&#x000A;        <span class="o">]</span>,&#x000A;        <span class="s2">"Labels"</span>: <span class="o">{</span>&#x000A;            <span class="s2">"purpose"</span>: <span class="s2">"atomic reactor demo"</span>&#x000A;...&#x000A;</code></pre>
+
+<p>Our dockerfile has 4 instructions and the image has only 2 layers. It worked!</p>
+
+<p>Since atomic-reactor is written in python, you can call <a href="https://github.com/projectatomic/atomic-reactor/blob/master/docs/api.md">python api</a> directly:</p>
+<pre class="highlight python"><code><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">from</span> <span class="nn">atomic_reactor</span> <span class="kn">import</span> <span class="n">api</span>&#x000A;&#x000A;<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">params</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">"build.json"</span><span class="p">))</span>&#x000A;&#x000A;<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">api</span><span class="o">.</span><span class="n">build_image_here</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>&#x000A;</code></pre>
+
+<p>This is the basic introduction of atomic-reactor. We&rsquo;ll be happy for any feedback. You can reach us at <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel</a> or via <a href="https://github.com/projectatomic/atomic-reactor">GitHub</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/build/">build</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/09/introduce-atomic-reactor/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/09/introduce-atomic-reactor/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/09/introduce-atomic-reactor/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

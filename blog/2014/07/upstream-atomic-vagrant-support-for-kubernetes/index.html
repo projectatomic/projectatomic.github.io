@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Upstream Atomic: Vagrant Support for Kubernetes &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brian Proffitt' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Upstream Atomic: Vagrant Support for Kubernetes' property='og:title'>
+<meta content='One of the most interesting things about Project Atomic is how much work is going on, even as the project seems to be standing still. After the discussions Joe and I have had at OSCON this past week...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/' property='og:url'>
+<meta content='2014-07-25T16:49:00Z' property='article:published_time'>
+<meta content='bkp' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Google' property='article:tag'>
+<link href='/blog/tag/google.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='orchestration' property='article:tag'>
+<link href='/blog/tag/orchestration.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Upstream Atomic: Vagrant Support for Kubernetes' name='twitter:title'>
+<meta content='One of the most interesting things about Project Atomic is how much work is going on, even as the project seems to be standing still. After the discussions Joe and I have had at OSCON this past week...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_07 blog_2014_07_upstream-atomic-vagrant-support-for-kubernetes blog_2014_07_upstream-atomic-vagrant-support-for-kubernetes_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Upstream Atomic: Vagrant Support for Kubernetes
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bkp/">Brian Proffitt</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-07-25T16:49:00Z'>
+Friday 25 July 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>One of the most interesting things about Project Atomic is how much work is going on, even as the project seems to be standing still. After the discussions Joe and I have had at OSCON this past week, I can safely say the work around containers is moving so fast that it almost seems that if you blink you will miss it.</p>
+
+<p>Atomic is not the usual open source project, in that there&rsquo;s not really code to download and install as a separate package. Rather, Project Atomic a combination of a lot of upstream projects that will be integrated within CentOS and Fedora. And, of course, Red Hat plans to build and distribute its own Red Hat Enterprise Linux Atomic Host.</p>
+
+<p>Because Atomic&rsquo;s small but growing community is using upstream projects like <a href="http://mesos.apache.org/">Apache Mesos</a>, Google&rsquo;s <a href="https://github.com/GoogleCloudPlatform/kubernetes">Kubernetes</a>, and <a href="https://www.docker.com/">Docker</a>, community members are submitting new code and features to those projects on almost a daily basis.</p>
+
+<p>Case in point: yesterday Red Hat&rsquo;s <a href="https://github.com/derekwaynecarr">Derek Carr</a> let us know that a new feature he was working on for Kubernetes had been merged into that project: the capability to <a href="https://github.com/GoogleCloudPlatform/kubernetes/pull/550">manage Vagrant clusters with Kubernetes</a>.</p>
+
+<p>Kubernetes is just one of the orchestration tools that will be included in Atomic for container management, and the inclusion of Vagrant support is a key move to get more developer involvement. While developers have long coded Linux applications, many programmers prefer Apple&rsquo;s hardware for their needs. Vagrant is very useful tool enabling them to have the best of both worlds.</p>
+
+<p>Specifically, Kubernetes users will be able to spin up a local <a href="http://www.vagrantup.com/">Vagrant</a> cluster of Fedora machines running a single master with <em>N</em> minions. Kubernetes will reuse existing Salt configuration scripts to provision master and minions. Carr has also added support to run on Red Hat-based operating systems, where systemd manages installed services. </p>
+
+<p>Carr has tested this on Vagrant 1.6.2, and it is recommended that users who want to test this feature use this version or higher of Vagrant. Head on over to GitHub and test this new feature today.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/google/">Google</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+<li><a href="/blog/tag/orchestration/">orchestration</a></li>
+<li><a href="/blog/tag/vagrant/">Vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

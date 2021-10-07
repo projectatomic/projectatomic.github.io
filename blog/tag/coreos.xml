@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Coreos</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/coreos.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Announcing the Fedora CoreOS community!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/welcome-to-fedora-coreos/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/welcome-to-fedora-coreos/</id>
+    <published>2018-06-20T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Welcome to Fedora CoreOS&lt;/h3&gt;
+
+&lt;p&gt;Earlier this year Red Hat acquired &lt;a href="https://www.redhat.com/en/about/press-releases/red-hat-acquire-coreos-expanding-its-kubernetes-and-containers-leadership"&gt;CoreOS, Inc.&lt;/a&gt;.
+In the past few
+months we have been working hard to evaluate the different technologies 
+in the CoreOS Container Linux and Project Atomic spaces. Since Container 
+Linux and Atomic Host overlap in functionality quite a bit we have decided
+to merge future development of the two projects so that we can combine
+our efforts and bring two great communities of people together to solve
+future challenges in the transactional update and container operating
+system landscape.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;What does this mean for Atomic Host?&lt;/h3&gt;
+
+&lt;p&gt;The last major release of Fedora Atomic Host will most likely be Fedora
+29 Atomic Host. After Fedora 29 we&amp;rsquo;ll recommend you use Fedora CoreOS for
+any deployments. The use cases for Fedora CoreOS should overlap with the
+existing use cases for Atomic Host, but there may be some use cases that
+are left behind as we narrow our focus. Hopefully disruptions will be minimal.&lt;/p&gt;
+
+&lt;h3&gt;What will happen to the Project Atomic community channels?&lt;/h3&gt;
+
+&lt;p&gt;The mailing lists, IRC channels, and GitHub organization will mostly
+be retired once the last releases are End Of Life. Please join us on the
+new community spaces (more details below)!&lt;/p&gt;
+
+&lt;h3&gt;Where can I learn more about Fedora CoreOS and get involved?&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There is a new website and FAQ at &lt;a href="https://coreos.fedoraproject.org"&gt;https://coreos.fedoraproject.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;There is a mailing list at &lt;a href="mailto:coreos@lists.fedoraproject.org"&gt;coreos@lists.fedoraproject.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;There is an IRC channel #fedora-coreos on freenode.&lt;/li&gt;
+&lt;li&gt;There is a new Discourse board at &lt;a href="https://discussion.fedoraproject.org/c/coreos"&gt;https://discussion.fedoraproject.org/c/coreos&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For future blog posts around containers, please refer to the new website
+that is currently under active development.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re excited to have the existing Container Linux and Atomic Host
+communities working together and we hope you&amp;rsquo;ll join us in making
+Fedora CoreOS a success.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

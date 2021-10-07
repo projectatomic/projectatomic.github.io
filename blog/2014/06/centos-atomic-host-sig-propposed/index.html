@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CentOS Atomic Host SIG Proposed &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='CentOS Atomic Host SIG Proposed' property='og:title'>
+<meta content='Today we proposed a CentOS Atomic Host Special Interest Group (SIG) on the CentOS Devel mailing list. Since Project Atomic isn’t in the business of producing its own distribution, the idea is to work within the CentOS community to develop an Atomic Host based on CentOS. &#x000A;&#x000A;If you’re interested in participating, the discussion about the SIG will take place on the CentOS devel mailing list. Work on the project will be coordinated on the Atomic devel mailing list. &#x000A;&#x000A;The next step for the proposal is to have it reviewed by the CentOS Board. The next board meeting is on July 9th, so we hope to have the SIG accepted at that time and make headway towards getting the first CentOS Atomic Host release out the door.&#x000A;&#x000A;The full proposal is below. If you have comments, please raise them on the CentOS devel or Atomic devel mailing lists.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/06/centos-atomic-host-sig-propposed/' property='og:url'>
+<meta content='2014-06-30T16:16:00Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Host' property='article:tag'>
+<link href='/blog/tag/host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='SIG' property='article:tag'>
+<link href='/blog/tag/sig.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='CentOS Atomic Host SIG Proposed' name='twitter:title'>
+<meta content='Today we proposed a CentOS Atomic Host Special Interest Group (SIG) on the CentOS Devel mailing list. Since Project Atomic isn’t in the business of producing its own distribution, the idea is to work within the CentOS community to develop an Atomic Host based on CentOS. &#x000A;&#x000A;If you’re interested in participating, the discussion about the SIG will take place on the CentOS devel mailing list. Work on the project will be coordinated on the Atomic devel mailing list. &#x000A;&#x000A;The next step for the proposal is to have it reviewed by the CentOS Board. The next board meeting is on July 9th, so we hope to have the SIG accepted at that time and make headway towards getting the first CentOS Atomic Host release out the door.&#x000A;&#x000A;The full proposal is below. If you have comments, please raise them on the CentOS devel or Atomic devel mailing lists.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_06 blog_2014_06_centos-atomic-host-sig-propposed blog_2014_06_centos-atomic-host-sig-propposed_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+CentOS Atomic Host SIG Proposed
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-06-30T16:16:00Z'>
+Monday 30 June 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><img src="http://www.projectatomic.io/images/centos-logo.png"> Today <a href="http://lists.centos.org/pipermail/centos-devel/2014-June/011225.html">we proposed a CentOS Atomic Host</a> <a href="http://wiki.centos.org/SpecialInterestGroup/">Special Interest Group</a> (SIG) on the CentOS Devel mailing list. Since Project Atomic isn&rsquo;t in the business of producing its own distribution, the idea is to work within the CentOS community to develop an Atomic Host based on CentOS. </p>
+
+<p>If you&rsquo;re interested in participating, the discussion about the SIG will take place on the <a href="http://lists.centos.org/mailman/listinfo/centos-devel">CentOS devel mailing list</a>. Work on the project will be coordinated on the <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">Atomic devel mailing list</a>. </p>
+
+<p>The next step for the proposal is to have it reviewed by the CentOS Board. The next board meeting is on July 9th, so we hope to have the SIG accepted at that time and make headway towards getting the first CentOS Atomic Host release out the door.</p>
+
+<p>The full proposal is below. If you have comments, please raise them on the CentOS devel or Atomic devel mailing lists. </p>
+
+<p></p>
+
+<h3>Atomic Host SIG Proposal</h3>
+
+<p>The CentOS Atomic Host SIG will work on a CentOS-based Atomic Host image that provides a minimal image using rpm-ostree, as well as tools and documentation for users to create their own CentOS/Atomic images with custom package sets.</p>
+
+<h4>Goals</h4>
+
+<ul>
+<li>Ship a minimal CentOS Atomic Host that focuses on running Docker containers in production. </li>
+<li>Provide ISO images installable with Anacona, and images suited for OpenStack, CloudStack, Amazon Web Services/Eucalyptus, and Google Compute Engine. </li>
+<li>Provide tools and documentation that can be used to spin custom images from CentOS packages to be deployed with Atomic (rpm-ostree) tools. </li>
+<li>Provide regular releases as underlying tools (e.g. rpm-ostree) advance, while maintaining stability for in-place upgrades. </li>
+<li>Establish a time-based release cadence. </li>
+<li>All code included in the Atomic image will be under an OSI-approved license. </li>
+<li>Unless differentation is absolutely necessary, all packages common to CentOS core and CentOS Atomic will be identical. </li>
+</ul>
+
+<h4>Mailing List and Communication</h4>
+
+<p>Work for the CentOS Atomic image relevant to CentOS build systems, etc. will take place on centos-devel. Work related to upstream Atomic will take place on the Atomic mailing lists. </p>
+
+<p>Note that the Atomic community comprises efforts underway with CentOS, Fedora, and Red Hat Enterprise Linux, as well as upstreams like Docker and OpenShift (GearD) so discussions may span several communities and mailing lists.</p>
+
+<h4>SIG Membership</h4>
+
+<p>The Atomic Host SIG will have a steering committee and committers. The steering committee will consist initially of Joe Brockmeier, Jason Brooks, Jim Perrin, Brian Proffitt, Greg DeKoenigsberg, and _________ (?). New committers and steering committee members are appointed by the steering committee. </p>
+
+<p>Committer privileges, once earned, do not expire unless revoked by the steering committee. </p>
+
+<p>The steering committee will appoint a chair to interface with the CentOS Board. </p>
+
+<h4>Meetings</h4>
+
+<p>The CentOS Atomic SIG will initially meet weekly until all pieces are in place for regular releases, then as needed.</p>
+
+<h4>Roadmap and (Action) TODO List</h4>
+
+<ul>
+<li>Define package set</li>
+<li>Establish builds for target environments (cloud deployments and bare metal)</li>
+<li>Define orchestration tool(s) for CentOS Atomic</li>
+<li>Establish test / QA processes</li>
+<li>Set long-term release cadence, upgrade policies</li>
+</ul>
+
+<h4>Further Info</h4>
+
+<ul>
+<li>Project Atomic (<a href="http://projectatomic.io">http://projectatomic.io</a>)</li>
+<li>Fedora Atomic Initiative (<a href="http://rpm-ostree.cloud.fedoraproject.org/#/">http://rpm-ostree.cloud.fedoraproject.org/#/</a>)</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/host/">Host</a></li>
+<li><a href="/blog/tag/sig/">SIG</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/06/centos-atomic-host-sig-propposed/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/06/centos-atomic-host-sig-propposed/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/06/centos-atomic-host-sig-propposed/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

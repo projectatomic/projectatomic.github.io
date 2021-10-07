@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Daemon</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/daemon.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Docker 1.8 and the New Daemon Command</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/09/docker-daemon-command/"/>
+    <id>http://www.projectatomic.io/blog/2015/09/docker-daemon-command/</id>
+    <published>2015-09-11T05:00:09+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Shishir Mahajan</name>
+    </author>
+    <content type="html">&lt;p&gt;Docker 1.8 fixes a long term problem with handling of command line options. It introduces the &lt;code&gt;docker daemon&lt;/code&gt; command which segregates the global options from the daemon options.&lt;/p&gt;
+
+&lt;p&gt;Docker daemon is a background server side process that manages images and containers. It is a child of the init system e.g systemd and can be started using systemd unit files. For the purpose of this article we will using linux distribution fedora.&lt;/p&gt;
+
+&lt;p&gt;A system administrator can execute &lt;code&gt;systemctl start docker&lt;/code&gt; to start the &lt;code&gt;docker daemon.&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="systemctl start docker" src="/images/docker_daemon_start.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see in the above screenshot, writing &lt;code&gt;systemctl start docker&lt;/code&gt; will instruct systemd to go to &lt;code&gt;/usr/lib/systemd/system/docker.service&lt;/code&gt; unit file and start docker based on &lt;code&gt;ExecStart&lt;/code&gt; flag. Under the hood, this unit file executes the docker binary &lt;code&gt;/usr/bin/docker -d&lt;/code&gt; to start the daemon. What this means is, a user can also start docker daemon by executing &lt;code&gt;docker -d&lt;/code&gt; or &lt;code&gt;docker --daemon.&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;So why do we need a new &lt;code&gt;docker daemon&lt;/code&gt; command? Is &lt;code&gt;docker -d&lt;/code&gt; or &lt;code&gt;docker --daemon&lt;/code&gt; not good enough to start the daemon? The new docker daemon command solves a very important problem which I like to call the &lt;code&gt;Daemon Flag-Set Problem&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Daemon Flag-set Problem&lt;/h3&gt;
+
+&lt;p&gt;If I do &lt;code&gt;docker --help&lt;/code&gt; on a docker package prior to docker-1.8, I see the below flags.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker help" src="/images/docker_help.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;These flags are a combination of globals flags and daemon flags. Global flags are flags which are applicable to all docker commands. Daemon flags are specific to docker daemon. Since there is no clear distinction of which flags are global and which are daemon, a docker user can pass any of these flags to any docker command. If that flag is global it will be applied to the command, else if the flag is daemon it will be silently ignored. &lt;/p&gt;
+
+&lt;p&gt;To give an example, &lt;code&gt;--selinux-enabled&lt;/code&gt; is a daemon flag which enables SELinux support. &lt;code&gt;docker inspect&lt;/code&gt; is a command which returns low level information on a container or image. Ideally &lt;code&gt;--selinux-enabled&lt;/code&gt; flag should only be applicable to &lt;code&gt;docker daemon,&lt;/code&gt; and if passed to other docker commands should blow up.&lt;/p&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker inspect" src="/images/docker_inspect.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see in the above screenshot &lt;code&gt;--selinux-enabled&lt;/code&gt; was silently ignored by the inspect command. To solve this &lt;code&gt;Daemon Flag-Set Problem,&lt;/code&gt; the docker daemon command will be introduced starting with the Docker 1.8.0 package.&lt;/p&gt;
+
+&lt;h3&gt;The Docker Daemon Command&lt;/h3&gt;
+
+&lt;p&gt;From docker 1.8.0 onwards, if a user starts docker daemon using &lt;code&gt;docker -d&lt;/code&gt; or &lt;code&gt;docker --daemon,&lt;/code&gt; He will get a warning message to switch to new &lt;code&gt;docker daemon&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker warning" src="/images/docker-d.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Using &lt;code&gt;docker --help&lt;/code&gt; will display something like the below screenshot.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="new docker help" src="/images/new_docker_help.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see in the above screenshot &lt;code&gt;docker --help&lt;/code&gt; only shows the global flags, and not the daemon flags. To see the daemon flags we can run &lt;code&gt;docker daemon --help&lt;/code&gt; which will produce something like the following output.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="new docker daemon help" src="/images/new_docker_daemon_help.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above screenshot is a trimmed down version of daemon flags. The actual output will show all daemon flags.&lt;/p&gt;
+
+&lt;p&gt;The Docker &lt;code&gt;daemon&lt;/code&gt; command will bring the following changes to docker users:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A user can still start docker daemon using &lt;code&gt;docker -d&lt;/code&gt; and &lt;code&gt;docker --daemon&lt;/code&gt;. Docker provides full backward compatibility without breaking any existing use cases.&lt;/li&gt;
+&lt;li&gt;With the new &lt;code&gt;docker daemon&lt;/code&gt; command, global flags and daemon flags must be passed in the below format.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img alt="docker daemon format" src="/images/docker_daemon_format.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;What this means is, the below command &lt;code&gt;docker --selinux-enabled daemon&lt;/code&gt; will throw an error. Since &lt;code&gt;--selinux-enabled&lt;/code&gt; is a daemon flag, it should be passed after docker daemon command. This would however completely work with &lt;code&gt;docker -d&lt;/code&gt; maintaining the backward compatibility.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker daemon error" src="/images/docker-selinux.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker daemon error" src="/images/docker_daemon_error.png" /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Daemon flags now cannot be passed to other docker commands (as global flags) like inspect, pull, push etc. Now, If we run the above  &lt;code&gt;docker inspect&lt;/code&gt; example again, it would blow up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I worked with Daniel Walsh (also of Red Hat) on fixing these issues for more than a year. Also a special thanks to Tibor Vass (of Docker) for taking over, completing, and making it available upstream.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

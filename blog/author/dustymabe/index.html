@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+About
+Dusty Mabe &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_author blog_author_dustymabe blog_author_dustymabe_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/10/setting-up-skydns/">Setting up SkyDNS </a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-10-05T08:17:14Z'>
+Monday  5 October 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Kubernetes exposes DNS for service discovery, but the DNS server itself must be configured after you install Kubernetes. In the future it will be integrated into <code>kubernetes</code> as part of the platform (see <a href="https://github.com/kubernetes/kubernetes/pull/11599">PR11599</a>) but for now you have to setup and run the <a href="https://github.com/skynetservices/skydns">SkyDNS</a> container yourself.</p>
+
+<p>I have seen some tutorials on how to get <code>skydns</code> working, but almost all of them are rather involved. However, if you just want a simple setup on a single node for testing then it is actually rather easy to get <code>skydns</code> set up.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/10/setting-up-skydns/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/dns/">dns</a></li>
+<li><a href="/blog/tag/etcd/">etcd</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/skydns/">skydns</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-07T15:23:32Z'>
+Wednesday  7 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p><a href="https://github.com/openshift/origin">Openshift Origin</a> is the upstream
+project that builds on top of the Kubernetes platform and feeds into the
+OpenShift Container Platform product that is available from Red Hat today.
+Origin is a great way to get started with Kubernetes, and what better
+place to run a container orchestration layer than on top of Fedora
+Atomic Host?</p>
+
+<p>We recently released <a href="https://fedoramagazine.org/fedora-25-released/">Fedora
+25</a>, along with the
+first biweekly release of Fedora 25 Atomic Host. This blog post
+will show you the basics for getting a production installation of Origin
+running on Fedora 25 Atomic Host using the <a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible
+Installer</a>. The
+OpenShift Ansible installer will allow you to install a
+production-worthy OpenShift cluster. If you&rsquo;d like to just
+try out OpenShift on a single node instead, you can set up OpenShift with
+the <code>oc cluster up</code> command, which we will detail in a later blog
+post.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/">Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-12T16:00:00Z'>
+Monday 12 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>In <a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">part 1</a>
+of this series, we used the <a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible
+Installer</a> to install
+<a href="https://github.com/openshift/origin">Openshift Origin</a> on three servers
+that were running <a href="https://getfedora.org/en/atomic/">Fedora 25 Atomic
+Host</a>. The three machines we&rsquo;ll be using
+have the following roles and IP address configurations:</p>
+<pre class="highlight plaintext"><code>|    Role     |  Public IPv4   | Private IPv4 |&#x000A;|-------------|----------------|--------------|&#x000A;| master,etcd | 54.175.0.44    | 10.0.173.101 |&#x000A;| worker      | 52.91.115.81   | 10.0.156.20  |&#x000A;| worker      | 54.204.208.138 | 10.0.251.101 |&#x000A;</code></pre>
+
+<p>In this blog, we&rsquo;ll explore the installed Origin cluster and then launch
+an application to see if everything works.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/02/matching-fedora-ostree-released-content-with-each-2week-atomic-release/">Matching Fedora OSTree Released Content With Each 2 Week Atomic Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-02-13T12:00:00Z'>
+Monday 13 February 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong><em>TL;DR</em></strong>: The default Fedora cadence for updates in the RPM streams is once a
+             day. Until now, the OSTree-based updates cadence has matched this, but
+             we&rsquo;re changing the default OSTree update stream to match the
+             Fedora Atomic Host image release cadence (once every two weeks).</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/02/matching-fedora-ostree-released-content-with-each-2week-atomic-release/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/04/fedora-atomic-digitalocean/">Fedora Atomic Host Available in DigitalOcean</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-04-27T19:30:00Z'>
+Thursday 27 April 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With the <a href="http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr27/">latest release</a>
+of Fedora Atomic Host we are now live in
+<a href="https://www.digitalocean.com/">DigitalOcean</a>! This was a popular <a href="https://digitalocean.uservoice.com/forums/136585-digitalocean/suggestions/5984177-project-atomic-docker-centos-fedora-scalab">user
+request</a>.
+Thanks to the folks at DigitalOcean and the
+<a href="https://pagure.io/atomic-wg/">Fedora Atomic Working Group</a>, we now have Fedora Atomic Host as an
+option when creating a droplet. Go ahead and spin up a droplet in the
+web interface or via the <a href="https://github.com/digitalocean/doctl">doctl</a>
+CLI today!</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/04/fedora-atomic-digitalocean/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/cloud/">cloud</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/07/fedora-atomic-july-25/">Fedora Atomic 26 July 25 Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-07-25T16:00:00Z'>
+Tuesday 25 July 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit:</p>
+<pre class="highlight plaintext"><code>Commit: 0715ce81064c30d34ed52ef811a3ad5e5d6a34da980bf35b19312489b32d9b83&#x000A;Version: 26.91&#x000A;</code></pre>
+
+<p>This is the second release for Fedora 26 Atomic Host. This contains a newer version of Kubernetes with fixes for the bug that was in the
+original release of the Fedora Atomic 26 tree.</p>
+
+<p>Users of built-in Kubernetes on Fedora Atomic Host can now rebase onto the version 26 ref.  We will be releasing a few blogs shortly about upgrading your existing hosts.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/07/fedora-atomic-july-25/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/08/fedora-atomic-25-to-26-upgrade/">Fedora 25->26 Atomic Host Upgrade Guide</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-03T13:00:00Z'>
+Thursday  3 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>In July we put out the
+<a href="http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-release/">first</a>
+and
+<a href="http://www.projectatomic.io/blog/2017/07/fedora-atomic-july-25/">second</a>
+releases of Fedora 26 Atomic Host. In this blog post we&rsquo;ll cover
+updating an existing Fedora 25 Atomic Host system to Fedora 26.
+We&rsquo;ll cover preparing the system for upgrade and performing the upgrade.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/08/fedora-atomic-25-to-26-upgrade/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/08/fedora-atomic-august-08/">Fedora 26 Atomic Host August 08 Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-09T22:00:00Z'>
+Wednesday  9 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit:</p>
+<pre class="highlight plaintext"><code>Commit: f6331bcd14577e0ee43db3ba5a44e0f63f74a86e3955604c20542df0b7ad8ad6&#x000A;Version: 26.101&#x000A;</code></pre>
+
+<p>In this release we have fixed <a href="https://pagure.io/atomic-wg/issue/307">an issue</a>
+with our qcow and vagrant images from the 20170723 release. If you used the qcow 
+or vagrant images from that release then please make sure you are
+following the <code>fedora/26/x86_64/atomic-host</code> ref. See <a href="https://pagure.io/atomic-wg/issue/307">this</a>
+Atomic Working Group issue for more details.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/08/fedora-atomic-august-08/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/08/fedora-atomic-0822/">Fedora 26 Atomic Host August 22 Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-24T18:00:00Z'>
+Thursday 24 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit:</p>
+<pre class="highlight plaintext"><code>Commit: 13ed0f241c9945fd5253689ccd081b5478e5841a71909020e719437bbeb74424&#x000A;Version: 26.110&#x000A;</code></pre>
+
+<h3>Warnings</h3>
+
+<p><strong>Hardware Issue</strong>: During our testing phase we found an issue where on a specific hardware platform <a href="https://pagure.io/atomic-wg/issue/324">we could not boot</a> after installing from the ISO images, or after updating to this release. If you experience similar behavior please use <a href="https://dl.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-26-20170807.0/Atomic/x86_64/iso/Fedora-Atomic-ostree-x86_64-26-20170807.0.iso">the previous ISO image</a>.  For existing machines, users with affected hardware should either wait for the next two-week release to upgrade, or switch to the updates ref where the issue is already fixed.</p>
+
+<p><strong>Kubernetes</strong>: We have also been notified by users that there <a href="https://github.com/projectatomic/atomic-site/issues/467">are firewall issues</a> with Docker 1.13 and Kubernetes.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/08/fedora-atomic-0822/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">Fedora 26->27 Atomic Host Upgrade Guide</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-11-14T18:00:00Z'>
+Tuesday 14 November 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>This week we put out the <a href="/blog/2017/11/fedora-atomic-27-features/">first</a>
+release of Fedora 27 Atomic Host. Some quick notes:</p>
+
+<ul>
+<li><p>In Fedora 27 Atomic Host we removed kubernetes from the base OSTree.
+We will have a post tomorrow about the upgrade steps for Kubernetes users.</p></li>
+<li><p>For Fedora 27 we are currently sticking with the non-unified repo
+approach as opposed to a unified repo. <em>TL;DR</em> nothing is changing
+for now but we expect to implement a unified repo as described
+<a href="http://www.projectatomic.io/blog/2017/06/future-plans-for-fedora-atomic-release-life-cycle/">here</a>
+during the F27 release cycle.</p></li>
+</ul>
+
+<p>For today we&rsquo;ll talk about updating an existing Fedora 26 Atomic Host
+system to Fedora 27. We&rsquo;ll cover preparing the system for upgrade and
+performing the upgrade.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/01/fedora-atomic-4-jan-18/">Fedora 27 Atomic Host January 4th Security Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-04T14:00:00Z'>
+Thursday  4 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit.  This update contains an important security patch.</p>
+<pre class="highlight plaintext"><code>Version: 27.47&#x000A;Commit(x86_64): 397e907961adafaeff11b807ceade8da5783134072406fcdba627f1195e0db76&#x000A;Commit(aarch64): 25965b64256417d7dfed37511ffe0cf842ebe64bd6adc8c57a3c603dcfd79885&#x000A;Commit(ppc64le): c0d0a28a01fd363dfc317e3418935efae6d728a718320dfb3709c4282160f20f&#x000A;</code></pre>
+
+<p>This is a security related release of Fedora Atomic Host to
+address <a href="https://access.redhat.com/security/cve/cve-2017-5754">CVE-2017-5754</a> (Meltdown). This release does not
+yet handle the <q>Spectre</q> vulnerabilities, <a href="https://access.redhat.com/security/cve/cve-2017-5753">CVE-2017-5753</a> and <a href="https://access.redhat.com/security/cve/cve-2017-5715">CVE-2017-5715</a>. Those will
+come in a future update. For more information see the <a href="https://access.redhat.com/security/vulnerabilities/speculativeexecution">Red Hat
+knowledgebase article</a>.</p>
+
+<p>kernel-4.14.11-300.fc27.x86_64 fixes <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1530826">BZ1530826</a> related to
+CVE-2017-5754. It also fixes some other CVEs as well. See <a href="https://bodhi.fedoraproject.org/updates/kernel-4.14.11-300.fc27">the
+attached bugs to the bodhi update</a> for more information.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/01/fedora-atomic-4-jan-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/01/fedora-atomic-18-jan-18/">Fedora 27 Atomic Host January 18th Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-18T16:00:00Z'>
+Thursday 18 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Fedora Atomic Host we have an updated kernel (the <a href="https://fedoramagazine.org/update-ongoing-meltdown-spectre-work/">spectre patches</a> are slowly working their way out), and an <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1510351">updated docker with a security fix</a>. We also are <em>including</em> <a href="https://pagure.io/atomic-wg/issue/372">firewalld in the ostree</a> now, but we are <em>not</em> enabling it by default. I&rsquo;ll post a follow up blog post on this topic in the next day or two.</p>
+
+<p>The new Fedora Atomic Host update is available via an OSTree update:</p>
+
+<p><strong><em>Version: 27.61</em></strong></p>
+
+<ul>
+<li>Commit(x86_64): 772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9</li>
+<li>Commit(aarch64): 598626fd61dc6ed4b702159e50b6029ee70a527e855fce7d8e61a870b141f893</li>
+<li>Commit(ppc64le): 16ce78ee689066f582dbfc0672dab1706051fefab496fcebd8109d58738eb8fe</li>
+</ul>
+
+<p>We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or <code>atomic host deploy</code>. Systems on Fedora Atomic 26 can be upgraded using <code>rpm-ostree rebase</code>. Refer to the <a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrade guide</a> for more details.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/01/fedora-atomic-18-jan-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/firewalld-in-atomic-host/">Firewalld in Atomic Host</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-01T18:00:00Z'>
+Thursday  1 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>TL;DR</h3>
+
+<p>Fedora Atomic Host (and derivatives) will now include the <code>firewalld</code>
+package in the base OSTree that is tested, delivered, and released
+every two weeks. Existing users should observe no change as it won&rsquo;t
+be enabled by default.</p>
+
+<h3>Firewalld in Atomic Host</h3>
+
+<p>In the past we have had requests to have <code>firewalld</code> in Atomic Host
+to enable a better interface into firewall management for
+administrators and management software. It turns out that if you have
+lots of rules to manage, or even multiple pieces of software trying to
+manage different sets of rules on a single system, then <code>iptables</code>
+becomes a limitation pretty quickly.</p>
+
+<p>Atomic Host users do have the ability to package layer <code>firewalld</code>,
+but <a href="https://www.projectatomic.io/blog/2017/06/rpm-ostree-v2017.6-released/">live changes to the host</a>
+are currently experimental. Since rebooting during system provisioning
+in certain environments is not desirable, and <code>firewalld</code> is
+relatively small, the <a href="https://pagure.io/atomic-wg">Fedora Atomic Working Group</a>
+<a href="https://pagure.io/atomic-wg/issue/372">decided</a> to include <code>firewalld</code> in the 
+base OSTree. </p>
+
+<p>In order to not affect existing users the <code>firewalld</code> service will be
+disabled by default. Existing users should observe no change in behavior.
+Users who want to use <code>firewalld</code> can enable/start the service and start
+using it immediately.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/firewalld-in-atomic-host/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/fedora-atomic-2-feb-18/">Fedora 27 Atomic Host February 2nd Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-02T00:00:00Z'>
+Friday  2 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Fedora Atomic Host we have a new kernel,
+ostree/rpm-ostree, glibc, and cloud-utils-growpart (fixes for aarch64
+<a href="https://pagure.io/atomic-wg/issue/382">partition resize issues</a>).</p>
+
+<p>The new Fedora Atomic Host update is available via an OSTree update:</p>
+
+<p><strong>Version: 27.72</strong></p>
+
+<ul>
+<li>Commit(x86_64): 39848372585a65dc63fb3052f997139b8b30d6b55ce378337db3664177489d28</li>
+<li>Commit(aarch64): 8048d384f231f90a7479cf94bfe94053970fb9a0f196ba4485d779696db81fa1</li>
+<li>Commit(ppc64le): 3fce2908406e41e2ffe533908e840f44311576befe7e49396d1894407341aef9</li>
+</ul>
+
+<p>We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or <code>atomic host deploy</code>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/fedora-atomic-2-feb-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/fedora-atomic-16-feb-18/">Fedora 27 Atomic Host February 16th Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-16T00:00:00Z'>
+Friday 16 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Fedora Atomic Host we have a new kernel, Atomic CLI, and runc.</p>
+
+<p>A new Fedora Atomic Host update is available via an OSTree update:</p>
+
+<p><strong>Version: 27.81</strong></p>
+
+<ul>
+<li>Commit(x86_64): b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742</li>
+<li>Commit(aarch64): bb5bc5afbf27333a70c1f3bf8d0117baa45e862e0440be5c779cd5f0bb35aab4</li>
+<li>Commit(ppc64le): e484af3c5a5c88c0de486eee195dff4c6c7ef41d07c41b5d356305db237066d7</li>
+</ul>
+
+<p>We are releasing images from multiple architectures but please note
+that x86_64 architecture is the only one that undergoes automated
+testing at this time.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or
+<code>atomic host deploy</code>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/fedora-atomic-16-feb-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/fedora-atomic-28-feb-18/">Fedora 27 Atomic Host February 28th Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-28T00:00:00Z'>
+Wednesday 28 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Fedora Atomic Host 27.93 is available. We have a new kernel (4.15), <a href="https://github.com/ostreedev/ostree/releases/tag/v2018.2">ostree</a>, and <a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2018.3">rpm-ostree</a> in this release.</p>
+
+<p>It is also worth noting that now the <code>rpm-ostree status</code> output will prefix the remote:ref with <code>ostree://</code> in order to denote the system is following an ostree repository remote (see example below). This is in preparation of some upstream changes related to <a href="https://github.com/projectatomic/rpm-ostree/issues/1081">rpm-ostree rojig</a>, where updates can be delivered via a special rpm in a yum repo rather than an ostree server/remote.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/fedora-atomic-28-feb-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/04/fedora-atomic-20-apr-18/">Fedora 27 Atomic Host April 20th Release</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-04-20T00:00:00Z'>
+Friday 20 April 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Fedora Atomic Host <strong>Version 27.122</strong> update is available via an OSTree update:</p>
+
+<ul>
+<li>Commit(x86_64): 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99</li>
+<li>Commit(aarch64): 837cd0c5e3a5656316ebf6142315ac107c8592d5c8d64a02e8a62919eee9f46f</li>
+<li>Commit(ppc64le): a1f565d73f1f1b6f6d7ef992251f21a704c4a8de40c41fc62be69c5ec2a65329</li>
+</ul>
+
+<p>We apologize for the delay in getting this release out the door. As a bonus for the wait we have AMIs that are available in additional regions (ap-northeast-2, ap-south-1). We&rsquo;ll be adding additional regions (the remaining missing regions) next release.</p>
+
+<p>Additionally, this will most likely be our last release of Fedora 27 Atomic Host. Very soon Fedora 28 will be released and we will be picking up with our releases in the Fedora 28 stream. We will have plenty of announcements and content around Fedora 28 release time so watch this space for that!</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/04/fedora-atomic-20-apr-18/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/05/pinning-deployments-ostree-based-systems/">Pinning Deployments in OSTree Based Systems</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-23T00:00:00Z'>
+Wednesday 23 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>RPM-OSTree/OSTree conveniently allows you to rollback if you upgrade and don&rsquo;t like the upgraded software. This is done by keeping around the old <strong>deployment</strong>; the old software you booted in to. After a single upgrade you&rsquo;ll have a booted deployement and the rollback deployment. On the next upgrade the current rollback deployment will be discarded and the current booted deployment will become the new rollback deployment.</p>
+
+<p>Typically these two deployments are all that is kept around. However, recently a new <a href="https://github.com/ostreedev/ostree/issues/1460">pinning</a> feature was added that allows the user to <q>pin</q> a deployment to make sure it doesn&rsquo;t get garbage collected.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/05/pinning-deployments-ostree-based-systems/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/06/welcome-to-fedora-coreos/">Announcing the Fedora CoreOS community!</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-20T00:00:00Z'>
+Wednesday 20 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Welcome to Fedora CoreOS</h3>
+
+<p>Earlier this year Red Hat acquired <a href="https://www.redhat.com/en/about/press-releases/red-hat-acquire-coreos-expanding-its-kubernetes-and-containers-leadership">CoreOS, Inc.</a>.
+In the past few
+months we have been working hard to evaluate the different technologies 
+in the CoreOS Container Linux and Project Atomic spaces. Since Container 
+Linux and Atomic Host overlap in functionality quite a bit we have decided
+to merge future development of the two projects so that we can combine
+our efforts and bring two great communities of people together to solve
+future challenges in the transactional update and container operating
+system landscape.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/06/welcome-to-fedora-coreos/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/coreos/">coreos</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/10/fedora-atomic-28-to-29-upgrade/">Fedora 28->29 Atomic Host Upgrade Guide</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-10-31T00:00:00Z'>
+Wednesday 31 October 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>This week we put out the <a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-October/msg00006.html">first</a>
+release of Fedora 29 Atomic Host. This will be the last major release
+of Fedora Atomic Host as we prepare for <a href="https://coreos.fedoraproject.org/">Fedora CoreOS</a>
+which will be released in Fedora 30.</p>
+
+<p>In this post we&rsquo;ll quickly list some known issues and then talk about updating 
+an existing Fedora 28 Atomic Host system to Fedora 29. We&rsquo;ll cover preparing
+the system for upgrade and performing the upgrade.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/10/fedora-atomic-28-to-29-upgrade/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2019/11/fedora-atomic-host-nearing-eol/">Fedora Atomic Host Nearing End Of Life</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2019-11-21T00:00:00Z'>
+Thursday 21 November 2019
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong>TL;DR</strong> <em>Fedora 29 will be End Of Life <a href="https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/VUK3CJ5LO4ROUH3JTCDVHYAVVYAOCU62/">soon</a>.</em>
+          <em>With it Fedora Atomic Host will have its last incremental release (based on</em>
+          <em>the Fedora 29 stream). Please move to the Fedora CoreOS preview if you can.</em></p>
+
+<p>
+<a class="more-link read-more" href="/blog/2019/11/fedora-atomic-host-nearing-eol/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

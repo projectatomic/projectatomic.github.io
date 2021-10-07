@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Buildah</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/buildah.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Buildah version 1.2 Release Announcement</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/07/Buildah-version-v1.2/"/>
+    <id>http://www.projectatomic.io/blog/2018/07/Buildah-version-v1.2/</id>
+    <published>2018-07-14T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;h3&gt;Buildah version 1.2 Release Announcement&lt;/h3&gt;
+
+&lt;p&gt;&lt;img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re pleased to announce the release of Buildah version 1.2 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.  &lt;/p&gt;
+
+&lt;p&gt;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix.  The highlights of this release are the added ability to control image layers when building an image, CVE’s Fixes, the initial support for user namespace handling and several other enhancements and bug fixes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;The major highlights for this release are:&lt;/h4&gt;
+
+&lt;h5&gt;Allow the user to control the layers of the image when the image is built with the ‘buildah bud’ command.&lt;/h5&gt;
+
+&lt;p&gt;A container is comprised of a final readable/writeable layer and when the layers are cached, a number of intermediate read only layers.  The read only layers are created with each step in the Dockerfile and the final readable/writeable layer contains the intermediate layers.  Prior to these changes Buildah did not cache these intermediate read only layers.&lt;/p&gt;
+
+&lt;p&gt;This release has a new environment variable ‘BUILDAH_LAYERS’ and a new ‘buildah bud’ &amp;ndash;layers parameter.  When either is set to true, the image layers are cached during the ‘buildah bud’ processing and not discarded.  The disadvantage to retaining layers is the space that they use.  The advantage to retaining them is if you make a change to your Dockerfile, only the layers for that change and the ones following it will need to be regenerated.  &lt;/p&gt;
+
+&lt;p&gt;The &amp;ndash;nocache parameter has also been added to the ‘buildah bud’ command.  When this parameter is set to true the ‘buildah bud’ command ignores any existing layers and creates all of the image layers anew.&lt;/p&gt;
+
+&lt;h5&gt;Added initial user namespace support.&lt;/h5&gt;
+
+&lt;p&gt;To isolate the container’s processes from running as root on the host machine, user namespaces are used by container technologies.  This allows the administrator to configure the containers processes that must run as root to remap the user to a less privileged user on the container’s host machine.  This remapping is handled in part by settings in the /etc/subuid and /etc/subgid files on the host machine.&lt;/p&gt;
+
+&lt;p&gt;The changes for this release does not yet provide full support for user namespaces, but does set up the options to control the mapping with the &amp;ndash;userns-uid-map and &amp;ndash;userns-gid-map options.   Changes have also been made to prevent the container from modifying the /etc/host or /etc/resolv.conf files on the host.&lt;/p&gt;
+
+&lt;p&gt;Also with this release if a user with a uid that’s not equal to zero creates a container, a namespace is now created based on the users uid and gid and the container will be reexec’d using that namespace.   In addition, the storage driver, storage root directory and storage state directory will all be created under alternate locations.  Please reference the buildah (1) man page for more details.  Further information will be published in upcoming blogs and additional changes are in progress to provide full support of user namespaces in future versions of Buildah.&lt;/p&gt;
+
+&lt;h5&gt;CVE security issues with /proc/acpi and /proc/keys have been addressed.&lt;/h5&gt;
+
+&lt;p&gt;The /proc/acpi and /proc/keys were added to the list of blocked kernel files.  This prevents the container from manipulating these files on the container’s host.&lt;/p&gt;
+
+&lt;h4&gt;Release Changes&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Added the ability to remove or retain image layers for ‘buildah bud’:
+
+&lt;ul&gt;
+&lt;li&gt;Add &amp;ndash;layers and &amp;ndash;no-cache options to &amp;lsquo;buildah bud&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Add &amp;ndash;rm and &amp;ndash;force-rm options to &amp;#39;buildah bud&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Fixed the buildah bud &amp;ndash;layers option.&lt;/li&gt;
+&lt;li&gt;Added environment variable BUILDAH_LAYERS to control image layers creation.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Added environment variable BUILDAH_RUNTIME to setup alternate runtimes.&lt;/li&gt;
+&lt;li&gt;build-using-dockerfile: let -t include transports again.&lt;/li&gt;
+&lt;li&gt;Block the use of /proc/acpi and /proc/keys from inside containers. These address potential CVE Security issues.&lt;/li&gt;
+&lt;li&gt;Add &amp;ndash;cidfile option to &amp;#39;buildah from`.&lt;/li&gt;
+&lt;li&gt;Add a &amp;ndash;loglevel option to build-with-dockerfile.&lt;/li&gt;
+&lt;li&gt;Begin supporting specification of user namespace for container separation:
+
+&lt;ul&gt;
+&lt;li&gt;Allow &amp;ndash;userns-uid-map/&amp;ndash;userns-gid-map to be global options.&lt;/li&gt;
+&lt;li&gt;If unprivileged, reexec in a user namespace.&lt;/li&gt;
+&lt;li&gt;Force ownership of /etc/hosts and /etc/resolv.conf to 0:0.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Recognize committing to second storage locations with &amp;#39;buildah commit&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Add the &amp;ndash;all option to &amp;#39;buildah unmount&amp;rsquo; to unmount all mounted containers.&lt;/li&gt;
+&lt;li&gt;When doing multiple mounts, output all pertinent errors, not just the last error.&lt;/li&gt;
+&lt;li&gt;Implement basic recognition of the &lt;q&gt;&amp;ndash;isolation&lt;/q&gt; option for &amp;#39;buildah from&amp;rsquo; and &amp;#39;buildah run&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Fix ARGS parsing for run commands.&lt;/li&gt;
+&lt;li&gt;When building a container the HTTP User-Agent is set to the Buildah version.&lt;/li&gt;
+&lt;li&gt;Makefile: add the uninstall command.&lt;/li&gt;
+&lt;li&gt;Support multiple inputs to &amp;#39;buildah mount&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Use the right formatting when adding entries to /etc/hosts.&lt;/li&gt;
+&lt;li&gt;A number of minor performance improvements for &amp;#39;buildah run&amp;rsquo; and &amp;#39;buildah bud&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Change RunOptions.Stdin/Stdout/Stderr to just be Reader/Writers.&lt;/li&gt;
+&lt;li&gt;Use conversion code from containers/image instead of converting configs manually.&lt;/li&gt;
+&lt;li&gt;Do not ignore any parsing errors during initialization.&lt;/li&gt;
+&lt;li&gt;Explicitly handle &lt;q&gt;from scratch&lt;/q&gt; images in Builder.initConfig.&lt;/li&gt;
+&lt;li&gt;Fix parsing of OCI images.&lt;/li&gt;
+&lt;li&gt;Don&amp;rsquo;t ignore v2s1 history if docker_version is not set.&lt;/li&gt;
+&lt;li&gt;Add &amp;ndash;all,-a flags to &amp;#39;buildah images&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Remove tty check from buildah images &amp;ndash;format.&lt;/li&gt;
+&lt;li&gt;Fix usage information for &amp;#39;buildah images&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Documentation changes:
+
+&lt;ul&gt;
+&lt;li&gt;Add registries.conf link to a few man pages.&lt;/li&gt;
+&lt;li&gt;Add information about the configuration files to the install documentation.&lt;/li&gt;
+&lt;li&gt;Follow man-pages(7) suggestions for SYNOPSIS in all man pages.&lt;/li&gt;
+&lt;li&gt;Minor update to buildah config documentation for entrypoint.&lt;/li&gt;
+&lt;li&gt;ONBUILD tutorial created.&lt;/li&gt;
+&lt;li&gt;Touch up images man page.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Plus a number of smaller fixes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Try it Out.&lt;/h4&gt;
+
+&lt;p&gt;If you haven’t yet, install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&amp;rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!&lt;/p&gt;
+
+&lt;p&gt;For those of you who contributed to this release, thank you very much for your contributions!  If you haven&amp;rsquo;t joined our community yet, don&amp;rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.&lt;/p&gt;
+
+&lt;h4&gt;Buildah == Simplicity&lt;/h4&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Buildah version 1.1 Release Announcement</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/Buildah-version-v1.1/</id>
+    <published>2018-06-12T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;h3&gt;Buildah version 1.1 Release Announcement&lt;/h3&gt;
+
+&lt;p&gt;&lt;img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re pleased to announce the release of Buildah version 1.1 which is now available from GitHub for any Linux distro.  We are shipping this release on Fedora, RHEL 7, CentOS and Ubuntu in the near future.&lt;/p&gt;
+
+&lt;p&gt;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.  &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;The major highlights for this release are:&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Drop capabilities if running container processes as non root&lt;/li&gt;
+&lt;li&gt;Print Warning message if cmd will not be used based on entrypoint&lt;/li&gt;
+&lt;li&gt;Add OnBuild support for Dockerfiles&lt;/li&gt;
+&lt;li&gt;Add support for buildah bud &amp;ndash;label&lt;/li&gt;
+&lt;li&gt;Report errors on bad transports specification when pushing images&lt;/li&gt;
+&lt;li&gt;Add registry errors for pull&lt;/li&gt;
+&lt;li&gt;Give better messages to users when image can not be found&lt;/li&gt;
+&lt;li&gt;Add environment variable to buildah &amp;ndash;format&lt;/li&gt;
+&lt;li&gt;Accept json array input for config entrypoint&lt;/li&gt;
+&lt;li&gt;buildah bud now requires a context directory or URL&lt;/li&gt;
+&lt;li&gt;buildah bud picks up ENV from base image&lt;/li&gt;
+&lt;li&gt;Run: set supplemental group IDs&lt;/li&gt;
+&lt;li&gt;Use CNI to configure container networks&lt;/li&gt;
+&lt;li&gt;add/secrets/commit: Use mappings when setting permissions on added content&lt;/li&gt;
+&lt;li&gt;Add CLI options for specifying namespace and cgroup setup&lt;/li&gt;
+&lt;li&gt;Always set mappings when using user namespaces&lt;/li&gt;
+&lt;li&gt;Read UID/GID mapping information from containers and images&lt;/li&gt;
+&lt;li&gt;build-using-dockerfile: add &amp;ndash;annotation&lt;/li&gt;
+&lt;li&gt;Implement &amp;ndash;squash for build-using-dockerfile and commit&lt;/li&gt;
+&lt;li&gt;Manage &lt;q&gt;Run&lt;/q&gt; containers more closely&lt;/li&gt;
+&lt;li&gt;Handle /etc/hosts and /etc/resolv.conf properly in container&lt;/li&gt;
+&lt;li&gt;Make &lt;q&gt;run &amp;ndash;terminal&lt;/q&gt; and &lt;q&gt;run -t&lt;/q&gt; aliases for &lt;q&gt;run &amp;ndash;tty&lt;/q&gt;&lt;/li&gt;
+&lt;li&gt;buildah push/from can push and pull images with no reference&lt;/li&gt;
+&lt;li&gt;Attempt to download file from url, if fails assume Dockerfile&lt;/li&gt;
+&lt;li&gt;builder-inspect: fix format option&lt;/li&gt;
+&lt;li&gt;buildah-from: add effective value to mount propagation&lt;/li&gt;
+&lt;li&gt;Documentation Changes&lt;/li&gt;
+&lt;li&gt;Change freenode chan to buildah&lt;/li&gt;
+&lt;li&gt;Add example CNI configurations&lt;/li&gt;
+&lt;li&gt;Touch Up tutorial for run changes&lt;/li&gt;
+&lt;li&gt;Update 01-intro.md tutorial&lt;/li&gt;
+&lt;li&gt;Update troubleshooting with new run workaround&lt;/li&gt;
+&lt;li&gt;Add console syntax highlighting to troubleshooting page&lt;/li&gt;
+&lt;li&gt;Touchup man page short options across man pages&lt;/li&gt;
+&lt;li&gt;Demo Changes
+
+&lt;ul&gt;
+&lt;li&gt;Added demo dir and a demo.&lt;/li&gt;
+&lt;li&gt;Added Docker compatibility demo &lt;/li&gt;
+&lt;li&gt;Added a bud demo and tidied up&lt;/li&gt;
+&lt;li&gt;Update buildah scratch demo to support el7&lt;/li&gt;
+&lt;li&gt;Quick fix on demo readme&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Test Changes
+
+&lt;ul&gt;
+&lt;li&gt;Add tests for namespace control flags&lt;/li&gt;
+&lt;li&gt;CI tests and minor fix for cache related noop flags&lt;/li&gt;
+&lt;li&gt;Add cpu-shares short flag (-c) and cpu-shares CI tests&lt;/li&gt;
+&lt;li&gt;Add buildah bud CI tests for ENV variables&lt;/li&gt;
+&lt;li&gt;Additional bud CI tests&lt;/li&gt;
+&lt;li&gt;Run integration tests under travis_wait in Travis&lt;/li&gt;
+&lt;li&gt;Re-enable rpm .spec version check and new commit test&lt;/li&gt;
+&lt;li&gt;Update to F28 and new run format in baseline test&lt;/li&gt;
+&lt;li&gt;Add context dir to bud command in baseline test&lt;/li&gt;
+&lt;li&gt;add test to inspect&lt;/li&gt;
+&lt;li&gt;Test with Go 1.10, too&lt;/li&gt;
+&lt;li&gt;rmi, rm: add test&lt;/li&gt;
+&lt;li&gt;add mount test&lt;/li&gt;
+&lt;li&gt;Fix SELinux test errors when SELinux is enabled&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Vendor changes
+
+&lt;ul&gt;
+&lt;li&gt;Vendor in latest container/storage for devicemapper support&lt;/li&gt;
+&lt;li&gt;Vendor github.com/onsi/ginkgo and github.com/onsi/gomega&lt;/li&gt;
+&lt;li&gt;Vendor github.com/containernetworking/cni v0.6.0&lt;/li&gt;
+&lt;li&gt;Update github.com/containers/storage&lt;/li&gt;
+&lt;li&gt;Update github.com/projectatomic/libpod&lt;/li&gt;
+&lt;li&gt;Vendor in latest containers/image&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Plus a number of smaller fixes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Try it Out.&lt;/h4&gt;
+
+&lt;p&gt;If you haven’t yet, install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&amp;rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!&lt;/p&gt;
+
+&lt;p&gt;For those of you who contributed to this release, thank you very much for your contributions!  If you haven&amp;rsquo;t joined our community yet, don&amp;rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.&lt;/p&gt;
+
+&lt;h4&gt;Buildah == Simplicity&lt;/h4&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Project Atomic at Red Hat Summit</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/atomic-at-summit/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/atomic-at-summit/</id>
+    <published>2018-05-07T05:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Coming to Red Hat Summit?  Project Atomic will be there! We will have multiple sessions plus demonstrations at the booth in Community Central.  Click through for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Key sessions include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=163857"&gt;Container Linux And Red Hat: the Road Ahead&lt;/a&gt;, where you&amp;rsquo;ll hear what&amp;rsquo;s planned for CoreOS Container Linux and Red Hat Atomic.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=154411"&gt;Atomic BOF&lt;/a&gt;, where we&amp;rsquo;ll discuss the upcoming changes &lt;em&gt;and&lt;/em&gt; introduce some new projects.&lt;/li&gt;
+&lt;li&gt;A great workshop on &lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=166833"&gt;Containerizing Applications&lt;/a&gt;, which will be given three times by Fedora Atomic project contributors.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=153605"&gt;Next-Generation Tools for Container Tech&lt;/a&gt;, covering Buildah, CRI-O, and more.&lt;/li&gt;
+&lt;li&gt;Tons of &lt;a href="https://agenda.summit.redhat.com/?buildah=11&amp;amp;containers=11"&gt;other talks on Atomic, OpenShift and containers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will also have a set of live demonstrations running in our &lt;q&gt;pod&lt;/q&gt; in Community Central on the show floor.  This includes demos by Atomic contributors and maintainers from other container projects.  Here&amp;rsquo;s a schedule:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;strong&gt;Day&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Time&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;*&lt;em&gt;Demo *&lt;/em&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Name&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Tuesday May 8&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Fabian Deutsch &amp;amp; Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:45:00&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;5:15&lt;/td&gt;
+&lt;td&gt;Running and Persisting VMs on Openshift&lt;/td&gt;
+&lt;td&gt;Adam Litke&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Wednesday May 9&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Thursday May 10&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Provisioning Fedora with Ignition&lt;/td&gt;
+&lt;td&gt;Derek Gonyeo&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at Red Hat Summit!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Buildah Alpha version 0.16 Release Announcement</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/04/Buildah-Alpha-version-v0.16/"/>
+    <id>http://www.projectatomic.io/blog/2018/04/Buildah-Alpha-version-v0.16/</id>
+    <published>2018-04-02T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;h3&gt;Buildah Alpha version 0.16 Release Announcement&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;re pleased to announce the release of Buildah Alpha version 0.16 which is now available from GitHub for any Linux distro.  We will be shipping this release on Fedora, CentOS and Ubuntu in the near future.&lt;/p&gt;
+
+&lt;p&gt;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.  &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;The major highlights for this release are:&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Add support for the SHELL command in Dockerfiles.&lt;/li&gt;
+&lt;li&gt;Change the time displayed by the image command to the locale time.&lt;/li&gt;
+&lt;li&gt;Allow the &amp;ndash;cmd parameter for the &lt;code&gt;buildah config&lt;/code&gt; command to have commands as values.  I.e. &lt;code&gt;buildah config --cmd “--help” {containerID}&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Documentations added for the mounts.conf file. The mounts config allows you to mount content from the host into the container to be used during the build procedure, but does not get committed to the image.&lt;/li&gt;
+&lt;li&gt;Fixed  a number of man pages to format correctly.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;buildah from&lt;/code&gt; command now supports pulling images using the following three transports: docker-archive, oci-archive, and dir, as well as normal container registries and the docker daemon.&lt;/li&gt;
+&lt;li&gt;If the user overrides the storage driver, the options will not be used from the default storage.conf file.&lt;/li&gt;
+&lt;li&gt;Show the Config and Manifest as a JSON string in &lt;code&gt;buildah inspect&lt;/code&gt; even when the  &amp;ndash;format parameter is not set.&lt;/li&gt;
+&lt;li&gt;Adds feature to pull compressed docker-archive files.&lt;/li&gt;
+&lt;li&gt;Vendor in latest containers/image
+
+&lt;ul&gt;
+&lt;li&gt;docker-archive generates docker legacy compatible images.&lt;/li&gt;
+&lt;li&gt;Ensure the layer IDs in legacy docker/tarfile metadata are unique.&lt;/li&gt;
+&lt;li&gt;docker-archive: repeated layers are symlinked in the tar file.&lt;/li&gt;
+&lt;li&gt;sysregistries: remove all trailing slashes.&lt;/li&gt;
+&lt;li&gt;Improve docker/* error messages.&lt;/li&gt;
+&lt;li&gt;Fix failure to make auth directory.&lt;/li&gt;
+&lt;li&gt;Create a new slice in Schema1.UpdateLayerInfos.&lt;/li&gt;
+&lt;li&gt;Drop unused storageImageDestination.{image,systemContext}.&lt;/li&gt;
+&lt;li&gt;Load a *storage.Image only once in storageImageSource.&lt;/li&gt;
+&lt;li&gt;Support gzip for docker-archive files.&lt;/li&gt;
+&lt;li&gt;Remove .tar extension from blob and config file names.&lt;/li&gt;
+&lt;li&gt;ostree, src: support copy of compressed layers.&lt;/li&gt;
+&lt;li&gt;ostree: re-pull layer if it misses uncompressed_digest|uncompressed_size.&lt;/li&gt;
+&lt;li&gt;image: fix docker schema v1 -&amp;gt; OCI conversion.&lt;/li&gt;
+&lt;li&gt;Add /etc/containers/certs.d as default certs directory.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Plus several small bug fixes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Try it Out.&lt;/h4&gt;
+
+&lt;p&gt;If you haven’t yet,  install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&amp;rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!&lt;/p&gt;
+
+&lt;p&gt;For those of you who contributed to this release, thank you very much for your contributions!  If you haven&amp;rsquo;t joined our community yet, don&amp;rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.&lt;/p&gt;
+
+&lt;h4&gt;Buildah == Simplicity&lt;/h4&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Open Source, What a Concept!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/04/open-source-what-a-concept/"/>
+    <id>http://www.projectatomic.io/blog/2018/04/open-source-what-a-concept/</id>
+    <published>2018-04-02T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;p&gt;I recently joined Red Hat after many years working for another tech company whose three character symbol most would recognize, but I won’t name. While there, I developed a number of different software products that were all very successful in their spaces, but all very proprietary.  Not only were we legally compelled to not share the software outside of the company, we often times didn&amp;rsquo;t share it within the company. To me at the time, that made complete sense. The company spent the time, energy and budget on developing the software, so they should then protect and then claim the rewards that were garnered for it.  &lt;/p&gt;
+
+&lt;p&gt;Fast forward to a year ago when I joined Red Hat, and developed a completely different mindset. One of the first things I jumped into was the Buildah project. It facilitates building Open Container Initiative (OCI) images and it is especially good at allowing you to tailor the size of the image that is created.  At that time Buildah was in its very early stages and there were some warts here and there that weren&amp;rsquo;t quite production ready.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Being new on the project, I made a few minor changes then asked where the company&amp;rsquo;s internal git repository was that I could push my changes to.  The answer was nothing internal, just push your changes to GitHub.  I was baffled, sending my changes out to GitHub would mean anyone could look at that code and use it for their own projects!  Plus the code still had a few warts, so that just seemed so counter-intuitive.  But being the new guy, I shook my head in wonder and pushed the changes out.&lt;/p&gt;
+
+&lt;p&gt;Now a year later, I’m very convinced of the power and value of Open Source software. I’m still working on Buildah and we recently had an issue that really illustrates that power and value.  The issue titled &lt;a href="https://github.com/projectatomic/buildah/issues/532"&gt;&lt;q&gt;Buildah images not so small&lt;/q&gt;&lt;/a&gt;, was raised by Tim Dudgeion (@tdudgeon). To summarize, he noted that images created by Buildah were bigger than those created by Docker even though the Buildah images didn’t contain the extra “fluff” he saw in the Docker images.&lt;/p&gt;
+
+&lt;p&gt;For comparison he first did:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull centos:7
+$ docker images
+REPOSITORY            TAG              IMAGE ID                 CREATED             SIZE
+docker.io/centos          7                   2d194b392dd1        2 weeks ago         195 MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;He noted that the size of the Docker image was &lt;code&gt;195 MB&lt;/code&gt;.  Tim then went and created a minimal (scratch) image using Buildah, with only the &lt;code&gt;coreutils&lt;/code&gt; and &lt;code&gt;bash&lt;/code&gt; packages added to the image, using the following script.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat  ./buildah-base.sh
+#!/bin/bash
+
+set -x
+
+# build a minimal image
+newcontainer=$(buildah from scratch)
+scratchmnt=$(buildah mount $newcontainer)
+
+# install the packages
+yum install --installroot $scratchmnt bash coreutils --releasever 7 --setopt install_weak_deps=false -y
+yum clean all -y --installroot $scratchmnt --releasever 7
+
+sudo buildah config --cmd /bin/bash $newcontainer
+
+# set some config info
+buildah config --label name=centos-base $newcontainer
+
+# commit the image
+buildah unmount $newcontainer
+buildah commit $newcontainer centos-base
+
+$ sudo ./buildah-base.sh
+
+$ sudo buildah images
+IMAGE ID               IMAGE NAME                                             CREATED AT            SIZE
+8379315d3e3e     docker.io/library/centos-base:latest           Mar 25, 2018 17:08   212.1 MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Tim wondered why the image was &lt;code&gt;17 MB larger&lt;/code&gt;, because &lt;code&gt;python&lt;/code&gt; and &lt;code&gt;yum&lt;/code&gt; were not installed in the Buildah image. Whereas they were installed in the Docker image.  Needless to say, this set off quite the discussion in the GitHub issue, as it was not at all an expected result.&lt;/p&gt;
+
+&lt;p&gt;What was great to see about the discussion was not only were Red Hat folks involved, but several others from outside of Red Hat were also involved.  In particular, a lot of great discussion and investigation was led by GitHub user @pixdrift.  Pixdrift noted that the documentation and locale-archive was chewing up a little over &lt;code&gt;100 MB&lt;/code&gt; of space in the Buildah image.  Pixdrift  suggested forcing locale in the yum installer and provided this updated &lt;code&gt;buildah-bash.sh&lt;/code&gt; script with those changes:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class="nb"&gt;set&lt;/span&gt; -x
+
+&lt;span class="c"&gt;# build a minimal image&lt;/span&gt;
+&lt;span class="nv"&gt;newcontainer&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;buildah from scratch&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;scratchmnt&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;buildah mount &lt;span class="nv"&gt;$newcontainer&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;# install the packages&lt;/span&gt;
+yum install --installroot &lt;span class="nv"&gt;$scratchmnt&lt;/span&gt; bash coreutils --releasever 7 --setopt&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;install_weak_deps&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;false&lt;/span&gt; --setopt&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;tsflags&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;nodocs --setopt&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;override_install_langs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;en_US.utf8 -y
+yum clean all -y --installroot &lt;span class="nv"&gt;$scratchmnt&lt;/span&gt; --releasever 7
+
+sudo buildah config --cmd /bin/bash &lt;span class="nv"&gt;$newcontainer&lt;/span&gt;
+
+&lt;span class="c"&gt;# set some config info&lt;/span&gt;
+buildah config --label &lt;span class="nv"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;centos-base &lt;span class="nv"&gt;$newcontainer&lt;/span&gt;
+
+&lt;span class="c"&gt;# commit the image&lt;/span&gt;
+buildah unmount &lt;span class="nv"&gt;$newcontainer&lt;/span&gt;
+buildah commit &lt;span class="nv"&gt;$newcontainer&lt;/span&gt; centos-base
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When Tim ran this new script, the image size was shrunk down to &lt;code&gt;92 MB&lt;/code&gt;, shedding &lt;code&gt;120 MB&lt;/code&gt; from the original Buildah image size and getting more to the expected size.  However engineers being engineers, a savings in size of &lt;code&gt;56%&lt;/code&gt; just wasn’t enough.   The discussion went further talking about how to remove individual locale packages to save even further space.  If you’d like to see more details of the discussion about the &lt;a href="https://github.com/projectatomic/buildah/issues/532"&gt;&lt;q&gt;Buildah images not so small&lt;/q&gt;&lt;/a&gt; issue, click on the link.  Who knows maybe you’ll have a helpful tip too or better yet, you’ll become a contributor for Buildah.&lt;/p&gt;
+
+&lt;p&gt;On a side note, this solution really illustrates how the Buildah software can be used to create a minimally sized container quickly and easily that fit your needs.  You can create a container loaded up only with the software that you need to get your job done efficiently.  As a bonus, it doesn’t require a daemon to be running….&lt;/p&gt;
+
+&lt;p&gt;This image sizing issue really drove home the power of Open Source software for me.  A number of people from different companies all collaborated to solve a problem through open discussion in a little over a day.  Although no code changes were created to address this particular issue, there have been many code contributions to Buildah from contributors outside of Red Hat and this has helped to make the project even better than if only a few of us had hands on it.  These contributions have served to get a lot more eyes onto the code from a wider variety of talented people than it ever would have if it was a proprietary piece of software stuck on a very private git repository.  It’s taken only a year to convert me to the &lt;a href="https://twitter.com/opensourceway"&gt;@opensourceway&lt;/a&gt;, I don’t think I could ever go back.  Come join us!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Buildah == Simplicity&lt;/strong&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

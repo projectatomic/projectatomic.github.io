@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Developer Tools</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/developer-tools.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Developing with Mesos-Marathon provider on Atomic Developer Bundle (ADB)</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/developing-with-mesos-marathon/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/developing-with-mesos-marathon/</id>
+    <published>2016-04-07T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dharmit Shah</name>
+    </author>
+    <content type="html">&lt;p&gt;Since the 1.6.0 release, the &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;Atomic Developer Bundle
+(ADB)&lt;/a&gt;
+includes support for Mesos-Marathon as an orchestrator. This is in conjunction
+with the support for Mesos-Marathon that was added to
+&lt;a href="https://github.com/projectatomic/atomicapp"&gt;Atomic App&lt;/a&gt; 0.3.0. This feature
+supports developers choosing to work with atomicapps on Mesos-Marathon.&lt;/p&gt;
+
+&lt;p&gt;Mesos Marathon is a distributed control system which can be used for container
+orchestration in large server clusters.  Some Docker-based infrastructure teams
+use Mesos instead of Kubernetes. Learn more here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://mesos.apache.org/"&gt;Mesos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://mesosphere.github.io/marathon/"&gt;Marathon&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Starting the Vagrant box&lt;/h3&gt;
+
+&lt;p&gt;A &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-mesos-marathon-singlenode-setup/Vagrantfile"&gt;Vagrantfile&lt;/a&gt;
+has been created that will use the ADB and provision it with a fully setup and
+configured single node Mesos-Marathon installation.&lt;/p&gt;
+
+&lt;p&gt;One can either clone the ADB repo to use this setup or download only the
+Vagrantfile and Ansible playbook. To avoid any errors, it&amp;rsquo;d be best to clone
+the repo and spin up the vagrant box:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/projectatomic/adb-atomic-developer-bundle/
+$ cd adb-atomic-developer-bundle/components/centos/centos-mesos-marathon-singlenode-setup/
+$ vagrant up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you need help with setting up Vagrant or a virtualization provider, refer
+&lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst"&gt;this
+document&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note that when you do &lt;code&gt;vagrant up&lt;/code&gt;, the &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-mesos-marathon-singlenode-setup/provisioning/playbook.yml"&gt;Ansible
+playbook&lt;/a&gt;,
+used to do the provisioning, downloads certain packages from the Internet.
+Hence, the time for box to get ready for use is directly dependent on your
+Internet connection. It pulls around 130 MB from the Internet.&lt;/p&gt;
+
+&lt;h3&gt;Developing on the box&lt;/h3&gt;
+
+&lt;p&gt;This section focuses on running containerized applications in the newly created
+Mesos-Marathon box with the help of
+&lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Install Atomic App&lt;/h4&gt;
+
+&lt;p&gt;Since the current ADB release doesn&amp;rsquo;t have the latest version of Atomic App, we
+want to install it. The Atomic App &lt;a href="https://github.com/projectatomic/atomicapp#installing-atomic-app"&gt;installation
+section&lt;/a&gt; on
+its GitHub repo explains how to install the current release.&lt;/p&gt;
+
+&lt;h4&gt;Setup Mesos-DNS&lt;/h4&gt;
+
+&lt;p&gt;In this example, I am using Mesos-DNS as a service discovery mechanism for
+Mesos. However, you can use any tool of your choice and code your application
+accordingly.&lt;/p&gt;
+
+&lt;p&gt;To setup Mesos-DNS, download the binary from its
+&lt;a href="https://github.com/mesosphere/mesos-dns/releases"&gt;releases&lt;/a&gt; page. Copy it to a
+location in the &lt;code&gt;$PATH&lt;/code&gt; variable or modify the &lt;code&gt;$PATH&lt;/code&gt; variable - whatever is
+convenient to you. I copied to /usr/bin/:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo yum -y install wget bind-utils    # we'll need bind-utils for dig
+$ wget https://github.com/mesosphere/mesos-dns/releases/download/v0.5.1/mesos-dns-v0.5.1-linux-amd64
+$ sudo mv mesos-dns-v0.5.1-linux-amd64 /usr/bin/mesos-dns
+$ sudo chmod +x /usr/bin/mesos-dns
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create a directory under &lt;code&gt;/etc&lt;/code&gt; to store configuartion for Mesos-DNS. And create
+a file &lt;code&gt;config.json&lt;/code&gt; under it with contents like below:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo mkdir /etc/mesos-dns
+$ cat /etc/mesos-dns/config.json
+{
+    "zk": "zk://10.0.2.2:2181/mesos",
+    "refreshSeconds": 60,
+    "ttl": 60,
+    "domain": "mesos",
+    "port": 53,
+    "resolvers": ["8.8.8.8"],
+    "timeout": 5,
+    "listener": "10.2.2.2",
+    "httpon": true,
+    "httpport": 8123
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace 10.0.2.2 in above output to the IP of your vagrant box. This IP is of
+the system on which ZooKeeper is running.&lt;/p&gt;
+
+&lt;p&gt;Next, start Mesos-DNS from the command line or using Marathon. Mesos-DNS
+documentation suggests to use Marathon as it&amp;rsquo;ll ensure that the Mesos-DNS
+service is restarted in event of any failure. I prefer checking from the
+command line before deploying it using Marathon.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo mesos-dns -config=/etc/mesos-dns/config.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If Mesos-DNS was deployed successfully, you should be able to make DNS lookups
+using it as your server. Make sure to edit your &lt;code&gt;/etc/resolv.conf&lt;/code&gt; to have the IP
+of system running Mesos-DNS as the first entry for nameserver:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat /etc/resolv.conf
+nameserver 10.2.2.2
+nameserver 8.8.8.8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you can perform DNS lookups:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ dig marathon.mesos
+$ dig mesos-dns.marathon.mesos
+$ dig master.mesos
+$ dig slave.mesos
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of the above lookups will be answered by Mesos-DNS if the setup is correct.&lt;/p&gt;
+
+&lt;h4&gt;Deploy a Flask + Redis based page visit counter app&lt;/h4&gt;
+
+&lt;p&gt;This is an atomic app based on the Nulecule specification that creates a 2-tier
+application based on Flask and Redis. Every time you access the web page, a
+message is displayed which indicates the number of times the web page was
+accessed. And this counter is incremented upon each access.&lt;/p&gt;
+
+&lt;p&gt;To make this example work, make sure that Mesos-DNS is configured. The IP
+address of the server hosting Mesos-DNS needs to be the first nameserver entry
+in &lt;code&gt;/etc/resolv.conf&lt;/code&gt; file. This makes it the primary DNS server. Related
+documentation &lt;a href="http://mesosphere.github.io/mesos-dns/docs/#slave-setup"&gt;link&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For the Redis container in this repo, go ahead and create a directory
+&lt;code&gt;/opt/redis&lt;/code&gt; on the Vagrant box. This is for the sake of persistence. Also,
+you need to apply below SELinux context to &lt;code&gt;/opt/redis&lt;/code&gt; on the host:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo mkdir /opt/redis
+$ sudo chcon -Rt svirt_sandbox_file_t /opt/redis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With that setup in place, you can simply do:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ atomicapp run --provider=marathon dharmit/flask_redis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Above command will download three Docker images:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Image containing information about our Nulecule&amp;#39;ized application&lt;/li&gt;
+&lt;li&gt;Flask Docker image&lt;/li&gt;
+&lt;li&gt;Redis Docker image&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The repository containing the code for this Flask application can be found on
+this &lt;a href="https://github.com/dharmit/flask_redis_nulecule_app"&gt;link&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Checking the application&lt;/h4&gt;
+
+&lt;p&gt;If all went well, Marathon web UI or &lt;code&gt;docker ps&lt;/code&gt; on the shell should give you
+information about the port on the Vagrant box that&amp;rsquo;s mapped to the port 5000
+inside the Flask container. In my case it was 31364.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ curl localhost:31364
+&amp;lt;div align=center&amp;gt;&amp;lt;img src='https://pbs.twimg.com/profile_images/458352291767013376/K9nN_rhH_400x400.png'&amp;gt;&amp;lt;h1&amp;gt;This page has been visited 1 times!&amp;lt;/h1&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Please share feedback about your experience with the process of setting up
+Mesos-Marathon provider on ADB. You can do this by engaging with developrs on
+&lt;code&gt;#nulecule&lt;/code&gt; IRC channel on Freenode or open an issue under &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;ADB repo on
+github&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>ADB-Atomic Developer Bundle 1.7.1 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/ADB-1-7-1/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/ADB-1-7-1/</id>
+    <published>2016-03-11T10:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Lalatendu Mohanty</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.7.1, a Vagrant box that provides a ready-to-use development environment for container based applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is available for Microsoft Windows, Apple OS X, and Linux distributions.&lt;/p&gt;
+
+&lt;p&gt;The 1.7.1 release is primarily a bug fix and enhancement release.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The OpenShift experience in ADB has been enhanced to be more streamlined and to make version selection easier.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;sccli openshift&lt;/code&gt; will download OpenShift images and setup a single-node OpenShift instance.  &lt;a href="https://github.com/projectatomic/adb-utils/blob/master/README.rst"&gt;Documentation&lt;/a&gt; is available online.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;sccli&lt;/code&gt; defaults to OpenShift Origin version 1.1.1.  This can be changed using environment variables as seen below.  For details, please see the &lt;a href="https://github.com/projectatomic/adb-utils/blob/master/README.rst"&gt;Documentation&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Use the latest version of OpenShift Origin
+$ sudo IMAGE_TAG="latest" sccli openshift
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This release also includes many smaller changes and bug fixes, which are detailed in the release comments from  &lt;a href="https://github.com/projectatomic/adb-utils/releases/tag/v1.1"&gt;adb-utils&lt;/a&gt; and &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/releases/tag/v1.7.1"&gt;ADB&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Learn More and Download&lt;/h3&gt;
+
+&lt;p&gt;The ADB provides a container development ecosystem that ensures developers are able to work with Linux containers even if their base operating system does not support it. It also offers a quick and easy way to setup multi-container applications that take advantage of management and/or orchestration  solutions, such as OpenShift or Kubernetes. The ADB supports &lt;a href="http://www.projectatomic.io/docs/nulecule/"&gt;Nulecule&lt;/a&gt; and &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;. These projects provide a structure for packaging, distributing, and deploying multi-container applications.&lt;/p&gt;
+
+&lt;p&gt;The ADB is built as part of Project Atomic, which integrates the tools and patterns of container-based application and service deployment with trusted operating system platforms to deliver an end-to-end hosting architecture that&amp;rsquo;s modern, reliable, and secure.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Read more about the Atomic Developer Bundle (ADB) at the project&amp;rsquo;s &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;github.com page&lt;/a&gt;, including a quick start guide.&lt;/li&gt;
+&lt;li&gt;The ADB can be &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst#3-download-the-adb"&gt;downloaded in multiple ways&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle#documentation"&gt;Project Documentation&lt;/a&gt; and &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst"&gt;Installation Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Get more Project Atomic updates on Twitter &lt;a href="https://twitter.com/projectatomic"&gt;@ProjectAtomic&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Releasing ADB-Atomic Developer Bundle 1.7</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/02/ADB-1-7/"/>
+    <id>http://www.projectatomic.io/blog/2016/02/ADB-1-7/</id>
+    <published>2016-02-18T20:24:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Lalatendu Mohanty</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.7.0, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple’s OS X, and Linux distributions.&lt;/p&gt;
+
+&lt;p&gt;The 1.7.0 release adds several new features, including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OpenShift is now managed as a systemd unit file with full functionality (start/stop/restart), making it a single step to set up OpenShift on one machine. This will help application developers who want to develop and test applications on OpenShift on their laptop or workstation.&lt;/li&gt;
+&lt;li&gt;The new SCCLI command-line tool to can help users move between Kubernetes and OpenShift setup.&lt;/li&gt;
+&lt;li&gt;A new vagrant plugin, vagrant-service-manager, that manages the services inside of the ADB. This plugin is recommended for use with the ADB and fully replaces vagrant-adbinfo.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This release also includes many smaller changes and bugfixes, which are detailed in the &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/releases/tag/v1.7.0"&gt;release comments&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Learn More and Download&lt;/h3&gt;
+
+&lt;p&gt;The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it. It also offers a quick and easy way to setup multi-container applications to take advantage of management and/or orchestration solutions, such as OpenShift or Kubernetes. The ADB supports &lt;a href="http://www.projectatomic.io/docs/nulecule/"&gt;Nulecule&lt;/a&gt; and &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;. These projects provide a structure for packaging, distributing, and deploying multi-container applications.&lt;/p&gt;
+
+&lt;p&gt;The ADB is built as part of Project Atomic, which integrates the tools and patterns of container-based application and service deployment with trusted operating system platforms to deliver an end-to-end hosting architecture that&amp;rsquo;s modern, reliable, and secure.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Read more about the Atomic Developer Bundle (ADB) at the project&amp;rsquo;s &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;github.com page&lt;/a&gt;, including a quick start guide.&lt;/li&gt;
+&lt;li&gt;The ADB can be &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst#3-download-the-adb"&gt;downloaded in multiple ways&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle#documentation"&gt;Project Documentation&lt;/a&gt; and &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst"&gt;Installation Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Get more Project Atomic updates on Twitter &lt;a href="https://twitter.com/projectatomic"&gt;@ProjectAtomic&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic Developer Bundle v1.6 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/01/ADB-1.6-announcement/"/>
+    <id>http://www.projectatomic.io/blog/2016/01/ADB-1.6-announcement/</id>
+    <published>2016-01-25T16:34:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian (bex) Exelbierd</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.6, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple&amp;rsquo;s OS X and GNU/Linux distributions.&lt;/p&gt;
+
+&lt;p&gt;The 1.6 release adds several new features, including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://mesosphere.github.io/marathon/"&gt;Mesos Marathon&lt;/a&gt; as a supported container orchestrator&lt;/li&gt;
+&lt;li&gt;A new delivery location in HashiCorp&amp;rsquo;s Atlas box catalog, &lt;a href="https://atlas.hashicorp.com/projectatomic/boxes/adb"&gt;projectatomic/adb&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ADB descriptive details now reported in /etc/os-release:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;VARIANT=&amp;quot;Atomic Developer Bundle (ADB)&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;VARIANT_ID=&amp;quot;adb&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;VARIANT_VERSION=&amp;quot;1.6.0&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Updated Documentation, a new Maintainer and &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/releases/tag/v1.6.0"&gt;more&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The ADB provides a quick and easy way to setup multi-container applications that take advantage of management and/or orchestration solutions, such as &lt;a href="https://www.openshift.org/"&gt;OpenShift&lt;/a&gt; or &lt;a href="http://kubernetes.io/"&gt;Kubernetes&lt;/a&gt;. The ADB also supports &lt;a href="http://www.projectatomic.io/docs/nulecule/"&gt;Nulecule&lt;/a&gt; and &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;. These projects provide a structure for packaging, distributing, and deploying multi-container applications.&lt;/p&gt;
+
+&lt;h3&gt;Additional Resources and Download Locations&lt;/h3&gt;
+
+&lt;p&gt;Project Atomic integrates the tools and patterns of container-based application and service deployment with trusted operating system platforms to deliver an end-to-end hosting architecture that&amp;rsquo;s modern, reliable and secure.&lt;/p&gt;
+
+&lt;p&gt;Interested in learning more about the ADB, or Project Atomic?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Read more about the Atomic Developer Bundle (ADB) at the project&amp;rsquo;s &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;github.com page&lt;/a&gt;, including a quick start guide.&lt;/li&gt;
+&lt;li&gt;The ADB can be downloaded in &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst#3-download-the-adb"&gt;multiple ways&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle#documentation"&gt;Project Documentation&lt;/a&gt; and &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst"&gt;Installation Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Get more Project Atomic updates on Twitter &lt;a href="https://twitter.com/projectatomic"&gt;@ProjectAtomic&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Releasing the Atomic Developer Bundle 1.5</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/12/ADB-1-5/"/>
+    <id>http://www.projectatomic.io/blog/2015/12/ADB-1-5/</id>
+    <published>2015-12-17T15:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Lalatendu Mohanty</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.5, a Vagrant box that provides a ready-to-use development environment for container applications. With ADB, developers can dive right into producing complex, multi-container applications.&lt;/p&gt;
+
+&lt;p&gt;The 1.5 release adds the ability to develop and test using &lt;a href="http://www.openshift.org/"&gt;OpenShift Origin v3&lt;/a&gt;. The ADB is useful on Microsoft Windows, Apple&amp;rsquo;s OS X and GNU/Linux distributions. The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The ADB provides a quick and easy way to setup multi-container applications that take advantage of management and/or orchestration solutions, such as OpenShift or &lt;a href="http://kubernetes.io/"&gt;Kubernetes&lt;/a&gt;. The ADB also supports &lt;a href="http://www.projectatomic.io/docs/nulecule/"&gt;Nulecule&lt;/a&gt; and &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt;. These projects provide a structure for packaging, distributing, and deploying multi-container applications.&lt;/p&gt;
+
+&lt;p&gt;Notable features of ADB v1.5 include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Docker, Kubernetes and other ecosystem packages are shipped and configured in the Vagrant box.&lt;/li&gt;
+&lt;li&gt;The Vagrant box has &lt;a href="http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/"&gt;device mapper thin provisioning storage setup&lt;/a&gt; for docker images, similarly to production instances of RHEL/CentOS/Fedora Atomic Hosts.&lt;/li&gt;
+&lt;li&gt;Setup OpenShift just with the the &lt;code&gt;vagrant up&lt;/code&gt; command and a shipped &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-with-openshift"&gt;Vagrantfile&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Setup single node kubernetes with the &lt;code&gt;vagrant up&lt;/code&gt; command and a shipped &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/tree/master/components/centos/centos-k8s-singlenode-setup"&gt;Vagrantfile&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Users can directly run Docker commands on hosts, such as Windows and OS X, that do not directly support Docker.  &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/using.rst#using-the-box-from-the-host"&gt;Read More&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The ADB is able to integrate with &lt;a href="https://wiki.eclipse.org/Linux_Tools_Project/Docker_Tooling"&gt;Eclipse docker tooling&lt;/a&gt;. &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-docker-eclipse/README.rst"&gt;Read More&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Additional Resources and Download Locations&lt;/h3&gt;
+
+&lt;p&gt;Project Atomic integrates the tools and patterns of container-based application and service deployment with trusted operating system platforms to deliver an end-to-end hosting architecture that&amp;rsquo;s modern, reliable and secure.&lt;/p&gt;
+
+&lt;p&gt;Interested in learning more about the ADB, or Project Atomic? &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Read more about the Atomic Developer Bundle (ADB) at the project&amp;rsquo;s &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;github.com page&lt;/a&gt;, including a quick start guide.&lt;/li&gt;
+&lt;li&gt;The ADB can be downloaded in &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst#3-download-the-adb"&gt;multiple ways&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle#documentation"&gt;Project Documentation&lt;/a&gt; and &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst"&gt;Installation Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Get more Project Atomic updates on Twitter &lt;a href="https://twitter.com/projectatomic"&gt;@ProjectAtomic&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

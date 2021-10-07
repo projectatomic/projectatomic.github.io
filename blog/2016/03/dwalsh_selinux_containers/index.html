@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Practical SELinux and Containers &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Practical SELinux and Containers' property='og:title'>
+<meta content='I believe SELinux is the best security measure we currently have for controlling access between standard Docker containers. Of course, I might be biased.  &#x000A;&#x000A;All of the security separation measures are nice, and should be enabled for security in depth, but SELinux policy prevents a lot of break out situations where the other security mechanisms fail. With SELinux on Docker, we write policy that says that the container process running as svirt_lxc_net_t can only read/write svirt_sandbox_file_t by default (there are some booleans to allow it to write to network shared storage, if required, like for NFS). This means that if a process from a Docker container broke out of the container, it would only be able to write to files/directories labeled svirt_sandbox_file_t. We take advantage of Multi-Category Security (MCS) separation to ensure that the processes running in the container can only write to svirt_sandbox_file_t files with the same MCS Label: s0.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/dwalsh_selinux_containers/' property='og:url'>
+<meta content='2016-03-04T02:20:31Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='selinux' property='article:tag'>
+<link href='/blog/tag/selinux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Practical SELinux and Containers' name='twitter:title'>
+<meta content='I believe SELinux is the best security measure we currently have for controlling access between standard Docker containers. Of course, I might be biased.  &#x000A;&#x000A;All of the security separation measures are nice, and should be enabled for security in depth, but SELinux policy prevents a lot of break out situations where the other security mechanisms fail. With SELinux on Docker, we write policy that says that the container process running as svirt_lxc_net_t can only read/write svirt_sandbox_file_t by default (there are some booleans to allow it to write to network shared storage, if required, like for NFS). This means that if a process from a Docker container broke out of the container, it would only be able to write to files/directories labeled svirt_sandbox_file_t. We take advantage of Multi-Category Security (MCS) separation to ensure that the processes running in the container can only write to svirt_sandbox_file_t files with the same MCS Label: s0.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_dwalsh_selinux_containers blog_2016_03_dwalsh_selinux_containers_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Practical SELinux and Containers
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-04T02:20:31Z'>
+Friday  4 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I believe SELinux is the best security measure we currently have for controlling access between standard Docker containers. Of course, I might be biased.  </p>
+
+<p>All of the security separation measures are nice, and should be enabled for security in depth, but SELinux policy prevents a lot of break out situations where the other security mechanisms fail. With SELinux on Docker, we write policy that says that the container process running as <code>svirt_lxc_net_t</code> can only read/write <code>svirt_sandbox_file_t</code> by default (there are some booleans to allow it to write to network shared storage, if required, like for NFS). This means that if a process from a Docker container broke out of the container, it would only be able to write to files/directories labeled <code>svirt_sandbox_file_t</code>. We take advantage of Multi-Category Security (MCS) separation to ensure that the processes running in the container can only write to <code>svirt_sandbox_file_t</code> files with the same MCS Label: <code>s0</code>.</p>
+
+<p></p>
+
+<p>The problem with SELinux and Docker comes up when you are volume mounting content into a container.  </p>
+
+<h3>It Depends on the Use Case</h3>
+
+<p>There are multiple ways to run containers with an SELinux-enforced system when sharing content inside of the container.</p>
+
+<p>The SELinux policy for <code>svirt_lxc_net_t</code> also enables the processes to read/execute most of the labels under /usr. This means if you wanted to volume mount an executable from /usr into a container, SELinux would probably allow the processes to execute the commands. If you want to share the same directory with multiple containers such that the containers can read/execute the content you could label the content as <code>usr_t</code>.</p>
+<pre class="highlight plaintext"><code>docker run -v /opt:/opt rhel7 ...&#x000A;</code></pre>
+
+<p>If you are sharing parts of the Host OS that can not be relabeled, you can always disable SELinux separation in the container.</p>
+<pre class="highlight plaintext"><code>docker run --security-opt label:disable rhel7 ...&#x000A;</code></pre>
+
+<p>This means that you can continue to run your system with SELinux enforcing and even run most of your containers locked down, but for this one particular container, it will run an unconfined type. (We use the spc_t type for this.)  As I <a href="http://developerblog.redhat.com/2014/11/06/introducing-a-super-privileged-container-concept/">wrote in a blog on Super Privileged Containers (SPC)</a> a while back, these are containers that you don&rsquo;t want to isolate from the system.</p>
+
+<p>Docker has the ability to automatically relabel content on the disk when doing volume mounts, by appending a <code>:z</code> or <code>:Z</code> on to the mount point.</p>
+
+<p>If you want to take a random directory from say /var/foobar and share it with multiple containers such that the containers can write to these volumes, you just need to add the <code>:z</code> to the end of the volume mount.</p>
+<pre class="highlight plaintext"><code>docker run -v /var/foobar:/var/foobar:z rhel7 ...&#x000A;</code></pre>
+
+<p>If you want to take a random directory from say /var/foobar and have it private to the container such that only that container can write to the volume, you just need to add the <code>:Z</code> to the end of the volume mount.</p>
+<pre class="highlight plaintext"><code>docker run -v /var/foobar:/var/foobar:Z rhel7 ...&#x000A;</code></pre>
+
+<p>You should be careful when doing this, since the tool will basically the following:</p>
+<pre class="highlight plaintext"><code>chcon -R -t svirt_sandbox_file_t /SOURCEDIR&#x000A;</code></pre>
+
+<p>This could cause breakage on your system. Make sure the directory is only to be used with containers. The following is probably a <em>bad</em> idea.</p>
+<pre class="highlight plaintext"><code>docker run -v /var:/var:Z rhel7&#x000A;</code></pre>
+
+<p>Using these few easy commands makes SELinux and containers work well together and give you the best security separation possible for default containers.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/dwalsh_selinux_containers/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/dwalsh_selinux_containers/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/dwalsh_selinux_containers/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

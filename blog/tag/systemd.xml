@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Systemd</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/systemd.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>CentOS Atomic Host Updated</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/11/centos-atomic-host-updated/"/>
+    <id>http://www.projectatomic.io/blog/2015/11/centos-atomic-host-updated/</id>
+    <published>2015-11-24T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;The CentOS Atomic SIG has released an updated filesystem tree and new set of deployment/installation images, featuring updates to docker and atomic, among other components. &lt;/p&gt;
+
+&lt;p&gt;Check out the details below, and stay tuned for the next CentOS Atomic Host update, which should arrive soon after the main CentOS Project finishes building its &lt;a href="http://seven.centos.org/2015/11/rhel-7-2-released-today/"&gt;next major release&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Today we&amp;rsquo;re announcing an update to CentOS Atomic Host (version 7.20151118), a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host. Please note that this release is based on content derived from the upstream 7.1 release.&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image. These images are available for download at &lt;a href="http://cloud.centos.org/centos/7/atomic/images/"&gt;cloud.centos.org&lt;/a&gt;. The backing ostree repo is published to &lt;a href="http://mirror.centos.org/centos/7/atomic/x86_64/repo"&gt;mirror.centos.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host includes these core component versions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;kernel-3.10.0-229.20.1.el7.x86_64&lt;/li&gt;
+&lt;li&gt;cloud-init-0.7.5-10.el7.centos.1.x86_64&lt;/li&gt;
+&lt;li&gt;atomic-1.6-6.gitca1e384.el7.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-1.0.3-0.2.gitb9a88a7.el7.x86_64&lt;/li&gt;
+&lt;li&gt;etcd-2.1.1-2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-2015.6-4.atomic.el7.x86_64&lt;/li&gt;
+&lt;li&gt;docker-1.8.2-7.el7.centos.x86_64&lt;/li&gt;
+&lt;li&gt;flannel-0.2.0-10.el7.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;For more information about the release, check out the &lt;a href="http://seven.centos.org/2015/11/centos-atomic-host-updated/"&gt;announcement post&lt;/a&gt; over at the CentOS Project blog.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Updated CentOS Atomic Host Tree and Images Available</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/10/updated-centos-atomic-host-tree-and-images-available/"/>
+    <id>http://www.projectatomic.io/blog/2015/10/updated-centos-atomic-host-tree-and-images-available/</id>
+    <published>2015-10-08T21:57:40+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;The CentOS Atomic Host train rolls on, with an updated filesystem tree and new set of deployment/installation images:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Today we’re announcing an update to CentOS Atomic Host (version 7.20151001), a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image. These images are available for download at cloud.centos.org. The backing ostree repo is published to mirror.centos.org.&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host includes these core component versions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;kernel-3.10.0-229.14.1.el7.x86_64&lt;/li&gt;
+&lt;li&gt;cloud-init-0.7.5-10.el7.centos.1.x86_64&lt;/li&gt;
+&lt;li&gt;atomic-1.0-115.el7.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-1.0.3-0.1.gitb9a88a7.el7.x86_64&lt;/li&gt;
+&lt;li&gt;flannel-0.2.0-10.el7.x86_64&lt;/li&gt;
+&lt;li&gt;docker-1.7.1-115.el7.x86_64&lt;/li&gt;
+&lt;li&gt;etcd-2.1.1-2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-2015.6-4.atomic.el7.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;For more information about the release, check out the &lt;a href="http://seven.centos.org/2015/10/new-centos-atomic-host-release-available-now/"&gt;announcement post&lt;/a&gt; over at the CentOS Project blog. &lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Running a Containerized Cockpit UI from Cloud-init</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/08/running-a-containerized-cockpit-ui-from-cloud-init/"/>
+    <id>http://www.projectatomic.io/blog/2015/08/running-a-containerized-cockpit-ui-from-cloud-init/</id>
+    <published>2015-08-26T20:13:21+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Fedora 22&amp;rsquo;s Atomic Host dropped most of packages for the web-based server UI, &lt;a href="http://cockpit-project.org/"&gt;cockpit&lt;/a&gt;, from its system tree in favor of a containerized deployment approach. &lt;a href="https://twitter.com/cleverbeard"&gt;Matt Micene&lt;/a&gt; blogged about &lt;a href="http://www.projectatomic.io/blog/2015/06/running-cockpit-as-a-service/"&gt;running cockpit-in-a-container with systemd&lt;/a&gt;, but people have &lt;a href="https://fedorahosted.org/cloud/ticket/105"&gt;expressed interest&lt;/a&gt; in learning how to start this container automatically, with cloud-init.&lt;/p&gt;
+
+&lt;h3&gt;cloud-init and cockpit&lt;/h3&gt;
+
+&lt;p&gt;Referencing the sample &lt;code&gt;cockpitws.service&lt;/code&gt; file from &lt;a href="http://www.projectatomic.io/blog/2015/06/running-cockpit-as-a-service/"&gt;Matt&amp;rsquo;s post&lt;/a&gt;, and using cloud-init&amp;rsquo;s &lt;a href="http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config-write-files.txt"&gt;cloud-config-write-files&lt;/a&gt; functionality, I started out with this service file:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[Unit]
+Description=Cockpit Web Interface
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=on-failure
+RestartSec=10
+ExecStart=/usr/bin/docker run --rm --privileged --pid host -v /:/host --name %p fedora/cockpitws /container/atomic-run --local-ssh
+ExecStop=-/usr/bin/docker stop -t 2 %p
+
+[Install]
+WantedBy=multi-user.target
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, I converted the service file to base 64, for inclusion in the cloud-init user-data file:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ base64 cockpitws.service
+
+W1VuaXRdCkRlc2NyaXB0aW9uPUNvY2twaXQgV2ViIEludGVyZmFjZQpSZXF1aXJlcz1kb2NrZXIuc2VydmljZQpBZnRlcj1kb2NrZXIuc2VydmljZQoKW1NlcnZpY2VdClJlc3RhcnQ9b24tZmFpbHVyZQpSZXN0YXJ0U2VjPTEwCkV4ZWNTdGFydD0vdXNyL2Jpbi9kb2NrZXIgcnVuIC0tcm0gLS1wcml2aWxlZ2VkIC0tcGlkIGhvc3QgLXYgLzovaG9zdCAtLW5hbWUgJXAgZmVkb3JhL2NvY2twaXR3cyAvY29udGFpbmVyL2F0b21pYy1ydW4gLS1sb2NhbC1zc2gKRXhlY1N0b3A9LS91c3IvYmluL2RvY2tlciBzdG9wIC10IDIgJXAKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo=
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Referencing another of Matt&amp;rsquo;s posts, &lt;a href="http://www.projectatomic.io/blog/2014/10/getting-started-with-cloud-init/"&gt;on cloud-init&lt;/a&gt;, I made this simple user-data file, which combines the write-files cloud-config bit for writing the service file with the &lt;a href="http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config-run-cmds.txt"&gt;cloud-config-run-cmds&lt;/a&gt; feature for enabling and starting the service:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;#cloud-config
+password: atomic
+chpasswd: { expire: False }
+ssh_pwauth: True
+write_files:
+-   encoding: b64
+    content: W1VuaXRdCkRlc2NyaXB0aW9uPUNvY2twaXQgV2ViIEludGVyZmFjZQpSZXF1aXJlcz1kb2NrZXIuc2VydmljZQpBZnRlcj1kb2NrZXIuc2VydmljZQoKW1NlcnZpY2VdClJlc3RhcnQ9b24tZmFpbHVyZQpSZXN0YXJ0U2VjPTEwCkV4ZWNTdGFydD0vdXNyL2Jpbi9kb2NrZXIgcnVuIC0tcm0gLS1wcml2aWxlZ2VkIC0tcGlkIGhvc3QgLXYgLzovaG9zdCAtLW5hbWUgJXAgZmVkb3JhL2NvY2twaXR3cyAvY29udGFpbmVyL2F0b21pYy1ydW4gLS1sb2NhbC1zc2gKRXhlY1N0b3A9LS91c3IvYmluL2RvY2tlciBzdG9wIC10IDIgJXAKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldAo=
+    owner: root:root
+    path: /etc/systemd/system/cockpitws.service
+    permissions: '0644'
+runcmd:
+- [ systemctl, daemon-reload ]
+- [ systemctl, enable, cockpitws.service ]
+- [ systemctl, start, --no-block, cockpitws.service ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Matt&amp;rsquo;s cloud-init post continues to describe how to create an iso image for use with virtualization tools that lack built-in support for cloud-init &amp;ndash; I was able to use this user-data file to create an iso image that folds in cockpit deployment. &lt;/p&gt;
+
+&lt;p&gt;This same chunk of text can be used with platforms that do support cloud-init, as well. For instance, on OpenStack, I pasted the text above into the &lt;code&gt;Customization Script&lt;/code&gt; field of the &lt;code&gt;Post-Creation&lt;/code&gt; tab within OpenStack dashboard &lt;code&gt;Launch Instance&lt;/code&gt; dialog:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/openstack-cloud-init-cockpit.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Upon booting up a new Fedora Atomic 22 VM using this cloud-init configuration, I see that the cockpitws service has started, and that docker is pulling down the cockpit image as expected. Once the container is running, you&amp;rsquo;ll be able to access the cockpit ui at port 9090 of your atomic host.&lt;/p&gt;
+
+&lt;p&gt;A visit to the cockpit interface shows the running container:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/cloud-init-cockpit-1.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;The services section of the cockpit ui shows the cockpitws service in place:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/cloud-init-cockpit-2.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;On subsequent reboots, the cockpit container image will already be in place, and should start automatically.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Running Syslog Within a Docker Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/"/>
+    <id>http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/</id>
+    <published>2014-09-11T20:06:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently I received a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1139734"&gt;bug report&lt;/a&gt; on Docker complaining about using rsyslogd within a container.  &lt;/p&gt;
+
+&lt;p&gt;The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message, and nothing happened.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -it --rm rhel /bin/bash
+# yum -y install rsyslog
+# /usr/sbin/rsyslogd
+# logger "this is a test"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;No message showed up in &lt;code&gt;/var/log/messages&lt;/code&gt; within the container, or on the host machine for that matter.&lt;/p&gt;
+
+&lt;p&gt;The user then looked and noticed that &lt;code&gt;/dev/log&lt;/code&gt; did not exist and this was where logger was writing the message. The user thought this was a bug.&lt;/p&gt;
+
+&lt;p&gt;The problem was that in RHEL7 and Fedora we now use journald, which listens on &lt;code&gt;/dev/log&lt;/code&gt; for incoming messages. In RHEL7 and Fedora, rsyslog actually reads messages from the journal via its API by default.&lt;/p&gt;
+
+&lt;p&gt;But not all docker containers run systemd and journald. (Most don&amp;rsquo;t). In order to get the rsyslogd to work the way the user wanted, he would have to modify the configuration file, &lt;code&gt;/etc/rsyslogd.conf&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In &lt;code&gt;/etc/rsyslog.conf&lt;/code&gt; remove &lt;code&gt;$ModLoad imjournal&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Set &lt;code&gt;$OmitLocalLogging&lt;/code&gt; to &lt;code&gt;off&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Make sure &lt;code&gt;$ModLoad imuxsock&lt;/code&gt; is present.&lt;/li&gt;
+&lt;li&gt;Also comment out: &lt;code&gt;$IMJournalStateFile imjournal.state&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After making these changes rsyslogd will start listening on &lt;code&gt;/dev/log&lt;/code&gt; within the container and the logger messages will get accepted by rsyslogd and written to &lt;code&gt;/var/log/messages&lt;/code&gt; within the container.&lt;/p&gt;
+
+&lt;p&gt;If you wanted to logging messages to go to the host logger, you could &lt;q&gt;volume&lt;/q&gt; mount &lt;code&gt;/dev/log&lt;/code&gt; into the container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -v /dev/log:/dev/log -it --rm rhel /bin/bash
+# logger "this is a test"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The message should show up in the host&amp;rsquo;s journalct log, and if you are running rsyslog on the host, the message should end up in &lt;code&gt;/var/log/messages&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Running systemd in a Docker Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/05/running-systemd-in-a-docker-container/"/>
+    <id>http://www.projectatomic.io/blog/2014/05/running-systemd-in-a-docker-container/</id>
+    <published>2014-05-06T19:50:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Ever wondered if you can get &lt;code&gt;systemd&lt;/code&gt; running in a Docker container? Apparently Dan Walsh did, &lt;a href="http://rhatdan.wordpress.com/2014/04/30/running-systemd-within-a-docker-container/"&gt;and spent some time getting it to work&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;While working with Docker, I looked at the great work that Scott Collier was doing for getting services to run within a container.  Scott provides the fedora-dockerfiles package in docker with lots of “Dockerfile” examples. You can build Docker images by running “docker build” on these examples.&lt;/p&gt;
+
+&lt;p&gt;It seemed a little difficult, and wondered if getting systemd to run within a docker container, as I did with virt-sandbox-service, might make this simpler.&lt;/p&gt;
+
+&lt;p&gt;The Docker Model suggests that it is better to run a single service within a container.  If you wanted to build an application that required an Apache service and a MariaDB database, you should generate two different containers.   Some people insist on running multiple services within a container, and for this Docker suggested using the supervisord tool.  In RHEL we do not want to support supervisord, since it is written in Python, and do not want to pull a Python requirement into containers, and it is just a package used to monitor multiple services.  We already have a tool for monitoring multiple services called systemd.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;After a little trial and error, Dan got &lt;code&gt;systemd&lt;/code&gt; working within a container on Fedora Rawhide, and expects it will work on Fedora 20 or RHEL 7 (when it&amp;rsquo;s released). Give it a spin and &lt;a href="http://rhatdan.wordpress.com/2014/04/30/running-systemd-within-a-docker-container/"&gt;let Dan know&lt;/a&gt; how it works out for you.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

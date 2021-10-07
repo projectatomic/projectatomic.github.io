@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-41 blog_page-41_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/skopeo-inspect-remote-images/">skopeo: inspect remote images</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-01T10:39:51Z'>
+Tuesday  1 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The <code>atomic verify</code> command checks whether there is a newer image available remotely and scans through all layers to see if any of the layers, which are base images themselves, have a new version available.  If the tool finds an out-of-date image, it will report as such. The command attempts to reach out the registry where the image has been downloaded from to understand if the local image is outdated.</p>
+
+<p>Currently, <code>atomic verify</code> relies on a Docker patch that Red Hat is carrying called <em>remote repository inspection</em>. It adds a new REST route that basically returns <code>docker inspect</code>-like information about a given image as found in the remote registry the image is hosted. We need this feature because <code>atomic verify</code> uses <code>LABEL</code>(s)&mdash;and in particular the <code>Version</code> <code>LABEL</code>&mdash;to check whether the local image needs to be updated. For more information about labels, see  the <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels">projectatomic/ContainerApplicationGenericLabels</a>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/skopeo-inspect-remote-images/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/02/atomic-app-0-4-2/">Atomic App 0.4.2 Released!</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-02-19T20:30:00Z'>
+Friday 19 February 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We&rsquo;ve now released <a href="https://github.com/projectatomic/atomicapp/releases">0.4.2</a> of <a href="http://www.projectatomic.io/docs/atomicapp/">Atomic App</a>!</p>
+
+<p>As we get closer to 1.0.0, we are focusing on testing and bug fixes before our grand release.</p>
+
+<p>The changes to <code>atomicapp</code> in this week&rsquo;s release are:</p>
+
+<p><strong>Features:</strong></p>
+
+<ul>
+<li>Meta data is now an optional requirement when building Nuleculized applications</li>
+</ul>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/02/atomic-app-0-4-2/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/alm/">alm</a></li>
+<li><a href="/blog/tag/application-lifecycle/">application lifecycle</a></li>
+<li><a href="/blog/tag/atomic-app/">atomic app</a></li>
+<li><a href="/blog/tag/composite-apps/">composite apps</a></li>
+<li><a href="/blog/tag/developers/">developers</a></li>
+<li><a href="/blog/tag/nulecule/">nulecule</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/02/ADB-1-7/">Releasing ADB-Atomic Developer Bundle 1.7</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/lala/">Lalatendu Mohanty</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-02-18T20:24:00Z'>
+Thursday 18 February 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.7.0, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple’s OS X, and Linux distributions.</p>
+
+<p>The 1.7.0 release adds several new features, including:</p>
+
+<ul>
+<li>OpenShift is now managed as a systemd unit file with full functionality (start/stop/restart), making it a single step to set up OpenShift on one machine. This will help application developers who want to develop and test applications on OpenShift on their laptop or workstation.</li>
+<li>The new SCCLI command-line tool to can help users move between Kubernetes and OpenShift setup.</li>
+<li>A new vagrant plugin, vagrant-service-manager, that manages the services inside of the ADB. This plugin is recommended for use with the ADB and fully replaces vagrant-adbinfo.</li>
+</ul>
+
+<p>This release also includes many smaller changes and bugfixes, which are detailed in the <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/releases/tag/v1.7.0">release comments</a>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/02/ADB-1-7/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/developer-tools/">Developer tools</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">OpenShift</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/02/dont-run-yum-update-within-a-running-container/">Don't Run yum update Within a Running Container</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/baude/">Brent Baude</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-02-04T10:04:54Z'>
+Thursday  4 February 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently, I have been reviewing a massive collection of Dockerfiles and interacting with customers
+and ISVs alike. In this time, I have seen all sorts of actions being taken for container design and how
+those containers should be run. One such action I really struggle with is when users are either told
+or take the initiative themselves to update packages within a running container. For example, they execute something like:</p>
+<pre class="highlight plaintext"><code>docker run -it foobar yum -y update&#x000A;</code></pre>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/02/dont-run-yum-update-within-a-running-container/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/dockerfiles/">Dockerfiles</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/01/ADB-1.6-announcement/">Atomic Developer Bundle v1.6 Released</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bexelbie/">Brian (bex) Exelbierd</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-01-25T16:34:00Z'>
+Monday 25 January 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.6, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple&rsquo;s OS X and GNU/Linux distributions.</p>
+
+<p>The 1.6 release adds several new features, including:</p>
+
+<ul>
+<li><a href="https://mesosphere.github.io/marathon/">Mesos Marathon</a> as a supported container orchestrator</li>
+<li>A new delivery location in HashiCorp&rsquo;s Atlas box catalog, <a href="https://atlas.hashicorp.com/projectatomic/boxes/adb">projectatomic/adb</a></li>
+<li>ADB descriptive details now reported in /etc/os-release:
+
+<ul>
+<li><code>VARIANT=&quot;Atomic Developer Bundle (ADB)&quot;</code></li>
+<li><code>VARIANT_ID=&quot;adb&quot;</code></li>
+<li><code>VARIANT_VERSION=&quot;1.6.0&quot;</code></li>
+</ul></li>
+<li>Updated Documentation, a new Maintainer and <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/releases/tag/v1.6.0">more</a></li>
+</ul>
+
+<p>The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/01/ADB-1.6-announcement/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/developer-tools/">Developer tools</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=40/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=37/">37</a>
+</li>
+<li>
+<a href="/blog/page=38/">38</a>
+</li>
+<li>
+<a href="/blog/page=39/">39</a>
+</li>
+<li>
+<a href="/blog/page=40/">40</a>
+</li>
+<li class='active'>
+<span>41</span>
+</li>
+<li>
+<a href="/blog/page=42/">42</a>
+</li>
+<li>
+<a href="/blog/page=43/">43</a>
+</li>
+<li>
+<a href="/blog/page=44/">44</a>
+</li>
+<li>
+<a href="/blog/page=45/">45</a>
+</li>
+<li>
+<a href="/blog/page=42/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

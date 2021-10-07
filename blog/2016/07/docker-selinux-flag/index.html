@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+What does --selinux-enabled do? &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='What does --selinux-enabled do?' property='og:title'>
+<meta content='I recently answered an email asking about –selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.&#x000A;&#x000A;&#x000A;I’m currently researching the topic of --selinux-enabled in docker and what it is doing when set to TRUE.&#x000A;&#x000A;From what I’m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.&#x000A;&#x000A;But I’m wondering if that is even correct, and if so, what else is happening when setting --selinux-enabled to TRUE.&#x000A;&#x000A;&#x000A;`--selinux-enabled on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file /etc/selinux/targeted/contexts/lxc_contexts for the default context to run containers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/' property='og:url'>
+<meta content='2016-07-11T12:00:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='selinux' property='article:tag'>
+<link href='/blog/tag/selinux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='What does --selinux-enabled do?' name='twitter:title'>
+<meta content='I recently answered an email asking about –selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.&#x000A;&#x000A;&#x000A;I’m currently researching the topic of --selinux-enabled in docker and what it is doing when set to TRUE.&#x000A;&#x000A;From what I’m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.&#x000A;&#x000A;But I’m wondering if that is even correct, and if so, what else is happening when setting --selinux-enabled to TRUE.&#x000A;&#x000A;&#x000A;`--selinux-enabled on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file /etc/selinux/targeted/contexts/lxc_contexts for the default context to run containers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_07 blog_2016_07_docker-selinux-flag blog_2016_07_docker-selinux-flag_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+What does --selinux-enabled do?
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-11T12:00:00Z'>
+Monday 11 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I recently answered an email asking about &ndash;selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.</p>
+
+<blockquote>
+<p>I&rsquo;m currently researching the topic of <code>--selinux-enabled</code> in docker and what it is doing when set to TRUE.</p>
+
+<p>From what I&rsquo;m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.</p>
+
+<p>But I&rsquo;m wondering if that is even correct, and if so, what else is happening when setting <code>--selinux-enabled</code> to TRUE.</p>
+</blockquote>
+
+<p>`<code>--selinux-enabled</code> on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file <code>/etc/selinux/targeted/contexts/lxc_contexts</code> for the default context to run containers.</p>
+
+<p></p>
+<pre class="highlight plaintext"><code>cat /etc/selinux/targeted/contexts/lxc_contexts&#x000A;process = "system_u:system_r:svirt_lxc_net_t:s0"&#x000A;content = "system_u:object_r:virt_var_lib_t:s0"&#x000A;file = "system_u:object_r:svirt_sandbox_file_t:s0"&#x000A;sandbox_kvm_process = "system_u:system_r:svirt_qemu_net_t:s0"&#x000A;sandbox_kvm_process = "system_u:system_r:svirt_qemu_net_t:s0"&#x000A;sandbox_lxc_process = "system_u:system_r:svirt_lxc_net_t:s0"&#x000A;</code></pre>
+
+<p>Docker by default uses a confined SELinux type <code>svirt_lxc_net_t</code> to isolate the container processes from the host, and it generates a unique MCS label to allow SELinux to prevent one container process from attacking other container processes and content.</p>
+
+<p>If you don&rsquo;t specify <code>--selinux-enabled</code>, docker does not execute SELinux code to set labels. When docker launches a container process, the system falls back to default transition policy.  This means the container processes will either run as docker_t or spc_t (depending on the version of policy you have installed). Both of these types are unconfined.  SELinux will provide no security separation for these container processes.</p>
+
+<blockquote>
+<p>In addition, I&rsquo;m also wondering what the impact will be, when <code>--selinux-enabed</code> is set to TRUE together with <code>--icc</code> to TRUE? Does it have any impact or is it unrelated.</p>
+
+<p>Could it be possible that with <code>--icc</code> and <code>--selinux-enabed</code> set to TRUE that we might have challenges when communicating between Containers when the connection is not specified (as it should be, when <code>--icc</code> is set to FALSE).</p>
+</blockquote>
+
+<p>It&rsquo;s unrelated. <code>--icc FALSE</code> sets up iptables rules that prevent containers from connecting to each other over the local network to each other.  The default SELinux policy allows all network connectivity between containers.</p>
+
+<blockquote>
+<p>Also, does anybody know what will happen if I run <code>docker</code> with <code>--selinux-enabled</code> for a while (so start containers, pull images, etc.) and then restart the daemon with <code>--selinux-enabled</code>. Is it possible that it does impact the environment somehow and that certain activities need to be done or shouldn&rsquo;t this affect the service at all?</p>
+</blockquote>
+
+<p>The only potential problem I can think of would be volume mounting being mislabeled.  If you volume mount content off of the host with <code>-v /source/path:/dest/path:Z</code> and SELinux is disabled, docker will not set up labels for the container.  If you later turn on <code>--selinux-enabled</code> these containers would not be able to read/write the content in the mounted volume.  Thinking about this further, I am not sure what labels the containers created while <code>--selinux-disabled</code> was set.  These pre-created containers would probably continue to run with an unconfined domain, and newer containers would run with confinement.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

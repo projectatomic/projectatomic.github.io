@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Container Con</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/containercon.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic at ContainerCon</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/07/project-atomic-at-containercon/"/>
+    <id>http://www.projectatomic.io/blog/2015/07/project-atomic-at-containercon/</id>
+    <published>2015-07-01T10:43:29+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;img width="125" height="125" src="/images/lf-logo.jpg?1633620578" /&gt; Attending &lt;a href="http://events.linuxfoundation.org/events/containercon"&gt;ContainerCon&lt;/a&gt; in Seattle this year? Co-located with CloudOpen and LinuxCon, ContainerCon is focused on bringing contributors working with containers, the Linux kernel, and other components together to continue improving the Linux container ecosystem.&lt;/p&gt;
+
+&lt;p&gt;As you might expect, there&amp;rsquo;s quite a few talks on the schedule related to Project Atomic or components important to Atomic (like Kubernetes). Here&amp;rsquo;s a sample of talks you might want to plan on seeing:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3Y6a"&gt;Managing Kubernetes and OpenShift with ManageIQ&lt;/a&gt; – Alissa Bonas&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3YKl"&gt;Understanding Atomic: Under the Hood of an Atomic Host&lt;/a&gt; – Joe Brockmeier&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3XqC"&gt;Docker for Developers&lt;/a&gt; – Michael Hrivnak&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3Z34"&gt;Lightweight Openstack Benchmarking Service with Rally and Docker&lt;/a&gt; – Swapnil Kuikarni&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3YQb"&gt;VDSM in a Box: The Journey of the oVirt Hypervisor Into the Container World &amp;amp; Project Atomic&lt;/a&gt; – Anayoly Litovsky&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3Y5q"&gt;What Does Kubernetes Get Me?&lt;/a&gt; – Eric Paris&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3Y5f"&gt;Persistent Storage for Containers with Kubernetes and OpenShift&lt;/a&gt; – Mark Turansky&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3YTh"&gt;Super Privileged Containers&lt;/a&gt; – Daniel J. Walsh&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3YTk"&gt;Container Security&lt;/a&gt; – Daniel J. Walsh&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3YTf"&gt;Containerizing Distributions&lt;/a&gt; – Colin Walters&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://sched.co/3XqB"&gt;Building Clustered Applications with Kubernetes and Docker&lt;/a&gt; – Steve Watt&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you&amp;rsquo;re going to be at LinuxCon, CloudOpen, and ContainerCon, be sure to drop by the Red Hat booth to say hello as well. We&amp;rsquo;ll have some Project Atomic swag and would love to hear about your experience with Atomic or questions you might have.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

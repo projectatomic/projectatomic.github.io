@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How to sneak secrets into your containers, without leaving a trace &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How to sneak secrets into your containers, without leaving a trace' property='og:title'>
+<meta content='Default mounts for all of your containers.&#x000A;&#x000A;I was presenting OpenShift and really the underlying container technology we are building CRI-O, Buildah and Podman to some customers the other day.  After the presentation, one of the customers came over to me and said, the biggest problem they have with their users building containers, was they needed to use certificates in the container in order to access their software repositories.  But they did not want the certificates to end up embedded in the containers.  I pointed out that Red Hat’s version of Docker allowed you to do volume mounts into containers during a docker build.  Also Buildah had the same functionality.  But he pointed out that they did not want everyone of their engineers to have to add the volumes, or if they were running a container and wanted to update software and they forgot the volume mount then they could not access the certificates.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/06/sneak-secrets-into-containers/' property='og:url'>
+<meta content='2018-06-11T00:00:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How to sneak secrets into your containers, without leaving a trace' name='twitter:title'>
+<meta content='Default mounts for all of your containers.&#x000A;&#x000A;I was presenting OpenShift and really the underlying container technology we are building CRI-O, Buildah and Podman to some customers the other day.  After the presentation, one of the customers came over to me and said, the biggest problem they have with their users building containers, was they needed to use certificates in the container in order to access their software repositories.  But they did not want the certificates to end up embedded in the containers.  I pointed out that Red Hat’s version of Docker allowed you to do volume mounts into containers during a docker build.  Also Buildah had the same functionality.  But he pointed out that they did not want everyone of their engineers to have to add the volumes, or if they were running a container and wanted to update software and they forgot the volume mount then they could not access the certificates.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_06 blog_2018_06_sneak-secrets-into-containers blog_2018_06_sneak-secrets-into-containers_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How to sneak secrets into your containers, without leaving a trace
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-11T00:00:00Z'>
+Monday 11 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Default mounts for all of your containers.</h3>
+
+<p>I was presenting <a href="https://www.openshift.com/">OpenShift</a> and really the underlying container technology we are building <a href="https://github.com/kubernetes-incubator/cri-o">CRI-O</a>, <a href="https://github.com/projectatomic/buildah">Buildah</a> and <a href="https://github.com/projectatomic/libpod">Podman</a> to some customers the other day.  After the presentation, one of the customers came over to me and said, the biggest problem they have with their users building containers, was they needed to use certificates in the container in order to access their software repositories.  But they did not want the certificates to end up embedded in the containers.  I pointed out that <a href="https://github.com/projectatomic/docker">Red Hat’s version of Docker</a> allowed you to do volume mounts into containers during a <code>docker build</code>.  Also Buildah had the same functionality.  But he pointed out that they did not want everyone of their engineers to have to add the volumes, or if they were running a container and wanted to update software and they forgot the volume mount then they could not access the certificates.  </p>
+
+<p></p>
+
+<h4>SECRETS PATCH</h4>
+
+<p>This reminded me of the first patch that we ever added the the upstream Docker package, the secrets patch.  We called it this because we needed to inject the RHEL subscription secrets into every container so that yum update would work inside of a container, using the host certificates.  If you grab Docker-ce or Docker-ee you don’t have this patch, so every RHEL container that you build needs to have its own subscription.</p>
+
+<p>When we talked about this secrets patch with customers over the years they wanted us to extend it so that they could inject their own secrets or content into containers.</p>
+
+<h4>BUILDAH, PODMAN, CRI-O support.</h4>
+
+<p>Anyways I realized that all of our new products had support for this.  We support a file called mounts.conf that has a simple SRC:DEST format for volume mounting the SRC directory into every container you use, no matter which of the tools above you use.</p>
+<pre class="highlight plaintext"><code>man buildah&#x000A;…&#x000A;       mounts.conf (/usr/share/containers/mounts.conf and optionally /etc/containers/mounts.conf)&#x000A;&#x000A;              The mounts.conf files specify volume mount directories that are automatically mounted inside containers when executing the `buildah run` or `buildah build-using-dockerfile` commands.  Container process can then use this content.  The volume mount content does not get committed to the final image.&#x000A;&#x000A;              Usually these directories are used for passing secrets or credentials required by the package software to access remote package repositories.&#x000A;&#x000A;              For example, a mounts.conf with the line "`/usr/share/rhel/secrets:/run/secrets`", the content of `/usr/share/rhel/secrets` directory is mounted on `/run/secrets` inside the container.  This mountpoint allows Red Hat Enterprise Linux subscriptions from the host to be used within the container.&#x000A;&#x000A;              Note this is not a volume mount. The content of the volumes is copied into container storage, not bind mounted directly from the host.&#x000A;</code></pre>
+
+<p>As explained above the content ends up in the container’s storage, and is private to the container.  If these directories or files are modified on the host system after the container is created, the changes will not show up inside the container.  The container has its own private copy.  The private copy does not get committed to the final image, if the container is committed.  </p>
+
+<p>To demonstrate this functionality for the customer, and I created a directory:</p>
+<pre class="highlight plaintext"><code>mkdir /var/lib/walsh&#x000A;</code></pre>
+
+<p>I added a file to it.</p>
+<pre class="highlight plaintext"><code>touch /var/lib/walsh/dan&#x000A;</code></pre>
+
+<p>Now I added a line to /etc/containers/mounts.conf</p>
+<pre class="highlight plaintext"><code>echo “/var/lib/walsh:/run/walsh” &gt;&gt; /etc/containers/mounts.conf&#x000A;</code></pre>
+
+<p>When I run any container image the <code>/run/walsh</code> directory shows up and contains the <code>dan</code> file.</p>
+<pre class="highlight plaintext"><code>podman run -ti fedora ls /run/walsh&#x000A;dan&#x000A;</code></pre>
+
+<p>I also created a Dockerfile</p>
+<pre class="highlight plaintext"><code>Cat &gt; Dockerfile &lt; _EOF&#x000A;FROM rhel7&#x000A;RUN ls -l /run/walsh&#x000A;_EOF&#x000A;</code></pre>
+
+<p>Executed Buildah</p>
+<pre class="highlight plaintext"><code># buildah bud -t secrets .&#x000A;buildah bud -t secrets -f Dockerfile.RHEL ~&#x000A;STEP 1: FROM rhel7&#x000A;STEP 2: RUN ls -l /run/walsh&#x000A;total 0&#x000A;-rwx------. 1 root root 0 Jun  6 13:25 dan&#x000A;STEP 3: COMMIT containers-storage:[overlay@/var/lib/containers/storage+/var/run/containers/storage:.override_kernel_check=true]localhost/secrets:latest&#x000A;Getting image source signatures&#x000A;Skipping fetch of repeat blob sha256:f4fa6c253d2ff944ef6975be17cd0bb59896b386f9e2b737539400a37a68a80b&#x000A;Skipping fetch of repeat blob sha256:d6a4dd6ace1f76d1410e389c23e515a09eda880da05850b4343e2b39b6ced363&#x000A;Copying blob sha256:bbcf34dcd633ea7ac67e53ab64a71b5cbf7c019c376b372c5bb9cba997bef67e&#x000A; 119 B / 119 B [============================================================] 0s&#x000A;Copying config sha256:380d63f99748e885dc31bcf6ff94a6a050d17dd1a6c3c61ca6180c6d32ffebb5&#x000A; 3.09 KiB / 3.09 KiB [======================================================] 0s&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;380d63f99748e885dc31bcf6ff94a6a050d17dd1a6c3c61ca6180c6d32ffebb5&#x000A;</code></pre>
+
+<p>As you see in the above example the <code>/run/walsh/dan</code> content is in the build environment.  </p>
+
+<p>Now I want to examine the actual containers image layer before committing, to make sure the <code>dan</code> file does not end up in the final image, if it was committed.</p>
+
+<p>I will create a container <code>secretctr</code> based on the <code>secret</code> image using podman.</p>
+<pre class="highlight plaintext"><code># ./bin/podman create --name secretctr -ti secrets ls -l /run/walsh&#x000A;Fcec8526624adf9b2173cf9cd359d80a1e1dde92165ba6a1bc80ca5275075278&#x000A;</code></pre>
+
+<p>Now I will mount and examine the container images /run/walsh directory.</p>
+<pre class="highlight plaintext"><code># mnt=$(podman mount secretctr)&#x000A;# ls $mnt/run&#x000A;# ls $mnt/run/walsh&#x000A;#&#x000A;</code></pre>
+
+<p>Note the <code>walsh</code> directory gets created since this is the mount point necessary for the volume, but the content is not in the container image.  There is no <code>dan</code> file.</p>
+
+<p>Now if I actually start the container, it will show the <code>dan</code> file.</p>
+<pre class="highlight plaintext"><code># podman start --attach secret1&#x000A;total 0&#x000A;-rwx------. 1 root root 0 Jun  6 14:34 dan&#x000A;</code></pre>
+
+<p>When we create the running container, the containers storage copy of the mounts directory gets mounted and the <code>dan</code> file becomes available.</p>
+
+<h4>BOTTOM LINE</h4>
+
+<p>We have added a long sought after feature to our tools, to allow the injecting of secrets or other content into containers, without this content ending up in the container image. This allows all of your containers to take advantage of content on the host inside of your containers.</p>
+
+</section>
+<footer class='post-meta'>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/06/sneak-secrets-into-containers/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/06/sneak-secrets-into-containers/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/06/sneak-secrets-into-containers/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-32 blog_page-32_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/working-with-containers-image-made-easy/">Working with Containers' Images Made Easy Part 1: skopeo</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-25T08:58:20Z'>
+Monday 25 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This is the first part of a series of posts about containers&rsquo; images. In this first part we&rsquo;re going to focus on <code>skopeo</code>.</p>
+
+<p>Back in March, I published a <a href="http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/">post</a> about <a href="https://github.com/projectatomic/skopeo">skopeo</a>, a new tiny binary to help people interact with Docker registries. Its job has been limited to <em>inspect</em> (<em>skopeo</em> is greek for <em>looking for</em>, <em>observe</em>) images on remote registries as opposed to <code>docker inspect</code>, which is working for locally pulled images.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/working-with-containers-image-made-easy/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/oci/">OCI</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/vagrant-service-manager-install-cli/">Client Binary Installation Now Included in the ADB</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/budhram/">Budh Ram Gurung</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-22T09:56:00Z'>
+Friday 22 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As part of the effort to continually improve the developer experience and make getting started easier, the ADB now supports client binary downloads. These downloads are facilitated by a new feature in &lsquo;vagrant-service-manger&rsquo;, the <code>install-cli</code> command.</p>
+
+<p>The <a href="https://github.com/projectatomic/vagrant-service-manager">vagrant-service-manager</a> plugin enables easier access to the features and services provided by the <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">Atomic Developer Bundle (ADB)</a>. More information can be found in the README of &#39;vagrant-service-manager&rsquo; repo.</p>
+
+<p>The <code>install-cli</code> command was released as part of &#39;vagrant-service-manager&rsquo; version 1.2.0. This command installs the client binary for services provided by the ADB. Today it can download client binaries for docker and OpenShift. This feature allows developers to know they have the best client for use with the ADB services they are using.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/vagrant-service-manager-install-cli/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-developer-bundle/">atomic-developer-bundle</a></li>
+<li><a href="/blog/tag/vagrant-service-manager/">vagrant-service-manager</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/new-centos-atomic-host-releases-available-for-download/">New CentOS Atomic Host Releases Available for Download</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-14T07:00:00Z'>
+Thursday 14 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Last week, the <a href="http://wiki.centos.org/SpecialInterestGroup/Atomic">CentOS Atomic SIG</a> <a href="https://seven.centos.org/2016/07/new-centos-atomic-host-ready-for-download/">released</a> an updated version of CentOS Atomic Host (tree version 7.20160707), featuring updated versions of docker and the atomic run tool.</p>
+
+<p>CentOS Atomic Host includes these core component versions:</p>
+
+<ul>
+<li>docker-1.10.3-44.el7.centos.x86_64</li>
+<li>kubernetes-1.2.0-0.12.gita4463d9.el7.x86_64</li>
+<li>kernel-3.10.0-327.22.2.el7.x86_64</li>
+<li>atomic-1.10.5-5.el7.x86_64</li>
+<li>flannel-0.5.3-9.el7.x86_64</li>
+<li>ostree-2016.5-3.atomic.el7.x86_64</li>
+<li>etcd-2.2.5-2.el7.0.1.x86_64</li>
+<li>cloud-init-0.7.5-10.el7.centos.1.x86_64</li>
+</ul>
+
+<p>CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image. Check out the <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">CentOS wiki</a> for download links and installation instructions, or read on to learn more about what&rsquo;s new in this release.</p>
+
+<h3>OCI Advances: runC and OCI Hooks</h3>
+
+<p>CentOS Atomic Host now ships with <a href="http://runc.io/">runC</a>, a lightweight client wrapper around libcontainer for spawning and running containers according to the <a href="https://www.opencontainers.org/">Open Container Initiative</a> specification. In this release, the host&rsquo;s atomic run tool makes use of runC to manage system services running in containers. While it&rsquo;s possible to run system containers with docker, there are certain system components that present chicken-and-egg scenarios, such as flannel, on which docker itself depends.</p>
+
+<p>runC-based containers can be pushed and pulled from standard docker registries, but are composed slightly differently than standard docker containers, as described in <a href="http://www.projectatomic.io/blog/2016/04/running_OCI/">this post</a> from <a href="https://twitter.com/mrunalp">Mrunal Patel</a>, and this <a href="https://www.youtube.com/watch?v=ZAhzoz2zJj8">Dockercon 2016 talk</a> from <a href="https://twitter.com/estesp">Phil Estes</a>.</p>
+
+<p>For more information on the system container feature in atomic, check out the man page for the <a href="https://github.com/projectatomic/atomic/blob/v1.10.5/docs/atomic-install.1.md">atomic install</a> command and <a href="http://www.scrivano.org/2016/03/24/system-containers-for-atomic/">this blog post</a> from <a href="https://twitter.com/gscrivano">Giuseppe Scrivano</a>.</p>
+
+<p>Elsewhere on the OCI front, users who wish to run systemd inside of their containers can do so more simply with this new atomic host release, thanks to a pair of <a href="https://github.com/projectatomic/oci-systemd-hook">OCI hooks</a> that enable users to run systemd in docker and OCI compatible runtimes such as runc without requiring the <code>--privileged</code> flag, and to display journal information from these containers using the host&rsquo;s journalctl command.</p>
+
+<h3>Modifying the Host &amp; CentOS Atomic Continuous</h3>
+
+<p>Also new in CentOS Atomic Host is an updated version of OSTree, the project that provides for atomic system upgrades for Atomic Hosts. The new OSTree version adds support for the <code>ostree admin unlock</code> command, which mounts a writable overlayfs, allowing users to install rpms on their otherwise immutable atomic hosts. These overlaid packages can be made either to persist between reboots or not, but the overlay will be discarded following an ostree upgrade. For more information on this feature, check out <a href="https://github.com/jlebon">Jonathan Lebon&rsquo;s</a> blog post on <a href="http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host">hacking and extending atomic hosts</a>.</p>
+
+<p>For a more permanent package overlay option, there&rsquo;s a brand-new package layering capability available, which Jonathan also covers in <a href="http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host">his post</a>. However, this capability is not yet included in the main CentOS Atomic Host release.</p>
+
+<p>To facilitate the testing of this and other new atomic host features, the SIG is now producing a <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">Continuous</a> atomic host tree, which combines a base of CentOS packages with an overlay of <a href="https://github.com/CentOS/sig-atomic-buildscripts/blob/master/overlay.yml">certain continuously-built packages</a> pulled from upstream git sources. The packages are built using a project called <a href="https://github.com/cgwalters/rpmdistro-gitoverlay">rpmdistro-gitoverlay</a> that runs as a <a href="https://ci.centos.org/job/atomic-rdgo-centos7/">Jenkins job</a> within the CentOS CI infrastructure.</p>
+
+<p>Switching to the Continuous release involves adding a new remote entry to an existing atomic host, rebasing to the continuous tree, and rebooting into the new tree:</p>
+<pre class="highlight plaintext"><code># ostree remote add --set=gpg-verify=false centos-atomic-continuous https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/ostree/repo/&#x000A;# rpm-ostree rebase centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous&#x000A;# systemctl reboot&#x000A;</code></pre>
+
+<a class="more-link view-article" href="/blog/2016/07/new-centos-atomic-host-releases-available-for-download/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/hacking-and-extending-atomic-host/">Hacking and extending Atomic Host</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-13T13:00:00Z'>
+Wednesday 13 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Many of the features that make Atomic Host great are due to the immutability of
+<code>/usr</code>. Things like atomic upgrades and rollbacks and efficient storage of files
+in an object store all require immutability. However, this immutability is also
+what can irritate people the most when they first start using Atomic Host.
+There is no <code>yum</code> or <code>dnf</code> to install programs.  We are at the mercy of the
+content provider.</p>
+
+<p>The answer of course is to use containers. Keep a <q>pet</q> SPC container around
+that will allow you to do all the configuration and hacking you need, all in the
+comfort of your favourite editor.</p>
+
+<p>But if you&rsquo;re hacking on the Atomic Host <strong>itself</strong>, containers can only take
+you so far. What if you want to change the version of docker on the host? Or
+install a new package? Or modify an installed Python script for debugging?</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/hacking-and-extending-atomic-host/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/hacking/">hacking</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/docker-selinux-flag/">What does --selinux-enabled do?</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-11T12:00:00Z'>
+Monday 11 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I recently answered an email asking about &ndash;selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.</p>
+
+<blockquote>
+<p>I&rsquo;m currently researching the topic of <code>--selinux-enabled</code> in docker and what it is doing when set to TRUE.</p>
+
+<p>From what I&rsquo;m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.</p>
+
+<p>But I&rsquo;m wondering if that is even correct, and if so, what else is happening when setting <code>--selinux-enabled</code> to TRUE.</p>
+</blockquote>
+
+<p>`<code>--selinux-enabled</code> on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file <code>/etc/selinux/targeted/contexts/lxc_contexts</code> for the default context to run containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/docker-selinux-flag/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=31/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=28/">28</a>
+</li>
+<li>
+<a href="/blog/page=29/">29</a>
+</li>
+<li>
+<a href="/blog/page=30/">30</a>
+</li>
+<li>
+<a href="/blog/page=31/">31</a>
+</li>
+<li class='active'>
+<span>32</span>
+</li>
+<li>
+<a href="/blog/page=33/">33</a>
+</li>
+<li>
+<a href="/blog/page=34/">34</a>
+</li>
+<li>
+<a href="/blog/page=35/">35</a>
+</li>
+<li>
+<a href="/blog/page=36/">36</a>
+</li>
+<li>
+<a href="/blog/page=33/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

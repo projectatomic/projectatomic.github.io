@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cockpit 0.99 Released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Stef Walter' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Cockpit 0.99 Released' property='og:title'>
+<meta content='Cockpit is the modern Linux admin interface. There’s a new release every week. Here are the highlights from 0.96 through 0.99.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/cockpit-099/' property='og:url'>
+<meta content='2016-03-28T18:00:00Z' property='article:published_time'>
+<meta content='stef' property='article:author:username'>
+<meta content='cockpit' property='article:tag'>
+<link href='/blog/tag/cockpit.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Cockpit 0.99 Released' name='twitter:title'>
+<meta content='Cockpit is the modern Linux admin interface. There’s a new release every week. Here are the highlights from 0.96 through 0.99.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_cockpit-099 blog_2016_03_cockpit-099_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Cockpit 0.99 Released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/stef/">Stef Walter</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-28T18:00:00Z'>
+Monday 28 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Cockpit is the <a href="http://cockpit-project.org/">modern Linux admin interface</a>. There&rsquo;s a new release every week. Here are the highlights from 0.96 through 0.99.</p>
+
+<p></p>
+
+<h3>Kubernetes Cockpit Pod</h3>
+
+<p>The Kubernetes cluster admin interface is now deployable as a <a href="http://kubernetes.io">Kubernetes</a> pod. Peter did a lot of work to make this happen. It&rsquo;s a good example of taking just one part Cockpit, containerizing it and running it in a completely different environment.</p>
+
+<p>You can use the <a href="http://cockpit-project.org/guide/latest/feature-kubernetes.html">commands listed in the documentation</a> to run the pod. Here&rsquo;s a demo:</p>
+
+<iframe width="853" height="480" src="https://www.youtube.com/embed/OCbuzBe7Ems?rel=0" frameborder="0" allowfullscreen></iframe>
+
+<h3>Locking Down Cockpit with Content-Security-Policy</h3>
+
+<p><a href="http://content-security-policy.com/">Content-Security-Policy</a> is like SELinux in your browser. You declare what your application is allowed to do, and the browser prevents other things from happening, like cross site scripting attacks.  Because the Cockpit JavaScript code has as much access to the system as the logged in user, Cockpit needs to make sure that attackers cannot sneak in JavaScript code into the browser session.</p>
+
+<p>In the last few releases, a strict policy was applied to the network, Kubernetes, Docker, storage, and accounts parts of the interface, just a few more remaining before all of Cockpit is locked down in this way.</p>
+
+<h3>Debian Packages</h3>
+
+<p>Cockpit has been testing each change and release against Debian during continuous integration for a while. Lars recently added installable Debian binary packages for each release. We&rsquo;re still looking for a <a href="https://wiki.debian.org/DebianDeveloper">DD maintainer</a> to help take those tested packages and include them in Debian proper.</p>
+
+<p>See the <a href="http://cockpit-project.org/running.html">documentation for how to use the Cockpit Debian packages</a>.</p>
+
+<h3>From the Future</h3>
+
+<p>The ability to troubleshoot <a href="http://stopdisablingselinux.com/">SELinux</a> in Cockpit is pretty exciting. Dominik has lots of the work in this area and it&rsquo;s nearly ready. Watch the video below. Once it&rsquo;s finished you&rsquo;ll be able to just click a button to resolve many, or at least most, SELinux issues found on a server.</p>
+
+<iframe width="853" height="480" src="https://www.youtube.com/embed/s6C29f8dSRQ?rel=0" frameborder="0" allowfullscreen></iframe>
+
+<p>Garret designed a UI for using Docker with an LVM pool as you would on <a href="http://www.projectatomic.io/download/">Atomic Host</a>. That is: a UI for <a href="https://github.com/projectatomic/docker-storage-setup">docker-storage-setup</a>. I&rsquo;m looking forward to this in Cockpit. Sneak peek here:</p>
+
+<p><img alt="Container Storage Designs" src="https://raw.githubusercontent.com/cockpit-project/cockpit-design/9bd7086a4a8492b72269c58272d063b3372116c3/containers/container-storage.png" /></p>
+
+<h3>Try It Out</h3>
+
+<p>Cockpit 0.99 is available now:</p>
+
+<ul>
+<li><a href="http://cockpit-project.org/running.html">For your Linux system</a></li>
+<li><a href="https://github.com/cockpit-project/cockpit/releases/tag/0.95">Source Tarball</a></li>
+<li><a href="https://bodhi.fedoraproject.org/updates/cockpit-0.99-1.fc24">Fedora 24</a></li>
+<li><a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/">COPR for Fedora 23, CentOS and RHEL</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/cockpit-099/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/cockpit-099/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/cockpit-099/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

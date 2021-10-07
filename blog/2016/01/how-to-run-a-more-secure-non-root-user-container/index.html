@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How to Run a More Secure Non-Root User Container &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How to Run a More Secure Non-Root User Container' property='og:title'>
+<meta content='I was asked a question about running users inside of a docker container: could they still get privileges?  &#x000A;&#x000A;Before we begin, here is more background on Linux capabilities&#x000A;&#x000A;We’ll start with a simple container where the primary process is running as root.  One can look at the capabilities of the current process via grep Cap /proc/self/status.  There is also a capsh utility.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/' property='og:url'>
+<meta content='2016-01-07T17:40:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='privileges' property='article:tag'>
+<link href='/blog/tag/privileges.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How to Run a More Secure Non-Root User Container' name='twitter:title'>
+<meta content='I was asked a question about running users inside of a docker container: could they still get privileges?  &#x000A;&#x000A;Before we begin, here is more background on Linux capabilities&#x000A;&#x000A;We’ll start with a simple container where the primary process is running as root.  One can look at the capabilities of the current process via grep Cap /proc/self/status.  There is also a capsh utility.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_01 blog_2016_01_how-to-run-a-more-secure-non-root-user-container blog_2016_01_how-to-run-a-more-secure-non-root-user-container_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How to Run a More Secure Non-Root User Container
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-01-07T17:40:00Z'>
+Thursday  7 January 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I was asked a question about running users inside of a docker container: could they still get privileges?  </p>
+
+<p>Before we begin, here is <a href="http://linux.die.net/man/7/capabilities">more background on Linux capabilities</a></p>
+
+<p>We&rsquo;ll start with a simple container where the primary process is running as root.  One can look at the capabilities of the current process via <code>grep Cap /proc/self/status</code>.  There is also a <code>capsh</code> utility.</p>
+
+<p></p>
+<pre class="highlight plaintext"><code># docker run --rm -ti fedora grep Cap /proc/self/status&#x000A;CapInh: 00000000a80425fb&#x000A;CapPrm: 00000000a80425fb&#x000A;CapEff: 00000000a80425fb&#x000A;CapBnd: 00000000a80425fb&#x000A;CapAmb: 0000000000000000&#x000A;</code></pre>
+
+<p>Notice that the Effective Capabilities (<code>CapEff</code>) is a non-zero value, which means that the process has capabilities.</p>
+
+<p>Using the <code>pscap</code> tool, I see that the process has these capabilities:</p>
+
+<p><code>chown, dac_override, fowner, fsetid, kill, setgid, setuid, setpcap, net_bind_service, net_raw, sys_chroot,</code><br>
+<code>mknod, audit_write, setfcap</code></p>
+
+<p>Now let&rsquo;s run a container as non-root using the <code>-u</code> option.</p>
+<pre class="highlight plaintext"><code>docker run -u 3267 fedora grep Cap /proc/self/status&#x000A;CapInh: 00000000a80425fb&#x000A;CapPrm: 0000000000000000&#x000A;CapEff: 0000000000000000&#x000A;CapBnd: 00000000a80425fb&#x000A;CapAmb: 0000000000000000&#x000A;</code></pre>
+
+<p>Notice that the <code>CapEff</code> is all zero, but the bounding set of capabilities (<code>CapBnd</code>) is not.  This means if there is a setuid binary included in the image, it would be possible to gain these capabilities. Notice also, not surprisingly, this number matches the previous container&rsquo;s.</p>
+
+<p>So, even though this process is running as non-root inside the container, it could potentially run with the same capabilities as above if the image builder included a setuid binary.</p>
+
+<p><code>chown, dac_override, fowner, fsetid, kill, setgid, setuid, setpcap, net_bind_service, net_raw, sys_chroot, mknod,</code><br>
+<code>audit_write, setfcap</code></p>
+
+<p>Docker has a nice feature where you can drop all capabilities via <code>--cap-drop=all</code>.  Now, if we execute the same container with a non-privileged user and drop all capabilities:</p>
+<pre class="highlight plaintext"><code># docker run --rm -ti --cap-drop=all -u 3267 fedora grep Cap /proc/self/status&#x000A;CapInh: 0000000000000000&#x000A;CapPrm: 0000000000000000&#x000A;CapEff: 0000000000000000&#x000A;CapBnd: 0000000000000000&#x000A;CapAmb: 0000000000000000&#x000A;</code></pre>
+
+<p>Now this user cannot gain any capabilities on the system.  I would advise almost all users of Docker who run their containers with non-privileged users to use this feature. It adds a lot of security to the system.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/privileges/">privileges</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

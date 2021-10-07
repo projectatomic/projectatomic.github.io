@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2' property='og:title'>
+<meta content='Introduction&#x000A;&#x000A;In part 1&#x000A;of this series, we used the OpenShift Ansible&#x000A;Installer to install&#x000A;Openshift Origin on three servers&#x000A;that were running Fedora 25 Atomic&#x000A;Host. The three machines we’ll be using&#x000A;have the following roles and IP address configurations:&#x000A;|    Role     |  Public IPv4   | Private IPv4 |&#x000A;|-------------|----------------|--------------|&#x000A;| master,etcd | 54.175.0.44    | 10.0.173.101 |&#x000A;| worker      | 52.91.115.81   | 10.0.156.20  |&#x000A;| worker      | 54.204.208.138 | 10.0.251.101 |&#x000A;&#x000A;&#x000A;In this blog, we’ll explore the installed Origin cluster and then launch&#x000A;an application to see if everything works.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/12/part2-install-origin-on-f25-atomic-host/' property='og:url'>
+<meta content='2016-12-12T16:00:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='origin' property='article:tag'>
+<link href='/blog/tag/origin.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2' name='twitter:title'>
+<meta content='Introduction&#x000A;&#x000A;In part 1&#x000A;of this series, we used the OpenShift Ansible&#x000A;Installer to install&#x000A;Openshift Origin on three servers&#x000A;that were running Fedora 25 Atomic&#x000A;Host. The three machines we’ll be using&#x000A;have the following roles and IP address configurations:&#x000A;|    Role     |  Public IPv4   | Private IPv4 |&#x000A;|-------------|----------------|--------------|&#x000A;| master,etcd | 54.175.0.44    | 10.0.173.101 |&#x000A;| worker      | 52.91.115.81   | 10.0.156.20  |&#x000A;| worker      | 54.204.208.138 | 10.0.251.101 |&#x000A;&#x000A;&#x000A;In this blog, we’ll explore the installed Origin cluster and then launch&#x000A;an application to see if everything works.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_12 blog_2016_12_part2-install-origin-on-f25-atomic-host blog_2016_12_part2-install-origin-on-f25-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-12T16:00:00Z'>
+Monday 12 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>In <a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">part 1</a>
+of this series, we used the <a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible
+Installer</a> to install
+<a href="https://github.com/openshift/origin">Openshift Origin</a> on three servers
+that were running <a href="https://getfedora.org/en/atomic/">Fedora 25 Atomic
+Host</a>. The three machines we&rsquo;ll be using
+have the following roles and IP address configurations:</p>
+<pre class="highlight plaintext"><code>|    Role     |  Public IPv4   | Private IPv4 |&#x000A;|-------------|----------------|--------------|&#x000A;| master,etcd | 54.175.0.44    | 10.0.173.101 |&#x000A;| worker      | 52.91.115.81   | 10.0.156.20  |&#x000A;| worker      | 54.204.208.138 | 10.0.251.101 |&#x000A;</code></pre>
+
+<p>In this blog, we&rsquo;ll explore the installed Origin cluster and then launch
+an application to see if everything works.</p>
+
+<p>                                                                                                                                                                                                         </p>
+
+<h3>The Installed Origin Cluster</h3>
+
+<p>With the cluster up and running, we can log in as <code>admin</code> to the master
+node via the <code>oc</code> command. To install the <code>oc</code> CLI on your machine, you can
+<a href="https://docs.openshift.org/1.2/cli_reference/get_started_cli.html#installing-the-cli">follow these
+instructions</a>
+or, on Fedora, you can install via <code>dnf install origin-clients</code>. For
+this demo, we have the <code>origin-clients-1.3.1-1.fc25.x86_64</code> rpm
+installed:</p>
+<pre class="highlight plaintext"><code>$ oc login --insecure-skip-tls-verify -u admin -p OriginAdmin https://54.175.0.44:8443&#x000A;Login successful.&#x000A;&#x000A;You have access to the following projects and can switch between them with 'oc project &lt;projectname&gt;':&#x000A;&#x000A;  * default&#x000A;    kube-system&#x000A;    logging&#x000A;    management-infra&#x000A;    openshift&#x000A;    openshift-infra&#x000A;&#x000A;Using project "default".&#x000A;Welcome! See 'oc help' to get started.&#x000A;</code></pre>
+
+<p><em><strong>NOTE:</strong> <code>--insecure-skip-tls-verify</code> was added because we do not have
+properly signed certificates. See <a href="https://docs.openshift.org/1.2/install_config/install/advanced_install.html#advanced-install-custom-certificates">the
+docs</a>
+for installing a custom signed certificate.</em></p>
+
+<p>After we log in we can see that we are using the <code>default</code> namespace.
+Let&rsquo;s see what nodes exist:</p>
+<pre class="highlight plaintext"><code>$ oc get nodes&#x000A;NAME           STATUS                     AGE&#x000A;10.0.156.20    Ready                      9h&#x000A;10.0.173.101   Ready,SchedulingDisabled   9h&#x000A;10.0.251.101   Ready                      9h&#x000A;</code></pre>
+
+<p>The nodes represent each of the servers that are a part
+of the Origin cluster. The name of each node corresponds with its
+private IPv4 address. Also note that the <code>10.0.173.101</code> is the private
+IP address from the <code>master,etcd</code> node and that its status contains
+<code>SchedulingDisabled</code>. This is because we specified
+<code>openshift_schedulable=false</code> for this node when we did the install in
+<a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">part
+1</a>.</p>
+
+<p>Now let&rsquo;s check the pods, services, and routes that are running in the
+default namespace:</p>
+<pre class="highlight plaintext"><code>$ oc get pods -o wide&#x000A;NAME                       READY     STATUS    RESTARTS   AGE       IP             NODE&#x000A;docker-registry-3-hgwfr    1/1       Running   0          9h        10.129.0.3     10.0.156.20&#x000A;registry-console-1-q48xn   1/1       Running   0          9h        10.129.0.2     10.0.156.20&#x000A;router-1-nwjyj             1/1       Running   0          9h        10.0.156.20    10.0.156.20&#x000A;router-1-o6n4a             1/1       Running   0          9h        10.0.251.101   10.0.251.101&#x000A;$&#x000A;$ oc get svc&#x000A;NAME               CLUSTER-IP       EXTERNAL-IP   PORT(S)                   AGE&#x000A;docker-registry    172.30.2.89      &lt;none&gt;        5000/TCP                  9h&#x000A;kubernetes         172.30.0.1       &lt;none&gt;        443/TCP,53/UDP,53/TCP     9h&#x000A;registry-console   172.30.147.190   &lt;none&gt;        9000/TCP                  9h&#x000A;router             172.30.217.187   &lt;none&gt;        80/TCP,443/TCP,1936/TCP   9h&#x000A;$&#x000A;$ oc get routes&#x000A;NAME               HOST/PORT                                        PATH      SERVICES           PORT               TERMINATION&#x000A;docker-registry    docker-registry-default.54.204.208.138.xip.io              docker-registry    5000-tcp           passthrough&#x000A;registry-console   registry-console-default.54.204.208.138.xip.io             registry-console   registry-console   passthrough&#x000A;</code></pre>
+
+<p><em><strong>NOTE:</strong> If there are any pods that have failed to run, you can try to
+debug with the <code>oc status -v</code>, and <code>oc describe pod/&lt;podname&gt;</code> commands.
+You can retry any failed deployments with the <code>oc deploy &lt;deploymentname&gt; --retry</code>
+command.</em></p>
+
+<p>We can see that we have a pod, service, and route for both a
+<code>docker-registry</code> and a <code>registry-console</code>. The docker registry is where
+any container builds within OpenShift will be pushed and the registry
+console is a web frontend interface for the registry.</p>
+
+<p>Notice that there are two <code>router</code> pods and they are running on two
+different nodes; the worker nodes. We can effectively send traffic to
+either of these nodes and it will get routed appropriately. For our
+install we elected to set the <code>openshift_master_default_subdomain</code> to
+<code>54.204.208.138.xip.io</code>. With that setting we are only directing traffic
+to one of the worker nodes. Alternatively, we could have configured this
+as a hostname that was load balanced and/or performed round robin to
+either worker node.</p>
+
+<p>Now that we have explored the install, let&rsquo;s try out logging in as
+<code>admin</code> to the openshift web console at <code>https://54.175.0.44:8443</code>:</p>
+
+<p><img alt="image" width="1215" height="682" src="/images/2016-12-12-origin-install-part-2/login.jpeg?1633620578" /></p>
+
+<p>And after we&rsquo;ve logged in, we see the list of <strong>projects</strong> that the
+<code>admin</code> user has access to:</p>
+
+<p><img alt="image" width="1213" height="596" src="/images/2016-12-12-origin-install-part-2/logged_in.jpeg?1633620578" /></p>
+
+<p>We then select the <code>default</code> project and can view the same applications
+that we looked at before using the <code>oc</code> command:</p>
+
+<p><img alt="image" width="1210" height="768" src="/images/2016-12-12-origin-install-part-2/logged_in_default.jpeg?1633620578" /></p>
+
+<p>At the top, there is the registry console. Let&rsquo;s try out accessing the
+registry console by clicking the
+<code>https://registry-console-default.54.204.208.138.xip.io/</code> link in the
+top right. Note that this is the link from the exposed route:</p>
+
+<p><img alt="image" width="1213" height="680" src="/images/2016-12-12-origin-install-part-2/registry_console_login.jpeg?1633620578" /></p>
+
+<p>We can log in with the same <code>admin/OriginAdmin</code> credentials that we used
+to log in to the OpenShift web console.</p>
+
+<p><img alt="image" width="1212" height="523" src="/images/2016-12-12-origin-install-part-2/registry_console_logged_in.jpeg?1633620578" /></p>
+
+<p>After logging in, there are links to each project so we can see images
+that belong to each project, and we see recently pushed images.</p>
+
+<p>And.. We&rsquo;re done! We have poked around the infrastructure of the
+installed Origin cluster a bit. We&rsquo;ve seen registry pods, router pods,
+and accessed the registry web console frontend. Next we&rsquo;ll get fancy and
+throw an example application onto the platform for the <code>user</code> user.</p>
+
+<h3>Running an Application as a Normal User</h3>
+
+<p>Now that we&rsquo;ve observed some of the more admin like items using the
+<code>admin</code> user&rsquo;s account, we&rsquo;ll give the normal <code>user</code> a spin. First,
+we&rsquo;ll log in:</p>
+<pre class="highlight plaintext"><code>$ oc login --insecure-skip-tls-verify -u user -p OriginUser https://54.175.0.44:8443                                                                                        &#x000A;Login successful.&#x000A;&#x000A;You don't have any projects. You can try to create a new project, by running&#x000A;&#x000A;    oc new-project &lt;projectname&gt;&#x000A;</code></pre>
+
+<p>After we log in as a normal user, the CLI tools recognize pretty quickly
+that this user has no projects and no applications running. The CLI
+tools give us some helpful clues as to what we should do next: create a
+new project. Let&rsquo;s create a new project called <code>myproject</code>:</p>
+<pre class="highlight plaintext"><code>$ oc new-project myproject&#x000A;Now using project "myproject" on server "https://54.175.0.44:8443".&#x000A;&#x000A;You can add applications to this project with the 'new-app' command. For example, try:&#x000A;&#x000A;    oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git&#x000A;&#x000A;to build a new example application in Ruby.&#x000A;</code></pre>
+
+<p>After creating the new project the CLI tools again give us some helpful
+text showing us how to get started with a new application on the
+platform. It is telling us to try out the ruby application with source
+code at
+<a href="https://github.com/openshift/ruby-ex.git">github.com/openshift/ruby-ex.git</a>
+and build it on top of the
+<a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#source-build">Source-to-Image</a>
+(or
+<a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#source-build">S2I</a>)
+image known as <code>centos/ruby-22-centos7</code>. Might as well give it a spin:</p>
+<pre class="highlight plaintext"><code>$ oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git&#x000A;--&gt; Found Docker image ecd5025 (10 hours old) from Docker Hub for "centos/ruby-22-centos7"&#x000A;&#x000A;    Ruby 2.2&#x000A;    --------&#x000A;    Platform for building and running Ruby 2.2 applications&#x000A;&#x000A;    Tags: builder, ruby, ruby22&#x000A;&#x000A;    * An image stream will be created as "ruby-22-centos7:latest" that will track the source image&#x000A;    * A source build using source code from https://github.com/openshift/ruby-ex.git will be created&#x000A;      * The resulting image will be pushed to image stream "ruby-ex:latest"&#x000A;      * Every time "ruby-22-centos7:latest" changes a new build will be triggered&#x000A;    * This image will be deployed in deployment config "ruby-ex"&#x000A;    * Port 8080/tcp will be load balanced by service "ruby-ex"&#x000A;      * Other containers can access this service through the hostname "ruby-ex"&#x000A;&#x000A;--&gt; Creating resources with label app=ruby-ex ...&#x000A;    imagestream "ruby-22-centos7" created&#x000A;    imagestream "ruby-ex" created&#x000A;    buildconfig "ruby-ex" created&#x000A;    deploymentconfig "ruby-ex" created&#x000A;    service "ruby-ex" created&#x000A;--&gt; Success&#x000A;    Build scheduled, use 'oc logs -f bc/ruby-ex' to track its progress.&#x000A;    Run 'oc status' to view your app.&#x000A;</code></pre>
+
+<p>Let&rsquo;s take a moment to digest that. A new <a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#image-streams">image
+stream</a>
+was created to track the upstream <code>ruby-22-centos7:latest</code> image. A
+<code>ruby-ex</code>
+<a href="https://docs.openshift.org/1.2/dev_guide/builds.html#defining-a-buildconfig">buildconfig</a>
+was created that will perform an
+<a href="https://docs.openshift.org/1.2/architecture/core_concepts/builds_and_image_streams.html#source-build">S2I</a>
+build that will bake the source code into the image from the
+<code>ruby-22-centos7</code> image stream. The resulting image will be the source
+for another image stream known as <code>ruby-ex</code>. A
+<a href="https://docs.openshift.org/1.2/architecture/core_concepts/deployments.html#deployments-and-deployment-configurations">deploymentconfig</a>
+was created to deploy the application into pods once the build is done.
+Finally, a <code>ruby-ex</code> service was created so the application can be load
+balanced and discoverable.</p>
+
+<p>After a short time, we check the status of the application:</p>
+<pre class="highlight plaintext"><code>$ oc status&#x000A;In project myproject on server https://54.175.0.44:8443&#x000A;&#x000A;svc/ruby-ex - 172.30.213.94:8080&#x000A;  dc/ruby-ex deploys istag/ruby-ex:latest &lt;-&#x000A;    bc/ruby-ex source builds https://github.com/openshift/ruby-ex.git on istag/ruby-22-centos7:latest&#x000A;      build #1 running for 26 seconds&#x000A;    deployment #1 waiting on image or update&#x000A;&#x000A;1 warning identified, use 'oc status -v' to see details.&#x000A;</code></pre>
+
+<p><em><strong>NOTE:</strong> The warning referred to in the output is a warning about
+there being no healthcheck defined for this service. You can view the
+text of this warning by running <code>oc status -v</code>.</em></p>
+
+<p>We can see here that there is a svc (service) that is associated with a
+dc (deploymentconfig) that is associated with a bc (buildconfig) that
+has a build that has been <code>running for 26 seconds</code>. The deployment is
+waiting for the build to finish before attempting to run.</p>
+
+<p>After some more time:</p>
+<pre class="highlight plaintext"><code>$ oc status&#x000A;In project myproject on server https://54.175.0.44:8443&#x000A;&#x000A;svc/ruby-ex - 172.30.213.94:8080&#x000A;  dc/ruby-ex deploys istag/ruby-ex:latest &lt;-&#x000A;    bc/ruby-ex source builds https://github.com/openshift/ruby-ex.git on istag/ruby-22-centos7:latest&#x000A;    deployment #1 running for 6 seconds&#x000A;&#x000A;1 warning identified, use 'oc status -v' to see details.&#x000A;</code></pre>
+
+<p>The build is now done and the deployment is running.</p>
+
+<p>And after more time:</p>
+<pre class="highlight plaintext"><code>$ oc status&#x000A;In project myproject on server https://54.175.0.44:8443&#x000A;&#x000A;svc/ruby-ex - 172.30.213.94:8080&#x000A;  dc/ruby-ex deploys istag/ruby-ex:latest &lt;-&#x000A;    bc/ruby-ex source builds https://github.com/openshift/ruby-ex.git on istag/ruby-22-centos7:latest&#x000A;    deployment #1 deployed about a minute ago - 1 pod&#x000A;&#x000A;1 warning identified, use 'oc status -v' to see details.&#x000A;</code></pre>
+
+<p>We have an app! What are the running pods in this project?:</p>
+<pre class="highlight plaintext"><code>$ oc get pods&#x000A;NAME              READY     STATUS      RESTARTS   AGE&#x000A;ruby-ex-1-build   0/1       Completed   0          13m&#x000A;ruby-ex-1-mo3lb   1/1       Running     0          11m&#x000A;</code></pre>
+
+<p>The <em>build</em> has <em>Completed</em> and the <code>ruby-ex-1-mo3lb</code> pod is <em>Running</em>.
+The only thing we have left to do is expose the service so that it can
+be accessed via the router from the outside world:</p>
+<pre class="highlight plaintext"><code>$ oc expose svc/ruby-ex&#x000A;route "ruby-ex" exposed&#x000A;$ oc get route/ruby-ex&#x000A;NAME      HOST/PORT                                 PATH      SERVICES   PORT       TERMINATION&#x000A;ruby-ex   ruby-ex-myproject.54.204.208.138.xip.io             ruby-ex    8080-tcp   &#x000A;</code></pre>
+
+<p>With the route exposed we should now be able to access the application
+on <code>ruby-ex-myproject.54.204.208.138.xip.io</code>. Before we do that we&rsquo;ll
+log in to the openshift console as the <code>user</code> user and view the running
+pods in project <code>myproject</code>:</p>
+
+<p><img alt="image" width="1221" height="526" src="/images/2016-12-12-origin-install-part-2/logged_in_user_ruby_ex.jpeg?1633620578" /></p>
+
+<p>And pointing the browser to <code>ruby-ex-myproject.54.204.208.138.xip.io</code> we
+see:</p>
+
+<p><img alt="image" width="1218" height="275" src="/images/2016-12-12-origin-install-part-2/ruby-ex-half.jpeg?1633620578" /></p>
+
+<p>Woot!</p>
+
+<h3>Conclusion</h3>
+
+<p>We have explored the basic OpenShift Origin cluster that we set up in
+part 1 of this two part blog series. We viewed the infrastructure docker
+registry and router components, as well as discussed the router
+components and how they are set up. We also ran through an example
+application that was suggested to us by the command line tools and were
+able to define that application, monitor its progress, and eventually
+access it from our web browser. Hopefully this blog gives the reader an
+idea or two about how they can get started with setting up and using an
+Origin cluster on Fedora 25 Atomic Host.</p>
+
+<p>Enjoy!</p>
+
+<p>Dusty</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/12/part2-install-origin-on-f25-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/12/part2-install-origin-on-f25-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/12/part2-install-origin-on-f25-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

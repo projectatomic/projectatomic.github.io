@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Cri O</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/cri-o.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic at Red Hat Summit</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/atomic-at-summit/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/atomic-at-summit/</id>
+    <published>2018-05-07T05:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Coming to Red Hat Summit?  Project Atomic will be there! We will have multiple sessions plus demonstrations at the booth in Community Central.  Click through for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Key sessions include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=163857"&gt;Container Linux And Red Hat: the Road Ahead&lt;/a&gt;, where you&amp;rsquo;ll hear what&amp;rsquo;s planned for CoreOS Container Linux and Red Hat Atomic.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=154411"&gt;Atomic BOF&lt;/a&gt;, where we&amp;rsquo;ll discuss the upcoming changes &lt;em&gt;and&lt;/em&gt; introduce some new projects.&lt;/li&gt;
+&lt;li&gt;A great workshop on &lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=166833"&gt;Containerizing Applications&lt;/a&gt;, which will be given three times by Fedora Atomic project contributors.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=153605"&gt;Next-Generation Tools for Container Tech&lt;/a&gt;, covering Buildah, CRI-O, and more.&lt;/li&gt;
+&lt;li&gt;Tons of &lt;a href="https://agenda.summit.redhat.com/?buildah=11&amp;amp;containers=11"&gt;other talks on Atomic, OpenShift and containers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will also have a set of live demonstrations running in our &lt;q&gt;pod&lt;/q&gt; in Community Central on the show floor.  This includes demos by Atomic contributors and maintainers from other container projects.  Here&amp;rsquo;s a schedule:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;strong&gt;Day&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Time&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;*&lt;em&gt;Demo *&lt;/em&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Name&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Tuesday May 8&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Fabian Deutsch &amp;amp; Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:45:00&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;5:15&lt;/td&gt;
+&lt;td&gt;Running and Persisting VMs on Openshift&lt;/td&gt;
+&lt;td&gt;Adam Litke&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Wednesday May 9&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Thursday May 10&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Provisioning Fedora with Ignition&lt;/td&gt;
+&lt;td&gt;Derek Gonyeo&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at Red Hat Summit!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic and Friends at KubeCon</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/"/>
+    <id>http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/</id>
+    <published>2017-11-29T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Going to KubeCon?  Contributors from Project Atomic, OpenShift Origin, and other related projects will be all over the conference, including talks, salons, and a whole schedule of back-to-back demos in the Red Hat booth. Read on for details on what to see at Kubecon.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The week kicks off with &lt;a href="http://openshiftgathering.com/openshiftgathering/austin"&gt;OpenShift Commons&lt;/a&gt;, including &lt;q&gt;The State of the Container Ecosystem&lt;/q&gt; with Dan Walsh and Mrunal Patel, and &lt;q&gt;OpenShift on AWS&lt;/q&gt; by Fedora Atomic contributor David Duncan.  As of this post, registration is still open.&lt;/p&gt;
+
+&lt;p&gt;Mrunal Patel is then &lt;a href="https://kccncna17.sched.com/event/CU6T/cri-o-all-the-runtime-kubernetes-needs-and-nothing-more-mrunal-patel-red-hat"&gt;explaining CRI-O&lt;/a&gt; during the main conference, and there&amp;rsquo;s a &lt;a href="https://kccncna17.sched.com/event/CU8j/cri-o-hosted-by-daniel-walsh-red-hat"&gt;CRI-O BOF&lt;/a&gt;.  Clayton Coleman is keynoting about &amp;ldquo;&lt;a href="https://kccncna17.sched.com/event/CUEB/keynote-red-hat-making-containers-boring-again-clayton-coleman-architect-kubernetes-and-openshift-red-hat"&gt;Making containers boring&lt;/a&gt;.&amp;rdquo;  Fabian Deutsch of KubeVirt is hosting a salon on &lt;a href="https://kccncna17.sched.com/event/CU8m/virtualizing-workloads-on-kubernetes-hosted-by-fabian-deutsch-red-hat"&gt;virtualization in Kubernetes&lt;/a&gt;.  Plus lots of other interesting sessions.&lt;/p&gt;
+
+&lt;p&gt;Then there&amp;rsquo;s the main action, in the Red Hat Booth on the show floor.  We&amp;rsquo;ll have back-to-back demos in the mini-theater all conference long, so that you can see lots of cool technology without ever leaving the show floor.  Here&amp;rsquo;s a full schedule for you to track what&amp;rsquo;s going on; most demos will be given twice.  &lt;/p&gt;
+
+&lt;table class="waffle" cellspacing="2" cellpadding="2"&gt;&lt;tbody&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;&lt;strong&gt;Start Time&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Topic&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Speaker&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Wednesday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;MiniShift Hands-On&lt;/td&gt;&lt;td&gt;Adam Miller&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td&gt;Live Hot Security Patching on OpenShift&lt;/td&gt;&lt;td&gt;Ryan Jarvinen&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;System containers&lt;/td&gt;&lt;td&gt;Jason Brooks&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;Container Native Storage&lt;/td&gt;&lt;td&gt;Jose Rivera&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:00:00 PM&lt;/td&gt;&lt;td&gt;ManageIQ-for-Kubernetes&lt;/td&gt;&lt;td&gt;Federico Simoncelli&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:30:00 PM&lt;/td&gt;&lt;td&gt;CI/CD Flow&lt;/td&gt;&lt;td&gt;Mauricio &amp;ldquo;Maltron&amp;rdquo; Leal&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Native Postgres&lt;/td&gt;&lt;td&gt;Josh Berkus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;05:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Wednesday Evening Booth Crawl&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;06:45:00 PM&lt;/td&gt;&lt;td&gt;New Container Tools&lt;/td&gt;&lt;td&gt;Dan Walsh&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;07:30:00 PM&lt;/td&gt;&lt;td&gt;KubeVirt&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;Fabian Deutch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Thursday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;10:30:00 AM&lt;/td&gt;&lt;td&gt;CI/CD Flow&lt;/td&gt;&lt;td&gt;Mauricio &amp;ldquo;Maltron&amp;rdquo; Leal&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;CRI-O&lt;/td&gt;&lt;td&gt;Mrunal Patel&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;OpenShift Developer Workflow&lt;/td&gt;&lt;td&gt;Ryan Jarvinen&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;MiniShift Hands-On&lt;/td&gt;&lt;td&gt;Adam Miller&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Native Postgres&lt;/td&gt;&lt;td&gt;Josh Berkus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:30:00 PM&lt;/td&gt;&lt;td&gt;System containers&lt;/td&gt;&lt;td&gt;Jason Brooks&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:00:00 PM&lt;/td&gt;&lt;td&gt;KubeVirt&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;Fabian Deutch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:30:00 PM&lt;/td&gt;&lt;td&gt;Container Native Storage&lt;/td&gt;&lt;td&gt;Jose Rivera&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:00:00 PM&lt;/td&gt;&lt;td&gt;ManageIQ-for-Kubernetes&lt;/td&gt;&lt;td&gt;Federico Simoncelli&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;05:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Friday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;10:30:00 AM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at KubeCon!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic Host and Docker Survey</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/11/docker-usage-survey/"/>
+    <id>http://www.projectatomic.io/blog/2017/11/docker-usage-survey/</id>
+    <published>2017-11-08T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;The Fedora Atomic Working Group needs your help to decide how Docker will be included in Fedora Atomic Host in the future.  If you&amp;rsquo;re already familiar with this issue, you can &lt;a href="https://goo.gl/forms/2WTX3EHTX6IxVldp1"&gt;skip straight to the survey&lt;/a&gt;.  Otherwise, read on for some background.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Currently, the Docker container runtime and tools ship as a part of Fedora Atomic Host in the base cloud image and ISO.  Docker is also part of the base OSTree and thus gets included in all atomic updates to the system (&lt;code&gt;atomic host upgrade&lt;/code&gt;).  This has clearly been useful to a lot of people, but there&amp;rsquo;s some problems with it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Docker and its dependencies add around 180MB to the base image;&lt;/li&gt;
+&lt;li&gt;Upstream updates to Docker increase the number of updates users need to apply to the base OS;&lt;/li&gt;
+&lt;li&gt;No one version of Docker satisfies all users;&lt;/li&gt;
+&lt;li&gt;Some users don&amp;rsquo;t want Docker at all, they want CRI-O or containerd or just runc;&lt;/li&gt;
+&lt;li&gt;Docker upgrades complicate Fedora Atomic&amp;rsquo;s plan to move to rolling upgrades.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The potential alternative to this is removing Docker from the base image and OSTree, and instead having users install it as a system container.  This would mean, on each new Fedora Atomic Host, adding the extra step of running:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;atomic install --system docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip; for each system.  Updates to Docker would also be on an independent cycle from the base OS, which is both extra work for admins, and an advantage for those who want to update Docker frequently.  There are some other disadvantages to moving to Docker in system containers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The upgrade from Fedora 27 Atomic Host to Fedora 28 Atomic Host would be more complicated;&lt;/li&gt;
+&lt;li&gt;It would be up to the user to keep kernel versions and Docker versions compatible;&lt;/li&gt;
+&lt;li&gt;Rollback of a bad Docker upgrade would require more steps;&lt;/li&gt;
+&lt;li&gt;Admins who have Atomic Host in production will need to update all their system automation.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Given this tradeoff, we need to know how this possible change would affect Atomic Host users.  Will it make life simpler for you, not affect you at all, or blow up your infrastructure and cause you to migrate to RancherOS?  Let us know by filling out our &lt;a href="#"&gt;survey&lt;/a&gt; on your Docker and Atomic Host usage.&lt;/p&gt;
+
+&lt;p&gt;If you want to express additional opinions about this change, you can talk to Atomic Host developers directly, either on channel &lt;a href="https://webchat.freenode.net/"&gt;#atomic on irc.freenode.net&lt;/a&gt;, or on email at &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel@projectatomic.io&lt;/a&gt;.  Or you can comment on &lt;a href="https://pagure.io/atomic-wg/issue/360"&gt;this Pagure issue&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note that we are currently only discussing this change for Fedora Atomic Host.  CentOS Atomic Host and Red Hat Atomic host might or might not adopt the same change at some later date, depending on their strategies.  To support this change, we would also simplify the commands for installing system containers.&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic Events October 2017</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/10/atomic-october-events/"/>
+    <id>http://www.projectatomic.io/blog/2017/10/atomic-october-events/</id>
+    <published>2017-10-20T20:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic contributors and projects will be represented at many events
+in October.  If you&amp;rsquo;re coming to any of these events, drop by
+and say hello!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;All Things Open&lt;/strong&gt;: Charlie Drage will be presenting &lt;a href="https://allthingsopen.org/talk/kompose-going-from-docker-compose-to-kubernetes-and-beyond/"&gt;Kompose: Going from Docker
+Compose to Kubernetes and Beyond&lt;/a&gt;.
+It&amp;rsquo;s likely that he and Dusty Mabe will also be around the Red Hat booth; drop by.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Open Source Summit Europe&lt;/strong&gt;: Tomas Tomecek will be presenting &lt;a href="https://osseu17.sched.com/event/BxIW/from-dockerfiles-to-ansible-container-tomas-tomecek-red-hat"&gt;From Dockerfiles to Ansible Container&lt;/a&gt;
+and Stef Walters will be presenting &lt;a href="https://osseu17.sched.com/event/ByIY/training-machines-to-be-open-source-contributors-stef-walter-red-hat-inc"&gt;Training Machines to be Open Source Contributors&lt;/a&gt;.
+Also, while not strictly part of Atomic, &lt;a href="https://osseu17.sched.com/event/BxIG/container-migration-around-the-world-adrian-reber-red-hat-and-mike-rapoport-ibm-research"&gt;Container Migration&lt;/a&gt;
+looks pretty cool.  Plus, come visit the Red Hat booth where Cockpit contributors will
+demonstrate the latest releases of the most modern server GUI.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Usenix LISA&lt;/strong&gt;: On Sunday, you can choose between &lt;a href="https://www.usenix.org/conference/lisa17/training-program"&gt;two workshops&lt;/a&gt;: Mark Lamourine&amp;rsquo;s &lt;em&gt;Container Hosts: CoreOS and Project Atomic&lt;/em&gt; and Ryan Jarvinen&amp;rsquo;s &lt;em&gt;Hands-on Intro to Kubernetes&lt;/em&gt;  We will also have a &lt;a href="https://www.usenix.org/conference/lisa17/bofs"&gt;BOF on the evening of Wednesday, November 1st&lt;/a&gt; on Migrating to
+Containers, OpenShift, or Atomic Host.  Join us in the Garden Room at 7pm. Then on Friday you can learn about &lt;a href="https://www.usenix.org/conference/lisa17/conference-program/presentation/preisler"&gt;OpenSCAP&lt;/a&gt; with Martin Preisler and Marek Haicman. Plus,
+we&amp;rsquo;ll have Atomic Host and OpenShift contributors at the Red Hat booth.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Last Week In Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/</id>
+    <published>2017-08-14T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Since Project Atomic has now spread out across several blogs and websites, this is the second of what will become regular updates on events and posts around the Atomic community.  This is also a useful catch-up for anyone who doesn&amp;rsquo;t have time to backfill on all of the individual blog posts.&lt;/p&gt;
+
+&lt;p&gt;This week includes kpod, vagrant-buildah, Fedora Atomic Host, CentOS Atomic Host, Kubernetes containers, and more.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;New Projects and Tools&lt;/h3&gt;
+
+&lt;p&gt;As a sub-project of CRI-O, that team has now &lt;a href="https://medium.com/cri-o/introducing-kpod-f06109b96374"&gt;announced development of the &lt;code&gt;kpod&lt;/code&gt; command&lt;/a&gt;.  &lt;code&gt;kpod&lt;/code&gt; is an administrative and troubleshooting tool for containers running on individual kubernetes nodes, especially if the docker daemon is not involved.  Current commands include &lt;a href="https://medium.com/cri-o/kpod-version-b9fd7175c730"&gt;version&lt;/a&gt;, &lt;a href="https://medium.com/cri-o/kpod-push-62bce8705c3f"&gt;push&lt;/a&gt;, and &lt;a href="https://medium.com/cri-o/kpod-pull-36765d2e5fb8"&gt;pull&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tyler Britten released some scripts for &lt;a href="https://github.com/vmtyler/vagrant-buildah"&gt;playing with Buildah on Windows or Mac&lt;/a&gt;, using Vagrant.&lt;/p&gt;
+
+&lt;h3&gt;Releases&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fedora released their &lt;a href="http://www.projectatomic.io/blog/2017/08/fedora-atomic-august-08/"&gt;August 8th Update for Fedora 26 Atomic&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;CentOS released &lt;a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"&gt;version 7.1707 of CentOS Atomic Host&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The CentOS Virt SIG and Atomic SIG released &lt;a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"&gt;new Kubernetes system containers&lt;/a&gt; based on version 1.7.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Blog Posts&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dusty Mabe explained &lt;a href="https://dustymabe.com/2017/08/08/how-do-we-create-ostree-repos-and-artifacts-in-fedora/"&gt;how the Fedora OSTree repos get built&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Tom Sweeney blogged about &lt;a href="http://www.projectatomic.io/blog/2017/08/buildah-getting-fit/"&gt;using Buildah to create &lt;q&gt;fit&lt;/q&gt; images&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Joe Brockmeier lays out &lt;a href="http://rhelblog.redhat.com/2017/08/01/whats-new-in-red-hat-enterprise-linux-atomic-host-7-4/"&gt;what will be in RHEL Atomic 7.4&lt;/a&gt;, coming soon.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Events&lt;/h3&gt;
+
+&lt;p&gt;The Fedora Atomic WG will be participating heavily in the upcoming &lt;a href="https://flocktofedora.org/"&gt;Flock to Fedora&lt;/a&gt; conference.  This includes sessions on multi-architecture containers, becoming a container package maintainer, system containers, an Atomic Host documentation writeathon, and many more sessions.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://2017.container.camp/uk/speakers/michael-hausenblas/"&gt;ContainerCamp UK&lt;/a&gt; will feature Michael Hausenblas of the OpenShift team talking about Kubernetes backup.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://events.linuxfoundation.org/events/open-source-summit-north-america"&gt;OSS Summit NA&lt;/a&gt; will have an Atomic booth presence in the Red Hat pavillion. We could use booth volunteers if you love Atomic.  We will also have a &lt;a href="http://sched.co/BDpX"&gt;BOF on Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://events.linuxfoundation.org/events/cloudnativecon-and-kubecon-north-america"&gt;Kubecon US&lt;/a&gt; still has their CfP open.  Sumbit talks involving Atomic projects!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-30 blog_page-30_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/10/install-with-kickstart/">Subatomic cluster install with Kickstart</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-12T12:00:00Z'>
+Wednesday 12 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Look, new case!  3D printed, thanks to <a href="https://twitter.com/spotrh">Spot Callaway</a>.</p>
+
+<p><img alt="new subatomic cluster" width="800" height="600" src="/images/subatomic_cluster_new_case.jpg?1633620578" /></p>
+
+<p>In my previous install of the <a href="/blog/2016/06/micro-cluster-part-1/">Subatomic Cluster</a>, I simply did the manual Ananconda install.  However, since this cluster is for testing, I wanted a way to re-install it rapidly so that I can test out various builds of Atomic.  This time, I was installing CentOS Atomic so that I could test things out on <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">CentOS Atomic Continuous</a>.</p>
+
+<p>I also wanted to fix the disk allocation.  Due to various limitations, the initial root partition for a new Atomic Host is of fixed size (3GB) regardless of the amount of disk space available.  I wanted to increase that to 1/3 of the 64GB size of each SSD.  </p>
+
+<p>Enter Kickstart, which is the standard installation automation system used by Fedora, CentOS, RHEL, and other Linux distributions.  I was more familiar with Kickstart as part of a PXEboot network install, and re-installing the cluster required something simpler.  In this case, a Kickstart file on the network, combined with editing the boot line for install.  Since <a href="https://docs.fedoraproject.org/en-US/Fedora/24/html/Installation_Guide/chap-kickstart-installations.html">the Kickstart documentation</a> is extensive enough to be confusing, here&rsquo;s some simple examples.  </p>
+
+<p>First, I created an atomic-ks.cfg file and dropped it on my laptop; see below for the full file.  I&rsquo;ve added comments in the example file so that you can understand what it&rsquo;s doing and modify it for your own use.  I then served this file on the local network just using <code>python -m SimpleHTTPServer</code>.  I&rsquo;ve annotated the atomic-ks.cfg file so that you can use it as a base for your own.</p>
+<pre class="highlight plaintext"><code># usual setup&#x000A;install&#x000A;reboot&#x000A;lang en_US.UTF-8&#x000A;keyboard us&#x000A;timezone --utc America/Los_Angeles&#x000A;selinux --enforcing&#x000A;&#x000A;# clear the disk and create a new mbr partition for boot&#x000A;zerombr&#x000A;clearpart --all --initlabel&#x000A;bootloader --location=mbr --boot-drive=sda&#x000A;reqpart --add-boot&#x000A;&#x000A;# create a new logical volume and group for everything lese&#x000A;part pv.01 --grow --ondisk=sda&#x000A;volgroup atomicos pv.01&#x000A;&#x000A;# add a 20GB XFS partition for root&#x000A;logvol / --size=20000 --fstype="xfs" --name=root --vgname=atomicos&#x000A;&#x000A;# add a 2GB swap partition&#x000A;logvol swap --fstype swap --name=lv_swap --vgname=atomicos --size=2048&#x000A;&#x000A;# disable cloud-init, enable ntp, docker and ssh&#x000A;services --disabled="cloud-init,cloud-config,cloud-final,cloud-init-local" --enabled="systemd-timesyncd,network,sshd,docker"&#x000A;&#x000A;# set up OSTree to pull a tree from the USB key&#x000A;ostreesetup --osname="centos-atomic-host" --remote="centos-atomic-host" --url="file:///install/ostree" --ref="centos-atomic-host/7/x86_64/standard" --nogpg&#x000A;&#x000A;# create static network interface, for Kubernetes setup.  Requires changing this line&#x000A;# for each machine&#x000A;network --device=link --bootproto=static --ip=192.168.1.102 --netmask=255.255.255.0 --gateway=192.168.1.1 --nameserver=192.168.1.1&#x000A;&#x000A;# create sudo user.&#x000A;user --name=atomic --groups=wheel --password=atomic&#x000A;&#x000A;# reset ostree to upstream&#x000A;%post --erroronfail&#x000A;rm -f /etc/ostree/remotes.d/centos-atomic-host.conf&#x000A;ostree remote add --set=gpg-verify=true centos-atomic-host 'http://mirror.centos.org/centos/7/atomic/x86_64/repo'&#x000A;%end&#x000A;</code></pre>
+
+<p>I then booted each minnowboard off the USB.  There was one manual step: I had to edit the grub boot menu and tell it to use the kickstart file.  When the boot menu comes up, I selected <q>Install Centos 7</q>, pressed <q>e</q> and edited the linuxefi boot line:</p>
+<pre class="highlight plaintext"><code>linuxefi /images/pxeboot/vmlinuz inst.ks=http://192.168.1.105:8000/atomic-ks.cfg inst.stage2=hd:LABEL=Centos-Atomic-Host-7-x86_64 quiet&#x000A;</code></pre>
+
+<p>After that, it&rsquo;s all automatic.  Anaconda will partition, install, and boot the system.  </p>
+
+<p>Want to see the sub-atomic cluster running?  Join us at <a href="http://www.containerdaysaustin.com/2016/">ContainerDays Austin</a> or <a href="http://events.linuxfoundation.org/events/kubecon">KubeCon</a>.</p>
+
+<p><em>Thanks to Dusty Mabe and Matthew Micene for helping me create this Kickstart config and troubleshoot it</em></p>
+
+<a class="more-link view-article" href="/blog/2016/10/install-with-kickstart/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/administration/">administration</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/microcluster/">microcluster</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/10/docker-brno-meetup-20160914/">Docker Brno -- Summer is OVER</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bexelbie/">Brian (bex) Exelbierd</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-11T12:00:20Z'>
+Tuesday 11 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Summer is over and school is back in session.  These events mark a
+change of seasons, a change in lifestyle, and a return to the
+<a href="https://www.meetup.com/Docker-Brno/">meetups</a> of Docker Brno. <a href="https://www.twitter.com/TomasTomec">Tomáš
+Tomeček</a> guided 45 of us through
+presentations by three speakers as well as a news and updates presentation.</p>
+
+<p><img alt="Tomáš Tomeček" width="400" height="300" src="/images/docker-brno-2016-09/ttomecek.jpg?1633620578" /></p>
+
+<p>Tomas started us off with a news and updates presentation about recent changes in Docker
+(<a href="https://tomastomecek.github.io/brno-docker-meetup-september-2016/#/">Slides</a>).
+He briefly covered a lot of the features in the latest releases of docker,
+versions 1.12.0 and 1.12.1.</p>
+
+<p>These versions include the new orchestration components bundled into
+the daemon. The addition of the components is particularly controversial
+and has caused some people to wonder why they are part of docker-engine.</p>
+
+<p>Along with the orchestration components, a new abstraction called the
+service API was added along with load balancing using IPVS in Linux
+Kernel.  Additional features include a plugin API, a new HEALTHCHECK
+instruction, and the <code>--live-restore</code> daemon flag that allows for
+auto-restarting of your containers.</p>
+
+<p><img alt="Joseph Karasek" width="400" height="300" src="/images/docker-brno-2016-09/jkarasek.jpg?1633620578" /></p>
+
+<p><a href="https://www.twitter.com/Pepe_CZ">Josef Karásek</a> presented &ldquo;Rolling Down
+the Upgrade River doesn&rsquo;t need to be a White Water Experience.&rdquo; This
+demonstration of rolling updates used a Java application running in
+docker containers on <a href="http://www.openshift.org">OpenShift Origin</a>.</p>
+
+<p>The demo was a &ldquo;canary-style&rdquo; rolling upgrade,
+allowing an application to be upgraded in-place, on a live service, with
+no interruption for client sessions. While the demo used a monolithic
+application, many of the <a href="https://12factor.net/">Twelve-Factor App</a>
+principles were satisfied.</p>
+
+<p>In both a show of demo-bravery and zero-to-hero magic, he started his
+demo with a clean install of OpenShift Origin.  This was done using the
+new <code>oc cluster up</code> command which started a local single node OpenShift
+environment on his laptop.  His secondary goal was to show how he could
+go from nothing to a fully launched Java application in less that 15
+minutes, including build time and downloads.</p>
+
+<p>To build the demo application he performed the following actions in the
+web console and with the CLI.  He alternated between them to show off
+OpenShift during the build process.</p>
+
+<ol>
+<li>Created a project to hold a git forge.  OpenShift lives behind a NAT
+by default, so he needed a git forge that could send a webhook to the
+rest of OpenShift.  This project contains one container that provides a
+<a href="https://gogs.io/">Gogs - Go Git Service</a>.</li>
+<li><p>Created a second project to hold the actual application.  Into this
+project he loaded:</p>
+
+<ol>
+<li>A Java application based on a JBoss EAP Quickstart example.
+The application is built using maven and is able to create and
+greet users and store session IDs in a replicated cache. The
+greeting page displays the cached session key information and
+reports what node is serving it. The session key was stored in
+a cache replicated over all EAP nodes. The application ran on a
+tiny cluster of two EAP servers (on a laptop!).</li>
+<li>A Postgres database to store user information.</li>
+</ol></li>
+<li><p>Configured Image Streams and other administrative components of
+OpenShift so that new builds can be automatically triggered and
+deployed.  This would normally be done by the operations team and
+not the developer.</p></li>
+<li><p>Added the URL for the webhook to Gogs.</p></li>
+<li><p>Started the application and let it build.</p></li>
+</ol>
+
+<p>While the build was finishing, he talked about how
+there are models for using OpenShift that include full
+<a href="https://blog.openshift.com/cicd-with-openshift/">CI/CD</a> systems, like
+Jenkins. These models allow code changes to be built, tested, merged
+and deployed automatically. Today, he changed the code and merged it
+by hand because he was on his laptop and had memory constraints.</p>
+
+<p>Then it was demo breaking time! Karásek scaled the application to two replicas
+and showed how a specific pod was assigned to serve it.  A &ldquo;pod&rdquo; is a
+Kubernetes abstraction that represents one or more related containers.
+The containers are managed as a single group for administrative
+purposes, including replication. In this example, each pod consists
+of one Java application container. Once we were convinced that the HAProxy
+router used by OpenShift would not allow us to be served by any other
+pod, he deleted the pod. The other pod was able to pick up the session
+without a user visible failure because of the auto-spawn capabilities
+of OpenShift and the session ID cache.</p>
+
+<p>Next, it was time for a code change. A quick <code>git clone</code> later and the
+code was modified and pushed to the Gogs service.  Less than a second
+later OpenShift reacted to the git webhook notification and kicked
+of a new build of the code.  Using the web console and <code>oc get pod</code>,
+we watched the builds progress. When complete, they seamlessly and
+invisibly replaced the original pods with zero downtime.</p>
+
+<p>This demonstration provided insight into how an existing application can
+be migrated to containers to gain scale-out and management features from
+an orchestrator like OpenShift Origin in a way that preserves all of
+the hard-won existing functionality.  Take a look at the <a href="https://github.com/josefkarasek/eap-rolling-update">demo script
+and code</a> and try
+it yourself.</p>
+
+<p>We took breaks between every talk and enjoyed the fine facilities provided
+by <a href="http://www.jobsatkiwi.com/">kiwi.com</a>.  They arranged for the use
+of their wine cellar for the meetup and a large supply of beverages and
+food for the attendees.</p>
+
+<p><img alt="Vadim Rutkovsky" width="400" height="300" src="/images/docker-brno-2016-09/vladim.jpg?1633620578" /></p>
+
+<p><a href="https://www.twitter.com/vrutkovs">Vadim Rutkovsky</a> was next with his
+presentation, <q>Ansible Container: Look mom, no Dockerfile!</q>
+(<a href="https://vrutkovs.github.io/dockerbrno-ansible-container">Slides</a>)
+His need for a new way to build containers was driven by his use of
+<a href="http://grafana.org/">grafana</a>.  He started with a container from
+DockerHub, but quickly hit some limitations that would mean he needed
+a custom built version.</p>
+
+<p>This should be easy to do as the Dockerfiles are online next to
+the containers. Unfortunately, the Dockerfile in question, while
+successfully able to build a container, was crazy-pants and not easy to
+maintain or modify. In particular its handling of plugins was not
+elegant.</p>
+
+<p>This got him thinking about traditional application
+installment concepts and he decided to use <a href="https://www.github.com/ansible/ansible-container">Ansible
+Container</a>.  Ansible
+Container has ability to build docker images and orchestrate containers
+using only Ansible playbooks + shell + docker-compose. It allows the
+container builder to leverage the power of Ansible features like vars,
+templates and roles.</p>
+
+<p>Getting started is easy thanks to the <code>ansible-container init</code> command.
+This generates the basic files of:</p>
+
+<ul>
+<li><code>main.yml</code>: that describes the images</li>
+<li><code>container.yml</code>: that describes orchestration</li>
+<li><code>requirements.txt</code>: which can load additional Ansible modules,
+if required</li>
+</ul>
+
+<p>A huge win came with the <code>main.yml</code> file structure because the container
+could be built using traditional application and system installation
+idioms.</p>
+
+<p>A build using Ansible Container creates a &ldquo;builder image&rdquo;
+which allows building and deploying one or more images.<br>
+Ansible Container can then launch the container using <code>docker-compose</code>,
+ or it can create a playbook and ship it to Kubernetes and OpenShift.</p>
+
+<p>The project is fairly new and the next round of features
+will include build caching, detached execution, custom
+volumes and build variables, and rkt and OCI support.  Full
+<a href="https://docs.ansible.com/ansible-container">documentation</a> is online
+as well as an active community in #ansible-container on Freenode.</p>
+
+<p><img alt="Tomas Kral" width="400" height="300" src="/images/docker-brno-2016-09/tkral.jpg?1633620578" /></p>
+
+<p><a href="https://www.twitter.com/kadel">Tomáš Král</a>
+presented the final talk of the evening, <q>Kompose:
+from your local machine to the cloud with one command.</q>
+(<a href="https://github.com/kadel/kompose-demo/blob/master/slides/docker_meetup_20160915.pdf">Slides</a>)
+<a href="https://github.com/skippbox/kompose">Kompose</a> can convert a Docker Compose
+file into a full Kubernetes or OpenShift configuration.  It is a golang
+open source project supported by Skippbox, Google and Red Hat.</p>
+
+<p>Kral&rsquo;s demo used the golang guestbook application which he had decomposed
+into two containerized services.  First he started the application
+just using a pair of <code>docker run</code> commands that started each service.
+Next he showed and used a Docker Compose file that was equivalent to
+the same pair of commands.  Kompose showed up at this point and with one
+command allowed us to deploy our application to a local Minikube cluster.</p>
+
+<p>As a final demo step, he made a live deployment to <a href="https://console.preview.openshift.com">OpenShift 3 Online
+(dev-preview)</a> to show how to
+go from a Docker Compose file on your local machine to a live production
+deployment in the cloud.</p>
+
+<p>Kompose allows you to easily move from a development environment using
+Docker Compose or an application delivered with a distributed application
+bundle (DAB) file to a production quality environment based on Kubernetes
+and OpenShift. The output of Kompose allows you to quickly bootstrap
+to the rich Kubernetes and OpenShift environments with a standard
+configuration that can then be tuned and configured.  Download the <a href="https://github.com/kadel/kompose-demo">demo
+code and script</a> and try it out.</p>
+
+<p>This meetup was a fantastic event showing of some really cool technology.
+I want to thank our speakers, attendees and sponsors for an making this
+such an awesome event.  I personally walked away motivated to play
+with both Ansible Container and Kompose to solve some challenges in
+my tech-life.</p>
+
+<p>The meetup was made possible through the generosity of our sponsors:
+<a href="http://www.jobsatkiwi.com/">kiwi.com</a>, who provided space and
+refreshments, and <a href="https://community.redhat.com">Red Hat</a>, who provided
+administrative support and funding.</p>
+
+<p>Our <a href="https://www.meetup.com/Docker-Brno/events/234091097/">next meetup</a>
+will be on 1 December 2016.  We are looking for speakers and hope
+you&rsquo;ll contact us at <a href="https://twitter.com/DockerBrno">@DockerBrno</a> or
+on our <a href="https://www.meetup.com/Docker-Brno">meetup page</a>.  If you&rsquo;re not local to Brno and
+are interested in talking, contact us too.  We may able to invite and
+sponsor you.</p>
+
+<a class="more-link view-article" href="/blog/2016/10/docker-brno-meetup-20160914/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/event/">event</a></li>
+<li><a href="/blog/tag/meetup/">meetup</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/09/running-kubernetes-in-containers-on-atomic/">Running Kubernetes and Friends in Containers on CentOS Atomic Host</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-09-15T12:00:00Z'>
+Thursday 15 September 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The <a href="http://www.projectatomic.io/docs/introduction/">atomic hosts</a> from CentOS and Fedora earn their <q>atomic</q> namesake by providing for atomic, image-based system updates via rpm-ostree, and atomic, image-based application updates via docker containers.</p>
+
+<p>This <q>system</q> vs <q>application</q> division isn&rsquo;t set in stone, however. There&rsquo;s room for system components to move across from the <a href="http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/">somewhat</a> rigid world of ostree commits to the freer-flowing container side.</p>
+
+<p>In particular, the key atomic host components involved in orchestrating containers across multiple hosts, such as flannel, etcd and kubernetes, could run instead in containers, making life simpler for those looking to test out newer or different versions of these components, or to swap them out for alternatives.</p>
+
+<p>The <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">devel tree</a> of CentOS Atomic Host, which features a trimmed-down system image that leaves out kubernetes and related system components, is a great place to experiment with alternative methods of running these components, and swapping between them.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/09/running-kubernetes-in-containers-on-atomic/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/system-containers/">system containers</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/09/intro-to-system-containers/">Introduction to System Containers</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/giuseppe/">Giuseppe Scrivano</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-09-12T13:00:00Z'>
+Monday 12 September 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As part of our effort to reduce the number of packages that are
+shipped with the Atomic Host image, we faced the problem of how to
+containerize services that are needed before Docker itself is running.
+The result: <q>system containers,</q> a way to run containers in
+production using read only images.</p>
+
+<p>System containers use different technologies such as OSTree for the
+storage, Skopeo to pull images from a registry, runC to run the
+containers and systemd to manage their life cycle.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/09/intro-to-system-containers/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/oc/">oc</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+<li><a href="/blog/tag/system-containers/">system-containers</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/08/new-centos-atomic-host-with-package-layering-support/">New CentOS Atomic Host with Package Layering Support</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-30T18:38:04Z'>
+Tuesday 30 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Last week, the CentOS Atomic SIG <a href="https://seven.centos.org/2016/08/announcing-a-new-release-of-centos-atomic-host-2/">released</a> an updated version of CentOS Atomic Host (tree version 7.20160818), featuring support for rpm-ostree package layering.</p>
+
+<p>CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box; or as an installable ISO, qcow2, or Amazon Machine image. Check out the <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">CentOS wiki</a> for download links and installation instructions, or read on to learn more about what’s new in this release.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/08/new-centos-atomic-host-with-package-layering-support/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=29/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=26/">26</a>
+</li>
+<li>
+<a href="/blog/page=27/">27</a>
+</li>
+<li>
+<a href="/blog/page=28/">28</a>
+</li>
+<li>
+<a href="/blog/page=29/">29</a>
+</li>
+<li class='active'>
+<span>30</span>
+</li>
+<li>
+<a href="/blog/page=31/">31</a>
+</li>
+<li>
+<a href="/blog/page=32/">32</a>
+</li>
+<li>
+<a href="/blog/page=33/">33</a>
+</li>
+<li>
+<a href="/blog/page=34/">34</a>
+</li>
+<li>
+<a href="/blog/page=31/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

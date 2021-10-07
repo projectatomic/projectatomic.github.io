@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+rpm-ostree v2017.4 released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='rpm-ostree v2017.4 released' property='og:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version v2017.4, as well as from earlier versions this year.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/04/rpm-ostree-v2017.4-released/' property='og:url'>
+<meta content='2017-04-18T18:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm' property='article:tag'>
+<link href='/blog/tag/rpm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='rpm-ostree v2017.4 released' name='twitter:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version v2017.4, as well as from earlier versions this year.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_04 blog_2017_04_rpm-ostree-v2017 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+rpm-ostree v2017.4 released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-04-18T18:00:00Z'>
+Tuesday 18 April 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://rpm-ostree.readthedocs.org/">rpm-ostree</a> is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host. Here are some highlights from
+version v2017.4, as well as from earlier versions this year.</p>
+
+<p></p>
+
+<h3>Deployment operations are now cumulative</h3>
+
+<p>Previously, if you wanted to both install a package and
+upgrade, you would have to do:</p>
+<pre class="highlight plaintext"><code># rpm-ostree upgrade&#x000A;# reboot&#x000A;# rpm-ostree install foo&#x000A;# reboot&#x000A;</code></pre>
+
+<p>Not very efficient. This was changed in v2017.2 so that
+operations became cumulative, thus only requiring one
+reboot:</p>
+<pre class="highlight plaintext"><code># rpm-ostree upgrade&#x000A;# rpm-ostree install foo&#x000A;# reboot&#x000A;</code></pre>
+
+<p>This is much better, but it&rsquo;s still causing rpm-ostree to
+create an intermediate deployment that soon after gets
+overwritten. In v2017.4, we can finally do these operations
+in a single step:</p>
+<pre class="highlight plaintext"><code># rpm-ostree upgrade --install foo&#x000A;# reboot&#x000A;</code></pre>
+
+<p>Of course, the same <code>--install</code> and <code>--uninstall</code> switches
+are available on the <code>deploy</code> and <code>rebase</code> commands.</p>
+
+<p>There is work underway to further improve on this and
+directly update the booted deployment, so that rebooting is
+no longer needed.</p>
+
+<h3>RPMs can now be directly installed</h3>
+
+<p>Previously, if you wanted to overlay a specific RPM file,
+you&rsquo;d have to shove it into a repo and place that repo in
+<code>/etc/yum.repos.d</code>. With v2017.4, rpm-ostree is now able to
+install it directly:</p>
+<pre class="highlight plaintext"><code># rpm-ostree install ltrace.rpm&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;  fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;             Version: 25.89 (2017-03-26 21:04:50)&#x000A;          BaseCommit: 6a71adb06bc296c19839e951c38dc0b71ee5d7...&#x000A;              OSName: fedora-atomic&#x000A;       LocalPackages: ltrace-0.7.91-20.fc25.x86_64&#x000A;&#x000A;* fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;             Version: 25.89 (2017-03-26 21:04:50)&#x000A;          BaseCommit: 6a71adb06bc296c19839e951c38dc0b71ee5d7...&#x000A;              OSName: fedora-atomic&#x000A;</code></pre>
+
+<p>As you can see above, the package shows up in a new
+<code>LocalPackages</code>.  This is different from <code>LayeredPackages</code>:
+packages in the latter are updated as new deployments are
+created, whereas those in the former are <em>never</em> updated. So
+in the example above, <code>ltrace</code> will remain at that version.</p>
+
+<p>You can always <q>unstick</q> a local package and fetch it back
+from the repos:</p>
+<pre class="highlight plaintext"><code># rpm-ostree uninstall ltrace-0.7.91-20.fc25.x86_64 --install ltrace&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;  fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;             Version: 25.89 (2017-03-26 21:04:50)&#x000A;          BaseCommit: 6a71adb06bc296c19839e951c38dc0b71...&#x000A;              OSName: fedora-atomic&#x000A;     LayeredPackages: ltrace&#x000A;&#x000A;* fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;             Version: 25.89 (2017-03-26 21:04:50)&#x000A;          BaseCommit: 6a71adb06bc296c19839e951c38dc0b71...&#x000A;              OSName: fedora-atomic&#x000A;       LocalPackages: ltrace-0.7.91-20.fc25.x86_64&#x000A;</code></pre>
+
+<h3>Configuration can now be reloaded (v2017.3)</h3>
+
+<p>Previously, one had to restart the <code>rpm-ostreed</code> service to
+get it to notice new remotes or repo configuration changes.
+Starting from v2017.3, there is now a <code>rpm-ostree reload</code>
+command available to do this. System administrators might
+prefer to use the equivalent <code>systemctl reload rpm-ostreed</code>.</p>
+
+<h3>More powerful package layering semantics (v2017.3)</h3>
+
+<p>rpm-ostree is now much smarter about how it handles layered
+RPMs. Previously, one couldn&rsquo;t add a package that already
+existed in the base layer. Additionally, previously layered
+packages would magically disappear if an update added that
+same package. If another update subsequently removed that
+package again, you&rsquo;d be left without it layered at all.</p>
+
+<p>Starting in v2017.3, rpm-ostree treats layered packages in a
+more declarative manner; packages requested through the
+<code>install</code> command are interpreted as directives to ensure
+they are always present. They will then be layered only when
+needed (i.e. when the base layer does not already contain
+it).</p>
+
+<p>Suppose you&rsquo;re on an ostree branch which has <code>strace</code> but
+doesn&rsquo;t have <code>ltrace</code>:</p>
+<pre class="highlight plaintext"><code># rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* branch/without/ltrace&#x000A;           Timestamp: 2017-04-13 23:56:48&#x000A;              Commit: 5745788c0e6c07bed73864b6addd4823961...&#x000A;              OSName: fedora-atomic&#x000A;# rpm -q strace ltrace&#x000A;strace-4.16-1.fc25.x86_64&#x000A;package ltrace is not installed&#x000A;</code></pre>
+
+<p>Imagine now that we want to make sure that <code>strace</code> and
+<code>ltrace</code> are <em>always</em> installed:</p>
+<pre class="highlight plaintext"><code># rpm-ostree install strace ltrace&#x000A;# reboot&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* branch/without/ltrace&#x000A;           Timestamp: 2017-04-14 00:09:45&#x000A;              Commit: 5b338d0237a343201d6b277b58010241974...&#x000A;              OSName: fedora-atomic&#x000A;   RequestedPackages: strace&#x000A;     LayeredPackages: ltrace&#x000A;&#x000A;  branch/without/ltrace&#x000A;           Timestamp: 2017-04-13 23:56:48&#x000A;              Commit: 5745788c0e6c07bed73864b6addd4823961...&#x000A;              OSName: fedora-atomic&#x000A;# rpm -q ltrace&#x000A;ltrace-0.7.91-20.fc25.x86_64&#x000A;</code></pre>
+
+<p>The output now becomes interesting. rpm-ostree determined
+that out of <code>strace</code> and <code>ltrace</code>, only <code>ltrace</code> actually
+needs to be layered. This is represented by the
+<code>LayeredPackages</code> line above. However, it makes sure to
+remember that the user always wants <code>strace</code> layered. This
+is represented by the <code>RequestedPackages</code> line.</p>
+
+<p>Imagine now that we rebase onto a different branch which
+already has <code>ltrace</code> installed:</p>
+<pre class="highlight plaintext"><code># rpm-ostree rebase branch/with/ltrace&#x000A;# reboot&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* branch/with/ltrace&#x000A;           Timestamp: 2017-04-13 23:56:23&#x000A;              Commit: f345e110dbdff66630fbbd554adbc5d998e7...&#x000A;              OSName: fedora-atomic&#x000A;   RequestedPackages: ltrace strace&#x000A;&#x000A;  branch/without/ltrace&#x000A;           Timestamp: 2017-04-14 00:15:33&#x000A;          BaseCommit: 5745788c0e6c07bed73864b6addd4823961...&#x000A;              Commit: 84438e8ca1e7cf9266c89dfbde40cbe4119...&#x000A;              OSName: fedora-atomic&#x000A;   RequestedPackages: strace&#x000A;     LayeredPackages: ltrace&#x000A;</code></pre>
+
+<p>As expected, rpm-ostree has correctly determined that
+<code>ltrace</code> no longer needs to be layered.</p>
+
+<p>These features will be especially useful for Kubernetes
+users on Fedora Atomic Host 25.
+<a href="http://www.projectatomic.io/blog/2016/12/Kubernetes-returns-to-fedora-atomic/">The plan</a>
+is to remove the <code>kubernetes</code> package in Fedora 26 from the
+host in favour of a containerized install. Migration guides
+will be available, though one will be able to keep it in the
+host by explicitly requesting it prior to rebasing to Fedora
+26:</p>
+<pre class="highlight plaintext"><code># rpm-ostree install kubernetes&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;  branch/with/ltrace&#x000A;           Timestamp: 2017-04-13 23:56:23&#x000A;              Commit: f345e110dbdff66630fbbd554adbc5d998e7...&#x000A;              OSName: fedora-atomic&#x000A;   RequestedPackages: kubernetes ltrace strace&#x000A;&#x000A;* branch/with/ltrace&#x000A;           Timestamp: 2017-04-13 23:56:23&#x000A;              Commit: f345e110dbdff66630fbbd554adbc5d998e7...&#x000A;              OSName: fedora-atomic&#x000A;   RequestedPackages: ltrace strace&#x000A;</code></pre>
+
+<h3>Cleaning up deployments (v2017.2)</h3>
+
+<p>It was always possible to delete non-booted deployments by
+dropping down to the ostree command <code>admin undeploy</code>. Though
+as the feature set of rpm-ostree grows, it becomes important
+to make sure that all proper layers and caches are cleaned
+up.</p>
+
+<p>In v2017.2, rpm-ostree learned the <code>cleanup</code> command to do
+this. It&rsquo;s capable of deleting pending deployment (using
+<code>rpm-ostree cleanup --pending</code>), as well as rollback
+deployment (using <code>rpm-ostree cleanup --rollback</code>).</p>
+
+<h3>Local initramfs regeneration (v2017.1)</h3>
+
+<p>By default, rpm-ostree sets up the bootloader so that the
+initramfs from the content provider is used. However, there
+are situations where one has host-specific requirements. A
+typical example is ensuring that certain kernel modules are
+included.</p>
+
+<p>Starting from v2017.1, rpm-ostree learned the <code>initramfs</code>
+command, which causes the initramfs to be regenerated
+locally. One can also pass specific arguments to dracut:</p>
+<pre class="highlight plaintext"><code># rpm-ostree initramfs --enable --arg "--drivers" --arg "kmodule"&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm/">rpm</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/04/rpm-ostree-v2017.4-released/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/04/rpm-ostree-v2017.4-released/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/04/rpm-ostree-v2017.4-released/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

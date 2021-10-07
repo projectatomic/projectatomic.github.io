@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-2 blog_page-2_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/06/sneak-secrets-into-containers/">How to sneak secrets into your containers, without leaving a trace</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-11T00:00:00Z'>
+Monday 11 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Default mounts for all of your containers.</h3>
+
+<p>I was presenting <a href="https://www.openshift.com/">OpenShift</a> and really the underlying container technology we are building <a href="https://github.com/kubernetes-incubator/cri-o">CRI-O</a>, <a href="https://github.com/projectatomic/buildah">Buildah</a> and <a href="https://github.com/projectatomic/libpod">Podman</a> to some customers the other day.  After the presentation, one of the customers came over to me and said, the biggest problem they have with their users building containers, was they needed to use certificates in the container in order to access their software repositories.  But they did not want the certificates to end up embedded in the containers.  I pointed out that <a href="https://github.com/projectatomic/docker">Red Hat’s version of Docker</a> allowed you to do volume mounts into containers during a <code>docker build</code>.  Also Buildah had the same functionality.  But he pointed out that they did not want everyone of their engineers to have to add the volumes, or if they were running a container and wanted to update software and they forgot the volume mount then they could not access the certificates.  </p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/06/sneak-secrets-into-containers/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/06/problems-are-opportunities-in-disguise/">Problems Are Just Opportunities in Disguise</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-07T00:00:00Z'>
+Thursday  7 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As a father who&rsquo;s ushered one child through their teen years, and with two more in the teens now, I know about problems. Problems with the WiFi not working, or the shoes that are two months old and now two sizes too small. Those are the easy ones, the harder ones come in with sleepovers with their significant others, the broken down car after curfew or the death of a classmate. In my <q>at-work</q> life, I was explaining to my scrum master that I&rsquo;d not been picking off any cards off our board in the past sprint because I&rsquo;d spent all my time working on issues. He remarked that as a software engineer we&rsquo;re not so much coders as we&rsquo;re problem solvers. I guess I can&rsquo;t escape problems either at work or at home.</p>
+
+<p>Recently one of the folks that talks about Buildah, Podman, and other related container technologies at conferences sent me an email about a problem he was having with a demo script he was hoping to show.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/06/problems-are-opportunities-in-disguise/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/06/building-kernel-modules-with-podman/">Building Kernel Modules with Podman</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jdoss/">Joe Doss</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-06T00:00:00Z'>
+Wednesday  6 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Building Kernel Modules on Atomic with Podman</h3>
+
+<p>The goal of this post is to explain how to build and load a kernel module inside a container using Podman.</p>
+
+<p>Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.</p>
+
+<p>Using <a href="https://github.com/dell/dkms">DKMS</a> on Atomic does not work as <a href="https://github.com/projectatomic/rpm-ostree/issues/1091">expected</a>. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/06/building-kernel-modules-with-podman/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kernel-modules/">kernel modules</a></li>
+<li><a href="/blog/tag/libpod/">libpod</a></li>
+<li><a href="/blog/tag/podman/">podman</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/05/podman-userns/">User namespaces support in Podman</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/giuseppe/">Giuseppe Scrivano</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-24T00:00:00Z'>
+Thursday 24 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We recently added support for user namespaces to
+<a href="https://github.com/projectatomic/libpod">Podman</a>.  This has some major
+benefits for security and added flexibility when running
+containers.  It allows processes to have privileges inside of the
+container, but no privileges if they escape the container.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/05/podman-userns/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/05/pinning-deployments-ostree-based-systems/">Pinning Deployments in OSTree Based Systems</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-23T00:00:00Z'>
+Wednesday 23 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>RPM-OSTree/OSTree conveniently allows you to rollback if you upgrade and don&rsquo;t like the upgraded software. This is done by keeping around the old <strong>deployment</strong>; the old software you booted in to. After a single upgrade you&rsquo;ll have a booted deployement and the rollback deployment. On the next upgrade the current rollback deployment will be discarded and the current booted deployment will become the new rollback deployment.</p>
+
+<p>Typically these two deployments are all that is kept around. However, recently a new <a href="https://github.com/ostreedev/ostree/issues/1460">pinning</a> feature was added that allows the user to <q>pin</q> a deployment to make sure it doesn&rsquo;t get garbage collected.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/05/pinning-deployments-ostree-based-systems/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/">Newer</a>
+</li>
+<li>
+<a href="/blog/">1</a>
+</li>
+<li class='active'>
+<span>2</span>
+</li>
+<li>
+<a href="/blog/page=3/">3</a>
+</li>
+<li>
+<a href="/blog/page=4/">4</a>
+</li>
+<li>
+<a href="/blog/page=5/">5</a>
+</li>
+<li>
+<a href="/blog/page=6/">6</a>
+</li>
+<li>
+<a href="/blog/page=3/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Build Your Own Atomic Updates &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Build Your Own Atomic Updates' property='og:title'>
+<meta content='Over the past several weeks, teams within the CentOS and Fedora projects have been establishing the processes needed to produce Atomic Host variants of their respective distributions. If you haven’t...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/11/build-your-own-atomic-updates/' property='og:url'>
+<meta content='2014-11-04T14:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Build Your Own Atomic Updates' name='twitter:title'>
+<meta content='Over the past several weeks, teams within the CentOS and Fedora projects have been establishing the processes needed to produce Atomic Host variants of their respective distributions. If you haven’t...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_11 blog_2014_11_build-your-own-atomic-updates blog_2014_11_build-your-own-atomic-updates_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Build Your Own Atomic Updates
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-11-04T14:00:00Z'>
+Tuesday  4 November 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Over the past several weeks, teams within the <a href="http://wiki.centos.org/SpecialInterestGroup/Atomic">CentOS</a> and <a href="http://fedoraproject.org/wiki/Cloud_SIG">Fedora projects</a> have been establishing the processes needed to produce <q>Atomic Host</q> variants of their respective distributions. If you haven&rsquo;t already done so, you can check out the latest pre-release <a href="http://fedoraproject.org/get-prerelease#cloud">Fedora Atomic</a> and <a href="http://cloud.centos.org/centos/7/devel/">CentOS Atomic</a> images.</p>
+
+<p>Now, consuming an OS that partakes in the hotness of atomic system and application management while consisting of pre-built packages from a distribution you already know and trust is the point of Project Atomic, but you still might want to take the reins and produce your own Atomic updates or add new RPMs of your choosing.</p>
+
+<p>If so, you can, without too much trouble, compose and host your own updated or changed atomic updates right from your Atomic host, or from any other sort of Docker host. Here&rsquo;s how that works:</p>
+
+<h3>Composing and hosting atomic updates</h3>
+
+<p>First, start with a Docker host (I&rsquo;m using an instance of the <a href="http://lists.centos.org/pipermail/centos-devel/2014-August/011784.html">CentOS Atomic</a> alpha, but you can use whatever you want) and clone my <a href="https://github.com/jasonbrooks/byo-atomic">byo-atomic</a> repo.</p>
+
+<p><em>I&rsquo;m not sure why, but when I performed this operation from the CentOS Atomic alpha image, I had to run my <code>docker build</code> command below with the <code>--privileged</code> argument in order for the <code>rpm-ostree compose tree</code> bit to work.</em></p>
+<pre class="highlight plaintext"><code># git clone --recursive https://github.com/jasonbrooks/byo-atomic.git&#x000A;# sudo docker build --rm -t $USER/atomicrepo byo-atomic/.&#x000A;# sudo docker run -ti -p 80:80 $USER/atomicrepo bash&#x000A;</code></pre>
+
+<p>Once inside the container:</p>
+
+<h4>For CentOS 7:</h4>
+<pre class="highlight plaintext"><code># cd /byo-atomic/sig-atomic-buildscripts&#x000A;# git checkout master&#x000A;# git pull&#x000A;</code></pre>
+
+<p>If you&rsquo;d like to add some more packages to your tree, add them in the file <code>centos-atomic-cloud-docker-host.json</code> before proceeding with the compose command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree compose tree --repo=/srv/rpm-ostree/repo centos-atomic-cloud-docker-host.json&#x000A;</code></pre>
+
+<p><em>The CentOS sig-atomic-buildscripts repo currently includes some key packages built in and hosted from the CentOS <a href="http://cbs.centos.org/koji/">Community Build System</a>. The CBS repos rebuild every 10 minutes, so if your rpm-ostree fails out w/ a repository not found sort of error, wait a few minutes and run the command again.</em></p>
+
+<p>The compose step will take some time to complete. When it&rsquo;s done, you can run the following command to start up a web server in the container. </p>
+<pre class="highlight plaintext"><code># sh /run-apache.sh&#x000A;</code></pre>
+
+<p>Now, you should be able to visit $YOURHOSTIP/repo and see your new rpm-ostree repo. </p>
+
+<h4>For Fedora 21:</h4>
+
+<p>The master branch of the fedora-atomic repo contains the definitions required to compose a rawhide-based Fedora Atomic host. If you&rsquo;d rather compose a f21-based Fedora Atomic host, you&rsquo;ll need to:</p>
+<pre class="highlight plaintext"><code># cd /byo-atomic/fedora-atomic&#x000A;# git checkout f21&#x000A;# git pull&#x000A;</code></pre>
+
+<p>If you&rsquo;d like to add some more packages to your tree, add them in the file <code>fedora-atomic-docker-host.json</code> before proceeding with the compose command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree compose tree --repo=/srv/rpm-ostree/repo fedora-atomic-docker-host.json&#x000A;</code></pre>
+
+<p>The compose step will take some time to complete. When it&rsquo;s done, you can run the following command to start up a web server in the container. </p>
+<pre class="highlight plaintext"><code># sh /run-apache.sh&#x000A;</code></pre>
+
+<p>Now, you should be able to visit $YOURHOSTIP/repo and see your new rpm-ostree repo. </p>
+
+<p>To configure an Atomic host to receive updates from your build machine, edit (as root) the file <code>/etc/ostree/remotes.d/centos-atomic.conf</code> or <code>sudo vi /etc/ostree/remotes.d/fedora-atomic.conf</code> and add a section like this:</p>
+<pre class="highlight plaintext"><code>[remote "centos-atomic-host"]&#x000A;url=http://$YOURHOSTIP/repo&#x000A;branches=centos/7/x86_64/cloud-docker-host;&#x000A;gpg-verify=false&#x000A;</code></pre>
+<pre class="highlight plaintext"><code>[remote "fedora-atomic-host"]&#x000A;url=http://$YOURHOSTIP/repo&#x000A;branches=fedora-atomic/21/x86_64/docker-host;&#x000A;gpg-verify=false&#x000A;</code></pre>
+
+<p>With your repo configured, you can check for updates with the command <code>sudo rpm-ostree upgrade</code>, followed by a reboot. Don&rsquo;t like the changes? You can rollback with <code>rpm-ostree rollback</code>, followed by another reboot.</p>
+
+<h3>Till Next Time</h3>
+
+<p>If you run into trouble following this walkthrough, I’ll be happy to help you get up and running or get pointed in the right direction. Ping me at jbrooks in #atomic on freenode irc or <a href="https://twitter.com/jasonbrooks">@jasonbrooks</a> on Twitter. Also, be sure to check out the <a href="http://ask.projectatomic.io/en/questions/">Project Atomic Q&amp;A site</a>.</p>
+
+</section>
+<footer class='post-meta'>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/11/build-your-own-atomic-updates/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/11/build-your-own-atomic-updates/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/11/build-your-own-atomic-updates/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

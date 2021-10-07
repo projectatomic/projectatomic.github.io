@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Working with Containers' Images Made Easy Part 1: skopeo &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Antonio Murdaca' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content="Working with Containers' Images Made Easy Part 1: skopeo" property='og:title'>
+<meta content='This is the first part of a series of posts about containers’ images. In this first part we’re going to focus on skopeo.&#x000A;&#x000A;Back in March, I published a post about skopeo, a new tiny binary to help people interact with Docker registries. Its job has been limited to inspect (skopeo is greek for looking for, observe) images on remote registries as opposed to docker inspect, which is working for locally pulled images.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/07/working-with-containers-image-made-easy/' property='og:url'>
+<meta content='2016-07-25T08:58:20Z' property='article:published_time'>
+<meta content='runcom' property='article:author:username'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OCI' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='skopeo' property='article:tag'>
+<link href='/blog/tag/skopeo.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content="Working with Containers' Images Made Easy Part 1: skopeo" name='twitter:title'>
+<meta content='This is the first part of a series of posts about containers’ images. In this first part we’re going to focus on skopeo.&#x000A;&#x000A;Back in March, I published a post about skopeo, a new tiny binary to help people interact with Docker registries. Its job has been limited to inspect (skopeo is greek for looking for, observe) images on remote registries as opposed to docker inspect, which is working for locally pulled images.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_07 blog_2016_07_working-with-containers-image-made-easy blog_2016_07_working-with-containers-image-made-easy_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Working with Containers' Images Made Easy Part 1: skopeo
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-25T08:58:20Z'>
+Monday 25 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This is the first part of a series of posts about containers&rsquo; images. In this first part we&rsquo;re going to focus on <code>skopeo</code>.</p>
+
+<p>Back in March, I published a <a href="http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/">post</a> about <a href="https://github.com/projectatomic/skopeo">skopeo</a>, a new tiny binary to help people interact with Docker registries. Its job has been limited to <em>inspect</em> (<em>skopeo</em> is greek for <em>looking for</em>, <em>observe</em>) images on remote registries as opposed to <code>docker inspect</code>, which is working for locally pulled images.</p>
+
+<p></p>
+
+<h3>The Tool</h3>
+
+<p>Since then, we&rsquo;ve been adding more features to <code>skopeo</code>, such as downloading image layers (via <code>skopeo layers</code>), and eventually we came up with a nice abstraction to the problem of <em>downloading</em>, <em>inspecting</em>, and <em>uploading</em> images (without even the need to have Docker installed on the system). We called this new abstraction <code>copy</code> and here is a straightforward example about how to use it:</p>
+<pre class="highlight shell"><code><span class="c"># skopeo copy &lt;source&gt; &lt;destination&gt;</span>&#x000A;&#x000A;<span class="gp">$ </span>id -u&#x000A;1000&#x000A;&#x000A; <span class="c"># let's say we want to download the Fedora 24 docker image from the Docker Hub and store it on a local directory</span>&#x000A;<span class="gp">$ </span>mkdir fedora-24&#x000A;<span class="gp">$ </span>skopeo copy docker://fedora:24 dir:fedora-24&#x000A;<span class="gp">$ </span>tree fedora-24&#x000A;fedora-24&#x000A;├── 7c91a140e7a1025c3bc3aace4c80c0d9933ac4ee24b8630a6b0b5d8b9ce6b9d4.tar&#x000A;├── f9873d530588316311ac1d3d15e95487b947f5d8b560e72bdd6eb73a7831b2c4.tar&#x000A;└── manifest.json&#x000A;&#x000A;0 directories, 3 files&#x000A;</code></pre>
+
+<p>You can see from the output  above that <code>skopeo copy</code> successfully downloaded the Fedora 24 image&mdash;as in, it downloaded all its layers plus the image manifest.</p>
+
+<p>You can also notice the whole operation has been done with an unprivileged user&mdash;while Docker needs you to be <code>root</code> to even do a <code>docker pull</code>.</p>
+
+<p>What can you do with that <code>fedora-24</code> directory now? There comes the fun. A nice new addition to the <a href="https://github.com/projectatomic/atomic">atomic</a> tool has been the so-called <em>system containers</em>&mdash;they are containers meant to be working before the Docker daemon comes up and they&rsquo;re powered by the community project <a href="https://github.com/opencontainers/runc">runc</a> which is part of the <a href="https://www.opencontainers.org/">Open Container Initiative</a>. Basically, those containers are set up with these steps:</p>
+
+<ol>
+<li>Download the image layers and manifest with <code>skopeo</code></li>
+<li>Setup a new <a href="https://wiki.gnome.org/action/show/Projects/OSTree?action=show&amp;redirect=OSTree">ostree</a> repository which will be the root filesystem of our system container</li>
+<li>Import downloaded layers in the order they come in the image manifest</li>
+<li>Create a systemd unit file to run <code>runc</code> with said filesystem</li>
+<li>Spawn the service</li>
+<li>Enjoy</li>
+</ol>
+
+<p>If the above sounds rather complex, the <code>atomic</code> tool already provides a <code>--system</code> flag which can be used to create a system container:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>sudo atomic install --system --name system-container gscrivano/spc-helloworld&#x000A;Missing layer b037963d9b4419ffe09694c450bd33a06d24945416109aeb2937c7a8595252d9&#x000A;Missing layer a1b129b466881845cdf628321bf7ed597b3d0cad0b8dd01564f78a4417c750fe&#x000A;Missing layer a8a1c0600345270e055477e8f282d1318f0cef0debaed032cd1ba1e20eb2a35e&#x000A;Missing layer 236608c7b546e2f4e7223526c74fc71470ba06d46ec82aeb402e704bfdee02a2&#x000A;Extracting to /var/lib/containers/atomic/spc.0&#x000A;systemctl <span class="nb">enable </span>spc&#x000A;Created symlink from /etc/systemd/system/multi-user.target.wants/spc.service to /etc/systemd/system/spc.service.&#x000A;systemctl start spc&#x000A;&#x000A;<span class="c"># verify the service is running smoothly</span>&#x000A;<span class="gp">$ </span>sudo systemctl status spc  &#x000A;● spc.service - Hello World System Container&#x000A;   Loaded: loaded <span class="o">(</span>/etc/systemd/system/spc.service; enabled; vendor preset: disabled<span class="o">)</span>&#x000A;   Active: active <span class="o">(</span>running<span class="o">)</span> since Fri 2016-07-22 09:27:47 CEST; 5s ago&#x000A; Main PID: 10405 <span class="o">(</span>runc<span class="o">)</span>&#x000A;    Tasks: 10 <span class="o">(</span>limit: 512<span class="o">)</span>&#x000A;   CGroup: /system.slice/spc.service&#x000A;           ├─10405 /bin/runc start spc&#x000A;           └─spc&#x000A;             ├─10416 /bin/sh /usr/bin/run.sh&#x000A;             └─10435 nc -k -l 8081 --sh-exec /usr/bin/greet.sh&#x000A;&#x000A;Jul 22 09:27:47 localhost.localdomain systemd[1]: Started Hello World System Container.&#x000A;&#x000A;<span class="c"># we know our system container is listening on port 8081 so let's test it out!</span>&#x000A;<span class="gp">$ </span>nc localhost 8081                 &#x000A;HTTP/1.1 200 OK&#x000A;Connection: Close&#x000A;&#x000A;Hi World&#x000A;&#x000A;</code></pre>
+
+<p>The new <code>skopeo copy</code> command isn&rsquo;t just limited to download to local directories. Instead, it can do almost all sort of download/upload between:</p>
+
+<ul>
+<li>docker registries -&gt; local diretories</li>
+<li>docker registries -&gt; docker registries (<code>skopeo copy docker://myimage docker://anotherrepo/myimage</code>)</li>
+<li>docker registries -&gt; <a href="https://github.com/opencontainers/image-spec/blob/master/image-layout.md">OCI image-layout</a> directories (<code>oci:</code> prefix)</li>
+<li>and viceversa in any combination!</li>
+</ul>
+
+<p>Possibilities seems endless, being able to pull as an unprivileged user also open the doors to work with unprivileged <em>sanboxes</em> like <a href="http://flatpak.org/">Flatpak</a>, <a href="https://github.com/projectatomic/bubblewrap">bubblewrap</a>.</p>
+
+<p>As part of this unprileged capability, we&rsquo;re working on <a href="https://github.com/projectatomic/atomic/pull/483">a new feature in the Atomic tool</a>, which will be able to pull images to the calling user home directory  and later run any containers from those images (by also remapping files ownership to the one of the calling user).</p>
+
+<p>Supporting the <a href="https://www.opencontainers.org/">Open Container Initiative</a> by early implementing the <a href="https://github.com/opencontainers/image-spec">image specification</a> had also great advantages as we eventually helped the specification itself where things weren&rsquo;t totally clear and defined. We&rsquo;re continuosly adding wider support as the specification moves along also in areas like images signing and layers federation.</p>
+
+<p>The next post will take care of explaining how we extracted some core components from <code>skopeo</code> and moved them to a set of reusable libraries.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/oci/">OCI</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/07/working-with-containers-image-made-easy/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/07/working-with-containers-image-made-easy/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/07/working-with-containers-image-made-easy/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

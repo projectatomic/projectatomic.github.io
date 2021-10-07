@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Vagrant Service Manager 1.3.0 Released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Budh Ram Gurung' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Vagrant Service Manager 1.3.0 Released' property='og:title'>
+<meta content='This version of vagrant-service-manager introduces support for displaying Kubernetes configuration information. This enable users to access the Kubernetes server that runs inside ADB virtual machine...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/08/vagrant-service-manager-1-3-0-release/' property='og:url'>
+<meta content='2016-08-16T12:54:00Z' property='article:published_time'>
+<meta content='budhram' property='article:author:username'>
+<meta content='devtools' property='article:tag'>
+<link href='/blog/tag/devtools.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='releases' property='article:tag'>
+<link href='/blog/tag/releases.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Vagrant Service Manager 1.3.0 Released' name='twitter:title'>
+<meta content='This version of vagrant-service-manager introduces support for displaying Kubernetes configuration information. This enable users to access the Kubernetes server that runs inside ADB virtual machine...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_08 blog_2016_08_vagrant-service-manager-1-3-0-release blog_2016_08_vagrant-service-manager-1-3-0-release_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Vagrant Service Manager 1.3.0 Released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/budhram/">Budh Ram Gurung</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-16T12:54:00Z'>
+Tuesday 16 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This version of <a href="https://github.com/projectatomic/vagrant-service-manager">vagrant-service-manager</a> introduces support for displaying Kubernetes configuration information. This enable users to access the Kubernetes server that runs inside ADB virtual machine from their host machine.</p>
+
+<p>This version also includes binary installation support for Kubernetes. This support is extended to users of the <a href="http://developers.redhat.com/products/cdk/overview">Red Hat Container Development Kit</a>. For information about client binary installation, see the previous release announcement <a href="../../../../blog/2016/07/vagrant-service-manager-install-cli"><q>Client Binary Installation Now Included in the ADB</q></a>.</p>
+
+<p>The full list of features from this version are:</p>
+
+<ul>
+<li>Configuration information for Kubernetes provided as part of the <code>env</code> command</li>
+<li>Client binary installation support for Kubernetes added to the ADB</li>
+<li>Client binary installation support for OpenShift, Kubernetes and Docker in the Red Hat Container Development Kit</li>
+<li>Auto-detection of a previously downloaded <code>oc</code> executable binary on Windows operating systems</li>
+<li>Unit and acceptance tests for the Kubernetes service</li>
+<li>Option to enable Kubernetes from a Vagrantfile  with the following command:</li>
+</ul>
+<pre class="highlight plaintext"><code>  config.servicemanager.services = 'kubernetes'&#x000A;</code></pre>
+
+<h3>1. Install the kubernetes client binary</h3>
+
+<h4>Run the following command to install the kubernetes binary, <code>kubectl</code></h4>
+<pre class="highlight plaintext"><code>$ vagrant service-manager install-cli kubernetes&#x000A;# Binary now available at /home/budhram/.vagrant.d/data/service-manager/bin/kubernetes/1.2.0/kubectl&#x000A;# run binary as:&#x000A;# kubectl &lt;command&gt;&#x000A;export PATH=/home/budhram/.vagrant.d/data/service-manager/bin/kubernetes/1.2.0:$PATH&#x000A;&#x000A;# run following command to configure your shell:&#x000A;# eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli kubernetes | tr -d '\r')"&#x000A;&#x000A;</code></pre>
+
+<h4>Run the following command to configure your shell</h4>
+<pre class="highlight plaintext"><code>$ eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli kubernetes | tr -d '\r')"&#x000A;</code></pre>
+
+<h3>2. Enable access to the kubernetes server that runs inside of the ADB</h3>
+
+<h4>Run the following command to display environment variable for kubernetes</h4>
+<pre class="highlight plaintext"><code>$ vagrant service-manager env kubernetes&#x000A;# Set the following environment variables to enable access to the&#x000A;# kubernetes server running inside of the vagrant virtual machine:&#x000A;export KUBECONFIG=/home/budhram/.vagrant.d/data/service-manager/kubeconfig&#x000A;&#x000A;# run following command to configure your shell:&#x000A;# eval "$(vagrant service-manager env kubernetes)"&#x000A;</code></pre>
+
+<h4>Run the following command to configure your shell</h4>
+<pre class="highlight plaintext"><code>eval "$(vagrant service-manager env kubernetes)"&#x000A;</code></pre>
+
+<p>For a full list of changes in version 1.3.0, see <a href="https://github.com/projectatomic/vagrant-service-manager/releases/tag/v1.3.0">the release log</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/devtools/">devtools</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/08/vagrant-service-manager-1-3-0-release/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/08/vagrant-service-manager-1-3-0-release/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/08/vagrant-service-manager-1-3-0-release/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Introduction to System Containers &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Giuseppe Scrivano' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Introduction to System Containers' property='og:title'>
+<meta content='As part of our effort to reduce the number of packages that are&#x000A;shipped with the Atomic Host image, we faced the problem of how to&#x000A;containerize services that are needed before Docker itself is running.&#x000A;The result: system containers, a way to run containers in&#x000A;production using read only images.&#x000A;&#x000A;System containers use different technologies such as OSTree for the&#x000A;storage, Skopeo to pull images from a registry, runC to run the&#x000A;containers and systemd to manage their life cycle.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/' property='og:url'>
+<meta content='2016-09-12T13:00:00Z' property='article:published_time'>
+<meta content='giuseppe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oc' property='article:tag'>
+<link href='/blog/tag/oc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='runc' property='article:tag'>
+<link href='/blog/tag/runc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='skopeo' property='article:tag'>
+<link href='/blog/tag/skopeo.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='system-containers' property='article:tag'>
+<link href='/blog/tag/system-containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Introduction to System Containers' name='twitter:title'>
+<meta content='As part of our effort to reduce the number of packages that are&#x000A;shipped with the Atomic Host image, we faced the problem of how to&#x000A;containerize services that are needed before Docker itself is running.&#x000A;The result: system containers, a way to run containers in&#x000A;production using read only images.&#x000A;&#x000A;System containers use different technologies such as OSTree for the&#x000A;storage, Skopeo to pull images from a registry, runC to run the&#x000A;containers and systemd to manage their life cycle.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_09 blog_2016_09_intro-to-system-containers blog_2016_09_intro-to-system-containers_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Introduction to System Containers
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/giuseppe/">Giuseppe Scrivano</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-09-12T13:00:00Z'>
+Monday 12 September 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As part of our effort to reduce the number of packages that are
+shipped with the Atomic Host image, we faced the problem of how to
+containerize services that are needed before Docker itself is running.
+The result: <q>system containers,</q> a way to run containers in
+production using read only images.</p>
+
+<p>System containers use different technologies such as OSTree for the
+storage, Skopeo to pull images from a registry, runC to run the
+containers and systemd to manage their life cycle.</p>
+
+<p></p>
+
+<p>To use system containers you must have <a href="https://github.com/projectatomic/atomic">Atomic CLI</a> version 1.12 or later
+and the <a href="https://github.com/ostreedev/ostree">ostree utility</a> installed.  Currently, this means you must be running the
+<a href="/blog/2016/07/new-centos-atomic-host-releases-available-for-download/">CentOS Continuous Atomic</a>,
+but updates for Fedora Atomic should be coming soon.</p>
+
+<h3>Pull an image</h3>
+
+<p>An image must be present in the OSTree system repository before we can
+use it as a system container.  By using skopeo, the atomic tool can pull an image from
+different locations, a registry, the local Docker engine or a tarball,
+according to how the image is prefixed:</p>
+<pre class="highlight plaintext"><code># atomic pull --storage=ostree gscrivano/etcd&#x000A;Image gscrivano/etcd is being pulled to ostree ...&#x000A;Pulling layer e4410b03d7db030dba502fef7bfd1dae56a6c48faae63a80fd82450322def2c5&#x000A;Pulling layer 2176ad01d5670713218844201dc4edb36d2692fcc79ad7008003227a5f80097b&#x000A;Pulling layer 9086967f25375e976260ad004a6ac3cc75ba020669042cb431904d2914ac1735&#x000A;Pulling layer c0ee5e1cf412f1fd511aa1c7427c6fd825dfe4969d9ed7462ff8f989aceded7a&#x000A;Pulling layer 024037bdea19132da059961b3ec58e2aff329fb2fe8ffd8030a65a27d7e7db5f&#x000A;&#x000A;# atomic pull --storage=ostree dockertar:/tmp/etcd.tar&#x000A;# atomic pull --storage=ostree docker:etcd&#x000A;</code></pre>
+
+<p>Each layer in the image is stored as a separate OSTree branch, this
+takes advantage of the layered model used by Docker images, since
+<code>atomic pull</code> will download only the layers that are not already
+available.  All the images are stored into the OSTree system
+repository.</p>
+
+<p>Using OSTree as storage has the advantage that if the same file is
+present in more layers, it will be stored only once, just like for container
+image layers.  A container is installed through hardlinks, the storage is
+shared with the OSTree repository <q>hardlink farm</q>.</p>
+
+<p><code>atomic images list</code> shows the list of the available images:</p>
+<pre class="highlight plaintext"><code># atomic images list&#x000A;   REPOSITORY    TAG          IMAGE ID       CREATED            VIRTUAL SIZE   TYPE&#x000A;gscrivano/etcd   latest       d7c1702506ff   2016-09-08 16:39                  system&#x000A;&#x000A;</code></pre>
+
+<p><code>atomic images delete</code> deletes one tag and <code>atomic images prune</code>
+removes the unused layers:</p>
+<pre class="highlight plaintext"><code># atomic images delete -f gscrivano/etcd&#x000A;# atomic images prune&#x000A;Deleting ociimage/9086967f25375e976260ad004a6ac3cc75ba020669042cb431904d2914ac1735&#x000A;Deleting ociimage/2176ad01d5670713218844201dc4edb36d2692fcc79ad7008003227a5f80097b&#x000A;Deleting ociimage/e4410b03d7db030dba502fef7bfd1dae56a6c48faae63a80fd82450322def2c5&#x000A;Deleting ociimage/c0ee5e1cf412f1fd511aa1c7427c6fd825dfe4969d9ed7462ff8f989aceded7a&#x000A;Deleting ociimage/024037bdea19132da059961b3ec58e2aff329fb2fe8ffd8030a65a27d7e7db5f&#x000A;&#x000A;</code></pre>
+
+<h3>Installation</h3>
+
+<p>System images are installed with <code>atomic install --system</code> as:</p>
+<pre class="highlight plaintext"><code># atomic install --system gscrivano/etcd&#x000A;Extracting to /var/lib/containers/atomic/etcd.0&#x000A;systemctl daemon-reload&#x000A;systemd-tmpfiles --create /etc/tmpfiles.d/etcd.conf&#x000A;systemctl enable etcd&#x000A;&#x000A;# atomic install --system gscrivano/flannel&#x000A;Extracting to /var/lib/containers/atomic/flannel.0&#x000A;systemctl daemon-reload&#x000A;systemd-tmpfiles --create /etc/tmpfiles.d/flannel.conf&#x000A;systemctl enable flannel&#x000A;&#x000A;# systemctl start etcd&#x000A;# runc exec etcd etcdctl set /atomic.io/network/config '{"Network":"10.40.0.0/16"}'&#x000A;# systemctl start flannel&#x000A;</code></pre>
+
+<p>The template mechanism allows us to configure settings for images.
+For example, we could use the following command to
+configure Flannel to use another Etcd endpoint instead of the default
+<code>http://127.0.0.1:2379</code>:</p>
+<pre class="highlight plaintext"><code># atomic install --system --set ETCD_ENDPOINTS=http://192.168.122.2:2379 gscrivano/flannel&#x000A;</code></pre>
+
+<p>The <code>atomic containers</code> verb is used to see containers:</p>
+<pre class="highlight plaintext"><code># atomic containers list -a&#x000A;   CONTAINER ID IMAGE                COMMAND              CREATED          STATUS    RUNTIME&#x000A;   etcd         gscrivano/etcd       /usr/bin/etcd-env.sh 2016-09-08 14:19 running   runc&#x000A;</code></pre>
+
+<h3>Uninstallation</h3>
+
+<p>Similarly to <code>atomic install</code>, <code>atomic uninstall</code> is used to uninstall
+an installed system container.</p>
+<pre class="highlight plaintext"><code># atomic uninstall etcd&#x000A;</code></pre>
+
+<h3>Structure of a System Image</h3>
+
+<p>System images are Docker images with a few extra files that are
+exported as part of the image itself, under the directory &rsquo;/exports&rsquo;.
+In other words, an existing <code>Dockerfile</code> can be converted adding the
+configuration files needed to run it as a system container (which
+translate to an additional <code>ADD [files] /exports</code> directive in the
+<code>Dockerfile</code>).</p>
+
+<p>These files are:</p>
+
+<ul>
+<li>config.json.template - template for the OCI configuration file that
+will be used to launch the runC container.</li>
+<li>manifest.json - used to define default values for configuration
+variables.</li>
+<li>service.template - template unit file for systemD.</li>
+<li>tmpfiles.template - template configuration file for systemd-tmpfiles.</li>
+</ul>
+
+<p>Not all of them are necessary for every image.</p>
+
+<p>All the files with a <code>.template</code> suffix are preprocessed and every
+variable in the form <code>$VARIABLE</code> or <code>${VARIABLE}</code> is replaced with
+its value.  This allows to define variables that are set at
+installation time (through the <code>--set</code> option) as we saw with the
+Flannel example.  It is possible to set a default value for these
+settings using the <code>manifest.json</code> file of the system container image.</p>
+
+<p>If any of these files are missing, atomic will provide a default one.
+For instance, if <code>config.json.template</code> is not included in the image,
+the default configuration will launch the <code>run.sh</code> script without any
+tty.</p>
+
+<p>There are some variables that are always defined by the atomic tool,
+without the need for an user to specify them via <code>--set</code>.  Of those,
+only <code>RUN_DIRECTORY</code> and <code>STATE_DIRECTORY</code> can be overriden with
+<code>--set</code>:</p>
+
+<ul>
+<li><code>DESTDIR</code> - path where the container is installed on the system</li>
+<li><code>NAME</code> - name of the container</li>
+<li><code>EXEC_START</code> - Start directive for the systemD unit file.</li>
+<li><code>EXEC_STOP</code> - Stop directive for the systemD unit file.</li>
+<li><code>HOST_UID</code> - uid of the user installing the container.</li>
+<li><code>HOST_GID</code> - gid of the user installing the container.</li>
+<li><code>RUN_DIRECTORY</code> - run directory.  <code>/run</code> for system containers.</li>
+<li><code>STATE_DIRECTORY</code> - path to the storage directory. <code>/var/lib/</code> for
+system containers.</li>
+</ul>
+
+<p>We&rsquo;re excited about the ability of system containers to greatly improve administration
+and infrastructure service delivery for Atomic clusters.  Please give them a try
+and tell us what you think.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/oc/">oc</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+<li><a href="/blog/tag/system-containers/">system-containers</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

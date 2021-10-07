@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Flibs</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/flibs.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Atomic at Flock to Fedora 2017</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/atomic-flock/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/atomic-flock/</id>
+    <published>2017-08-21T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;This year&amp;rsquo;s &lt;a href="https://flocktofedora.org/"&gt;Flock to Fedora&lt;/a&gt; contributor conference is chock-full of Atomic project work.  If you&amp;rsquo;re interested in Atomic Host, containers, and Kubernetes, you&amp;rsquo;ll have plenty to do for the whole week in Cape Cod.  Sessions will cover maintaining containers, writing docs, the FLIBS build system, building alternate-arch containers, and much more. And if you&amp;rsquo;re in the Boston area &amp;hellip; there&amp;rsquo;s still time to &lt;a href="https://register.flocktofedora.org/"&gt;register&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Read through for a list of sessions.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Regular Sessions&lt;/h3&gt;
+
+&lt;p&gt;Atomic is so much of Fedora these days, about &amp;frac14; of the program is Atomic-related.  Sessions include the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://flock2017.sched.com/event/Bm97/atomic-host-101"&gt;Atomic Host 101&lt;/a&gt; will explain Atomic Host to Fedora members who are new to the platform.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://flock2017.sched.com/event/Bm9F/multi-arch-container-layered-image-build-system"&gt;Multi-Arch Container Layered Image Build System&lt;/a&gt;, covering how Fedora is planning to have ARM and PPC containers.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://flock2017.sched.com/event/Bm9d/new-container-technologies"&gt;New Container Technologies&lt;/a&gt; covers the various Atomic projects around building and deploying containers.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="https://flock2017.sched.com/event/Bm9U/system-containers-concept-creation-and-usage"&gt;System Containers&lt;/a&gt; session will show you how to make your own system containers for installing key software.&lt;/li&gt;
+&lt;li&gt;A &lt;a href="https://flock2017.sched.com/event/Bm9T/discussing-kubernetes-origin-deployment-options"&gt;Kubernetes vs. OpenShift&lt;/a&gt; talk will explain the two kinds of Atomic clusters and how to handle each.&lt;/li&gt;
+&lt;li&gt;Fedora engineering folks will explain &lt;a href="https://flock2017.sched.com/event/Bm94/on-openshift-in-fedora-infrastructure"&gt;how we&amp;rsquo;re using OpenShift in the Fedora Infrastucture&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;You can find out how to &lt;a href="https://flock2017.sched.com/event/Bm9Y/setup-your-own-atomic-workstation"&gt;set up your own Atomic Workstation&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Need to create your own custom OStrees?  &lt;a href="https://flock2017.sched.com/event/Bm9b/automate-building-custom-atomic-host-with-ansible"&gt;Use Ansible&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Work Sessions&lt;/h3&gt;
+
+&lt;p&gt;More than anything, we want you to contribute to Atomic.  As such, we&amp;rsquo;ve created the following Work Sessions for you to get started with some hands-on contributions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://flock2017.sched.com/event/Bm9B/become-a-container-maintainer"&gt;Become a Container Maintainer&lt;/a&gt;, because we need you to create, maintain, and review container images for FLIBS!&lt;/li&gt;
+&lt;li&gt;Help us create a new Administrator Guide for Atomic Host in this &lt;a href="https://flock2017.sched.com/event/Bm9S/fedora-atomic-doc-work"&gt;Doc Work Session&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See you at Flock!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora VFAD about Container Guidelines</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/03/fedora-vfad-container-policy/"/>
+    <id>http://www.projectatomic.io/blog/2017/03/fedora-vfad-container-policy/</id>
+    <published>2017-03-14T20:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;The &lt;a href="https://pagure.io/atomic-wg"&gt;Fedora Atomic Working Group&lt;/a&gt; had our second &lt;a href="https://pagure.io/atomic-wg/issue/238"&gt;Virtual Fedora Activity Day&lt;/a&gt; (VFAD) last Friday in order to resolve a &lt;a href="https://pagure.io/atomic-wg/roadmap?status=all&amp;amp;milestone=2017-03-10+VFAD"&gt;number of issues and policy questions&lt;/a&gt; with the &lt;a href="https://fedoraproject.org/wiki/Container:Guidelines"&gt;Container Guidelines&lt;/a&gt;. Our decisions will be of interest to anyone submitting software to the &lt;a href="https://docs.pagure.org/releng/layered_image_build_service.html"&gt;Fedora Layered Image Build Service&lt;/a&gt; (FLIBS), as well as anyone who runs their own public open source registry.  Among those we discussed were versioning, labeling requirements, help files, volumes and systemd in containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;VFADs are an innovation of the Atomic WG.  Regular &lt;a href="https://fedoraproject.org/wiki/Fedora_Activity_Day_-_FAD"&gt;Fedora Activity Days&lt;/a&gt; (FADs) are held in person, and thus can only happen once a year or so, due to the cost of flying folks in from all over the world.  Since the Atomic WG wants to &lt;q&gt;release early and often,&lt;/q&gt; we needed a different way, and Adam Miller and Dusty Mabe came up with one.  Instead of flying everyone around the world, once every month we get together on IRC and video chat for VFAD.  In addition to letting us meet more often, this also lets contributors who couldn&amp;rsquo;t travel to a FAD participate.  The only painful part is the time zones.&lt;/p&gt;
+
+&lt;p&gt;Friday&amp;rsquo;s VFAD demonstrated the success of this, attracting nine regular Fedora Atomic contributors, as well as several people who just showed up for specific issues.  For example, Dan Walsh dialed in for the conversation about systemd containers.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll discuss a few of the group&amp;rsquo;s decisions below.  For the rest, check out &lt;a href="https://fedoraproject.org/wiki/Atomic/VFAD_20170310"&gt;the VFAD notes&lt;/a&gt; on the Fedora wiki.&lt;/p&gt;
+
+&lt;h3&gt;Run and Usage&lt;/h3&gt;
+
+&lt;p&gt;In order to support the container user, every FLIBS container will have either the &lt;code&gt;RUN&lt;/code&gt; or &lt;code&gt;Usage&lt;/code&gt; labels defined. &lt;code&gt;RUN&lt;/code&gt; is consumed by the &lt;a href="https://github.com/projectatomic/atomic"&gt;Atomic CLI&lt;/a&gt;, which uses it to execute a container image. It&amp;rsquo;s machine-readable, and is part of a set with the &lt;code&gt;INSTALL&lt;/code&gt; and &lt;code&gt;UNINSTALL&lt;/code&gt; labels.  System Containers are required to have &lt;code&gt;RUN&lt;/code&gt;.  For example, the Cockpit Dockerfile has this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;LABEL RUN /usr/bin/docker run -d --privileged --pid=host -v /:/host IMAGE /container/atomic-run --local-ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since supporting the Atomic CLI is optional for FLIBS, the maintainer can choose to have a human-readable &lt;code&gt;Usage&lt;/code&gt; label instead, such as one for OwnCloud:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;LABEL Usage="docker run -d -P -v owncloud-data:/var/lib/owncloud -v owncloud-config:/etc/owncloud owncloud"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Importantly, such &lt;code&gt;Usage&lt;/code&gt; examples must show how volumes and port mappings are expected to work for the container, as well as any special permissions required.  They can show any container runtime.&lt;/p&gt;
+
+&lt;h3&gt;Versions and Releases&lt;/h3&gt;
+
+&lt;p&gt;Another issue discussed was the &lt;a href="https://pagure.io/atomic-wg/issue/235"&gt;ambiguity around what to put for &lt;code&gt;VERSION&lt;/code&gt; and &lt;code&gt;RELEASE&lt;/code&gt;&lt;/a&gt;. As it turns out, part of this came down to a missing feature in our build pipeline, which will be addressed as soon as reasonable.&lt;/p&gt;
+
+&lt;p&gt;The obvious answer for &lt;code&gt;VERSION&lt;/code&gt; is to populate the ENV variable with the version number of the &lt;q&gt;primary&lt;/q&gt; RPM installed in the image.  However, that assumes that a maintainer is manually building the image and each update to the image.  One of the critical features of FLIBS is auto-build so that all images get updated with critical security releases and dependency updates.  Since we have no way for the build system to pull the version number from the RPM right now, that would mean that &lt;code&gt;VERSION&lt;/code&gt; does not get updated on auto-build, possibly making it inaccurate.  &lt;/p&gt;
+
+&lt;p&gt;As Jason Brooks pointed out, it&amp;rsquo;s better to have no information than inaccurate information.  As such, all image definitions will have &lt;code&gt;VERSION=0&lt;/code&gt; until such time as it can be automatically populated.  There will likely be exceptions for specific images where the version is not tied to any specific RPM.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;RELEASE&lt;/code&gt; will start at 1, and get automatically incremented each time either the maintainer or auto-build makes a change.  This means that the maintainer needs to make sure to &lt;code&gt;git pull&lt;/code&gt; the FLIBS repository before making any changes to the image.&lt;/p&gt;
+
+&lt;h3&gt;Help File&lt;/h3&gt;
+
+&lt;p&gt;One of the other issues made obvious by the &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1420275"&gt;OwnCloud image submission&lt;/a&gt; was the need for a &lt;q&gt;man page&lt;/q&gt; for each container.  Complicating this is that some images need only a couple lines of information about how to run them, whereas others (such as OwnCloud or PostgreSQL) need a page or more.  Also, some users will want to be able to access this help information &lt;q&gt;inside&lt;/q&gt; the container.  The lack of such help information has been one of the flaws in Docker Hub.&lt;/p&gt;
+
+&lt;p&gt;Given that, the group created a multi-step requirement.  Images that need very little documentation (like libraries) will have that in the &lt;code&gt;Help&lt;/code&gt; label as text.  Images which need significant documentation will have a file, named one of the following: &lt;code&gt;help1.txt&lt;/code&gt;, &lt;code&gt;README&lt;/code&gt;, or &lt;code&gt;README.md&lt;/code&gt;.  This file will be submitted with the image proposal, and will be included bout inside the container image and available online from fedoraproject.org.  The &lt;code&gt;Help&lt;/code&gt; label will link to that URL.&lt;/p&gt;
+
+&lt;p&gt;There were several other decisions and details worked out at this VFAD.  In addition to making FLIBS successful, we are hoping that we can set some precedents for other independent, open source registries.  Our container guidelines are being updated now; take a look at them in a week when we&amp;rsquo;re done.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

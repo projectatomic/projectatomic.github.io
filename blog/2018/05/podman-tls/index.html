@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Podman and insecure registries &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brent Baude' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Podman and insecure registries' property='og:title'>
+<meta content='Podman and insecure registries&#x000A;&#x000A;The last few weeks, we have had a number of bugs and questions about how to pull from an insecure registry. The obvious advice here is that you should always be using a registry which implements tls-verify. But if you are a container or image developer or you are just plain breaking new ground, your registry may not use tls-verify. And Podman can handle this; and I wanted to spend a minute or two explaining how it does and the logic behind it.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/05/podman-tls/' property='og:url'>
+<meta content='2018-05-07T00:00:00Z' property='article:published_time'>
+<meta content='baude' property='article:author:username'>
+<meta content='crio' property='article:tag'>
+<link href='/blog/tag/crio.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='libpod' property='article:tag'>
+<link href='/blog/tag/libpod.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='podman' property='article:tag'>
+<link href='/blog/tag/podman.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Podman and insecure registries' name='twitter:title'>
+<meta content='Podman and insecure registries&#x000A;&#x000A;The last few weeks, we have had a number of bugs and questions about how to pull from an insecure registry. The obvious advice here is that you should always be using a registry which implements tls-verify. But if you are a container or image developer or you are just plain breaking new ground, your registry may not use tls-verify. And Podman can handle this; and I wanted to spend a minute or two explaining how it does and the logic behind it.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_05 blog_2018_05_podman-tls blog_2018_05_podman-tls_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Podman and insecure registries
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/baude/">Brent Baude</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-07T00:00:00Z'>
+Monday  7 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Podman and insecure registries</h3>
+
+<p>The last few weeks, we have had a number of bugs and questions about how to pull from an insecure registry. The obvious advice here is that you should always be using a registry which implements <em>tls-verify</em>. But if you are a container or image developer or you are just plain breaking new ground, your registry may not use <em>tls-verify</em>. And <a href="https://github.com/projectatomic/libpod/">Podman</a> can handle this; and I wanted to spend a minute or two explaining how it does and the logic behind it.</p>
+
+<p></p>
+
+<h4>Podman pull</h4>
+
+<p>We first need to talk about the various components in play here. To start with, lets use an example of the <code>podman pull</code> command:</p>
+<pre class="highlight plaintext"><code>$ sudo podman pull --help&#x000A;NAME:&#x000A;   podman pull - pull an image from a registry&#x000A;&#x000A;USAGE:&#x000A;   podman pull [command options] [arguments...]&#x000A;&#x000A;DESCRIPTION:&#x000A;   Pulls an image from a registry and stores it locally.&#x000A;An image can be pulled using its tag or digest. If a tag is not&#x000A;specified, the image with the 'latest' tag (if it exists) is pulled.&#x000A;&#x000A;OPTIONS:&#x000A;   --authfile value             Path of the authentication file. Default is ${XDG_RUNTIME_DIR}/containers/auth.json&#x000A;   --cert-dir pathname          pathname of a directory containing TLS certificates and keys&#x000A;   --creds credentials          credentials (USERNAME:PASSWORD) to use for authenticating to a registry&#x000A;   --quiet, -q                  Suppress output information when pulling images&#x000A;   --signature-policy pathname  pathname of signature policy file (not usually used)&#x000A;   --tls-verify                 require HTTPS and verify certificates when contacting registries (default: true)&#x000A;</code></pre>
+
+<p>Most noteworthy, the podman pull command has a <em>tls-verify</em> command line switch. It can accept a booleon (true/false) argument and you will notice it is set to true by default.</p>
+
+<h4>System-wide registries configuration file</h4>
+
+<p>The next component to look at is the system-wide registries configuration file. On my system, that file resides at <em>/etc/containers/registries.conf</em>. And I will show a somewhat redacted version of mine as an example:</p>
+<pre class="highlight plaintext"><code># This is a system-wide configuration file used to&#x000A;# keep track of registries for various container backends.&#x000A;# It adheres to TOML format and does not support recursive&#x000A;# lists of registries.&#x000A;&#x000A;[registries.search]&#x000A;registries = ['docker.io', 'registry.fedoraproject.org', 'registry.access.redhat.com']&#x000A;&#x000A;# If you need to access insecure registries, add the registry's fully-qualified name.&#x000A;# An insecure registry is one that does not have a valid SSL certificate or only does HTTP.&#x000A;[registries.insecure]&#x000A;registries = ['localhost:5000']&#x000A;</code></pre>
+
+<p>Here you can see I have three registries defined under the search header and a single registry defined as an insecure registry. The registries under the search header are registries that Podman will search when you try to find an image that is not fully-qualified.</p>
+
+<p>I also have a development registry defined under the insecure header as <em>localhost:5000</em>. It was not pragmatic for me to setup certificates for a registry I might delete and rerun 10 times a day so I simply access it without <em>tls-verify</em>.</p>
+
+<p>You can also quickly see what registries Podman is aware of by issuing the <code>podman info</code> command. Both searchable and insecure registries are listed there.</p>
+
+<h4>Applying system-wide registries to Podman pull</h4>
+
+<p>When you run Podman, it reads and parses your system-wide registries configuration file. When it pulls an image, it will use the searchable registries to find the image in question. And when the image is actually pulled, it will see if the registry it is pulling from is listed as insecure. If the registry is listed as insecure and you did not specifically set the <em>tls-verify=true</em> option, Podman will pull the image with <em>tls=verify=false</em>. This is a convenience function for users so they do not have to remember the security protocols of their registries.</p>
+<pre class="highlight plaintext"><code>$ sudo podman pull localhost:5000/bb:latest&#x000A;Trying to pull localhost:5000/bb:latest...Getting image source signatures&#x000A;Copying blob sha256:f70adabe43c0cccffbae8785406d490e26855b8748fc982d14bc2b20c778b929&#x000A; 706.22 KB / 706.22 KB [====================================================] 0s&#x000A;Copying config sha256:8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7&#x000A; 1.46 KB / 1.46 KB [========================================================] 0s&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7&#x000A;</code></pre>
+
+<p>To review, the rules are as follows.</p>
+
+<ul>
+<li>If you pull from a registry not in the configuration file, <em>tls-verify</em> is assumed true unless you override it.</li>
+<li>If you pull from a registry defined as a searchable registry (only) in your configuration file, <em>tls-verify</em> is assumed true unless you override it.</li>
+<li>If you pull from a registry that is defined as insecure, <em>tls-verify</em> will be false unless you specifically call out <em>tls-verify=true</em>.</li>
+</ul>
+
+<h4>Insecure registries can be searchable too</h4>
+
+<p>A follow up question I often get is if a searchable registry can be insecure as well? Yes, you can list a registry as both searchable and insecure. Notice how I pulled the previous bb:latest image by a fully-qualified name. If <em>localhost:5000</em> is a searchable registry, I can pull it by short name — bb.</p>
+<pre class="highlight plaintext"><code>$ sudo podman pull bb&#x000A;Trying to pull docker.io/bb:latest...Failed&#x000A;Trying to pull registry.fedoraproject.org/bb:latest...Failed&#x000A;Trying to pull registry.access.redhat.com/bb:latest...Failed&#x000A;Trying to pull localhost:5000/bb:latest...Getting image source signatures&#x000A;Copying blob sha256:f70adabe43c0cccffbae8785406d490e26855b8748fc982d14bc2b20c778b929&#x000A; 706.22 KB / 706.22 KB [====================================================] 0s&#x000A;Copying config sha256:8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7&#x000A; 1.46 KB / 1.46 KB [========================================================] 0s&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/crio/">crio</a></li>
+<li><a href="/blog/tag/libpod/">libpod</a></li>
+<li><a href="/blog/tag/podman/">podman</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/05/podman-tls/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/05/podman-tls/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/05/podman-tls/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

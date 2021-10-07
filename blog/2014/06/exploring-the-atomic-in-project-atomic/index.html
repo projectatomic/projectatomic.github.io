@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Exploring the Atomic in Project Atomic &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brian Proffitt' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Exploring the Atomic in Project Atomic' property='og:title'>
+<meta content='As Project Atomic continues to lift off, a lot of attention has been focused on the container aspects of Atomic, and our consumption of the popular Docker container technology. Atomic, however, is not just about container technology, nor is it solely about the GearD container management that will also be a part of Project Atomic host. Nor just about about Cockpit. It’s about all of those technologies and more.&#x000A;&#x000A;But what makes Atomic atomic? I’ve had some people come up to me and ask if we are making a word-play on the container/size thing and using the label Atomic to describe container technology. In actuality, the atomic in Atomic describes the one bit of technology that makes Project Atomic very unique: rpm-ostree.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/06/exploring-the-atomic-in-project-atomic/' property='og:url'>
+<meta content='2014-06-18T19:51:00Z' property='article:published_time'>
+<meta content='bkp' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='packages' property='article:tag'>
+<link href='/blog/tag/packages.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Exploring the Atomic in Project Atomic' name='twitter:title'>
+<meta content='As Project Atomic continues to lift off, a lot of attention has been focused on the container aspects of Atomic, and our consumption of the popular Docker container technology. Atomic, however, is not just about container technology, nor is it solely about the GearD container management that will also be a part of Project Atomic host. Nor just about about Cockpit. It’s about all of those technologies and more.&#x000A;&#x000A;But what makes Atomic atomic? I’ve had some people come up to me and ask if we are making a word-play on the container/size thing and using the label Atomic to describe container technology. In actuality, the atomic in Atomic describes the one bit of technology that makes Project Atomic very unique: rpm-ostree.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_06 blog_2014_06_exploring-the-atomic-in-project-atomic blog_2014_06_exploring-the-atomic-in-project-atomic_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Exploring the Atomic in Project Atomic
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bkp/">Brian Proffitt</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-06-18T19:51:00Z'>
+Wednesday 18 June 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As Project Atomic continues to lift off, a lot of attention has been focused on the container aspects of Atomic, and our consumption of the popular Docker container technology. Atomic, however, is not just about container technology, nor is it solely about the <a href="http://openshift.github.io/geard/">GearD</a> container management that will also be a part of Project Atomic host. Nor just about about <a href="http://cockpit-project.org/">Cockpit</a>. It&rsquo;s about all of those technologies and more.</p>
+
+<p>But what makes Atomic <q>atomic</q>? I&rsquo;ve had some people come up to me and ask if we are making a word-play on the container/size thing and using the label Atomic to describe container technology. In actuality, the <q>atomic</q> in Atomic describes the one bit of technology that makes Project Atomic very unique: <a href="https://github.com/projectatomic/rpm-ostree">rpm-ostree</a>.</p>
+
+<p></p>
+
+<p>While Docker is all about delivering applications, rpm-ostree is about updating the Project Atomic host itself. If you aren&rsquo;t familiar with rpm-ostree, it&rsquo;s the brainchild of Colin Walters, Senior Software Engineer in Red Hat&rsquo;s Server Experience group. Walters has described this project, which was recently relocated to <a href="https://github.com/projectatomic">Project Atomic&rsquo;s GitHub</a> repository set, as <q>git for operating system binaries.</q></p>
+
+<p>To understand rpm-ostree, it&rsquo;s important to understand there is more than one layer to this new approach. At the core is ostree, which deviates from the traditional package-by-package update model found in modern operating systems. Instead of package by package, ostree delivers a complete filesystem tree as an update. This is easy to roll out, and also very easy to roll back if something goes wrong with your update.</p>
+
+<h3>A Package Lovely as a Tree</h3>
+
+<p><q>Trees,</q> in this context, are also somewhat new to many peoples&rsquo; understanding. Walters explains software update systems these days as parts of a spectrum. On one end of the spectrum, there are package systems (such as RPM and DEB), which are very flexible and independent of storage filesystems. You can install RPMs on btrfs, XFS, or ext4, whatever you like. On the other end of the spectrum, there are image-based updates, but these will be locked into a partition layout. </p>
+
+<p>The trees of ostree are between. Trees are like packages in that they are filesystem and block independent, but they are like image updates in that you get a tree all as one unit instead of package by package. It&rsquo;s this <q>one unit</q> idea that forms the idea of <q>atomic</q>&ndash;one solid unit of updates delivered atomically.</p>
+
+<p>But ostree is not enough, because it just delivers content in a rote fashion, much like rsync does for files&ndash;ostree just replicates content from a compose server. Generating unique content is where rpm-ostree comes in: users can select a compose server&rsquo;s RPMs&ndash;any RPMs that are needed&ndash;and commit them to a tree. From which clients can just replicate.</p>
+
+<p>For Walters, this is the best of both worlds, because all of the effort and work that went into creating the packages is preserved, but now there is a more efficient delivery system to push the software out to servers and clients. This is an important distinction, because rpm-ostree is not meant to supplant RPMs and package systems in general.</p>
+
+<h3>Seeing the Forest for the Trees</h3>
+
+<p>rpm-ostree was not invented just for Project Atomic, though it&rsquo;s a very strong compliment to other tools in the Atomic software. </p>
+
+<p>rpm-ostree is something Walters has been working on for quite some time. ostree had its origins from a project known as <a href="https://wiki.gnome.org/Projects/GnomeContinuous">gnome-continuous</a>, where it was a high-performance continuous-delivery system that would ensure that a couple of minutes after a git commit, GNOME developers would be testing the changes that had landed in GNOME. </p>
+
+<p>But Walters had always kept ostree as a separate layer so anyone could feed RPM content into it. And not just RPMs, there&rsquo;s are people feeding DEB packages into ostree as well. The core ostree, in actuality, is very content independent.</p>
+
+<p>Atomic also compliments some aspects of rpm-ostree that could be seen as short-term limitations. One such trade off with the ostree model is that once a tree is replicated, that tree is immutable in the client. ostree itself doesn&rsquo;t give you a way to add or remove packages within the tree on the client side; rpm-ostree is what does that, and only from the compose server. Docker, then, is a way to add or remove apps dynamically, where you can get applications as an image inside a container. Systemd will facilitate starting and stopping these containers, and GearD will enable orchestration of these containers.</p>
+
+<p>Project Atomic is about best practices for deployment of servers and applications on servers. That is what the combination of these particular tools is all about.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/packages/">packages</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/06/exploring-the-atomic-in-project-atomic/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/06/exploring-the-atomic-in-project-atomic/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/06/exploring-the-atomic-in-project-atomic/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

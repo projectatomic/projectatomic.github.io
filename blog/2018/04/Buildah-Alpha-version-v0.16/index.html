@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Buildah Alpha version 0.16 Release Announcement &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tom Sweeney' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Buildah Alpha version 0.16 Release Announcement' property='og:title'>
+<meta content='Buildah Alpha version 0.16 Release Announcement&#x000A;&#x000A;We’re pleased to announce the release of Buildah Alpha version 0.16 which is now available from GitHub for any Linux distro.  We will be shipping this release on Fedora, CentOS and Ubuntu in the near future.&#x000A;&#x000A;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/04/Buildah-Alpha-version-v0.16/' property='og:url'>
+<meta content='2018-04-02T00:00:00Z' property='article:published_time'>
+<meta content='tsweeney' property='article:author:username'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='open source' property='article:tag'>
+<link href='/blog/tag/open source.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Buildah Alpha version 0.16 Release Announcement' name='twitter:title'>
+<meta content='Buildah Alpha version 0.16 Release Announcement&#x000A;&#x000A;We’re pleased to announce the release of Buildah Alpha version 0.16 which is now available from GitHub for any Linux distro.  We will be shipping this release on Fedora, CentOS and Ubuntu in the near future.&#x000A;&#x000A;The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_04 blog_2018_04_Buildah-Alpha-version-v0 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Buildah Alpha version 0.16 Release Announcement
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-04-02T00:00:00Z'>
+Monday  2 April 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Buildah Alpha version 0.16 Release Announcement</h3>
+
+<p>We&rsquo;re pleased to announce the release of Buildah Alpha version 0.16 which is now available from GitHub for any Linux distro.  We will be shipping this release on Fedora, CentOS and Ubuntu in the near future.</p>
+
+<p>The Buildah project has continued to grow over the past several weeks, welcoming several new contributors to the mix, launching new functionality and creating a number of improvements and bug fixes.  </p>
+
+<p></p>
+
+<h4>The major highlights for this release are:</h4>
+
+<ul>
+<li>Add support for the SHELL command in Dockerfiles.</li>
+<li>Change the time displayed by the image command to the locale time.</li>
+<li>Allow the &ndash;cmd parameter for the <code>buildah config</code> command to have commands as values.  I.e. <code>buildah config --cmd “--help” {containerID}</code>.</li>
+<li>Documentations added for the mounts.conf file. The mounts config allows you to mount content from the host into the container to be used during the build procedure, but does not get committed to the image.</li>
+<li>Fixed  a number of man pages to format correctly.</li>
+<li>The <code>buildah from</code> command now supports pulling images using the following three transports: docker-archive, oci-archive, and dir, as well as normal container registries and the docker daemon.</li>
+<li>If the user overrides the storage driver, the options will not be used from the default storage.conf file.</li>
+<li>Show the Config and Manifest as a JSON string in <code>buildah inspect</code> even when the  &ndash;format parameter is not set.</li>
+<li>Adds feature to pull compressed docker-archive files.</li>
+<li>Vendor in latest containers/image
+
+<ul>
+<li>docker-archive generates docker legacy compatible images.</li>
+<li>Ensure the layer IDs in legacy docker/tarfile metadata are unique.</li>
+<li>docker-archive: repeated layers are symlinked in the tar file.</li>
+<li>sysregistries: remove all trailing slashes.</li>
+<li>Improve docker/* error messages.</li>
+<li>Fix failure to make auth directory.</li>
+<li>Create a new slice in Schema1.UpdateLayerInfos.</li>
+<li>Drop unused storageImageDestination.{image,systemContext}.</li>
+<li>Load a *storage.Image only once in storageImageSource.</li>
+<li>Support gzip for docker-archive files.</li>
+<li>Remove .tar extension from blob and config file names.</li>
+<li>ostree, src: support copy of compressed layers.</li>
+<li>ostree: re-pull layer if it misses uncompressed_digest|uncompressed_size.</li>
+<li>image: fix docker schema v1 -&gt; OCI conversion.</li>
+<li>Add /etc/containers/certs.d as default certs directory.</li>
+</ul></li>
+<li>Plus several small bug fixes.</li>
+</ul>
+
+<h4>Try it Out.</h4>
+
+<p>If you haven’t yet,  install Buildah from the Fedora repo or GitHub and give it a spin.  We’re betting you&rsquo;ll find it’s an easy and quick way to build containers in your environment without a daemon being involved!</p>
+
+<p>For those of you who contributed to this release, thank you very much for your contributions!  If you haven&rsquo;t joined our community yet, don&rsquo;t wait any longer!  Come join us in GitHub, where Open Source communities live.</p>
+
+<h4>Buildah == Simplicity</h4>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/community/">community</a></li>
+<li><a href="/blog/tag/open-source/">open source</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/04/Buildah-Alpha-version-v0.16/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/04/Buildah-Alpha-version-v0.16/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/04/Buildah-Alpha-version-v0.16/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

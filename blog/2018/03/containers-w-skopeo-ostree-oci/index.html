@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How does Atomic run system containers without Docker Daemon? &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='alsadi' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How does Atomic run system containers without Docker Daemon?' property='og:title'>
+<meta content='Introduction&#x000A;&#x000A;In 2016, we started to Containerize the Kubernetes stack,&#x000A;that is to ship all the components as containers as you can see here.&#x000A;But some of those containers like etcd and flanneld&#x000A;must be started before Docker daemon because etcd is the cluster state store,&#x000A;and flanneld is the cluster network overlay (SDN).&#x000A;&#x000A;In this blog post we are going to demonstrate how to use the same components used by&#x000A;Project Atomic&#x000A;in the so called system containers&#x000A;that is to run the containers without a Docker daemon, namely:&#x000A;skopeo,&#x000A;ostree, and an OCI runtime like&#x000A;runc&#x000A;or bubble wraps and its OCI wrapper.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/' property='og:url'>
+<meta content='2018-03-05T00:00:00Z' property='article:published_time'>
+<meta content='alsadi' property='article:author:username'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oci' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='skopeo' property='article:tag'>
+<link href='/blog/tag/skopeo.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How does Atomic run system containers without Docker Daemon?' name='twitter:title'>
+<meta content='Introduction&#x000A;&#x000A;In 2016, we started to Containerize the Kubernetes stack,&#x000A;that is to ship all the components as containers as you can see here.&#x000A;But some of those containers like etcd and flanneld&#x000A;must be started before Docker daemon because etcd is the cluster state store,&#x000A;and flanneld is the cluster network overlay (SDN).&#x000A;&#x000A;In this blog post we are going to demonstrate how to use the same components used by&#x000A;Project Atomic&#x000A;in the so called system containers&#x000A;that is to run the containers without a Docker daemon, namely:&#x000A;skopeo,&#x000A;ostree, and an OCI runtime like&#x000A;runc&#x000A;or bubble wraps and its OCI wrapper.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_03 blog_2018_03_containers-w-skopeo-ostree-oci blog_2018_03_containers-w-skopeo-ostree-oci_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How does Atomic run system containers without Docker Daemon?
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/alsadi/">alsadi</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-05T00:00:00Z'>
+Monday  5 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>In 2016, we started to <a href="https://www.projectatomic.io/blog/2016/09/running-kubernetes-in-containers-on-atomic/">Containerize the Kubernetes stack</a>,
+that is to ship all the components as containers as you can see <a href="https://registry.fedoraproject.org/">here</a>.
+But some of those containers like <a href="https://coreos.com/etcd/">etcd</a> and <a href="https://coreos.com/flannel/docs/latest/">flanneld</a>
+must be started before Docker daemon because <code>etcd</code> is the cluster state store,
+and <code>flanneld</code> is the cluster network overlay (SDN).</p>
+
+<p>In this blog post we are going to demonstrate how to use the same components used by
+<a href="http://www.projectatomic.io/">Project Atomic</a>
+in the so called <a href="https://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">system containers</a>
+that is to run the containers without a Docker daemon, namely:
+<a href="https://github.com/projectatomic/skopeo">skopeo</a>,
+<a href="https://github.com/ostreedev/ostree">ostree</a>, and an OCI runtime like
+<a href="https://github.com/opencontainers/runc">runc</a>
+or <a href="https://github.com/projectatomic/bubblewrap">bubble wraps</a> and its <a href="https://github.com/projectatomic/bwrap-oci">OCI wrapper</a>.</p>
+
+<p></p>
+
+<h3>Background</h3>
+
+<p><code>Atomic Host</code> is an immutable stateless operating system,
+that is designed to consume applications via containers.
+You can do carefree updates or even switch from <code>CentOS</code> to <code>Fedora</code> and vice versa
+because of the image-like nature of <code>ostree</code> and it&rsquo;s carefree because your workloads are in the containers.
+It has many use cases like running <code>Kubernetes</code> clusters,
+and there is an ongoing effort to extend it to desktop
+(using <a href="https://flatpak.org/">Flatpak</a> as the containers for the desktop, which also uses ostree). This desktop variant is called <a href="https://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/">Atomic Workstation</a></p>
+
+<p>In the containerized Kubernetes stack, there seems to be <q>the chicken or the egg</q> dilemma,
+We need a running <code>flanneld</code> or <code>etcd</code> to start Docker Daemon,
+and you need a running docker daemon to start flanneld or etcd if they are shipped as containers.</p>
+
+<p>In this blog post, we are going to demonstrate how to pull docker container images
+and run them the same way as the <a href="https://github.com/projectatomic/atomic">Atomic tool</a> does.</p>
+
+<p>If you inspected the <code>flannel</code> container image (either using <code>docker inspect</code> or remotely with <code>skopeo inspect</code>)
+you would see that it has a label called <code>atomic.type</code> indicating it is a system container.</p>
+<pre class="highlight plaintext"><code>$ skopeo inspect docker://registry.fedoraproject.org/f27/flannel&#x000A;{&#x000A;    "Name": "registry.fedoraproject.org/f27/flannel",&#x000A;    "Labels": {&#x000A;        "atomic.type": "system",&#x000A;// ...&#x000A;</code></pre>
+
+<p>Either that or by passing <code>--system</code> after <code>atomic install</code>,
+those are special containers that are executed without Docker daemon,
+those containers have <a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">a special directory structure</a>
+like their <code>systemd</code> service template as you can see in the source of <a href="https://src.fedoraproject.org/container/flannel/blob/master/f/Dockerfile#_23">Fedora&rsquo;s flannel container source</a>.</p>
+
+<p>The steps in this article are inspired by <a href="https://github.com/projectatomic/atomic/blob/v1.22/Atomic/syscontainers.py">how atomic tool work under the hood</a>.</p>
+
+<p>You can follow those steps on atomic host or in your regular OS (I&rsquo;ve tested them on regular Fedora Workstation),
+and you don&rsquo;t need to be root.</p>
+
+<h3>OSTree - a space-efficient way to store images locally</h3>
+
+<p>OSTree is the same technology used by Atomic host to store its own host OS images.
+It&rsquo;s a content-addressable object storage to store files,
+which means a file is stored once even if it&rsquo;s in multiple images,
+this is even more efficient than layer-based Docker&rsquo;s storage backends, because it&rsquo;s not on layer level, but on file level.</p>
+
+<p>Let&rsquo;s start by creating a directory and initializing it to contain bare OSTree repo,
+but because we are running as non-root we need to pass <code>--mode=bare-user</code> instead of <code>--mode=bare</code></p>
+<pre class="highlight plaintext"><code>$ mkdir ostree&#x000A;$ cd ostree&#x000A;$ ostree init --mode=bare-user --repo=$PWD&#x000A;</code></pre>
+
+<h3>Skopeo - for dealing with container Images and Image registries</h3>
+
+<p>Skopeo can inspect remote container images from various registries and formats,
+pull them, and store them in many kinds of ways. 
+We are going to demonstrate how to pull small images and run them,
+so for this purpose let&rsquo;s choose some small few megabytes images like <code>docker://redis:alpine</code>.</p>
+<pre class="highlight plaintext"><code>$ skopeo copy docker://redis:alpine ostree:redis@$PWD&#x000A;$ skopeo copy docker://nginx:alpine ostree:nginx@$PWD&#x000A;$ skopeo copy docker://busybox:alpine ostree:busybox@$PWD&#x000A;</code></pre>
+
+<p>You can list images in OSTree using:</p>
+<pre class="highlight plaintext"><code>$ ostree refs&#x000A;</code></pre>
+
+<p>The interesting part of the output looks like:</p>
+<pre class="highlight plaintext"><code>ociimage/redis_3Alatest&#x000A;ociimage/nginx_3Alatest&#x000A;ociimage/busybox_3Alatest&#x000A;</code></pre>
+
+<p>The Atomic command like tool is written in python, and it uses <code>libostree</code> via <code>gobject-introspection</code>, it looks like <a href="https://github.com/projectatomic/atomic/blob/v1.22/Atomic/syscontainers.py#L26">this</a>.</p>
+<pre class="highlight plaintext"><code>import gi&#x000A;gi.require_version('OSTree', '1.0')&#x000A;from gi.repository import OSTree&#x000A;</code></pre>
+
+<p>For our article we are going to use <code>ostree</code> command line interface:</p>
+<pre class="highlight plaintext"><code>$ ostree ls ociimage/redis_3Alatest &#x000A;d00755 1000 1000      0 /&#x000A;-00644 1000 1000   1568 /manifest.json&#x000A;$ ostree cat ociimage/redis_3Alatest /manifest.json&#x000A;{&#x000A;// ...&#x000A;   "config": {&#x000A;      "mediaType": "application/vnd.docker.container.image.v1+json",&#x000A;      "size": 4791,&#x000A;      "digest": "sha256:d3117424aaee14ab2b0edb68d3e3dcc1785b2e243b06bd6322f299284c640465"&#x000A;   },&#x000A;// ...&#x000A;   "layers": [&#x000A;      {&#x000A;         "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",&#x000A;         "size": 2065537,&#x000A;         "digest": "sha256:ff3a5c916c92643ff77519ffa742d3ec61b7f591b6b7504599d95a4a41134e28"&#x000A;      },&#x000A;      //  ..&#x000A;    ]&#x000A;}&#x000A;</code></pre>
+
+<p>We are going to use <code>jq</code> tool to get the specific parts from this JSON like getting the config digest:</p>
+<pre class="highlight plaintext"><code>$ config_hash=`ostree cat ociimage/redis_3Alatest /manifest.json | jq -r .config.digest | cut -d ':' -f 2`&#x000A;$ ostree cat ociimage/$config_hash /content | jq &#x000A;{&#x000A;// ...&#x000A;}&#x000A;$ ostree cat ociimage/$config_hash /content | jq .config.Entrypoint&#x000A;["docker-entrypoint.sh"]&#x000A;$ ostree cat ociimage/$config_hash /content | jq .config.Cmd&#x000A;["redis-server"]&#x000A;$ ostree cat ociimage/$config_hash /content | jq .config.ExposedPorts&#x000A;{"6379/tcp": {}}&#x000A;$ ostree cat ociimage/$config_hash /content | jq .config.Volumes&#x000A;{"/data": {}}&#x000A;$ ostree cat ociimage/$config_hash /content | jq .config.WorkingDir&#x000A;"/data"&#x000A;</code></pre>
+
+<p>Let&rsquo;s create a directory for our container and apply layers one by one inside that directory,
+using <code>ostree checkout</code>.</p>
+<pre class="highlight plaintext"><code>$ mkdir -p cont1/rootfs&#x000A;$ ostree checkout --union ociimage/redis_3Alatest cont1&#x000A;$ cat cont1/manifest.json | jq -r '.layers[]|.digest' | cut -d ':' -f 2 |&#x000A;  while read a&#x000A;  do&#x000A;    ostree checkout --union ociimage/$a cont1/rootfs;&#x000A;  done&#x000A;</code></pre>
+
+<p>We can reverse the order of layers (using <code>tac</code>) and use <code>--union-add</code> instead of <code>--union</code>.</p>
+
+<h3>Running the container using OCI runtimes</h3>
+
+<h4>Runc</h4>
+
+<p>Now we have checked out the redis root filesystem in <code>cont1/rootfs</code>,
+and that does not take space because they are merely <a href="https://en.wikipedia.org/wiki/Hard_link">hard links</a>
+to those in our ostree repo. Before we run it, let&rsquo;s generate <a href="https://github.com/opencontainers/runtime-spec/blob/master/config.md">OCI <code>config.json</code></a> using <code>runc spec</code>:</p>
+<pre class="highlight plaintext"><code>$ cd cont1&#x000A;$ mkdir data&#x000A;$ runc spec --rootless&#x000A;</code></pre>
+
+<p>We have added <code>--rootless</code> because we are not running as root, by default it&rsquo;s configured to run <code>/bin/sh</code>.</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">&#x000A;</span><span class="s2">"process"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;  </span><span class="s2">"terminal"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">&#x000A;    </span><span class="s2">"sh"</span><span class="w">&#x000A;  </span><span class="p">],</span><span class="w">&#x000A;  </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w">&#x000A;</span><span class="err">}</span><span class="w">&#x000A;</span></code></pre>
+
+<p>You can edit the file <code>config.json</code>, for example you can:</p>
+
+<ul>
+<li>adjust <code>args</code>: to be the command to be executed, for example <code>&quot;args&quot;: [ &quot;redis-server&quot; ]</code></li>
+<li>adjust <code>env</code>: to pass custom environment variables</li>
+<li>adjust <code>cwd</code>: to set current working directory (in our example,  it could be <code>/data</code>)</li>
+<li>adjust <code>mounts</code>: to add tmpfs on <q>/tmp</q> and <q>/var/run</q> or even <q>/var</q>, or even bind mount data volumes</li>
+<li>adjust <code>namespaces</code>: to add <code>{&quot;type&quot;: &quot;network&quot;}</code> to make a separated network stack otherwise it would use host networking</li>
+<li>you can adjust mapping between users <code>&quot;linux&quot;: { &quot;uidMappings&quot;: [ ... ] }</code> typically containers root is the current user</li>
+</ul>
+
+<p>Atomic system containers can ship a template for config.json as in <a href="https://src.fedoraproject.org/container/flannel/blob/master/f/config.json.template">flannel&rsquo;s config.json.template</a>.</p>
+
+<p>Here is how you can attach a writable directory for <code>/data</code> (which is <code>cont1/data</code> we have created before):</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">&#x000A;</span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w">&#x000A;    </span><span class="s2">"mounts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">&#x000A;        </span><span class="p">{</span><span class="w">&#x000A;            </span><span class="s2">"destination"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data"</span><span class="p">,</span><span class="w">&#x000A;            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bind"</span><span class="p">,</span><span class="w">&#x000A;            </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data"</span><span class="p">,</span><span class="w">&#x000A;            </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rbind"</span><span class="p">,</span><span class="s2">"rw"</span><span class="p">]</span><span class="w">&#x000A;        </span><span class="p">},</span><span class="w">&#x000A;    </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w">&#x000A;    </span><span class="p">]</span><span class="w">&#x000A;</span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w">&#x000A;</span><span class="p">}</span><span class="w">&#x000A;</span></code></pre>
+
+<p>To run the container type <code>runc run</code> followed by any name like <code>redis</code>.</p>
+<pre class="highlight plaintext"><code>$ runc run redis &#x000A;1:C 03 Mar 16:13:06.463 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo&#x000A;1:C 03 Mar 16:13:06.474 # Redis version=4.0.8, bits=64, commit=00000000, modified=0, pid=1, just started&#x000A;...                _._                                                  &#x000A;           _.-``__ ''-._                                             &#x000A;      _.-``    `.  `_.  ''-._           Redis 4.0.8 (00000000/0) 64 bit&#x000A;  .-`` .-```.  ```\/    _.,_ ''-._                                   &#x000A; (    '      ,       .-`  | `,    )     Running in standalone mode&#x000A; |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379&#x000A; |    `-._   `._    /     _.-'    |     PID: 1&#x000A;  `-._    `-._  `-./  _.-'    _.-'                                   &#x000A; |`-._`-._    `-.__.-'    _.-'_.-'|                                  &#x000A; |    `-._`-._        _.-'_.-'    |           http://redis.io        &#x000A;  `-._    `-._`-.__.-'_.-'    _.-'                                   &#x000A; |`-._`-._    `-.__.-'    _.-'_.-'|                                  &#x000A; |    `-._`-._        _.-'_.-'    |                                  &#x000A;  `-._    `-._`-.__.-'_.-'    _.-'                                   &#x000A;      `-._    `-.__.-'    _.-'                                       &#x000A;          `-._        _.-'                                           &#x000A;              `-.__.-'                                               &#x000A;&#x000A;</code></pre>
+
+<p>In another terminal you can have a shell inside the container using <code>runc exec redis /bin/sh</code>:</p>
+<pre class="highlight plaintext"><code>$ runc exec redis /bin/sh&#x000A;/data # ps -a&#x000A;PID   USER     TIME   COMMAND&#x000A;    1 root       0:00 redis-server&#x000A;   18 root       0:00 /bin/sh&#x000A;   24 root       0:00 ps -a&#x000A;/data # &#x000A;</code></pre>
+
+<h4>Bubble Wraps OCI</h4>
+
+<p><code>bwrap-oci</code> is another OCI runtime that is designed for userspace containers (non-root)
+You can use the same <code>config.json</code> we made in previous section.
+There was <a href="https://github.com/projectatomic/bwrap-oci/pull/17">a bug</a> in <code>bwrap-oci</code>,
+that&rsquo;s why you need to build it from source.</p>
+<pre class="highlight plaintext"><code>$ bwrap-oci run redis&#x000A;</code></pre>
+
+<p>You can list running Bubble wrapped containers using <code>bwrap-oci list</code></p>
+<pre class="highlight plaintext"><code>$ bwrap-oci list&#x000A;NAME                          PID       STATUS    BUNDLE&#x000A;redis                         23369     running   /home/alsadi/ostree/cont1&#x000A;</code></pre>
+
+<p>Unfortunately there is no <code>bwrap-oci exec</code>.</p>
+
+<h3>Atomic Options</h3>
+
+<p>Atomic Install has corresponding options to the choices we have demonstrated in this article like:</p>
+
+<ul>
+<li><code>--storage=ostree|docker</code> whether to use <code>docker</code> or <code>ostree</code> to store the image</li>
+<li><code>--runtime=/bin/bwrap-oci</code> for user containers or when <code>--user</code> is passed</li>
+<li><code>--runtime=/bin/runc</code> for system containers or when <code>--system</code> is passed</li>
+</ul>
+
+<p>For more details type <code>man atomic install</code>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

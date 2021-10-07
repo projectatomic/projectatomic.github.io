@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Exploring Web Apps with Docker &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Exploring Web Apps with Docker' property='og:title'>
+<meta content='Dockermania has been running wild, and it seems as though there’s an advocate for swapping in the containerization technology wherever we once turned to virtual machines. While Docker won’t (yet) fit the bill in all of these cases, containers are great for trying out new or updated Web applications on your local machine. &#x000A;&#x000A;Rather than tax your speedy but space-constrained notebook SSD with a library of different virtual machines, you can stack up a series of containers on a single VM. &#x000A;&#x000A;When WordPress hit its big 4.0 release earlier this month, I fired up an instance of the new Fedora 21 Atomic image alpha on my notebook to check out the new WordPress release, in Dockerized form.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/09/exploring-web-apps-with-docker/' property='og:url'>
+<meta content='2014-09-26T00:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Exploring Web Apps with Docker' name='twitter:title'>
+<meta content='Dockermania has been running wild, and it seems as though there’s an advocate for swapping in the containerization technology wherever we once turned to virtual machines. While Docker won’t (yet) fit the bill in all of these cases, containers are great for trying out new or updated Web applications on your local machine. &#x000A;&#x000A;Rather than tax your speedy but space-constrained notebook SSD with a library of different virtual machines, you can stack up a series of containers on a single VM. &#x000A;&#x000A;When WordPress hit its big 4.0 release earlier this month, I fired up an instance of the new Fedora 21 Atomic image alpha on my notebook to check out the new WordPress release, in Dockerized form.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_09 blog_2014_09_exploring-web-apps-with-docker blog_2014_09_exploring-web-apps-with-docker_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Exploring Web Apps with Docker
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-26T00:00:00Z'>
+Friday 26 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Dockermania has been running wild, and it seems as though there&rsquo;s an advocate for swapping in the containerization technology wherever we once turned to virtual machines. While Docker <a href="https://opensource.com/business/14/9/security-for-docker">won&rsquo;t (yet) fit the bill</a> in all of these cases, containers are great for trying out new or updated Web applications on your local machine. </p>
+
+<p>Rather than tax your speedy but space-constrained notebook SSD with a library of different virtual machines, you can stack up a series of containers on a single VM. </p>
+
+<p>When WordPress hit its big 4.0 release earlier this month, I fired up an instance of the new <a href="http://fedoraproject.org/en/get-prerelease#cloud">Fedora 21 Atomic image alpha</a> on my notebook to check out the new WordPress release, in Dockerized form.</p>
+
+<p></p>
+
+<p>Now, for a popular app like WordPress, you can expect to find a ready-to-deploy image in the <a href="https://registry.hub.docker.com/_/wordpress/">Docker Registry</a>. However, I prefer to choose my own image operating system, and to have a clearer view into the components behind the application at hand. </p>
+
+<p>Anyway, WordPress is super easy to install, and the projects behind my OSes of choice, <a href="https://github.com/fedora-cloud/Fedora-Dockerfiles">Fedora</a> and <a href="https://github.com/CentOS/CentOS-Dockerfiles">CentOS</a>, maintain sets of base component Dockerfiles for things like databases and Web servers that I can quickly plug together with the WordPress source.</p>
+
+<p>After ssh&#39;ing into my Atomic host, I started by cloning the Fedora-Dockerfiles git repo and changing into that directory:</p>
+<pre class="highlight plaintext"><code>git clone https://github.com/fedora-cloud/Fedora-Dockerfiles.git&#x000A;cd Fedora-Dockerfiles&#x000A;</code></pre>
+
+<p>Next I&rsquo;ll built myself a MariaDB container:</p>
+<pre class="highlight plaintext"><code>sudo docker build --rm -t jbrooks/mariadb mariadb/.&#x000A;</code></pre>
+
+<p>The MariaDB Dockerfile didn&rsquo;t need any changes, but I tweaked the Apache Dockerfile just a bit to pull in the WordPress source, decompress it, and drop it into the right spot in the container image:</p>
+<pre class="highlight plaintext"><code>vi apache/Dockerfile&#x000A;</code></pre>
+
+<p>Immediately below the line <code>RUN yum -y install httpd &amp;&amp; yum clean all</code>, I added the following lines:</p>
+<pre class="highlight plaintext"><code>RUN yum -y install php php-mysql php-gd &amp;&amp; yum clean all&#x000A;ADD http://wordpress.org/latest.tar.gz /wordpress.tar.gz&#x000A;RUN tar xvzf /wordpress.tar.gz&#x000A;RUN mv /wordpress/* /var/www/html/&#x000A;RUN chown -R apache:apache /var/www/&#x000A;</code></pre>
+
+<p>Next, I deleted the line, <code>RUN echo &quot;Apache&quot; &gt;&gt; /var/www/html/index.html</code>, saved, and exited my editor before building the Apache/WordPress image:</p>
+<pre class="highlight plaintext"><code>sudo docker build --rm -t jbrooks/wordpress apache/.&#x000A;</code></pre>
+
+<p>Then, I fired up the database container, and then spun up the WordPress container, with a link to the database:</p>
+<pre class="highlight plaintext"><code>sudo docker run --name=mariadb -d -p 3306:3306 jbrooks/mariadb&#x000A;sudo docker run -d --name wordpress --link mariadb:mariadb -p 80:80 jbrooks/wordpress&#x000A;</code></pre>
+
+<p>Finally, I keyed the IP address of my Atomic host into my Web browser address bar, and clicked my way through the WordPress installer. As noted in the MariaDB Dockerfile README, the container comes with a default <code>testdb</code> database, a <code>testdb</code> user, and a password of <code>mysqlPassword</code>. Since I was just kicking the tires of WordPress, I didn&rsquo;t bother to change these, but you can find details on changing them in the README. </p>
+
+<p>After a clicking through the rest of the installer, WordPress 4.0:</p>
+
+<p><img src="http://www.projectatomic.io/images/wordpress-screen.png"></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/09/exploring-web-apps-with-docker/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/09/exploring-web-apps-with-docker/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/09/exploring-web-apps-with-docker/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

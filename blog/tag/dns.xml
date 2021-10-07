@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Dns</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/dns.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Setting up SkyDNS </title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/10/setting-up-skydns/"/>
+    <id>http://www.projectatomic.io/blog/2015/10/setting-up-skydns/</id>
+    <published>2015-10-05T08:17:14+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;p&gt;Kubernetes exposes DNS for service discovery, but the DNS server itself must be configured after you install Kubernetes. In the future it will be integrated into &lt;code&gt;kubernetes&lt;/code&gt; as part of the platform (see &lt;a href="https://github.com/kubernetes/kubernetes/pull/11599"&gt;PR11599&lt;/a&gt;) but for now you have to setup and run the &lt;a href="https://github.com/skynetservices/skydns"&gt;SkyDNS&lt;/a&gt; container yourself.&lt;/p&gt;
+
+&lt;p&gt;I have seen some tutorials on how to get &lt;code&gt;skydns&lt;/code&gt; working, but almost all of them are rather involved. However, if you just want a simple setup on a single node for testing then it is actually rather easy to get &lt;code&gt;skydns&lt;/code&gt; set up.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Setting it up&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; This tutorial assumes that you already have a machine with &lt;code&gt;docker&lt;/code&gt; and &lt;code&gt;kubernetes&lt;/code&gt; set up and working. This has been tested on Fedora 22 and CentOS 7. It should work on other platforms but YMMV.&lt;/p&gt;
+
+&lt;p&gt;So the way &lt;code&gt;kubernetes&lt;/code&gt;/&lt;code&gt;skydns&lt;/code&gt; work together is by having two parts:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;  kube2sky - listens on the kubernetes api for new services and adds information into etcd.&lt;/li&gt;
+&lt;li&gt;  skydns - listens for dns requests and responds based on information in etcd.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The easiest way to get &lt;code&gt;kube2sky&lt;/code&gt; and &lt;code&gt;skydns&lt;/code&gt; up and running is to just kick off a few &lt;code&gt;docker&lt;/code&gt; containers. We&amp;rsquo;ll start with &lt;code&gt;kube2sky&lt;/code&gt; like so:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@f22 ~]$ docker run -d --net=host --restart=always          \
+                gcr.io/google_containers/kube2sky:1.11           \
+                -v=10 -logtostderr=true -domain=kubernetes.local \
+                -etcd-server="http://127.0.0.1:2379"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; We are re-using the same &lt;code&gt;etcd&lt;/code&gt; that &lt;code&gt;kubernetes&lt;/code&gt; is using.&lt;/p&gt;
+
+&lt;p&gt;The next step is to start &lt;code&gt;skydns&lt;/code&gt; to respond to dns queries:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@f22 ~]$ docker run -d --net=host --restart=always         \
+                -e ETCD_MACHINES="http://127.0.0.1:2379"        \
+                -e SKYDNS_DOMAIN="kubernetes.local"             \
+                -e SKYDNS_ADDR="0.0.0.0:53"                     \
+                -e SKYDNS_NAMESERVERS="8.8.8.8:53,8.8.4.4:53"   \
+                gcr.io/google_containers/skydns:2015-03-11-001
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The final step is to modify your &lt;code&gt;kubelet&lt;/code&gt; configuration to let it know where the dns for the cluster is. You can do this by adding &lt;code&gt;--cluster_dns&lt;/code&gt; and &lt;code&gt;--cluster_domain&lt;/code&gt; to &lt;code&gt;KUBELET_ARGS&lt;/code&gt; in &lt;code&gt;/etc/kubernetes/kubelet&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@f22 ~]$ grep KUBELET_ARGS /etc/kubernetes/kubelet
+KUBELET_ARGS="--cluster_dns=192.168.121.174 --cluster_domain=kubernetes.local"
+[root@f22 ~]$ systemctl restart kubelet.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; I used the ip address of the machine that we are using for this single node cluster.&lt;/p&gt;
+
+&lt;p&gt;And finally we can see our two containers running:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@f22 ~]$ docker ps --format "table {{.ID}}\t{{.Status}}\t{{.Image}}"
+CONTAINER ID        STATUS              IMAGE
+d229442f533c        Up About a minute   gcr.io/google_containers/skydns:2015-03-11-001
+76d51770b240        Up About a minute   gcr.io/google_containers/kube2sky:1.11
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Testing it out&lt;/h3&gt;
+
+&lt;p&gt;Now lets see if it works! Taking a page out of the &lt;a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns#1-create-a-simple-pod-to-use-as-a-test-environment"&gt;kubernetes github&lt;/a&gt; we&amp;rsquo;ll start a busybox container and then do an &lt;code&gt;nslookup&lt;/code&gt; on the &lt;em&gt;&lt;q&gt;kubernetes service&lt;/q&gt;&lt;/em&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@f22 ~]$ cat &amp;gt; /tmp/busybox.yaml &amp;lt;&amp;lt;EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: default
+spec:
+  containers:
+  - image: busybox
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+    name: busybox
+  restartPolicy: Always
+EOF
+[root@f22 ~]$ kubectl create -f /tmp/busybox.yaml
+pod "busybox" created
+[root@f22 ~]$ kubectl get pods
+NAME      READY     STATUS    RESTARTS   AGE
+busybox   1/1       Running   0          16s
+[root@f22 ~]$ kubectl exec busybox -- nslookup kubernetes
+Server:    192.168.121.174
+Address 1: 192.168.121.174
+
+Name:      kubernetes
+Address 1: 10.254.0.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; The &lt;em&gt;&lt;q&gt;kubernetes service&lt;/q&gt;&lt;/em&gt; is the one that is shown from the &lt;code&gt;kubectl get services kubernetes&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;Now you have a single node &lt;code&gt;k8s&lt;/code&gt; setup with dns. In the future &lt;a href="https://github.com/kubernetes/kubernetes/pull/11599"&gt;PR11599&lt;/a&gt; should satisfy this need but this works for now.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

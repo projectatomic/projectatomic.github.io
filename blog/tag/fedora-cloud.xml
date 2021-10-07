@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Fedora Cloud</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/fedora-cloud.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Fedora Atomic Host Two-Week Release (12-15-2015) Ready!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/12/fedora-atomic-host-two-week-release-12-15-2015-ready/"/>
+    <id>http://www.projectatomic.io/blog/2015/12/fedora-atomic-host-two-week-release-12-15-2015-ready/</id>
+    <published>2015-12-17T14:20:54+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;The Fedora Project&amp;rsquo;s Cloud Working Group is pleased to announce the December 15 two-week Fedora Atomic Host is &lt;a href="https://getfedora.org/en/cloud/download/atomic.html"&gt;ready to download&lt;/a&gt;. Fedora Atomic Host is optimized to run Docker containers and is on a rapid-release cycle to match the pace of Linux container technology. Note that there will be no release on December 29 due to the holiday.&lt;/p&gt;
+
+&lt;p&gt;We release the Fedora Atomic Host builds approximately every two weeks in all the supported formats (installable ISO, qcow2, Vagrant Boxes, and EC2 images), with the most up-to-date snapshot of our stack to work with Linux containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The 15 December 2015 release includes updates for &lt;a href="https://bodhi.fedoraproject.org/updates/FEDORA-2015-5917f166c6"&gt;Docker&lt;/a&gt;, RPM-ostree, and fixes a few &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1290257"&gt;filesystem issues with the bare metal install&lt;/a&gt;. Changed packages include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;docker-1.9.1-4.git6ec29ef.fc23.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-2015.11-2.fc23.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you&amp;rsquo;re new to Atomic and want to give it a try, the easiest way is to use Vagrant. You can grab the Vagrant boxes with &lt;code&gt;vagrant init fedora/23-atomic-host&lt;/code&gt; and then use &lt;code&gt;vagrant up&lt;/code&gt;. If you&amp;rsquo;re already using the two-week releases with Vagrant, just start your box and do &lt;code&gt;sudo atomic host upgrade&lt;/code&gt; to grab the latest bits. (Note that there are already newer bits in the Fedora Atomic Host tree, so you should probably do an upgrade anyway!)&lt;/p&gt;
+
+&lt;p&gt;The Atomic release is produced by the Fedora Cloud Working Group. We are always looking for additional contributors and folks to help test the releases. If you have questions about the Fedora Atomic release, find us on Freenode in #fedora-cloud or on &lt;a href="https://admin.fedoraproject.org/mailman/listinfo/cloud"&gt;cloud@lists.fedoraproject.org&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

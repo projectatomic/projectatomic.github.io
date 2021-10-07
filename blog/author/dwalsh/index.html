@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Articles from
+Dan Walsh &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_author blog_author_dwalsh blog_author_dwalsh_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<h2>
+Articles from
+Dan Walsh
+</h2>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/keeping-up-with-docker-security/">Keeping Up with Docker Security</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-08T19:15:00Z'>
+Monday  8 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I’ve been working on the Project Atomic team at Red Hat on Security for Docker containers. In order to get the word out I have been writing a series of blogs on Docker Security for OpenSource.com. I’ve written two so far, and hope to have the third done soon.</p>
+
+<p>The <a href="http://opensource.com/business/14/7/docker-security-selinux">first post</a> covers the fact that a privileged process within a container is the same from a security point of view as the security of...</p>
+<a class="more-link read-more" href="/blog/2014/09/keeping-up-with-docker-security/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/running-syslog-within-a-docker-container/">Running Syslog Within a Docker Container</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-11T20:06:00Z'>
+Thursday 11 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently I received a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1139734">bug report</a> on Docker complaining about using rsyslogd within a container.  </p>
+
+<p>The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message, and nothing happened.</p>
+<pre class="highlight plaintext"><code># docker run -it --rm rhel /bin/bash&#x000A;# yum -y install rsyslog&#x000A;# /usr/sbin/rsyslogd&#x000A;# logger "this is a test"&#x000A;</code></pre>
+
+<p>No message showed up in <code>/var/log/messages</code> within the container...</p>
+<a class="more-link read-more" href="/blog/2014/09/running-syslog-within-a-docker-container/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/journald/">journald</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+<li><a href="/blog/tag/syslog/">Syslog</a></li>
+<li><a href="/blog/tag/systemd/">systemd</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/">Yet Another Reason Containers Don't Contain: Kernel Keyrings</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-15T17:39:00Z'>
+Monday 15 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I see people rushing to set up Web sites and PaaS Servers that allow random people to upload Docker container images, and I feel like I am the voice in the wilderness. Remember, containers do not contain!</p>
+
+<h3>Containers Do Not Contain</h3>
+
+<p>As I stated in <a href="http://opensource.com/business/14/7/docker-security-selinux">my posts</a> <a href="https://opensource.com/business/14/9/security-for-docker">on OpenSource.com</a>, not all of the operating system is namespaced. Parts that are not namespaced can potentially allow containers to attack each other, or the host, or at the very least will allow leakage of information into the containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kernel/">Kernel</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/">Granting Rights to Users to Use Docker in Fedora</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-09-24T14:47:00Z'>
+Wednesday 24 September 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I saw on the docker-dev list someone was asking about Fedora documentation that described how you add a user to the <code>docker</code> group. The user wanted to allow his users to do <code>docker search</code> to try to find images that they could use.</p>
+
+<p>From the <a href="http://docs.docker.com/installation/fedora/">Docker installation documentation regarding Fedora</a>: </p>
+
+<blockquote>
+<p>Granting rights to users to use Docker</p>
+
+<p>Fedora 19 and 20 shipped with Docker 0.11. The package has already been updated to 1.0 in Fedora 20. If you are still using the 0.11 version you will need to grant rights to users of Docker.</p>
+
+<p>The <code>docker</code> command line tool contacts the <code>docker</code> daemon process via a socket file <code>/var/run/docker.sock</code> owned by group <code>docker</code>. One must be member of that group in order to contact the <code>docker -d</code> process.</p>
+</blockquote>
+
+<p>Luckily this documentation is somewhat wrong, you still need to add users to the <code>docker</code> group in order for them to use <code>docker</code> from a non-root account.  I would hope that all Distributions have this policy.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2014/11/docker-s-new-security-advisories-and-untrusted-images/">Docker's New Security Advisories and Untrusted Images</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-11-25T21:50:00Z'>
+Tuesday 25 November 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><img src="/images/dan-yawning.jpg"> Docker has released two CVEs with the newest version (docker-1.3.2) regarding two privilege escalation flaws. They are only an issue when running untrusted images.</p>
+
+<h3>Yawn!!!</h3>
+
+<p>I question whether they should be CVE’s at all. People need to realize that installing a Docker image is the equivalent of installing an RPM or a Debian .deb package. </p>
+
+<ul>
+<li>If you install an RPM or Debian package from an untrusted...</li>
+</ul>
+<a class="more-link read-more" href="/blog/2014/11/docker-s-new-security-advisories-and-untrusted-images/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cve/">CVE</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/01/improving-docker-error-messages/">Improving Docker Error Messages</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-01-07T15:13:00Z'>
+Wednesday  7 January 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>It is always amazing how small things can aggravate you. One of the biggest irritants I have with <code>docker</code> is how it has handled the <code>--help</code> option.</p>
+
+<p>It was sending <code>docker --help</code> and <code>docker COMMAND --help</code> to <code>stderr</code>. This caused Red Hat’s Quality Engineering (QE) teams headaches since they wanted to automate testing for things like new options, or making sure the options in the man page matched those...</p>
+<a class="more-link read-more" href="/blog/2015/01/improving-docker-error-messages/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/">Addressing Problems with Ping in Containers on Atomic Hosts</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-02T15:44:00Z'>
+Thursday  2 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Having problems with <code>ping</code> in your containers? It might not be what you think! </p>
+
+<h3>Problem Statement</h3>
+
+<p>We received a bug report the other day with the following comment:</p>
+
+<p>On a RHEL 7 host (registered and subscribed), I can use Yum to install additional packages from <code>docker run ...</code> or in a Docker file.  If I install the <code>iputils</code> package (and any dependencies), the basic <code>ping</code> command does not work.  However, if I use the <code>busybox</code> image from the public Docker index, its ping command works perfectly fine (on same RHEL 7 host).</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/ping/">Ping</a></li>
+<li><a href="/blog/tag/rhel-atomic/">RHEL Atomic</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/04/using-environment-substitution-with-the-atomic-command/">Using Environment Substitution with the Atomic Command</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-22T11:00:00Z'>
+Wednesday 22 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I recently published a <a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command">post on the Red Hat Developer Blog</a> about the Atomic command that we&rsquo;ve been working on for the last few months. </p>
+
+<p>The <a href="http://www.projectatomic.io/docs/usr-bin-atomic/">Atomic</a> command (/usr/bin/atomic) is a high-level, coherent entrypoint for Atomic Host systems, and aims to fill in the gaps in Linux container implementations. </p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/04/using-environment-substitution-with-the-atomic-command/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/bash/">Bash</a></li>
+<li><a href="/blog/tag/cli/">CLI</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/04/logging-docker-container-output-to-journald/">Logging Docker Container Output to journald</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-28T17:26:27Z'>
+Tuesday 28 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://www.docker.com/">Docker</a> has added a new feature to allow alternate logging drivers, and soon you&rsquo;ll be able to use <code>journald</code> as a supported driver.</p>
+
+<p>With Docker 1.6 they support json-file, which is the old default, syslog, or no logging at all.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/04/logging-docker-container-output-to-journald/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/journald/">journald</a></li>
+<li><a href="/blog/tag/logging/">logging</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/04/hey-container-community-lets-talk-about-labels/">Hey Container Community, Let's Talk about Labels</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-29T15:08:06Z'>
+Wednesday 29 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We have added a new tool called atomic <a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command/">which I announced last week. </a></p>
+
+<p>The Atomic tool currently takes advantage of the Label patch in docker that allows developers shipping applications as container images, to add arbitrary labels to the images json data.  We chose to use some top level names for identifiers. Right now, Labels support free-form text without any restrictions. This is good in that it&rsquo;s flexible, but bad in that we want containers to be portable and tools like Atomic that make use of the Label should co-exist with other tools that may also use the Label.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/04/hey-container-community-lets-talk-about-labels/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/labels/">Labels</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/why-red-hat-is-shipping-docker-1-6/">Why Red Hat is Shipping Docker 1.6</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-20T20:24:04Z'>
+Wednesday 20 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We attempt to ship new versions of Red Hat Enteprise Linux Atomic Host (RHELAH) every six weeks. I am in charge of the Docker portion of each release. I also lead the team developing the <a href="http://www.projectatomic.io/docs/usr-bin-atomic/">atomic</a> command. As a major component of the RHELAH release, we want to include the most recent Docker release possible to our users. </p>
+
+<p>However, just because Docker releases a new version does not mean this instantly...</p>
+<a class="more-link read-more" href="/blog/2015/05/why-red-hat-is-shipping-docker-1-6/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cve/">CVE</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/">Using Volumes with Docker can Cause Problems with SELinux</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-06-15T17:52:00Z'>
+Monday 15 June 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>When using SELinux for controlling processes within a container, you need to make sure any content that gets volume mounted into the container is readable, and potentially writable, depending on the use case.</p>
+
+<p>By default, Docker container processes run with the <code>system_u:system_r:svirt_lxc_net_t:s0</code> label.  The <code>svirt_lxc_net_t</code> type is allowed to read/execute most content under /usr, but it is not allowed to use most other types on the system. </p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+<li><a href="/blog/tag/volumes/">Volumes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/">Why we don't let non-root users run Docker in CentOS, Fedora, or RHEL</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-08-10T14:53:25Z'>
+Monday 10 August 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I often get bug reports from users asking <em><q>why can&rsquo;t I use `docker` as a non root user, by default?</q></em></p>
+
+<p>Docker has the ability to change the group ownership of the /run/docker.socket to have group permission of 660, with the <code>group</code> ownership the docker group.  This would allow users added to the docker group to be able to run docker containers without having to execute <code>sudo</code> or <code>su</code> to become root. Sounds great&hellip;<br>
+
+<a class="more-link read-more" href="/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+<li><a href="/blog/tag/sudo/">sudo</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/12/making-docker-images-write-only-in-production/">Making Docker images read-only in production</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-16T22:06:42Z'>
+Wednesday 16 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new <code>--tmpfs</code> you can run a container as read only, but still use writeable directories for things like <code>/etc</code>, <code>/tmp</code> or <code>/run</code> but discard changes when a container is stopped.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/12/making-docker-images-write-only-in-production/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/images/">images</a></li>
+<li><a href="/blog/tag/operations/">operations</a></li>
+<li><a href="/blog/tag/production/">production</a></li>
+<li><a href="/blog/tag/tmpfs/">tmpfs</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/">How to Run a More Secure Non-Root User Container</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-01-07T17:40:00Z'>
+Thursday  7 January 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I was asked a question about running users inside of a docker container: could they still get privileges?  </p>
+
+<p>Before we begin, here is <a href="http://linux.die.net/man/7/capabilities">more background on Linux capabilities</a></p>
+
+<p>We&rsquo;ll start with a simple container where the primary process is running as root.  One can look at the capabilities of the current process via <code>grep Cap /proc/self/status</code>.  There is also a <code>capsh</code> utility.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/privileges/">privileges</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/dwalsh_selinux_containers/">Practical SELinux and Containers</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-04T02:20:31Z'>
+Friday  4 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I believe SELinux is the best security measure we currently have for controlling access between standard Docker containers. Of course, I might be biased.  </p>
+
+<p>All of the security separation measures are nice, and should be enabled for security in depth, but SELinux policy prevents a lot of break out situations where the other security mechanisms fail. With SELinux on Docker, we write policy that says that the container process running as <code>svirt_lxc_net_t</code> can only read/write <code>svirt_sandbox_file_t</code> by default (there are some booleans to allow it to write to network shared storage, if required, like for NFS). This means that if a process from a Docker container broke out of the container, it would only be able to write to files/directories labeled <code>svirt_sandbox_file_t</code>. We take advantage of Multi-Category Security (MCS) separation to ensure that the processes running in the container can only write to <code>svirt_sandbox_file_t</code> files with the same MCS Label: <code>s0</code>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/dwalsh_selinux_containers/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/selinux-and-docker-part-2/">Extending SELinux Policy for Containers</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-15T12:12:00Z'>
+Tuesday 15 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A developer contacted me about building a container that will run as a log aggregator for
+<code>fluentd</code>.  This container needed to be a <a href="http://developers.redhat.com/blog/2014/11/06/introducing-a-super-privileged-container-concept/">SPC container</a> that would manage parts of the host system, namely the log files under /var/logs.</p>
+
+<p>Being a good conscientious developer, he wanted to run his application as securely as possible.
+The option he wanted to avoid was running the container in <code>--privileged</code> mode, removing all security from the container.  When he ran his container <code>SELinux</code> complained about the container processes trying to read log files.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/selinux-and-docker-part-2/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/docker-selinux-flag/">What does --selinux-enabled do?</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-11T12:00:00Z'>
+Monday 11 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I recently answered an email asking about &ndash;selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.</p>
+
+<blockquote>
+<p>I&rsquo;m currently researching the topic of <code>--selinux-enabled</code> in docker and what it is doing when set to TRUE.</p>
+
+<p>From what I&rsquo;m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.</p>
+
+<p>But I&rsquo;m wondering if that is even correct, and if so, what else is happening when setting <code>--selinux-enabled</code> to TRUE.</p>
+</blockquote>
+
+<p>`<code>--selinux-enabled</code> on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file <code>/etc/selinux/targeted/contexts/lxc_contexts</code> for the default context to run containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/docker-selinux-flag/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/08/docker-patches/">Project Atomic Docker Patches</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-18T12:00:00Z'>
+Thursday 18 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic’s version of the Docker-based container runtime has been carrying a series of patches on the upstream Docker project for a while now.  Each time we carry a patch, it adds significant effort as we continue to track upstream, therefore we would prefer to never carry any patches.  We always strive to get our patches upstream and do it in the open.</p>
+
+<p>This post, and the accompanying document...</p>
+<a class="more-link read-more" href="/blog/2016/08/docker-patches/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/patches/">patches</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/10/playing-with-docker-logging/">Better ways of handling logging in containers</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-24T10:00:00Z'>
+Monday 24 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Traditional logging systems, like syslog, do not quite work by default with Containers. This is especially true if they are running without an init system in the container.</p>
+
+<h3>STDIN/STDERR messages in journal</h3>
+
+<p>I recently received a <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1386661">bugzilla</a> report complaining about logging inside of a docker container.</p>
+
+<p>First the user complained about all of STDOUT/STDERR showing up in the journal. This can actually...</p>
+<a class="more-link read-more" href="/blog/2016/10/playing-with-docker-logging/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/administration/">administration</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/logging/">logging</a></li>
+<li><a href="/blog/tag/volumes/">volumes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/12/atomic-and-containerd/">Looking forward to working with containerd</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-22T14:00:00Z'>
+Thursday 22 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A number of folks have asked for my thoughts on the Docker <a href="https://blog.docker.com/2016/12/introducing-containerd/">containerd
+announcement</a>
+last week. While containerd itself is not new, having been <a href="https://blog.docker.com/2015/12/containerd-daemon-to-control-runc/">announced
+over a year
+ago</a>,
+we were happy to see that Docker Inc. is now spinning this out as an
+independent project. This is aligned with Red Hat’s overall goal to
+drive open industry <a href="https://www.redhat.com/en/about/blog/linux-container-standards-didn%E2%80%99t-we-talk-about-last-year">standards for Linux
+containers</a>
+and the work that we’ve helped drive as a...</p>
+<a class="more-link read-more" href="/blog/2016/12/atomic-and-containerd/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containerd/">containerd</a></li>
+<li><a href="/blog/tag/crio/">crio</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/02/selinux-policy-containers/">Tightening Up SELinux Policy for Containers</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-02-16T14:00:00Z'>
+Thursday 16 February 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I wrote a blog post a couple of weeks ago <a href="http://rhelblog.redhat.com/2017/01/13/selinux-mitigates-container-vulnerability/">explaining how SELinux can block breakout</a> of processes in containers using when exploiting a vulnerability in the <code>/usr/bin/docker-runc</code> or <code>/usr/bin/runc</code> executable.  At the time, I explained that the policy for <code>container_t</code> was blocked from writing to most parts of the OS other the container content labeled <code>container_file_t</code>. Despite blocking writes, though, it still allowed reads of some files.</p>
+
+<p>A few people were alarmed when they realized that SELinux would block the breakout on writes but there is a chance for information leakage into the container. The usual example was the ability to read /etc/passwd from the host. But this isn&rsquo;t unlimited access to the host. If the same container processes tried to read /etc/shadow on the hosts, or content in users home directories, or database data in /var, they would be blocked.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/02/selinux-policy-containers/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/02/reintroduction-podman/">Reintroduction of Podman</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-26T00:00:00Z'>
+Monday 26 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Podman (formerly kpod) has been kicking around since last summer.  It was originally part of the <a href="https://github.com/kubernetes-incubator/cri-o&amp;sa=D&amp;ust=1519653090854000&amp;usg=AFQjCNGVeTeYAfYk3RH27hK5ykSNrATy1w">CRI-O</a> project.  We moved podman into a separate project, <a href="https://github.com/projectatomic/libpod">libpod</a>.  We wanted Podman and CRI-O to develop at their own pace.  Both CRI-O and Podman work fine as independent tools and also work well together.</p>
+
+<p>The goal of Podman (Pod Manager) is to offer an experience similar to the docker command line - to allow users to run standalone (non-orchestrated) containers.  Podman also allows users to run groups of containers called pods. For those that don’t know, a Pod is a term developed for the Kubernetes Project which describes an object that has one or more containerized processes sharing multiple namespaces (Network, IPC and optionally PID).</p>
+
+<p>Podman brings innovation to container tools in the spirit of Unix commands which do “one thing” well. Podman doesn’t require a daemon to run containers and pods. This makes it a great asset for your container tools arsenal.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/02/reintroduction-podman/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/podman/">podman</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/06/sneak-secrets-into-containers/">How to sneak secrets into your containers, without leaving a trace</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-11T00:00:00Z'>
+Monday 11 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Default mounts for all of your containers.</h3>
+
+<p>I was presenting <a href="https://www.openshift.com/">OpenShift</a> and really the underlying container technology we are building <a href="https://github.com/kubernetes-incubator/cri-o">CRI-O</a>, <a href="https://github.com/projectatomic/buildah">Buildah</a> and <a href="https://github.com/projectatomic/libpod">Podman</a> to some customers the other day.  After the presentation, one of the customers came over to me and said, the biggest problem they have with their users building containers, was they needed to use certificates in the container in order to access their software repositories.  But they did not want the certificates to end up embedded in the containers.  I pointed out that <a href="https://github.com/projectatomic/docker">Red Hat’s version of Docker</a> allowed you to do volume mounts into containers during a <code>docker build</code>.  Also Buildah had the same functionality.  But he pointed out that they did not want everyone of their engineers to have to add the volumes, or if they were running a container and wanted to update software and they forgot the volume mount then they could not access the certificates.  </p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/06/sneak-secrets-into-containers/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+</footer>
+</article>
+
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

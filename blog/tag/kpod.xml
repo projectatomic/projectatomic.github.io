@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Kpod</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/kpod.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Last Week In Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/</id>
+    <published>2017-08-14T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Since Project Atomic has now spread out across several blogs and websites, this is the second of what will become regular updates on events and posts around the Atomic community.  This is also a useful catch-up for anyone who doesn&amp;rsquo;t have time to backfill on all of the individual blog posts.&lt;/p&gt;
+
+&lt;p&gt;This week includes kpod, vagrant-buildah, Fedora Atomic Host, CentOS Atomic Host, Kubernetes containers, and more.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;New Projects and Tools&lt;/h3&gt;
+
+&lt;p&gt;As a sub-project of CRI-O, that team has now &lt;a href="https://medium.com/cri-o/introducing-kpod-f06109b96374"&gt;announced development of the &lt;code&gt;kpod&lt;/code&gt; command&lt;/a&gt;.  &lt;code&gt;kpod&lt;/code&gt; is an administrative and troubleshooting tool for containers running on individual kubernetes nodes, especially if the docker daemon is not involved.  Current commands include &lt;a href="https://medium.com/cri-o/kpod-version-b9fd7175c730"&gt;version&lt;/a&gt;, &lt;a href="https://medium.com/cri-o/kpod-push-62bce8705c3f"&gt;push&lt;/a&gt;, and &lt;a href="https://medium.com/cri-o/kpod-pull-36765d2e5fb8"&gt;pull&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tyler Britten released some scripts for &lt;a href="https://github.com/vmtyler/vagrant-buildah"&gt;playing with Buildah on Windows or Mac&lt;/a&gt;, using Vagrant.&lt;/p&gt;
+
+&lt;h3&gt;Releases&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fedora released their &lt;a href="http://www.projectatomic.io/blog/2017/08/fedora-atomic-august-08/"&gt;August 8th Update for Fedora 26 Atomic&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;CentOS released &lt;a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"&gt;version 7.1707 of CentOS Atomic Host&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The CentOS Virt SIG and Atomic SIG released &lt;a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"&gt;new Kubernetes system containers&lt;/a&gt; based on version 1.7.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Blog Posts&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dusty Mabe explained &lt;a href="https://dustymabe.com/2017/08/08/how-do-we-create-ostree-repos-and-artifacts-in-fedora/"&gt;how the Fedora OSTree repos get built&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Tom Sweeney blogged about &lt;a href="http://www.projectatomic.io/blog/2017/08/buildah-getting-fit/"&gt;using Buildah to create &lt;q&gt;fit&lt;/q&gt; images&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Joe Brockmeier lays out &lt;a href="http://rhelblog.redhat.com/2017/08/01/whats-new-in-red-hat-enterprise-linux-atomic-host-7-4/"&gt;what will be in RHEL Atomic 7.4&lt;/a&gt;, coming soon.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Events&lt;/h3&gt;
+
+&lt;p&gt;The Fedora Atomic WG will be participating heavily in the upcoming &lt;a href="https://flocktofedora.org/"&gt;Flock to Fedora&lt;/a&gt; conference.  This includes sessions on multi-architecture containers, becoming a container package maintainer, system containers, an Atomic Host documentation writeathon, and many more sessions.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://2017.container.camp/uk/speakers/michael-hausenblas/"&gt;ContainerCamp UK&lt;/a&gt; will feature Michael Hausenblas of the OpenShift team talking about Kubernetes backup.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://events.linuxfoundation.org/events/open-source-summit-north-america"&gt;OSS Summit NA&lt;/a&gt; will have an Atomic booth presence in the Red Hat pavillion. We could use booth volunteers if you love Atomic.  We will also have a &lt;a href="http://sched.co/BDpX"&gt;BOF on Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://events.linuxfoundation.org/events/cloudnativecon-and-kubecon-north-america"&gt;Kubecon US&lt;/a&gt; still has their CfP open.  Sumbit talks involving Atomic projects!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

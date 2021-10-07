@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-28 blog_page-28_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/12/notice-to-kubernetes-atomic-users/">Important Notice for Users of Kubernetes on Fedora Atomic</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-09T16:00:00Z'>
+Friday  9 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong>UPDATE</strong>: This issue has been resolved.  Please see <a href="#">the update blog post</a></p>
+
+<p>One of the features of the <a href="/blog/2016/11/fedora-atomic-25-released/">Fedora Atomic Host 25</a>
+release was decoupling Kubernetes
+from the base ostree for Atomic (this is true of the current CentOS Atomic Host
+as well).  That is, Kubernetes is no longer in the base install, you need to
+add it in as system containers and/or an overlay.  This is a step forwards for
+Atomic because it means that users can continuously update Atomic, and update
+Kubernetes on a different schedule which works for their cluster.  Since Kubernetes
+gets released four times a year, this lets developers update to the latest
+version, and production users stay on their production version.</p>
+
+<p>However, when we released Fedora Atomic 25, the containerized install wasn&rsquo;t
+quite ready, and there were <a href="https://github.com/projectatomic/rpm-ostree/issues/462">issues with installing Kubernetes using package
+layering</a>
+which we hadn&rsquo;t anticipated.  At the time, we expected those issues to
+be resolved within a few days.  Instead, some have taken longer than expected
+and are still unresolved or waiting on PR review.</p>
+
+<p>The Fedora Atomic team is hard at work on getting a solution out for Kubernetes
+users and expect to have one before the holidays.  If you are able to help with
+building or testing, please speak up on the Atomic Development mailing list; we
+could use your help.  If you can&rsquo;t help, wait for us to publish documentation
+of the new containerized Kubernetes before you rebase to 25.  Bug fixes are
+still available for the Fedora 24 tree.</p>
+
+<p>If you use Fedora Atomic, but do not use Kubernetes, this issue does not affect
+you.  If you are using Kubernetes based on a containerized install already
+(via Kubeadm or Hyperkube), this issue is also not a problem for you.  Unaffected
+users should <a href="blog/2016/11/fedora-atomic-25-released/">rebase to Fedora Atomic 25</a>
+for updated libraries and platforms,
+including the latest OpenShift and Docker support.</p>
+
+<p>Thanks for your patience, and we&rsquo;ll see you on the
+<a href="https://lists.projectatomic.io/mailman/listinfo/atomic">mailing lists</a> and IRC with
+any other issues.</p>
+
+<a class="more-link view-article" href="/blog/2016/12/notice-to-kubernetes-atomic-users/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-07T15:23:32Z'>
+Wednesday  7 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p><a href="https://github.com/openshift/origin">Openshift Origin</a> is the upstream
+project that builds on top of the Kubernetes platform and feeds into the
+OpenShift Container Platform product that is available from Red Hat today.
+Origin is a great way to get started with Kubernetes, and what better
+place to run a container orchestration layer than on top of Fedora
+Atomic Host?</p>
+
+<p>We recently released <a href="https://fedoramagazine.org/fedora-25-released/">Fedora
+25</a>, along with the
+first biweekly release of Fedora 25 Atomic Host. This blog post
+will show you the basics for getting a production installation of Origin
+running on Fedora 25 Atomic Host using the <a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible
+Installer</a>. The
+OpenShift Ansible installer will allow you to install a
+production-worthy OpenShift cluster. If you&rsquo;d like to just
+try out OpenShift on a single node instead, you can set up OpenShift with
+the <code>oc cluster up</code> command, which we will detail in a later blog
+post.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/11/cockpit-125-released/">Cockpit 125 Now Available</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/stef/">Stef Walter</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-11-28T16:00:00Z'>
+Monday 28 November 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Cockpit&rsquo;s <a href="http://cockpit-project.org/blog/cockpit-125.html">build 125 has been released</a>.</p>
+
+<p>Cockpit is the modern Linux admin interface. We release regularly. Here
+are the release notes from version 123, 124 and 125.</p>
+
+<h3>Cockpit is now properly translatable</h3>
+
+<p>Cockpit is now properly translatable. It was a big task to extract
+all the translatable strings and make translations work consistently
+between the browser and installed tools like the bridge.</p>
+
+<p>We now start also run the login user session with a proper locale and
+LANG environment variables.</p>
+
+<p>You can help <a href="https://fedora.zanata.org/iteration/view/cockpit/master">translate cockpit in Zanata</a>, or if you find text in the
+front end that isn&rsquo;t translatable, then please do report it.</p>
+
+<p>Changes:</p>
+
+<ul>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5362">pull 5362</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5418">pull 5418</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5418">pull 5418</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5420">pull 5420</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/1728">pull 1728</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5442">pull 5442</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5444">pull 5444</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5443">pull 5443</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5461">pull 5461</a></li>
+</ul>
+
+<h3>Display OSTree signatures</h3>
+
+<p>Peter implement displaying OSTree tree signatures. You can tell where
+a certain update tree came from and who signed it.</p>
+
+<ul>
+<li> <a href="http://cockpit-project.org/blog/images/ostree-signatures.png">Screenshot</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5433">Changes</a></li>
+</ul>
+
+<h3>New expandable views for storage partitions</h3>
+
+<p>Marius implemented expandable views in the <em>Storage</em> pages. These let
+you dive into the details of a particular partition without having
+to navigate away from the page describing where it lives.</p>
+
+<ul>
+<li> <a href="http://cockpit-project.org/blog/images/storage-listing.png">Screenshot</a></li>
+<li> <a href="https://github.com/cockpit-project/cockpit/pull/5097">Changes</a></li>
+</ul>
+
+<h3>Other storage fixes</h3>
+
+<p>Marius did work to fix many other storage related bugs. In particular
+Cockpit now deals properly with passphrases stored for LUKS encrypted
+devices, and also no longer offers to format read-only block devices.</p>
+
+<ul>
+<li><a href="https://github.com/cockpit-project/cockpit/pull/5343">Changes</a></li>
+<li><a href="https://github.com/cockpit-project/cockpit/pull/5097">more</a></li>
+</ul>
+
+<h3>Full testing on RHEL 7.3, Ubuntu 16.04 and Debian 8 Jessie</h3>
+
+<p>The Cockpit project started testing on Cockpit on RHEL 7.3, Ubuntu 16.04
+and Debian 8 Jessie along the operating systems we tested earlier. These
+will be part of our usual continuous integration, where we boot
+thousands or tens of thousands of instances per day to test changes and
+contributions.</p>
+
+<p>Marius fixed many bugs we found, and filed operating system bugs in
+the issue trackers for those operating systems.</p>
+
+<p>You can see the which operating systems we test Cockpit on:</p>
+
+<ul>
+<li> <a href="http://cockpit-project.org/running.html">pull 5445</a></li>
+</ul>
+
+<p>There&rsquo;s no Debian Jessie repository yet, but hopefully we can have that
+ready as time permits.</p>
+
+<ul>
+<li><a href="https://github.com/cockpit-project/cockpit/pull/5445">Changes</a></li>
+<li><a href="https://github.com/cockpit-project/cockpit/pull/5285">more</a></li>
+</ul>
+
+<h3>System shutdown can be scheduled by date</h3>
+
+<p>Fridolin did work a long time ago, so that users could select a specific
+date and time to schedule a shutdown or reboot of the system. Stef
+finished that work added tests and it&rsquo;s now in Cockpit.</p>
+
+<ul>
+<li><a href="http://cockpit-project.org/blog/images/shutdown-date.png">Screenshot</a></li>
+<li><a href="https://github.com/cockpit-project/cockpit/pull/2419">Changes</a></li>
+</ul>
+
+<h3>Properly terminate user sessions on the Accounts page</h3>
+
+<p>The Accounts page now properly terminates user sessions when the
+Terminate Session button is clicked. We use the correct systemd
+loginctl commands.</p>
+
+<ul>
+<li><a href="https://github.com/cockpit-project/cockpit/pull/5359">Changes</a></li>
+</ul>
+
+<h3>Get it</h3>
+
+<p>You can <a href="http://cockpit-project.org/running.html">get Cockpit here</a>.</p>
+
+<p>Cockpit 125 is <a href="https://bodhi.fedoraproject.org/updates/cockpit-125-1.fc25">available in Fedora 25</a>.</p>
+
+<p>Or <a href="https://github.com/cockpit-project/cockpit/releases/tag/125">download the tarball</a>.</p>
+
+<a class="more-link view-article" href="/blog/2016/11/cockpit-125-released/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+<li><a href="/blog/tag/encryption/">encryption</a></li>
+<li><a href="/blog/tag/localization/">localization</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/11/fedora-atomic-25-released/">Fedora Atomic 25 released</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-11-22T20:00:00Z'>
+Tuesday 22 November 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://fedoramagazine.org/fedora-25-released/">Fedora 25</a> has been released,
+including <a href="https://getfedora.org/en/atomic/">Fedora Atomic 25</a>, the latest build of
+Fedora&rsquo;s container platform.  Among the features added in this build are:</p>
+
+<ul>
+<li><a href="http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/">Package Layering</a></li>
+<li><a href="https://blog.docker.com/2016/06/docker-1-12-built-in-orchestration/">Docker 1.12</a></li>
+</ul>
+
+<p>You can install Fedora Atomic 25 by any of the various methods listed
+on <a href="https://getfedora.org/en/atomic/">the GetFedora Atomic page</a>.  You can also
+upgrade an existing server to Atomic 25 from version 24:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/24/x86_64/docker-host&#x000A;       Version: 24.78 (2016-11-10 02:57:50)&#x000A;        Commit: 5ac1aee3c8810f4da27b0dee0c70899409602b3bf6ef47c60ee23600be795d47&#x000A;        OSName: fedora-atomic&#x000A;&#x000A;-bash-4.3# ostree remote add --set=gpg-verify=false fedora-atomic-25 \&#x000A;   https://dl.fedoraproject.org/pub/fedora/linux/atomic/25/&#x000A;-bash-4.3# rpm-ostree rebase fedora-atomic-25:fedora-atomic/25/x86_64/docker-host&#x000A;&#x000A;2037 metadata, 10860 content objects fetched; 293397 KiB transferred in 301 seconds&#x000A;Copying /etc changes: 24 modified, 0 removed, 49 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1&#x000A;Freed objects: 18.7 kB&#x000A;Changed:&#x000A;  NetworkManager 1:1.2.4-3.fc24 -&gt; 1:1.4.2-1.fc25&#x000A;...&#x000A;timedatex-0.4-2.fc24.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;&#x000A;-bash-4.3# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic-25:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.42 (2016-11-16 10:26:30)&#x000A;        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4&#x000A;        OSName: fedora-atomic&#x000A;&#x000A;  fedora-atomic:fedora-atomic/24/x86_64/docker-host&#x000A;       Version: 24.78 (2016-11-10 02:57:50)&#x000A;        Commit: 5ac1aee3c8810f4da27b0dee0c70899409602b3bf6ef47c60ee23600be795d47&#x000A;        OSName: fedora-atomic&#x000A;&#x000A;</code></pre>
+
+<p>Package Layering is a feature which allows the installation of groups of packages
+on a running Atomic system without breaking upstream updateability.  It requires
+that the packages be available from a configured repo.  As a trivial example, since
+I&rsquo;m an emacs guy, I wanted to install emacs on my kuberntes master so that
+I can edit my kubernetes configuration files with it:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.26 (2016-10-15 10:27:51)&#x000A;        Commit: c972fb623bd7973aa26f2dc6703a398719d39410191a2aad1943733ac54a9c5d&#x000A;        OSName: fedora-atomic&#x000A;-bash-4.3# rpm-ostree pkg-add emacs-nox&#x000A;&#x000A;Downloading metadata: [===========================] 100%&#x000A;Resolving dependencies... done&#x000A;Will download: 7 packages (42.7 MB)&#x000A;&#x000A;  Downloading from fedora: [======================] 100%&#x000A;&#x000A;Importing: [====================================] 100%&#x000A;Checking out tree c972fb6... done&#x000A;Overlaying... done&#x000A;Running %post for emacs-common...... done&#x000A;Running %posttrans for emacs-common...... done&#x000A;Running %posttrans for emacs-nox...... done&#x000A;Writing rpmdb... done&#x000A;Writing OSTree commit... done&#x000A;Copying /etc changes: 25 modified, 0 removed, 50 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1&#x000A;Freed 1 pkgcache branch: 67.4 kB&#x000A;Added:&#x000A;  alsa-lib-1.1.1-2.fc25.x86_64&#x000A;  emacs-common-1:25.1-2.fc25.x86_64&#x000A;  emacs-nox-1:25.1-2.fc25.x86_64&#x000A;  gpm-libs-1.20.7-9.fc24.x86_64&#x000A;  libjpeg-turbo-1.5.1-0.fc25.x86_64&#x000A;  liblockfile-1.09-4.fc24.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;-bash-4.3# systemctl reboot&#x000A;&#x000A;...&#x000A;&#x000A;-bash-4.3# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.26 (2016-11-23 00:39:02)&#x000A;    BaseCommit: c972fb623bd7973aa26f2dc6703a398719d39410191a2aad1943733ac54a9c5d&#x000A;        Commit: 82b69e3d34f4b1389126f0c57e03175a7c60f935da19f0285e0beef4476207b7&#x000A;        OSName: fedora-atomic&#x000A;      Packages: emacs-nox&#x000A;&#x000A;  fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.26 (2016-10-15 10:27:51)&#x000A;        Commit: c972fb623bd7973aa26f2dc6703a398719d39410191a2aad1943733ac54a9c5d&#x000A;        OSName: fedora-atomic&#x000A;-bash-4.3# emacs --version&#x000A;GNU Emacs 25.1.1&#x000A;</code></pre>
+
+<p>In the next couple weeks, we&rsquo;ll post on how to use package layering to install
+your chosen release of Kubernetes, how to deploy Docker Swarm on Atomic, and other
+things you can do with the new release.  In  the meantime, download and
+play with it yourself.</p>
+
+<a class="more-link view-article" href="/blog/2016/11/fedora-atomic-25-released/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/10/atomic-events/">Upcoming events November 2016</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-28T12:00:00Z'>
+Friday 28 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Members of the Atomic Team will be at a Red Hat booth or table at the following events in November:</p>
+
+<ul>
+<li><a href="http://dynamicinfradays.org/events/2016-nyc/">ContainerDays NYC</a> on Nov. 3rd, New York</li>
+<li><a href="http://events.linuxfoundation.org/events/kubecon">KubeCon/CNCFCon</a> on Nov. 7th, Seattle</li>
+</ul>
+
+<p>If you&rsquo;re at either event, drop by the booth or table and say hello!</p>
+
+<a class="more-link view-article" href="/blog/2016/10/atomic-events/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/events/">events</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=27/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=24/">24</a>
+</li>
+<li>
+<a href="/blog/page=25/">25</a>
+</li>
+<li>
+<a href="/blog/page=26/">26</a>
+</li>
+<li>
+<a href="/blog/page=27/">27</a>
+</li>
+<li class='active'>
+<span>28</span>
+</li>
+<li>
+<a href="/blog/page=29/">29</a>
+</li>
+<li>
+<a href="/blog/page=30/">30</a>
+</li>
+<li>
+<a href="/blog/page=31/">31</a>
+</li>
+<li>
+<a href="/blog/page=32/">32</a>
+</li>
+<li>
+<a href="/blog/page=29/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

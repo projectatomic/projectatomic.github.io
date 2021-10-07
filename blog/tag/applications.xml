@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Applications</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/applications.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Containerization and Deployment of application on Atomic host with Ansible-Playbook</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/deployment-using-ansible/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/deployment-using-ansible/</id>
+    <published>2016-10-27T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Trishna Guha</name>
+    </author>
+    <content type="html">&lt;p&gt;This mini-tutorial describes how to build &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; image and deploy containerized application on &lt;a href="http://www.projectatomic.io/"&gt;Atomic&lt;/a&gt; host using &lt;a href="https://www.ansible.com/"&gt;Ansible&lt;/a&gt; Playbook.&lt;/p&gt;
+
+&lt;p&gt;Building Docker image for an application and running container/cluster of containers is nothing new. But the idea is to automate the whole process and this is where Ansible playbooks come in to play.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; You can use any Cloud/Workstation based Image to execute the following task.&lt;/p&gt;
+
+&lt;h3&gt;How to automate the containerization and deployment process for a simple Flask application&lt;/h3&gt;
+
+&lt;p&gt;First, let’s create a simple &lt;strong&gt;Flask Hello-World&lt;/strong&gt; application. This is the directory structure of the entire application.  You can copy these files from the repository &lt;a href="https://github.com/trishnaguha/fedora-cloud-ansible"&gt;trishnaguha/fedora-cloud-ansible&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;flask-helloworld/
+├── ansible
+│   ├── ansible.cfg
+│   ├── inventory
+│   └── main.yml
+├── Dockerfile
+└── flask-helloworld
+    ├── hello_world.py
+    ├── static
+    │   └── style.css
+    └── templates
+        ├── index.html
+        └── master.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;hello_world.py&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;from flask import Flask, render_template
+
+APP = Flask(__name__)
+
+@APP.route('/')
+def index():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    APP.run(debug=True, host='0.0.0.0')
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;static/style.css&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;body {
+  background: #F8A434;
+  font-family: 'Lato', sans-serif;
+  color: #FDFCFB;
+  text-align: center;
+  position: relative;
+  bottom: 35px;
+  top: 65px;
+}
+.description {
+  position: relative;
+  top: 55px;
+  font-size: 50px;
+  letter-spacing: 1.5px;
+  line-height: 1.3em;
+  margin: -2px 0 45px;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;templates/master.html&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight html"&gt;&lt;code&gt;&lt;span class="cp"&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    {% block head %}
+    &lt;span class="nt"&gt;&amp;lt;title&amp;gt;&lt;/span&gt;{% block title %}{% endblock %}&lt;span class="nt"&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+    {% endblock %}
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"&lt;/span&gt; &lt;span class="na"&gt;integrity=&lt;/span&gt;&lt;span class="s"&gt;"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"&lt;/span&gt; &lt;span class="na"&gt;crossorigin=&lt;/span&gt;&lt;span class="s"&gt;"anonymous"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;integrity=&lt;/span&gt;&lt;span class="s"&gt;"sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1"&lt;/span&gt; &lt;span class="na"&gt;crossorigin=&lt;/span&gt;&lt;span class="s"&gt;"anonymous"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ url_for('static', filename='style.css') }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;'http://fonts.googleapis.com/css?family=Lato:400,700'&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;'stylesheet'&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;'text/css'&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"container"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    {% block content %}
+    {% endblock %}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;templates/index.html&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;extends&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"master.html"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;block&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;title&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}Welcome&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;to&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;Flask&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;App&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;endblock&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;block&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;content&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;&amp;lt;div&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;class=&lt;/span&gt;&lt;span class="s2"&gt;"description"&lt;/span&gt;&lt;span class="err"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;span class="err"&gt;Hello&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;World&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;endblock&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the &lt;strong&gt;Dockerfile&lt;/strong&gt; to build the image.  Remember to put your name and email after MAINTAINER:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora
+MAINTAINER YOUR NAME HERE&amp;lt;your@email.address&amp;gt;
+
+RUN dnf -y update &amp;amp;&amp;amp; dnf -y install python-flask python-jinja2 &amp;amp;&amp;amp; dnf clean all
+RUN mkdir -p /app
+
+COPY files/ /app/
+WORKDIR /app
+
+ENTRYPOINT ["python"]
+CMD ["hello_world.py"]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s everything we need to build the container.  Now let&amp;rsquo;s automate it.&lt;/p&gt;
+
+&lt;h3&gt;Ansible playbook for our application&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Create Inventory file:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[atomic]
+&amp;lt;IP_ADDRESS_OF_HOST&amp;gt; ansible_ssh_private_key_file=&amp;lt;'PRIVATE_KEY_FILE'&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;IP_ADDRESS_OF_HOST&lt;/code&gt; with the IP address of the atomic/remote host and &lt;code&gt;‘PRIVATE_KEY_FILE’&lt;/code&gt; with your private key file.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Create ansible.cfg file:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[defaults]
+inventory=inventory
+remote_user=&amp;lt;USER&amp;gt;
+
+[privilege_escalation]
+become_method=sudo
+become_user=root
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;USER&lt;/code&gt; with the user of your remote host (Atomic).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Create the Playbook main.yml file:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;---
+- name: Deploy Flask App
+  hosts: atomic
+  become: yes
+
+  vars:
+    src_dir: [Source Directory]
+    dest_dir: [Destination Directory]
+
+  tasks:
+    - name: Create Destination Directory
+      file:
+       path: "{{ dest_dir }}/files"
+       state: directory
+       recurse: yes
+
+    - name: Copy Dockerfile to host
+      copy:
+       src: "{{ src_dir }}/Dockerfile"
+       dest: "{{ dest_dir }}"
+
+    - name: Copy Application to host
+      copy:
+       src: "{{ src_dir }}/flask-helloworld/"
+       dest: "{{ dest_dir }}/files/"
+
+    - name: Make sure that the current directory is {{ dest_dir }}
+      command: cd {{ dest_dir }}
+
+    - name: Build Docker Image
+      command: docker build --rm -t fedora/flask-app:test -f "{{ dest_dir }}/Dockerfile" "{{ dest_dir }}"
+
+    - name: Run Docker Container
+      command: docker run -d --name helloworld -p 5000:5000 fedora/flask-app:test
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;[Source Directory]&lt;/code&gt; in &lt;code&gt;src_dir&lt;/code&gt; field in main.yml with your &lt;code&gt;/path/to/src_dir&lt;/code&gt; of the current host.&lt;/p&gt;
+
+&lt;p&gt;Replace &lt;code&gt;[Destination Directory]&lt;/code&gt; in &lt;code&gt;dest_dir&lt;/code&gt; field in main.yml with your &lt;code&gt;/path/to/dest_dir&lt;/code&gt; of the remote atomic host.&lt;/p&gt;
+
+&lt;p&gt;Issue the following command in order to run the playbook. Make sure you are in the &lt;code&gt;ansible&lt;/code&gt; directory.
+&lt;code&gt;$ ansible-playbook main.yml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To verify whether the application is running, you can curl the localhost on your remote atomic host with
+&lt;code&gt;$ curl http://localhost:5000&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also manage your containers running on remote host using &lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt;. Check this article to know how to use Cockpit to manage your containers: &lt;a href="https://fedoramagazine.org/deploy-containers-atomic-host-ansible-cockpit"&gt;Manage-Containers-with-Cockpit&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is the repository that contains Playbooks to deploy containers on Atomic host: &lt;a href="https://github.com/trishnaguha/fedora-cloud-ansible"&gt;trishnaguha/fedora-cloud-ansible&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

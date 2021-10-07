@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Appc</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/appc.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>The Problem with Containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/05/the-problem-with-containers/"/>
+    <id>http://www.projectatomic.io/blog/2015/05/the-problem-with-containers/</id>
+    <published>2015-05-08T18:23:25+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>John Mark Walker</name>
+    </author>
+    <content type="html">&lt;p&gt;Our own &lt;a href="http://rhelblog.redhat.com/author/danielriek/"&gt;Daniel Riek&lt;/a&gt; wrote a &lt;a href="http://rhelblog.redhat.com/2015/05/05/rkt-appc-and-docker-a-take-on-the-linux-container-upstream/"&gt;great blog post&lt;/a&gt; about CoreOS&amp;rsquo;s current efforts around the &lt;a href="https://github.com/appc/"&gt;appc specification&lt;/a&gt;, rkt, and the significant work that remains. &lt;/p&gt;
+
+&lt;p&gt;This is where it gets interesting:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;As it is today, appc only covers a very small part of what needs to be sorted out for a container-based, application-centric model. The impact of containerization in redefining the enterprise OS is still vastly underestimated by most; it is a departure from the traditional model of a single-instance, monolithic, UNIX user space in favor of a multi-instance, multi-version environment using containers and aggregate packaging. We are talking about nothing less than changing some of the core paradigms on which the software industry has been working for the last 20 – if not 40 – years.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In other words: change is hard, and the entire computing world as we know it is turning upside down. This necessarily means re-learning how to do some things that we take for granted. Like, how to build applications that&amp;rsquo;s not a manual construction process involving bailing wire and duct tape. Appc covers important territory around defining how containers are expected to work, but it leaves out a lot about how they&amp;rsquo;re supposed to work in concert.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Another important scope issue is primarily induced by the name “Application” - at this point, appc covers individual containers up to a pod. Unfortunately&amp;hellip; there are very few applications that consist of only a single container / single pod. &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Sure, one can stand up a container, maybe a few at a time, customize some pods, install some software, throw Kubernetes in it, and voila! What do you have? You just hand-crafted a solution that Works For You &amp;trade; but is impossible to manage, won&amp;rsquo;t survive the next technology culling, doesn&amp;rsquo;t integrate with your existing management tooling, and probably cannot be easily repeated. &lt;/p&gt;
+
+&lt;p&gt;This is not to downplay the work that is taking place right now on appc. After all, we have to start somewhere, and walking must be perfected before running or flying. However, Daniel brings up one more point that should give us pause when considering the current container landscape:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;It’s important to note that an even bigger concern than the early stage of appc, is that rkt also introduces its own container package format in addition to supporting a compatibility interface to the docker model&amp;hellip; At the end of the day, it will mean fragmentation of the ecosystem&amp;hellip; &lt;/p&gt;
+
+&lt;p&gt;The elephant in the room is that appc does not have the support of Docker, the company that leads in mindshare and controls the format that has quickly become the defacto standard for container packaging. They were not even represented at the panel to share their point of view.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This means that those of us who make up the greater container community will have to work extra hard to make sure we don&amp;rsquo;t end up with a fragmented ecosystem where individual companies protect their turf at the expense of the vast expanse of users and developers who just want things to work. The Unix wars have long been cited as &lt;q&gt;how not to do it,&lt;/q&gt; so let&amp;rsquo;s not go back to that. &lt;/p&gt;
+</content>
+  </entry>
+</feed>

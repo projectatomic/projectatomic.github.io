@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Management</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/management.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing Commissaire</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/05/introducing_commissaire/"/>
+    <id>http://www.projectatomic.io/blog/2016/05/introducing_commissaire/</id>
+    <published>2016-05-19T10:20:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stephen Milner</name>
+    </author>
+    <content type="html">&lt;p&gt;What the heck is commissaire? I&amp;rsquo;m glad you asked! Commissaire is a new
+component of Project Atomic that aims to simplify life for cluster
+administrators.  It provides a simple, script-friendly REST interface
+for cluster-wide maintenance operations like system upgrades and
+rolling restarts.&lt;/p&gt;
+
+&lt;p&gt;Instead of starting from scratch, Commissaire utilizes common
+technologies such as Ansible for communicating with cluster nodes, and
+interfaces with OpenShift and Kubernetes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Architecture" src="http://commissaire.readthedocs.io/en/latest/_images/commissaire-flow-diagram.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Current Features&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/endpoints.html"&gt;Simple REST interface&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/authentication_devel.html"&gt;Plug-in based authentication
+framework&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/operations.html#restart"&gt;Restart hosts in a container
+cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/operations.html#upgrade"&gt;Upgrade hosts in a container
+cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/operations.html#bootstrapping"&gt;Bootstrap new hosts into an existing
+cluster&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/commctl"&gt;Command line interface&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Running The Service&lt;/h3&gt;
+
+&lt;p&gt;If you are curious to give the current development source a try check
+out the &lt;a href="http://commissaire.readthedocs.io/en/latest/gettingstarted.html"&gt;Manual
+Installation&lt;/a&gt;
+instructions.&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;The project is still young, making it a great time to get involved and
+help shape the service. Everyone is welcome to give ideas, feedback,
+patches, or just come say hi! For more information on contributing code
+see &lt;a href="http://commissaire.readthedocs.io/en/latest/development.html#development-setup"&gt;Development
+Setup&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Freenode IRC&lt;/strong&gt;: #atomic&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Email List&lt;/strong&gt;: &lt;a href="mailto:atomic-devel@projectatomic.io"&gt;atomic-devel@projectatomic.io&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/commissaire"&gt;Commissaire Source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/commctl"&gt;Commctl Source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://commissaire.readthedocs.io/en/latest/index.html"&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

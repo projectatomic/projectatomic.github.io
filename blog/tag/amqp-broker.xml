@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Amqp Broker</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/amqp-broker.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Using Kubernetes for Simple Containers and Services</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/09/using-kubernetes-for-simple-containers-and-services/"/>
+    <id>http://www.projectatomic.io/blog/2014/09/using-kubernetes-for-simple-containers-and-services/</id>
+    <published>2014-09-11T18:47:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Mark Lamourine is working on an excellent series of posts that demonstrate how you&amp;rsquo;d use &lt;a href="https://github.com/GoogleCloudPlatform/kubernetes"&gt;Kubernetes&lt;/a&gt; to run services using Docker containers. The latest is &lt;a href="http://cloud-mechanic.blogspot.com/2014/09/kubernetes-simple-containers-and.html"&gt;Kubernetes: Simple Containers and Services&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The most recent post explores creating the subsidiary services for a &lt;a href="http://www.pulpproject.org/"&gt;Pulp&lt;/a&gt; service within a Kubernetes cluster:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;As mentioned elsewhere, Kubernetes is a service which is designed to bind together a cluster of container hosts, which can be regular hosts running the etcd and kubelet daemons or they can be specialized images like Atomic or CoreOS.  They can be private or public services such as Google Cloud&lt;/p&gt;
+
+&lt;p&gt;For Pulp, I need to place a MongoDB and a QPID container within a Kubernetes cluster and create the infrastructure so that clients can find it and connect to it.  For each of these I need to create a Kubernetes Service and a Pod (group of related containers).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Note that the latest post builds on this series:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cloud-mechanic.blogspot.com/2014/08/intro-to-containerized-applications.html"&gt;Intro to Containerized Applications: Docker and Kubernetes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://cloud-mechanic.blogspot.com/2014/08/docker-simple-service-container-example.html"&gt;Docker: A simple service container example with MongoDB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://cloud-mechanic.blogspot.com/2014/09/docker-qpid-message-broker-container.html"&gt;Docker: A QPID Message Broker Container&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Keep an eye on Mark&amp;rsquo;s blog &amp;ldquo;&lt;a href="http://cloud-mechanic.blogspot.com/"&gt;Under the Hood of Cloud Computing&lt;/a&gt; for future installments. &lt;/p&gt;
+</content>
+  </entry>
+</feed>

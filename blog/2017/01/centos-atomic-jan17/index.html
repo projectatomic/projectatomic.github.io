@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+New CentOS Atomic Host with Containerized Kubernetes &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='New CentOS Atomic Host with Containerized Kubernetes' property='og:title'>
+<meta content='A new CentOS Atomic Host release (7.20170117), based on CentOS 7.1611,&#x000A;is now available. Beyond the rebase to the new CentOS version, the&#x000A;biggest change in this release is the removal of the kubernetes-master&#x000A;package from the image, a change that we’ve inherited from RHEL&#x000A;Atomic.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/' property='og:url'>
+<meta content='2017-01-19T10:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='New CentOS Atomic Host with Containerized Kubernetes' name='twitter:title'>
+<meta content='A new CentOS Atomic Host release (7.20170117), based on CentOS 7.1611,&#x000A;is now available. Beyond the rebase to the new CentOS version, the&#x000A;biggest change in this release is the removal of the kubernetes-master&#x000A;package from the image, a change that we’ve inherited from RHEL&#x000A;Atomic.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_01 blog_2017_01_centos-atomic-jan17 blog_2017_01_centos-atomic-jan17_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+New CentOS Atomic Host with Containerized Kubernetes
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-01-19T10:00:00Z'>
+Thursday 19 January 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new CentOS Atomic Host release (7.20170117), based on CentOS 7.1611,
+is now available. Beyond the rebase to the new CentOS version, the
+biggest change in this release is the removal of the kubernetes-master
+package from the image, a change that we&rsquo;ve inherited from RHEL
+Atomic.</p>
+
+<p></p>
+
+<p>You can run the master kubernetes components (apiserver, scheduler,
+and controller-manager) in containers, managed via systemd, using the
+service files and instructions on the <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/ContainerizedMaster">CentOS wiki</a>. The containers
+referenced in these systemd service files are built in and hosted from
+the <a href="https://wiki.centos.org/ContainerPipeline">CentOS Community Container Pipeline</a>, based on Dockerfiles from
+the <a href="https://github.com/CentOS/CentOS-Dockerfiles/tree/master/kubernetes">CentOS-Dockerfiles</a> repository.</p>
+
+<p>I&rsquo;ve tested these containers with the kubernetes ansible scripts
+provided in the <a href="https://github.com/kubernetes/contrib/tree/master/ansible">upstream contrib repository</a>, and they work as
+expected, provided you first copy the service files onto your master.
+I&rsquo;ve also tested the containers with a cluster already running
+kubernetes as configured by the ansible scripts, and that case works
+as well.</p>
+
+<p>There is, however, <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1412803">an SELinux issue</a>, the workaround for which is
+running your kubernetes nodes in permissive mode. The fix for this
+issue requires updating to the docker 1.12 version released this week
+as part of this week&rsquo;s RHEL AH 7.3.2. As soon as docker and the rest
+of the <q>atomic</q> packages are built for CentOS, we&rsquo;ll test and release
+an updated CentOS Atomic Host, along with refreshed media.</p>
+
+<p>For now, if you wish to upgrade to 7.20170117, do so by running:</p>
+<pre class="highlight plaintext"><code>atomic host upgrade&#x000A;</code></pre>
+
+<p>If you aren&rsquo;t already running CentOS Atomic, you can download an image
+from our <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">download page</a> on the CentOS wiki and upgrade that to the
+latest tree.</p>
+
+<h3>Components</h3>
+
+<p>CentOS Atomic Host 7.20170117 includes these core component versions:</p>
+
+<ul>
+<li>atomic-1.13.8-1.el7.x86_64</li>
+<li>cloud-init-0.7.5-10.el7.centos.1.x86_64</li>
+<li>docker-1.10.3-59.el7.centos.x86_64</li>
+<li>etcd-2.3.7-4.el7.x86_64</li>
+<li>flannel-0.5.5-1.el7.x86_64</li>
+<li>kernel-3.10.0-514.2.2.el7.x86_64</li>
+<li>kubernetes-node-1.3.0-0.3.git86dc49a.el7.x86_64</li>
+<li>ostree-2016.11-2.atomic.el7.x86_64</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+vagrant-service-manager Plugin Version 0.0.3 Released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brian (bex) Exelbierd' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='vagrant-service-manager Plugin Version 0.0.3 Released' property='og:title'>
+<meta content='Version 0.0.3 of the vagrant-service-manager&#x000A;plugin has&#x000A;been released by Project Atomic.&#x000A;&#x000A;The vagrant-service-manager plugin works&#x000A;in conjunction with the Atomic Developer Bundle&#x000A;(ADB)&#x000A;to provide a Linux container development environment. The plugin is used&#x000A;to display the configuration information of services present in ADB.&#x000A;This plugin replaces the previously released vagrant-adbinfo plugin.&#x000A;&#x000A;The plugin displays the configuration details for the Docker and other&#x000A;container-related services running inside of the ADB. This information can&#x000A;be used by a CLI client, such as docker or oc, or by an IDE, such as&#x000A;Eclipse,&#x000A;to interact with the ADB.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/vagrant-service-manager-0.0.3/' property='og:url'>
+<meta content='2016-03-01T17:35:00Z' property='article:published_time'>
+<meta content='bexelbie' property='article:author:username'>
+<meta content='ADB' property='article:tag'>
+<link href='/blog/tag/adb.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='vagrant-service-manager Plugin Version 0.0.3 Released' name='twitter:title'>
+<meta content='Version 0.0.3 of the vagrant-service-manager&#x000A;plugin has&#x000A;been released by Project Atomic.&#x000A;&#x000A;The vagrant-service-manager plugin works&#x000A;in conjunction with the Atomic Developer Bundle&#x000A;(ADB)&#x000A;to provide a Linux container development environment. The plugin is used&#x000A;to display the configuration information of services present in ADB.&#x000A;This plugin replaces the previously released vagrant-adbinfo plugin.&#x000A;&#x000A;The plugin displays the configuration details for the Docker and other&#x000A;container-related services running inside of the ADB. This information can&#x000A;be used by a CLI client, such as docker or oc, or by an IDE, such as&#x000A;Eclipse,&#x000A;to interact with the ADB.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_vagrant-service-manager-0 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+vagrant-service-manager Plugin Version 0.0.3 Released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bexelbie/">Brian (bex) Exelbierd</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-01T17:35:00Z'>
+Tuesday  1 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Version 0.0.3 of the <a href="https://github.com/projectatomic/vagrant-service-manager">vagrant-service-manager
+plugin</a> has
+been released by Project Atomic.</p>
+
+<p>The vagrant-service-manager plugin works
+in conjunction with the <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/">Atomic Developer Bundle
+(ADB)</a>
+to provide a Linux container development environment. The plugin is used
+to display the configuration information of services present in ADB.
+This plugin replaces the previously released vagrant-adbinfo plugin.</p>
+
+<p>The plugin displays the configuration details for the Docker and other
+container-related services running inside of the ADB. This information can
+be used by a CLI client, such as <code>docker</code> or <code>oc</code>, or by an IDE, such as
+<a href="http://www.eclipse.org/community/eclipse_newsletter/2015/june/article3.php">Eclipse</a>,
+to interact with the ADB.</p>
+
+<p></p>
+
+<p>Notable changes in this release include:</p>
+
+<ul>
+<li><p>New sub-command for displaying OpenShift provider information</p>
+
+<p><code>$ vagrant service-manager env openshift</code></p></li>
+<li><p>New sub-command for displaying the version information of the ADB box
+and services</p>
+
+<p><code>$ vagrant service-manager box version</code></p></li>
+<li><p>New option to display the version information in <code>--script-readable</code> form</p></li>
+<li><p>Adds exit codes as per status of the executed command for better
+integration with tools consuming the plugin</p></li>
+</ul>
+
+<h3>Example Execution</h3>
+<pre class="highlight plaintext"><code>$ curl https://raw.githubusercontent.com/projectatomic/vagrant-service-manager/master/Vagrantfile &gt; Vagrantfile&#x000A;$ vagrant up&#x000A;&#x000A;# Obtain docker configuration information:&#x000A;&#x000A;$ vagrant service-manager env docker&#x000A;# Copying TLS certificates to /home/bexelbie/Repositories/vagrant-service-manager/.vagrant/machines/default/virtualbox/docker&#x000A;# Set the following environment variables to enable access to the&#x000A;# docker daemon running inside of the vagrant virtual machine:&#x000A;export DOCKER_HOST=tcp://172.28.128.3:2376&#x000A;export DOCKER_CERT_PATH=/home/bexelbie/Repositories/vagrant-service-manager/.vagrant/machines/default/virtualbox/docker&#x000A;export DOCKER_TLS_VERIFY=1&#x000A;export DOCKER_MACHINE_NAME=3cd8ff6&#x000A;# run following command to configure your shell:&#x000A;# eval "$(vagrant service-manager env docker)"&#x000A;&#x000A;# Printing the version of the vagrant box&#x000A;$ vagrant service-manager box version&#x000A;Atomic Developer Bundle (ADB) 1.7.0&#x000A;</code></pre>
+
+<p>Additionally, the information for contributors has been expanded to make
+it even easier to become a contributor.</p>
+
+<p>Users of the previous plugin, vagrant-adbinfo, should know of the
+following significant changes:</p>
+
+<ul>
+<li><p>The docker certificate directory was renamed from <code>.docker</code> to <code>docker</code></p></li>
+<li><p>There is now a sub-command structure in place.  The functionality of
+vagrant-adbinfo is now accessed as follows:</p>
+
+<p><code>vagrant service-manager env docker</code></p></li>
+</ul>
+
+<p>vagrant-service-manager is available via the standard
+method of plugin installation, <code>vagrant plugin install&#x000A;vagrant-service-manager</code>.  You may upgrade from previous versions
+with <code>vagrant plugin update vagrant-service-manager</code>. It
+is also is packaged for Fedora and available from <a href="https://copr.fedorainfracloud.org/coprs/nshaikh/vagrant-service-manager/">COPR</a>.</p>
+
+<p>Please join us by using, testing, and contributing to the
+vagrant-service-manager plugin.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/adb/">ADB</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/vagrant/">Vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/vagrant-service-manager-0.0.3/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/vagrant-service-manager-0.0.3/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/vagrant-service-manager-0.0.3/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Brian (bex) Exelbierd
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/1cf7d9ab78ad3683bca03ab4cad8edf0" /></div>
+<div class='author-blurb with-photo'>
+<p>Software Engineer, Writer and all around really hoopy frood with Red Hat&rsquo;s Open Source and Standards team.</p>
+
+<div class='more-link'>
+<a href="/blog/author/bexelbie/">View all posts by Brian (bex) Exelbierd &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

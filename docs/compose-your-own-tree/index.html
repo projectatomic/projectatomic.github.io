@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Compose Your Own Atomic Updates &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_compose-your-own-tree docs_compose-your-own-tree_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Compose Your Own Atomic Updates</h1>
+
+<p>Project Atomic hosts are built from standard RPM packages which have been composed into filesystem trees using rpm-ostree. This guide provides a method for customizing existing filesystem trees or creating new trees.</p>
+
+<h2>Requirements</h2>
+
+<ul>
+<li>a machine running CentOS or Fedora for composing filesystem trees</li>
+<li>a web server for hosting these tree repositories</li>
+</ul>
+
+<h2>Process</h2>
+
+<ul>
+<li>The <code>rpm-ostree</code> program takes as input a manifest file that describes the target system, and commits the result to an OSTree repository.</li>
+<li>This tree is made available via web server, for Atomic hosts to consume.</li>
+</ul>
+
+<h2>Example Dockerfile</h2>
+
+<p>The tree compose and hosting functions can both be performed in a container, if you choose. The simple Dockerfile below will suffice, or you may use a similarly-configured Fedora or CentOS machine:</p>
+<pre class="highlight plaintext"><code>FROM fedora:25&#x000A;&#x000A;# install needed packages&#x000A;&#x000A;RUN dnf install -y rpm-ostree git python; \&#x000A;dnf clean all&#x000A;&#x000A;# create working dir, clone fedora atomic definitions&#x000A;&#x000A;RUN mkdir -p /srv; \&#x000A;cd /srv; \&#x000A;git clone https://pagure.io/fedora-atomic.git; \&#x000A;&#x000A;# create and initialize repo directory&#x000A;&#x000A;mkdir -p /srv/repo &amp;&amp; \&#x000A;cd /srv/ &amp;&amp; \&#x000A;ostree --repo=repo init --mode=archive-z2; \&#x000A;&#x000A;# make a cache dir&#x000A;&#x000A;mkdir -p /srv/cache&#x000A;&#x000A;# expose default SimpleHTTPServer port, set working dir&#x000A;&#x000A;EXPOSE 8000&#x000A;WORKDIR /srv&#x000A;&#x000A;# start SimpleHTTPServer&#x000A;&#x000A;CMD python -m SimpleHTTPServer&#x000A;</code></pre>
+
+<h2>Build, Run and Enter the Container</h2>
+<pre class="highlight plaintext"><code>docker build --rm -t $USER/atomicrepo .&#x000A;&#x000A;docker run --privileged -d -p 8000:8000 --name atomicrepo $USER/atomicrepo&#x000A;&#x000A;docker exec -it atomicrepo bash &#x000A;</code></pre>
+
+<h2>Compose Your Custom Tree</h2>
+
+<p>The Dockerfile above pulls in the definition files for Atomic CentOS and Atomic Fedora, which may be modified to produce a custom tree. The tree manifest syntax is documented <a href="https://github.com/projectatomic/rpm-ostree/blob/master/docs/manual/treefile.md">here</a>. </p>
+
+<p>For example, here&rsquo;s how to produce a version of the Atomic Fedora 25 tree that adds the <code>fortune</code> command:</p>
+<pre class="highlight plaintext"><code>cd fedora-atomic&#x000A;&#x000A;git checkout f25&#x000A;&#x000A;vi fedora-atomic-docker-host.json&#x000A;</code></pre>
+
+<p>Now, in the <code>&quot;packages&quot;:</code> section of <code>fedora-atomic-docker-host.json</code>, and insert a line like this: <code>&quot;fortune-mod&quot;,</code>. </p>
+
+<p>Next, compose the new tree with the command:</p>
+<pre class="highlight plaintext"><code>rpm-ostree compose tree  --cachedir=/srv/cache  --repo=/srv/repo fedora-atomic-docker-host.json&#x000A;</code></pre>
+
+<h2>Configure Your Atomic Host with the New Repository</h2>
+
+<p>To configure an Atomic host to receive updates from your build machine, run a pair of commands like the following to add a new <q>withfortune</q> repo definition to your host, and then rebase to that tree:</p>
+<pre class="highlight plaintext"><code>sudo ostree remote add withfortune http://$YOUR_IP:8000/repo --no-gpg-verify&#x000A;&#x000A;sudo rpm-ostree rebase withfortune:fedora-atomic/25/x86_64/docker-host&#x000A;</code></pre>
+
+<p>Once the rebase operation is complete, run <code>sudo systemctl reboot</code> to reboot into your updated tree.</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/compose-your-own-tree.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

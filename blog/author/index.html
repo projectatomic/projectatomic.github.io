@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Josh Berkus &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_author blog_author_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<div class='authors-list'>
+<div class='author-list'>
+<h2>Josh Berkus</h2>
+<ul>
+<li><a href="/blog/2018/05/atomic-at-summit/">Project Atomic at Red Hat Summit</a></li>
+<li><a href="/blog/2017/12/fedora-atomic-13-dec-17/">Fedora 27 Atomic Host December 13th Release</a></li>
+<li><a href="/blog/2017/12/fedora-atomic-30-nov-17/">Fedora 27 Atomic Host November 30th Release</a></li>
+<li><a href="/blog/2017/11/atomic-at-kubecon/">Atomic and Friends at KubeCon</a></li>
+<li><a href="/blog/2017/11/fedora-atomic-27-features/">Fedora 27 Atomic Released</a></li>
+<li><a href="/blog/2017/11/docker-usage-survey/">Atomic Host and Docker Survey</a></li>
+<li><a href="/blog/2017/10/fedora-atomic-26-oct-31/">Fedora 26 Atomic Host October 30 Release</a></li>
+<li><a href="/blog/2017/10/atomic-october-events/">Atomic Events October 2017</a></li>
+<li><a href="/blog/2017/10/fedora-atomic-26-oct-16/">Fedora 26 Atomic Host October 16 Release</a></li>
+<li><a href="/blog/2017/10/ostree-reboot-saga/">Rolling Back Bad Kernel Updates</a></li>
+<li><a href="/blog/2017/10/fedora-atomic-26-oct-5/">Fedora 26 Atomic Host October 5 Release</a></li>
+<li><a href="/blog/2017/09/fedora-atomic-26-sept-20/">Fedora 26 Atomic Host September 20 Release</a></li>
+<li><a href="/blog/2017/08/fedora-images-aug-2017/">Fedora Layered Image Release August 2017</a></li>
+<li><a href="/blog/2017/08/atomic-flock/">Atomic at Flock to Fedora 2017</a></li>
+<li><a href="/blog/2017/08/last-week-in-atomic/">Last Week In Atomic</a></li>
+<li><a href="/blog/2017/08/crio-week-1/">This Week in CRI-O</a></li>
+<li><a href="/blog/2017/08/cockpit-148/">Cockpit 148 supports Internet Explorer</a></li>
+<li><a href="/blog/2017/07/changes-to-fah-mailing-lists/">Fedora Atomic communications changes</a></li>
+<li><a href="/blog/2017/07/fedora-atomic-26-kickstarts/">Changes to Kickstarts for Fedora Atomic 26</a></li>
+<li><a href="/blog/2017/07/fedora-atomic-26-release/">Fedora Atomic 26 Released</a></li>
+<li><a href="/blog/2017/07/fedora-atomic-july-5/">Fedora Atomic July 5 Release</a></li>
+<li><a href="/blog/2017/06/fedora-atomic-june25/">Fedora Atomic June 26 Release</a></li>
+<li><a href="/blog/2017/06/fedora-atomic-june-6/">Fedora Atomic June 6 Release</a></li>
+<li><a href="/blog/2017/05/fedora_atomic_may23/">Fedora Atomic May 23 Release</a></li>
+<li><a href="/blog/2017/05/fedora_atomic_may15/">Fedora Atomic May 15 Release</a></li>
+<li><a href="/blog/2017/05/single-overlayfs-volume/">Installing One Big Volume with Overlay2</a></li>
+<li><a href="/blog/2017/05/atomic-at-summit/">Atomic at Red Hat Summit</a></li>
+<li><a href="/blog/2017/04/fedora_atomic_apr27/">Fedora Atomic April 26 Release</a></li>
+<li><a href="/blog/2017/04/fedora_atomic_apr18/">Fedora Atomic April 18 Release</a></li>
+<li><a href="/blog/2017/03/fedora_atomic_mar28/">Fedora Atomic March 28 Release</a></li>
+<li><a href="/blog/2017/03/fedora_atomic_2week_2/">Fedora Atomic March 15 Release</a></li>
+<li><a href="/blog/2017/03/fedora-vfad-container-policy/">Fedora VFAD about Container Guidelines</a></li>
+<li><a href="/blog/2017/03/fedora_atomic_2week/">Fedora Atomic March 1 Release and Security Fix</a></li>
+<li><a href="/blog/2016/12/Kubernetes-returns-to-fedora-atomic/">Kubernetes is back in Fedora Atomic 25 base</a></li>
+<li><a href="/blog/2016/12/notice-to-kubernetes-atomic-users/">Important Notice for Users of Kubernetes on Fedora Atomic</a></li>
+<li><a href="/blog/2016/11/fedora-atomic-25-released/">Fedora Atomic 25 released</a></li>
+<li><a href="/blog/2016/10/atomic-events/">Upcoming events November 2016</a></li>
+<li><a href="/blog/2016/10/install-with-kickstart/">Subatomic cluster install with Kickstart</a></li>
+<li><a href="/blog/2016/06/rh-summit-demos/">Live Demos at Red Hat Summit 2016</a></li>
+<li><a href="/blog/2016/06/micro-cluster-part-2/">Building a Sub-Atomic Cluster, Part 2</a></li>
+<li><a href="/blog/2016/06/origin-on-fedora/">Origin on Fedora, Part 1</a></li>
+<li><a href="/blog/2016/06/micro-cluster-part-1/">Building a Sub-Atomic Cluster, Part 1</a></li>
+<li><a href="/blog/2016/04/gsoc-projects-accepted/">GSOC Atomic, Cockpit Students Selected</a></li>
+<li><a href="/blog/2016/04/postgresql-ha-kubernetes/">Video - PostgreSQL HA with Kubernetes and Patroni</a></li>
+<li><a href="/blog/2016/03/atomic-site-on-atomic-app/">Projectatomic.io Running in Atomic App</a></li>
+<li><a href="/blog/2016/03/project-atomic-gsoc-2016/">Project Atomic in GSOC 2016</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Jason Brooks</h2>
+<ul>
+<li><a href="/blog/2018/01/centos-atomic-1712/">CentOS Atomic Host 7.1712 Available for Download</a></li>
+<li><a href="/blog/2017/12/centos-atomic-1711/">CentOS Atomic Host 7.1711 Available for Download</a></li>
+<li><a href="/blog/2017/11/migrating-kubernetes-on-fedora-atomic-host-27/">Migrating Kubernetes on Fedora Atomic Host 27</a></li>
+<li><a href="/blog/2017/09/new-centos-atomic-release-with-overlayfs/">New CentOS Atomic Release and Kubernetes System Containers Now Available</a></li>
+<li><a href="/blog/2017/09/running-kubernetes-on-fedora-atomic-26/">Running Kubernetes on Fedora Atomic Host</a></li>
+<li><a href="/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/">New CentOS Atomic Release and Kubernetes System Containers Now Available</a></li>
+<li><a href="/blog/2017/07/centos-atomic-july-2017/">CentOS Atomic Host 1706 Release</a></li>
+<li><a href="/blog/2017/06/centos-atomic-security-update-1705/">CentOS Atomic Host 1705.1 Security Update</a></li>
+<li><a href="/blog/2017/06/centos-atomic-host-june-2017/">CentOS Atomic Host 1705 Release</a></li>
+<li><a href="/blog/2017/06/future-plans-for-fedora-atomic-release-life-cycle/">Future Plans for the Fedora Atomic Host Release Life Cycle</a></li>
+<li><a href="/blog/2017/05/testing-system-containerized-kubeadm/">Testing System-Containerized Kubeadm</a></li>
+<li><a href="/blog/2017/05/new-centos-atomic-host-may-2017/">New CentOS Atomic Host with Docker 1.13</a></li>
+<li><a href="/blog/2017/05/system-containerized-kube/">Testing System-Containerized Kubernetes</a></li>
+<li><a href="/blog/2017/04/new-centos-atomic-host-with-updated-kube/">New CentOS Atomic Host with Updated Kubernetes, Flannel, and Etcd</a></li>
+<li><a href="/blog/2017/02/new-centos-atomic-host-with-updated-docker-kubernetes-and-etcd/">New CentOS Atomic Host with Updated Docker, Kubernetes and Etcd</a></li>
+<li><a href="/blog/2017/01/centos-atomic-jan17/">New CentOS Atomic Host with Containerized Kubernetes</a></li>
+<li><a href="/blog/2016/10/join-us-for-a-fedora-25-test-day-next-week-october-24-2016/">Join Us for a Fedora 25 Test Day Next Week (October 24, 2016)</a></li>
+<li><a href="/blog/2016/10/new-centos-atomic-host-with-optional-docker-1-12/">New CentOS Atomic Host with Optional Docker 1.12</a></li>
+<li><a href="/blog/2016/09/running-kubernetes-in-containers-on-atomic/">Running Kubernetes and Friends in Containers on CentOS Atomic Host</a></li>
+<li><a href="/blog/2016/08/new-centos-atomic-host-with-package-layering-support/">New CentOS Atomic Host with Package Layering Support</a></li>
+<li><a href="/blog/2016/07/download-and-get-involved-with-fedora-atomic-24/">Download and Get Involved with Fedora Atomic 24</a></li>
+<li><a href="/blog/2016/07/new-centos-atomic-host-releases-available-for-download/">New CentOS Atomic Host Releases Available for Download</a></li>
+<li><a href="/blog/2016/04/new-centos-atomic-host-release-with-docker-1-9-1/">New CentOS Atomic Host Release, with Docker 1.9.1</a></li>
+<li><a href="/blog/2016/03/new-centos-atomic-host-images-available-for-download/">New CentOS Atomic Host Images Available for Download</a></li>
+<li><a href="/blog/2015/11/centos-atomic-host-updated/">CentOS Atomic Host Updated</a></li>
+<li><a href="/blog/2015/10/updated-centos-atomic-host-tree-and-images-available/">Updated CentOS Atomic Host Tree and Images Available</a></li>
+<li><a href="/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/">Clustering Atomic Hosts with Kubernetes, Ansible, and Vagrant</a></li>
+<li><a href="/blog/2015/09/combined-fedora-centos-atomic-test-day-next-week/">Combined Fedora/CentOS Atomic Test Day Next Week</a></li>
+<li><a href="/blog/2015/09/new-centos-atomic-host-release-featuring-kubernetes-1-0/">New CentOS Atomic Host Release, Featuring Kubernetes 1.0</a></li>
+<li><a href="/blog/2015/08/running-a-containerized-cockpit-ui-from-cloud-init/">Running a Containerized Cockpit UI from Cloud-init</a></li>
+<li><a href="/blog/2015/08/fun-with-kubenetes-and-atomicapp/">Deploy Kubernetes with a Single Command Using Atomicapp</a></li>
+<li><a href="/blog/2015/07/docker-centos-6-and-you/">Docker, CentOS 6, and You</a></li>
+<li><a href="/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/">Friends Don't Let Friends Run Docker on Loopback in Production</a></li>
+<li><a href="/blog/2015/04/my-letter-home-from-container-camp/">My Letter Home from Container Camp</a></li>
+<li><a href="/blog/2015/01/running-ovirt-guest-agent-as-privileged-container/">Running oVirt's Guest Agent on Atomic as a Privileged Container</a></li>
+<li><a href="/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/">Deploying a Containerized Gitlab Instance with Kubernetes</a></li>
+<li><a href="/blog/2014/11/testing-kubernetes-with-an-atomic-host/">Testing Kubernetes with an Atomic Host</a></li>
+<li><a href="/blog/2014/11/build-your-own-atomic-updates/">Build Your Own Atomic Updates</a></li>
+<li><a href="/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/">Containerized Directory Services with Docker and FreeIPA</a></li>
+<li><a href="/blog/2014/09/exploring-web-apps-with-docker/">Exploring Web Apps with Docker</a></li>
+<li><a href="/blog/2014/09/docker-as-middleman/">Docker as Development Middleman</a></li>
+<li><a href="/blog/2014/08/build-your-own-atomic-centos-or-fedora/">Build Your Own Atomic Image, Updated</a></li>
+<li><a href="/blog/2014/04/build-your-own-atomic-host-on-fedora-20/">Build Your Own Atomic Host on Fedora 20</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Joe Brockmeier</h2>
+<ul>
+<li><a href="/blog/2016/05/fedora-24-test-day-tomorrow-may-10-2016/">Fedora 24 Test Day Tomorrow (May 10, 2016)</a></li>
+<li><a href="/blog/2015/12/fedora-atomic-host-two-week-release-12-15-2015-ready/">Fedora Atomic Host Two-Week Release (12-15-2015) Ready!</a></li>
+<li><a href="/blog/2015/12/fedora-atomic-host-two-week-release-ready/">Fedora Atomic Host Two-Week Release Ready!</a></li>
+<li><a href="/blog/2015/07/project-atomic-at-containercon/">Project Atomic at ContainerCon</a></li>
+<li><a href="/blog/2015/06/centos-atomic-host-rebuild-released/">CentOS Atomic Host Released</a></li>
+<li><a href="/blog/2015/06/project-atomic-online-meetup-wednesday/">Project Atomic Online Meetup Wednesday</a></li>
+<li><a href="/blog/2015/06/see-you-at-southeast-linuxfest-self/">See you at Southeast LinuxFest (SELF)</a></li>
+<li><a href="/blog/2015/05/project-atomic-comes-to-japan/">Project Atomic Comes to Japan</a></li>
+<li><a href="/blog/2015/05/fedora-22-released-with-atomic-hosts/">Fedora 22 Released with Atomic Hosts</a></li>
+<li><a href="/blog/2015/04/container-camp-presentation-and-slides/">Container.Camp Presentation and Slides</a></li>
+<li><a href="/blog/2015/04/thoughts-on-project-photon/">Thoughts on Project Photon</a></li>
+<li><a href="/blog/2015/04/atomic-news-fedora-22-beta-centos-update-glitch/">Atomic News: Fedora 22 Beta, CentOS Update Glitch (and Fix!)</a></li>
+<li><a href="/blog/2015/04/project-atomic-at-container-camp/">Project Atomic at Container.Camp</a></li>
+<li><a href="/blog/2015/03/fedora-22-alpha-and-vagrant-boxes/">Fedora 22 Alpha and Vagrant Boxes</a></li>
+<li><a href="/blog/2015/03/red-hat-enterprise-linux-atomic-host-released/">Red Hat Enterprise Linux Atomic Host released</a></li>
+<li><a href="/blog/2015/01/atomic-hackfest-at-devconf-cz/">Atomic Workshop at DevConf.cz</a></li>
+<li><a href="/blog/2015/01/speak-at-red-hat-summit-proposals-due-7-january-2015/">Speak at Red Hat Summit: Proposals Due 7 January 2015</a></li>
+<li><a href="/blog/2014/12/cockpit-0-27-stable-added-to-centos-7-atomic-image/">Docker 1.4, Cockpit 0.27 (stable) added to CentOS 7 Atomic</a></li>
+<li><a href="/blog/2014/12/fedora-21-goes-gold-with-atomic-images/">Fedora 21 goes gold with Atomic images</a></li>
+<li><a href="/blog/2014/12/new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2/">New CentOS Atomic image, Updated CentOS containers, and FreeIPA 4.1.2</a></li>
+<li><a href="/blog/2014/11/fedora-atomic-test-day-tomorrow/">Fedora Atomic Test Day Tomorrow</a></li>
+<li><a href="/blog/2014/11/centos-atomic-sig-image-ready-for-testing/">CentOS Atomic SIG Image Ready for Testing</a></li>
+<li><a href="/blog/2014/11/updated-centos-containers-available-via-docker-hub/">Updated CentOS Containers Available via Docker Hub</a></li>
+<li><a href="/blog/2014/09/fedora-test-day-for-cockpit-tomorrow-16-september-2014/">Fedora Test Day for Cockpit Tomorrow (16 September 2014)</a></li>
+<li><a href="/blog/2014/09/using-kubernetes-for-simple-containers-and-services/">Using Kubernetes for Simple Containers and Services</a></li>
+<li><a href="/blog/2014/09/bringing-new-security-features-to-docker/">Bringing new security features to Docker</a></li>
+<li><a href="/blog/2014/08/is-it-safe-a-look-at-docker-and-security-from-linuxcon/">Is It Safe? A Look at Docker and Security from LinuxCon</a></li>
+<li><a href="/blog/2014/08/centos-7-alpha-builds-for-atomic/">CentOS 7 Alpha Builds for Atomic</a></li>
+<li><a href="/blog/2014/06/centos-atomic-host-sig-propposed/">CentOS Atomic Host SIG Proposed</a></li>
+<li><a href="/blog/2014/06/new-fedora-based-atomic-image-available-with-docker-1-0/">New Fedora-based Atomic Image Available with Docker 1.0</a></li>
+<li><a href="/blog/2014/05/moving-an-rhscl-app-to-docker-on-atomic/">Moving an RHSCL app to Docker on Atomic</a></li>
+<li><a href="/blog/2014/05/running-systemd-in-a-docker-container/">Running systemd in a Docker Container</a></li>
+<li><a href="/blog/2014/04/why-project-atomic/">Why Project Atomic?</a></li>
+<li><a href="/blog/2014/04/announcing-project-atomic/">Announcing Project Atomic: An Operating System Concept for Running Docker Containers</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Dan Walsh</h2>
+<ul>
+<li><a href="/blog/2018/06/sneak-secrets-into-containers/">How to sneak secrets into your containers, without leaving a trace</a></li>
+<li><a href="/blog/2018/02/reintroduction-podman/">Reintroduction of Podman</a></li>
+<li><a href="/blog/2017/02/selinux-policy-containers/">Tightening Up SELinux Policy for Containers</a></li>
+<li><a href="/blog/2016/12/atomic-and-containerd/">Looking forward to working with containerd</a></li>
+<li><a href="/blog/2016/10/playing-with-docker-logging/">Better ways of handling logging in containers</a></li>
+<li><a href="/blog/2016/08/docker-patches/">Project Atomic Docker Patches</a></li>
+<li><a href="/blog/2016/07/docker-selinux-flag/">What does --selinux-enabled do?</a></li>
+<li><a href="/blog/2016/03/selinux-and-docker-part-2/">Extending SELinux Policy for Containers</a></li>
+<li><a href="/blog/2016/03/dwalsh_selinux_containers/">Practical SELinux and Containers</a></li>
+<li><a href="/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/">How to Run a More Secure Non-Root User Container</a></li>
+<li><a href="/blog/2015/12/making-docker-images-write-only-in-production/">Making Docker images read-only in production</a></li>
+<li><a href="/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/">Why we don't let non-root users run Docker in CentOS, Fedora, or RHEL</a></li>
+<li><a href="/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/">Using Volumes with Docker can Cause Problems with SELinux</a></li>
+<li><a href="/blog/2015/05/why-red-hat-is-shipping-docker-1-6/">Why Red Hat is Shipping Docker 1.6</a></li>
+<li><a href="/blog/2015/04/hey-container-community-lets-talk-about-labels/">Hey Container Community, Let's Talk about Labels</a></li>
+<li><a href="/blog/2015/04/logging-docker-container-output-to-journald/">Logging Docker Container Output to journald</a></li>
+<li><a href="/blog/2015/04/using-environment-substitution-with-the-atomic-command/">Using Environment Substitution with the Atomic Command</a></li>
+<li><a href="/blog/2015/04/problems-with-ping-in-containers-on-atomic-hosts/">Addressing Problems with Ping in Containers on Atomic Hosts</a></li>
+<li><a href="/blog/2015/01/improving-docker-error-messages/">Improving Docker Error Messages</a></li>
+<li><a href="/blog/2014/11/docker-s-new-security-advisories-and-untrusted-images/">Docker's New Security Advisories and Untrusted Images</a></li>
+<li><a href="/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/">Granting Rights to Users to Use Docker in Fedora</a></li>
+<li><a href="/blog/2014/09/yet-another-reason-containers-don-t-contain-kernel-keyrings/">Yet Another Reason Containers Don't Contain: Kernel Keyrings</a></li>
+<li><a href="/blog/2014/09/running-syslog-within-a-docker-container/">Running Syslog Within a Docker Container</a></li>
+<li><a href="/blog/2014/09/keeping-up-with-docker-security/">Keeping Up with Docker Security</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Dusty Mabe</h2>
+<ul>
+<li><a href="/blog/2019/11/fedora-atomic-host-nearing-eol/">Fedora Atomic Host Nearing End Of Life</a></li>
+<li><a href="/blog/2018/10/fedora-atomic-28-to-29-upgrade/">Fedora 28->29 Atomic Host Upgrade Guide</a></li>
+<li><a href="/blog/2018/06/welcome-to-fedora-coreos/">Announcing the Fedora CoreOS community!</a></li>
+<li><a href="/blog/2018/05/pinning-deployments-ostree-based-systems/">Pinning Deployments in OSTree Based Systems</a></li>
+<li><a href="/blog/2018/04/fedora-atomic-20-apr-18/">Fedora 27 Atomic Host April 20th Release</a></li>
+<li><a href="/blog/2018/02/fedora-atomic-28-feb-18/">Fedora 27 Atomic Host February 28th Release</a></li>
+<li><a href="/blog/2018/02/fedora-atomic-16-feb-18/">Fedora 27 Atomic Host February 16th Release</a></li>
+<li><a href="/blog/2018/02/fedora-atomic-2-feb-18/">Fedora 27 Atomic Host February 2nd Release</a></li>
+<li><a href="/blog/2018/02/firewalld-in-atomic-host/">Firewalld in Atomic Host</a></li>
+<li><a href="/blog/2018/01/fedora-atomic-18-jan-18/">Fedora 27 Atomic Host January 18th Release</a></li>
+<li><a href="/blog/2018/01/fedora-atomic-4-jan-18/">Fedora 27 Atomic Host January 4th Security Release</a></li>
+<li><a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">Fedora 26->27 Atomic Host Upgrade Guide</a></li>
+<li><a href="/blog/2017/08/fedora-atomic-0822/">Fedora 26 Atomic Host August 22 Release</a></li>
+<li><a href="/blog/2017/08/fedora-atomic-august-08/">Fedora 26 Atomic Host August 08 Release</a></li>
+<li><a href="/blog/2017/08/fedora-atomic-25-to-26-upgrade/">Fedora 25->26 Atomic Host Upgrade Guide</a></li>
+<li><a href="/blog/2017/07/fedora-atomic-july-25/">Fedora Atomic 26 July 25 Release</a></li>
+<li><a href="/blog/2017/04/fedora-atomic-digitalocean/">Fedora Atomic Host Available in DigitalOcean</a></li>
+<li><a href="/blog/2017/02/matching-fedora-ostree-released-content-with-each-2week-atomic-release/">Matching Fedora OSTree Released Content With Each 2 Week Atomic Release</a></li>
+<li><a href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/">Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 2</a></li>
+<li><a href="/blog/2016/12/part1-install-origin-on-f25-atomic-host/">Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1</a></li>
+<li><a href="/blog/2015/10/setting-up-skydns/">Setting up SkyDNS </a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Stef Walter</h2>
+<ul>
+<li><a href="/blog/2017/07/cockpit-145/">Cockpit 145 with Machines and Terminal improvements</a></li>
+<li><a href="/blog/2017/06/cockpit-hackfest-0617/">Cockpit Virtual Hackfest</a></li>
+<li><a href="/blog/2017/06/cockpit-143/">Cockpit 143 with New Software Updates Page</a></li>
+<li><a href="/blog/2017/03/cockpit-134/">Cockpit 134 Released</a></li>
+<li><a href="/blog/2017/03/cockpit-133/">Cockpit 133 Released</a></li>
+<li><a href="/blog/2017/02/cockpit-132/">Cockpit 132 Released</a></li>
+<li><a href="/blog/2017/01/cockpit-129/">Cockpit 129 Released</a></li>
+<li><a href="/blog/2017/01/cockpit-127/">Cockpit 127 Released</a></li>
+<li><a href="/blog/2016/11/cockpit-125-released/">Cockpit 125 Now Available</a></li>
+<li><a href="/blog/2016/07/cockpit-0.113/">Cockpit 0.113 Released</a></li>
+<li><a href="/blog/2016/04/cockpit-docker-restart-policy-0.102/">Cockpit with Docker Restart Policy</a></li>
+<li><a href="/blog/2016/04/cockpit-kubernetes-volumes-0.101/">Cockpit Does Kubernetes Data Volumes</a></li>
+<li><a href="/blog/2016/03/cockpit-099/">Cockpit 0.99 Released</a></li>
+<li><a href="/blog/2014/08/cockpit-roadmap-and-contributing/">Cockpit Roadmap and Contributing</a></li>
+<li><a href="/blog/2014/05/what-s-new-in-cockpit/">What's New in Cockpit?</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Charlie Drage</h2>
+<ul>
+<li><a href="/blog/2016/07/atomic-app-0-6-2-release/">Atomic App 0.6.2 released with new index CLI command</a></li>
+<li><a href="/blog/2016/06/atomic-app-0-6-0-release/">Atomic App 0.6.0 Released&mdash;Native Kubernetes API Integration</a></li>
+<li><a href="/blog/2016/05/atomic-app-0-5-2-release/">Atomic App 0.5.2 released - Cleaner logging and binary generation!</a></li>
+<li><a href="/blog/2016/04/atomic-app-0-5-0-release/">Atomic App 0.5.0 Released!</a></li>
+<li><a href="/blog/2016/03/atomic-app-0-4-5-release/">Atomic App 0.4.5 Released</a></li>
+<li><a href="/blog/2016/03/atomic-app-044-release/">Atomic App 0.4.4 Released</a></li>
+<li><a href="/blog/2016/03/atomic-app-0-4-3/">Atomic App 0.4.3 Release with New Logging UI</a></li>
+<li><a href="/blog/2016/02/atomic-app-0-4-2/">Atomic App 0.4.2 Released!</a></li>
+<li><a href="/blog/2016/01/atomic-app-0-4-0/">Atomic App 0.4.0 Released!</a></li>
+<li><a href="/blog/2016/01/atomic-app-0-3-1/">Atomic App 0.3.1 Release Features Persistent Storage, More OpenShift Support</a></li>
+<li><a href="/blog/2015/12/atomic-app-0-3/">Atomic App 0.3.0 release!</a></li>
+<li><a href="/blog/2015/11/atomic-app-0-2/">What's new in Atomic App 0.2</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Jonathan Lebon</h2>
+<ul>
+<li><a href="/blog/2018/03/new-rpm-ostree-features/">Latest rpm-ostree features</a></li>
+<li><a href="/blog/2018/02/fedora-atomic-workstation/">An Introduction to Fedora Atomic Workstation</a></li>
+<li><a href="/blog/2017/09/rpm-ostree-v2017.8-released/">rpm-ostree v2017.8 released</a></li>
+<li><a href="/blog/2017/09/fedora-atomic-26-120/">Fedora 26 Atomic Host September 05 Release</a></li>
+<li><a href="/blog/2017/07/rpm-ostree-v2017.7-released/">rpm-ostree v2017.7 released</a></li>
+<li><a href="/blog/2017/06/rpm-ostree-v2017.6-released/">rpm-ostree v2017.6 released</a></li>
+<li><a href="/blog/2017/04/rpm-ostree-v2017.5-released/">rpm-ostree v2017.5 released</a></li>
+<li><a href="/blog/2017/04/rpm-ostree-v2017.4-released/">rpm-ostree v2017.4 released</a></li>
+<li><a href="/blog/2016/07/hacking-and-extending-atomic-host/">Hacking and extending Atomic Host</a></li>
+<li><a href="/blog/2016/03/introducing-atomic-devmode/">Introducing Atomic Developer Mode</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Tom Sweeney</h2>
+<ul>
+<li><a href="/blog/2018/07/Buildah-version-v1.2/">Buildah version 1.2 Release Announcement</a></li>
+<li><a href="/blog/2018/06/Buildah-version-v1.1/">Buildah version 1.1 Release Announcement</a></li>
+<li><a href="/blog/2018/06/problems-are-opportunities-in-disguise/">Problems Are Just Opportunities in Disguise</a></li>
+<li><a href="/blog/2018/04/Buildah-Alpha-version-v0.16/">Buildah Alpha version 0.16 Release Announcement</a></li>
+<li><a href="/blog/2018/04/open-source-what-a-concept/">Open Source, What a Concept!</a></li>
+<li><a href="/blog/2018/02/buildah-builds-itself/">Buildah Blocks- Buildah builds itself!</a></li>
+<li><a href="/blog/2018/02/buildah-alpha-0-12/">Buildah Alpha version 0.12 Release Announcement</a></li>
+<li><a href="/blog/2018/01/buildah-blocks/">Buildah Blocks - OCI Shell Game</a></li>
+<li><a href="/blog/2017/08/buildah-getting-fit/">Buildah Blocks &mdash; Getting Fit</a></li>
+<li><a href="/blog/2017/06/introducing-buildah/">Buildah - build your containers from the ground up!</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Brian (bex) Exelbierd</h2>
+<ul>
+<li><a href="/blog/2016/10/docker-brno-meetup-20160914/">Docker Brno -- Summer is OVER</a></li>
+<li><a href="/blog/2016/06/docker-brno-meetup-20160615/">Docker Brno&mdash;Back in the Saddle Again</a></li>
+<li><a href="/blog/2016/03/vagrant-service-manager-0.0.3/">vagrant-service-manager Plugin Version 0.0.3 Released</a></li>
+<li><a href="/blog/2016/01/ADB-1.6-announcement/">Atomic Developer Bundle v1.6 Released</a></li>
+<li><a href="/blog/2015/11/docker-brno-meetup-2/">What Happened at the 2nd Big Docker Meetup in Brno, Czech Republic on 15 October 2015 @ 6 pm</a></li>
+<li><a href="/blog/2015/10/container-roundtable-linuxcon-eu/">Report on the Container Keynote Panel from LinuxCon EU 2015</a></li>
+<li><a href="/blog/2015/10/docker-brno-meetup/">Upcoming Docker Meetup in Brno, Czech Republic - 15 October 2015 @ 6 pm</a></li>
+<li><a href="/blog/2015/08/testing-nulecule-on-debian/">Testing Nulecule on Debian</a></li>
+<li><a href="/blog/2015/05/docker-meetup-brno/">First Docker Meetup in Brno, Czech Republic</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Antonio Murdaca</h2>
+<ul>
+<li><a href="/blog/2017/06/using-kubeadm-with-cri-o/">Using kubeadm with CRI-O</a></li>
+<li><a href="/blog/2017/06/6-reasons-why-cri-o-is-the-best-runtime-for-kubernetes/">6 Reasons why CRI-O is the best runtime for Kubernetes</a></li>
+<li><a href="/blog/2017/02/crio-runtimes/">CRI-O and Alternative Runtimes in Kubernetes</a></li>
+<li><a href="/blog/2016/10/how-the-container-registries-prevent-information-leakage/">How container registries prevent information leakage</a></li>
+<li><a href="/blog/2016/07/working-with-containers-image-made-easy/">Working with Containers' Images Made Easy Part 1: skopeo</a></li>
+<li><a href="/blog/2016/03/docker-credentials-store/">Docker Credential Store</a></li>
+<li><a href="/blog/2016/03/skopeo-inspect-remote-images/">skopeo: inspect remote images</a></li>
+<li><a href="/blog/2016/01/understanding-docker-top-and-ps/">atomic top, docker top, and ps</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Adam Miller</h2>
+<ul>
+<li><a href="/blog/2017/06/fedora-images-june/">Fedora Layered Image Release June 2017</a></li>
+<li><a href="/blog/2017/05/fedora-layered-image-may2017/">Fedora Layered Image Release May 2017</a></li>
+<li><a href="/blog/2017/04/fedora-layered-images-april/">Fedora Layered Image Release April 2017</a></li>
+<li><a href="/blog/2017/02/fedora-layered-image-release/">Fedora's First Ever Container Layered Image Release</a></li>
+<li><a href="/blog/2016/12/announcing-fedora-layered-image-builds/">Announcing the Fedora Layered Image Build Service</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Brent Baude</h2>
+<ul>
+<li><a href="/blog/2018/05/podman-tls/">Podman and insecure registries</a></li>
+<li><a href="/blog/2018/05/podman-varlink/">A remote API for Podman</a></li>
+<li><a href="/blog/2016/05/using-the-atomic-cli-to-scan-vms/">Using the Atomic CLI to Scan Virtual Machines</a></li>
+<li><a href="/blog/2016/02/dont-run-yum-update-within-a-running-container/">Don't Run yum update Within a Running Container</a></li>
+<li><a href="/blog/2016/01/atomic-diff/">Introducing atomic diff</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Micah Abbott</h2>
+<ul>
+<li><a href="/blog/2018/05/fedora-atomic-27-to-28-upgrade/">Fedora 27->28 Atomic Host Upgrade Guide</a></li>
+<li><a href="/blog/2018/03/the-many-ways-to-build-oci-images/">The Many Ways to Build an OCI Image without Docker</a></li>
+<li><a href="/blog/2017/05/oo-standalone-registry/">Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host</a></li>
+<li><a href="/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/">Migrating the Docker Storage Driver to overlay2</a></li>
+<li><a href="/blog/2015/09/creating-custom-ostree-composes-for-atomic-testing/">Creating Custom ostree Composes for Atomic Testing</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Sinny Kumari</h2>
+<ul>
+<li><a href="/blog/2018/04/test-day-for-fedora-28-atomic-cloud-april-11th/">Test Day for Fedora 28 Atomic/Cloud April 11th</a></li>
+<li><a href="/blog/2018/03/fedora-atomic-28-mar-18/">Fedora 27 Atomic Host March 28th Release</a></li>
+<li><a href="/blog/2018/03/fedora-atomic-15-mar-18/">Fedora 27 Atomic Host March 15th Release</a></li>
+<li><a href="/blog/2017/12/compose-custom-ostree/">Composing custom OSTree update for Fedora 27 Atomic Host</a></li>
+<li><a href="/blog/2017/11/fedora-atomic-27-on-multiarch/">Fedora 27 Atomic Host Availability on Multiple Architectures</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Stephen Milner</h2>
+<ul>
+<li><a href="/blog/2017/12/project-atomic-docker-hub-namespace-changes/">Project Atomic Docker Hub Namespace Changes</a></li>
+<li><a href="/blog/2017/11/installing-etcd-as-a-system-container/">Installing etcd as a System container</a></li>
+<li><a href="/blog/2017/06/creating-system-containers/">Creating and Building System Images</a></li>
+<li><a href="/blog/2016/07/commissaire_video_2/">Atomic Video: Commissaire Basic Usage</a></li>
+<li><a href="/blog/2016/05/introducing_commissaire/">Introducing Commissaire</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Brian Proffitt</h2>
+<ul>
+<li><a href="/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/">Upstream Atomic: Vagrant Support for Kubernetes</a></li>
+<li><a href="/blog/2014/06/exploring-the-atomic-in-project-atomic/">Exploring the Atomic in Project Atomic</a></li>
+<li><a href="/blog/2014/06/containers-vs-virtual-machines-is-a-fake-conflict/">Containers Vs. Virtual Machines is a Fake Conflict</a></li>
+<li><a href="/blog/2014/05/why-the-operating-system-will-never-die/">Why The Operating System Will Never Die</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Matthew Micene</h2>
+<ul>
+<li><a href="/blog/2015/10/updated-spc-sysdig-container/">Updates to running a sysdig SPC to troubleshoot containers</a></li>
+<li><a href="/blog/2015/09/using-a-spc-to-troubleshoot-containers/">Using a Super Privileged Container to Troubleshoot Container Problems</a></li>
+<li><a href="/blog/2015/06/running-cockpit-as-a-service/">Running Cockpit as a service in Fedora 22 Atomic Host</a></li>
+<li><a href="/blog/2014/10/getting-started-with-cloud-init/">Getting started with cloud-init</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Shishir Mahajan</h2>
+<ul>
+<li><a href="/blog/2016/05/docker-lvm-plugin/">Working with Docker LVM Plugin</a></li>
+<li><a href="/blog/2016/03/daemon_option_basedevicesize/">Increasing the Base Device Size on Docker Daemon Restart</a></li>
+<li><a href="/blog/2015/09/docker-daemon-command/">Docker 1.8 and the New Daemon Command</a></li>
+<li><a href="/blog/2015/07/what-are-docker-none-none-images/">What are Docker &lt;none&gt;:&lt;none&gt; images?</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Budh Ram Gurung</h2>
+<ul>
+<li><a href="/blog/2017/05/minishift-intro/">Introducing Minishift - Run OpenShift locally</a></li>
+<li><a href="/blog/2016/08/vagrant-service-manager-1-3-0-release/">Vagrant Service Manager 1.3.0 Released</a></li>
+<li><a href="/blog/2016/07/vagrant-service-manager-install-cli/">Client Binary Installation Now Included in the ADB</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Giuseppe Scrivano</h2>
+<ul>
+<li><a href="/blog/2018/05/podman-userns/">User namespaces support in Podman</a></li>
+<li><a href="/blog/2017/07/unprivileged-containers-with-bwrap-oci-and-bubblewrap/">Unprivileged containers with bwrap-oci and bubblewrap</a></li>
+<li><a href="/blog/2016/09/intro-to-system-containers/">Introduction to System Containers</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>ipbabble</h2>
+<ul>
+<li><a href="/blog/2018/03/building-buildah-container-image-for-kubernetes/">Building a Buildah container image for Kubernetes</a></li>
+<li><a href="/blog/2018/01/using-image-registries-with-buildah/">Using OCI Image Registries with Buildah</a></li>
+<li><a href="/blog/2017/11/getting-started-with-buildah/">Getting Started with Buildah</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>John Mark Walker</h2>
+<ul>
+<li><a href="/blog/2015/08/why-containers-are-worth-the-hype/">El-Deko - Why Containers Are Worth the Hype</a></li>
+<li><a href="/blog/2015/05/announcing-the-nulecule-specification-for-composite-applications/">Announcing the Nulecule Specification for Composite Applications</a></li>
+<li><a href="/blog/2015/05/the-problem-with-containers/">The Problem with Containers</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Lalatendu Mohanty</h2>
+<ul>
+<li><a href="/blog/2016/03/ADB-1-7-1/">ADB-Atomic Developer Bundle 1.7.1 Released</a></li>
+<li><a href="/blog/2016/02/ADB-1-7/">Releasing ADB-Atomic Developer Bundle 1.7</a></li>
+<li><a href="/blog/2015/12/ADB-1-5/">Releasing the Atomic Developer Bundle 1.5</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Trishna Guha</h2>
+<ul>
+<li><a href="/blog/2017/04/contribute-to-atomic-host-doc/">Contribute to the Atomic Host Documentation!</a></li>
+<li><a href="/blog/2017/02/automate-building-atomic-host/">Automate Building Atomic Host</a></li>
+<li><a href="/blog/2016/10/deployment-using-ansible/">Containerization and Deployment of application on Atomic host with Ansible-Playbook</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Aaron Weitekamp</h2>
+<ul>
+<li><a href="/blog/2015/09/introducing-vendor-labels2/">Introducing Image Metadata Labels for Software Vendors</a></li>
+<li><a href="/blog/2015/05/bugfix-container-software-in-place/">Bugfix Container Software In Place</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Christoph Görn</h2>
+<ul>
+<li><a href="/blog/2015/07/follow-us-the-nulecule-has-moved/">Follow us, the Nulecule has moved!</a></li>
+<li><a href="/blog/2015/05/atomic-app-0-1-0/">Atomic App 0.1.1</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Colin Walters</h2>
+<ul>
+<li><a href="/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/">First atomic upgrade for Fedora 21 Atomic</a></li>
+<li><a href="/blog/2014/07/new-fedora-atomic-installable-iso/">New Fedora Atomic Installable ISO</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Mrunal Patel</h2>
+<ul>
+<li><a href="/blog/2016/04/running_OCI/">Getting Started with OCI</a></li>
+<li><a href="/blog/2016/03/no-new-privs-docker/">Added no-new-privileges Security Flag to Docker</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Tomáš Tomeček</h2>
+<ul>
+<li><a href="/blog/2016/03/how-i-wrote-compose-exec/">How I Wrote exec Support for docker-compose</a></li>
+<li><a href="/blog/2015/09/introduce-atomic-reactor/">Introducing Atomic Reactor</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>alsadi</h2>
+<ul>
+<li><a href="/blog/2018/03/containers-w-skopeo-ostree-oci/">How does Atomic run system containers without Docker Daemon?</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Brent Baude, Scott Collier</h2>
+<ul>
+<li><a href="/blog/2014/10/libvirtd_in_containers/">Running libvirtd in a container</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Dharmit Shah</h2>
+<ul>
+<li><a href="/blog/2016/04/developing-with-mesos-marathon/">Developing with Mesos-Marathon provider on Atomic Developer Bundle (ADB)</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Haiyan Meng</h2>
+<ul>
+<li><a href="/blog/2016/08/ocitools-libgen/">Creating OCI configurations with the ocitools generate library</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Jan Pazdziora</h2>
+<ul>
+<li><a href="/blog/2015/12/fedora-atomic-sssd-container/">External authentication for Fedora Atomic Host</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Jeremy Eder</h2>
+<ul>
+<li><a href="/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/">Introducing the “fedora-tools” Image for Fedora Atomic Host</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Jim Perrin</h2>
+<ul>
+<li><a href="/blog/2014/09/centos-docker-images-updated-to-20140902/">CentOS Docker Images updated to 20140902</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Joe Brockmeier, Lars Herrmann</h2>
+<ul>
+<li><a href="/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/">The Difference Between Project Atomic and Atomic Hosts</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Joe Doss</h2>
+<ul>
+<li><a href="/blog/2018/06/building-kernel-modules-with-podman/">Building Kernel Modules with Podman</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Praveen Kumar</h2>
+<ul>
+<li><a href="/blog/2016/05/App-Development-on-OpenShift-using-ADB/">App Development on OpenShift using ADB</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Radek Vykydal</h2>
+<ul>
+<li><a href="/blog/2015/05/building-and-running-live-atomic/">Building and running live Atomic from PXE with iSCSI</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Ruixin Bao</h2>
+<ul>
+<li><a href="/blog/2018/03/update-kernel-arguments-on-atomic-host/">Update Kernel arguments on Atomic Host</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>sanja</h2>
+<ul>
+<li><a href="/blog/2018/05/welcome-redhat-coreos/">Welcome to Red Hat CoreOS</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Sayan Chowdhury</h2>
+<ul>
+<li><a href="/blog/2017/09/test-day-for-fedora-27-atomic-cloud-september-29th/">Test Day for Fedora 27 Atomic/Cloud September 29th</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Scott Collier</h2>
+<ul>
+<li><a href="/blog/2014/10/atomic-rescue-mode/">How to rescue an Atomic host</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>stefwalter</h2>
+<ul>
+<li><a href="/blog/2016/04/cockpit-100/">Cockpit 0.100 Released</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Suraj Deshmukh</h2>
+<ul>
+<li><a href="/blog/2016/04/k8s-adb-usage/">Using Kubernetes with ADB (Atomic Developer Bundle)</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>trishnag, jberkus</h2>
+<ul>
+<li><a href="/blog/2017/01/remote-access-docker-daemon/">Set Up Remote Access for Docker on Atomic Host</a></li>
+</ul>
+</div>
+<div class='author-list'>
+<h2>Waldemar Augustyn</h2>
+<ul>
+<li><a href="/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/">Creating a Simple Bare Metal Atomic Host Cluster</a></li>
+</ul>
+</div>
+</div>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

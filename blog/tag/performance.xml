@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Performance</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/performance.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing the “fedora-tools” Image for Fedora Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/"/>
+    <id>http://www.projectatomic.io/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/</id>
+    <published>2015-09-04T16:07:35+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jeremy Eder</name>
+    </author>
+    <content type="html">&lt;p&gt;Borrowing from the &lt;a href="http://developerblog.redhat.com/2015/03/11/introducing-the-rhel-container-for-rhel-atomic-host/"&gt;Red Hat Developer Blog&lt;/a&gt; entry, here&amp;rsquo;s an introduction the “fedora-tools” image for Fedora Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;When Red Hat’s performance team first started experimenting with Atomic, it became clear that our needs for low-level debug capabilities were at odds with the stated goal of Atomic to maintain a very small footprint.  If you consider your current production environment, most standard builds do not include full debug capabilities, so this is nothing new.  What is new, is that on Red Hat Enterprise Linux (RHEL) you could easily install any debug/tracing/analysis utility, but on Atomic:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+-bash-4.2# dnf
+bash: dnf: command not found
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Whoops!  What’s this now???  If you haven’t played with Fedora Atomic yet, keep the first rule of Atomic in mind:&lt;/p&gt;
+
+&lt;p&gt;You don’t install software on Atomic.  You build containers on RHEL, CentOS, or Fedora, then run them on Atomic. Sys admin tools are no exception.&lt;/p&gt;
+
+&lt;p&gt;We always knew we needed an equivalent for Fedora, and we&amp;rsquo;re happy to announce today the availability of the &lt;a href="https://hub.docker.com/r/fedora/tools/"&gt;fedora-tools image&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;READMORE&lt;/p&gt;
+
+&lt;h3&gt;How Do I Use This Thing?&lt;/h3&gt;
+
+&lt;p&gt;Here’s a &lt;a href="https://youtu.be/W4D-TPge9-E"&gt;short video&lt;/a&gt; that shows how to use the tools container to do common &lt;q&gt;root&lt;/q&gt; system administrator tasks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;sosreport&lt;/li&gt;
+&lt;li&gt;Snooping bridge traffic&lt;/li&gt;
+&lt;li&gt;System service container (sadc/sar)&lt;/li&gt;
+&lt;li&gt;Using the &lt;q&gt;perf&lt;/q&gt; profiling tool&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;iframe width="420" height="315" src="https://www.youtube.com/embed/W4D-TPge9-E" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Real-World Usage in the Field&lt;/h3&gt;
+
+&lt;p&gt;One capability that we love having in the tools container is the GNU Debugger (GDB).  GDB is an interactive debugger used to troubleshoot application crashes by analyzing process core dumps.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a quick demo of how to analyze userspace core dumps on Atomic, using the tools container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# atomic host status
+  TIMESTAMP (UTC)         VERSION    ID             OSNAME            REFSPEC
+* 2015-09-01 22:50:33     22.102     132444ceed     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host
+ 2015-08-26 17:38:55     22.98      8b40b4d962     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Download the Fedora and new Fedora Tools images:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# docker pull fedora
+latest: Pulling from docker.io/fedora
+...
+Status: Downloaded newer image for docker.io/fedora:latest
+
+-bash-4.3# docker pull fedora/tools
+latest: Pulling from docker.io/fedora/tools
+...
+Status: Downloaded newer image for docker.io/fedora/tools:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Launch a tools container:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# atomic run --name tools fedora/tools
+docker run -it --name tools --privileged --ipc=host --net=host --pid=host -e HOST=/host -e NAME=tools -e IMAGE=fedora/tools -v /run:/run -v /var/log:/var/log -v /etc/localtime:/etc/localtime -v /:/host fedora/tools
+[root@f22-atomic /]# exit
+exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now for the demo part. Let&amp;rsquo;s run a daemonized container that runs the &lt;code&gt;sleep&lt;/code&gt; command.  Sleep could represent any daemonized application.  We are going to crash it, and analyze the core dump with &lt;code&gt;gdb&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# docker run -d fedora sleep infinity
+9921bdd687eea85faa3f0365bb510c4e4e5df142295a2c8775e4c4a0912376a6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get the Process ID (PID) of the process we are going to crash.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# pid=$(pgrep sleep)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using the &lt;code&gt;gcore&lt;/code&gt; utility from the &lt;code&gt;gdb&lt;/code&gt; package, crash the sleep PID within the container we created.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# docker run fedora/tools gcore -o /host/tmp/democore $!
+ptrace: No such process.
+You can't do that without a process to debug.
+The program is not being run.
+gcore: failed to create /host/tmp/democore.1822
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahh, why did that fail?  It failed because of PID namespace isolation.  A normal docker run invocation gives you a dedicated PID namespace for that container, starting with PID 1.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# docker run -it fedora/tools ps aux
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.0  45860  2632 ?        Rs+  19:10   0:00 ps aux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, the value of $pid does not exist inside this new container.  But, if you use &lt;code&gt;--pid=host&lt;/code&gt;, which is what the atomic run command does for you, you skip the PID namespace creation for the container, and operate in the host&amp;rsquo;s PID namespace, where the value of $pid is valid.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# atomic run fedora/tools pgrep sleep
+1822
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s use the tools container to try and take a gcore of the sleep process running in another container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# atomic run fedora/tools gcore -o /host/tmp/democore $pid
+warning: Target and debugger are in different PID namespaces; thread lists and other data are likely unreliable
+0x00007fc297ba62c0 in __nanosleep_nocancel () from /lib64/libc.so.6
+warning: target file /proc/2240/cmdline contained unexpected null characters
+warning: Memory read failed for corefile section, 8192 bytes at 0x7ffe73d4e000.
+Saved corefile /host/tmp/democore.1822
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Okay, this time we were able to save a core at &lt;code&gt;/host/tmp/democore.1822&lt;/code&gt;.  But what is &lt;code&gt;/host&lt;/code&gt;?  /host is a volume mount that Red Hat has chosen to standardize on for its super-privileged containers.  This list of options is embedded in the tools image label:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker inspect fedora/tools | grep RUN
+            "RUN": "docker run -it --name NAME --privileged --ipc=host --net=host --pid=host -e HOST=/host -e NAME=NAME -e IMAGE=IMAGE -v /run:/run -v /var/log:/var/log -v /etc/localtime:/etc/localtime -v /:/host IMAGE"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, a tools image launched with the &lt;code&gt;atomic&lt;/code&gt; command will be launched as above, including the &lt;code&gt;-v/:/host&lt;/code&gt; volume.  This gives us a handy way to write stuff to the host from within a container, such as when using gcore and choosing where it should write out the core dump.&lt;/p&gt;
+
+&lt;p&gt;Also, notice the warning about being in different PID namespaces.  This warning means that certain data within the core file will not make sense when read back in a different PID namespace in which our gdb process will run.  It gives the example of thread lists, which for our sake can be thought of as PID namespaces.&lt;/p&gt;
+
+&lt;p&gt;Back on the Atomic host system, we can see the core file was in fact written to &lt;code&gt;/tmp&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# file /tmp/democore.$pid
+/tmp/democore.2240: ELF 64-bit LSB core file x86-64, version 1 (SYSV), SVR4-style, from 'sleep'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can now use the tools container to run &lt;code&gt;gdb&lt;/code&gt;, and analyze the core dump:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.3# atomic run fedora/tools gdb /host/tmp/democore.$pid -q -ex bt -batch
+[New LWP 2240]
+Core was generated by `sleep'.
+#0  0x00007fc297ba62c0 in ?? ()
+"/host/tmp/democore.2240" is a core file.
+Please specify an executable to debug.
+#0  0x00007fc297ba62c0 in ?? ()
+#1  0x0000000000403e0f in ?? ()
+#2  0x000000000001869f in ?? ()
+#3  0x0000000000000000 in ?? ()
+-bash-4.3#
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The magic numbers above can be resolved into human-readable function names by installing the corresponding debuginfo package:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install --disablerepo=* --enablerepo=fedora-debuginfo coreutils-debuginfo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Coming soon: sosreport&lt;/h3&gt;
+
+&lt;p&gt;Unfortunately, the container support for &lt;code&gt;sosreport&lt;/code&gt; has not yet been merged into Fedora.  We&amp;rsquo;ve discussed this, and are working quickly to update the Fedora tools image accordingly.&lt;/p&gt;
+
+&lt;h3&gt;Go Forth and Debug!&lt;/h3&gt;
+
+&lt;p&gt;For more information, head over to the Red Hat Customer Portal and check out the &lt;a href="https://access.redhat.com/articles/1336853"&gt;official rhel-tools documentation&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

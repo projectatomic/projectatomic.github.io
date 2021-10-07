@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-51 blog_page-51_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/atomic-app-0-1-0/">Atomic App 0.1.1</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/goern/">Christoph Görn</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-28T04:00:00Z'>
+Thursday 28 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We are pleased to announce Atomic App 0.1.1! Find it at <a href="https://github.com/projectatomic/atomicapp/releases">github</a> and <a href="https://registry.hub.docker.com/u/projectatomic/atomicapp/">docker hub</a>. </p>
+
+<p>Atomic App is the reference implementation of the <a href="https://github.com/projectatomic/nulecule/">Nulecule Specification for composite applications</a>. It can be used to bootstrap container applications and to install/deploy and run them. One of the key design goals of the Nulecule spec is to be container and orchestration engine agnostic, so that any developer or operator could successfully build, test, install, run, and manage composite container applications regardless of tooling. </p>
+
+<p>In that same vein, Atomic App is designed to be provider agnostic, whether you want to run your application in a Kubernetes, OpenShift, or plain container environment, like Docker. It&rsquo;s this multi-provider support feature that we are emphasizing for this release: building a Nulecule application results in a portable container that can be run in a wide variety of environments, and Atomic App takes the Nulecule application container and allows the operator to easily run a composite application in their chosen environment with their chosen providers. </p>
+
+<p>It is in the spirit of portability that we announce a major milestone for Atomic App: support for <a href="https://github.com/openshift/origin">OpenShift v3</a> as a provider. And for developers of Nulecule applications, we have also added some new and exciting developer features.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/05/atomic-app-0-1-0/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/alm/">alm</a></li>
+<li><a href="/blog/tag/application-lifecycle/">application lifecycle</a></li>
+<li><a href="/blog/tag/atomic-app/">atomic app</a></li>
+<li><a href="/blog/tag/composite-apps/">composite apps</a></li>
+<li><a href="/blog/tag/developers/">developers</a></li>
+<li><a href="/blog/tag/nulecule/">nulecule</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/fedora-22-released-with-atomic-hosts/">Fedora 22 Released with Atomic Hosts</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-27T18:14:16Z'>
+Wednesday 27 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A quick note for folks who might have missed the announcement yesterday, <a href="http://fedoramagazine.org/fedora-22-released/">Fedora 22 was officially released</a>, along with <a href="https://getfedora.org/en/cloud/download/atomic.html">Atomic images</a> for OpenStack/KVM, Amazon EC2, and Vagrant.</p>
+
+<p>The Vagrant images are suitable for VirtualBox and libvirt/KVM, so they&rsquo;re usable on Linux (libvirt), or Mac OS X and Windows (VirtualBox) with the appropriate Vagrant providers. Josef Stříbný has written up a short tutorial on <a href="http://fedoramagazine.org/running-vagrant-fedora-22/">using Vagrant images on Fedora 22</a> on Fedora Magazine.</p>
+
+<p>Of course, Fedora 22 also includes the Workstation and Server editions – and the Fedora 22 Docker image will be available via the Docker Hub very soon.</p>
+
+<p>Questions or feedback on the Fedora 22 Atomic host release? <a href="https://admin.fedoraproject.org/mailman/listinfo/cloud">Talk to us on the Fedora Cloud mailing list</a>, or fire up your favorite IRC client and head to Freenode in the #fedora-cloud channel.</p>
+
+<a class="more-link view-article" href="/blog/2015/05/fedora-22-released-with-atomic-hosts/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/fedora-22/">Fedora 22</a></li>
+<li><a href="/blog/tag/vagrant/">Vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/building-and-running-live-atomic/">Building and running live Atomic from PXE with iSCSI</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/rvykydal/">Radek Vykydal</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-26T04:00:00Z'>
+Tuesday 26 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this post I&rsquo;ll show how to build live Atomic Host image that can be run on diskless machine using PXE boot. Once we have the images, I&rsquo;ll show you how to run the live system and customize it with boot options and cloud-config for better use of resources, leading to the goal of storing Docker images on iSCSI devices.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/05/building-and-running-live-atomic/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/iscsi/">iSCSI</a></li>
+<li><a href="/blog/tag/pxe/">PXE</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/why-red-hat-is-shipping-docker-1-6/">Why Red Hat is Shipping Docker 1.6</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-20T20:24:04Z'>
+Wednesday 20 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We attempt to ship new versions of Red Hat Enteprise Linux Atomic Host (RHELAH) every six weeks. I am in charge of the Docker portion of each release. I also lead the team developing the <a href="http://www.projectatomic.io/docs/usr-bin-atomic/">atomic</a> command. As a major component of the RHELAH release, we want to include the most recent Docker release possible to our users. </p>
+
+<p>However, just because Docker releases a new version does not mean this instantly gets into the RHEL release. We need to allow our QE team time for testing, and to make sure it is <q>Enterprise Ready.</q>  Towards the end of the most recent six week period Docker released an updated Docker 1.6.1 package with a series of <a href="http://www.openwall.com/lists/oss-security/2015/05/07/10">CVEs</a>. </p>
+
+<p>Naturally, Red Hat&rsquo;s Security Response Team (SRT) analysed these CVEs to see if we needed to hold up the release to include Docker 1.6.1. After careful analysis, SRT decided that the potential threat posed by these CVEs was <em>not</em> a real risk to users who deploy containers responsibly.</p>
+
+<p>Trevor Jay, from Red Hat Security, states:</p>
+
+<blockquote>
+<p>Technically speaking, these don&rsquo;t cross any trust boundaries. Docker images are root-run software. They can drop or restrict permissions and capabilities so that you&rsquo;re protected should they become compromised just like any other software that starts with elevated privileges, but you are inherently trusting the image itself to be well-written (to take advantage of the safeties we provide) and non-malicious.</p>
+
+<p>This is all about trusting the application you install on your system. Sometimes I worry people have the opinion that any piece of software I install, as long as it is in a container I am safe.  I believe Docker is playing whack a mole with these vulnerabilities and preventing this is going to be near impossible.</p>
+
+<p>Container safety is about restricting what can happen when your application gets owned, not about randomly running potential malware.</p>
+</blockquote>
+
+<h3>Verify, then Trust</h3>
+
+<p>I don&rsquo;t want to sound like a broken record, but <a href="http://www.projectatomic.io/blog/2014/11/docker-s-new-security-advisories-and-untrusted-images">I&rsquo;ve covered this before</a>. The problem isn&rsquo;t the privilege escalation, it&rsquo;s that users are running untrusted images and expecting Docker to protect them against potentially malicious software.</p>
+
+<p>Docker shouldn&rsquo;t be about running random crap from the Internet (as root, no less!) and expecting not to be hacked. </p>
+
+<p>Make no mistake, we will do everything we can to have a timely (but tested) asynchronous release when we identify real security vulnerabilities in the software we ship. These <q>vulnerabilities,</q> however, are easily prevented by sane computing practices.</p>
+
+<a class="more-link view-article" href="/blog/2015/05/why-red-hat-is-shipping-docker-1-6/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cve/">CVE</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/security/">Security</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/05/bugfix-container-software-in-place/">Bugfix Container Software In Place</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/aweiteka/">Aaron Weitekamp</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-19T17:54:07Z'>
+Tuesday 19 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Debugging container applications can be frustrating. Last week a few of us got together to hack on <a href="https://github.com/projectatomic/atomicapp">Atomicapp</a> and the <a href="https://github.com/projectatomic/nulecule">Nulecule specification</a>. The codebase was moving fast, so I hit a few bugs. The problem was the application I was running was in a container and the bug was difficult to reproduce on my local workstation. The python traceback output suggested it was a simple fix so I wanted to just edit the code in place in the container and keep moving. But then how would I get the code onto my local development box and into my git repository? And how could I test this code change?</p>
+
+<p>My approach was to bindmount the source from the local workstation into the container so the files being edited can remain in the local git repository.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/05/bugfix-container-software-in-place/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=50/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=47/">47</a>
+</li>
+<li>
+<a href="/blog/page=48/">48</a>
+</li>
+<li>
+<a href="/blog/page=49/">49</a>
+</li>
+<li>
+<a href="/blog/page=50/">50</a>
+</li>
+<li class='active'>
+<span>51</span>
+</li>
+<li>
+<a href="/blog/page=52/">52</a>
+</li>
+<li>
+<a href="/blog/page=53/">53</a>
+</li>
+<li>
+<a href="/blog/page=54/">54</a>
+</li>
+<li>
+<a href="/blog/page=55/">55</a>
+</li>
+<li>
+<a href="/blog/page=52/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

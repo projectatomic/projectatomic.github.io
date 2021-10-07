@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Building Kernel Modules with Podman &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Doss' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Building Kernel Modules with Podman' property='og:title'>
+<meta content='Building Kernel Modules on Atomic with Podman&#x000A;&#x000A;The goal of this post is to explain how to build and load a kernel module inside a container using Podman.&#x000A;&#x000A;Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.&#x000A;&#x000A;Using DKMS on Atomic does not work as expected. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/' property='og:url'>
+<meta content='2018-06-06T00:00:00Z' property='article:published_time'>
+<meta content='jdoss' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kernel modules' property='article:tag'>
+<link href='/blog/tag/kernel modules.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='libpod' property='article:tag'>
+<link href='/blog/tag/libpod.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='podman' property='article:tag'>
+<link href='/blog/tag/podman.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Building Kernel Modules with Podman' name='twitter:title'>
+<meta content='Building Kernel Modules on Atomic with Podman&#x000A;&#x000A;The goal of this post is to explain how to build and load a kernel module inside a container using Podman.&#x000A;&#x000A;Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.&#x000A;&#x000A;Using DKMS on Atomic does not work as expected. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_06 blog_2018_06_building-kernel-modules-with-podman blog_2018_06_building-kernel-modules-with-podman_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Building Kernel Modules with Podman
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jdoss/">Joe Doss</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-06-06T00:00:00Z'>
+Wednesday  6 June 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Building Kernel Modules on Atomic with Podman</h3>
+
+<p>The goal of this post is to explain how to build and load a kernel module inside a container using Podman.</p>
+
+<p>Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.</p>
+
+<p>Using <a href="https://github.com/dell/dkms">DKMS</a> on Atomic does not work as <a href="https://github.com/projectatomic/rpm-ostree/issues/1091">expected</a>. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.</p>
+
+<p></p>
+
+<h4>Fedora Atomic and Kernel Modules</h4>
+
+<p>There are a few technical reasons on why building a kernel module inside of a container is a quick path for getting a third party kernel module built and loaded on Fedora Atomic Host.</p>
+
+<p>The first is all kernel modules must be built to match the version of the current running kernel,  meaning we have to ensure that the kernel module is built consistently for every new kernel for it to work correctly.</p>
+
+<p>The second is the fact that most of the file system on Atomic is read only.  Most third party kernel modules have their source stored in <code>/usr/src</code> and once they are built, they are stored in <code>/usr/lib/modules</code>. Since both paths are immutable, this makes using a container ideal to build and store the kernel module.</p>
+
+<p>The last surrounds how packages are created in the bi-weekly Fedora Atomic Host composes. The <code>kernel-devel</code> packages sometimes do not match up with the kernel that is being shipped in these bi-weekly updates. This means consistently getting the correct <code>kernel-devel</code> packages can be challenging. If we build the kernel module inside a container, we can pull in the correct <code>kernel-devel</code> packages from <a href="https://koji.fedoraproject.org/koji/packageinfo?packageID=8">Koji</a> for the booted kernel to build the module.</p>
+
+<h4>Building a Kernel Module with Podman</h4>
+
+<p>In this example we are building the <a href="https://www.wireguard.com">WireGuard</a> kernel module, which is an extremely simple yet fast and modern VPN. For non-Atomic Fedora/CentOS/RHEL based installs, you can use the <code>wireguard-dkms</code> <a href="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/">RPM</a>. It uses DKMS to build and load the kernel module on boot. This doesn&rsquo;t help us get WireGuard running on Atomic as it will only result in failure. This leads us to building the kernel module inside of a container.</p>
+
+<p>Let&rsquo;s check out the Dockerfile below:</p>
+<pre class="highlight plaintext"><code>FROM fedora as builder&#x000A;MAINTAINER "Joe Doss" &lt;joe@solidadmin.com&gt;&#x000A;&#x000A;ARG WIREGUARD_VERSION&#x000A;ARG WIREGUARD_KERNEL_VERSION&#x000A;ARG WIREGUARD_SHA256&#x000A;&#x000A;WORKDIR /tmp&#x000A;&#x000A;RUN dnf update -y &amp;&amp; dnf install \&#x000A;        libmnl-devel elfutils-libelf-devel findutils binutils boost-atomic boost-chrono \&#x000A;        boost-date-time boost-system boost-thread cpp dyninst efivar-libs gc \&#x000A;        gcc glibc-devel glibc-headers guile koji isl libatomic_ops libdwarf libmpc \&#x000A;        libpkgconf libtool-ltdl libxcrypt-devel make mokutil pkgconf pkgconf-m4 \&#x000A;        pkgconf-pkg-config unzip zip /usr/bin/pkg-config xz -y &amp;&amp; \&#x000A;        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;&amp; \&#x000A;        koji download-build --rpm --arch=x86_64 kernel-devel-${WIREGUARD_KERNEL_VERSION} &amp;&amp; \&#x000A;        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;&amp; \&#x000A;        dnf install kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \&#x000A;        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \&#x000A;        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;&amp; \&#x000A;        dnf clean all &amp;&amp; \&#x000A;        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \&#x000A;        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat &gt;| "$t"; sha256sum --quiet -c &lt;&lt;&lt;"${WIREGUARD_SHA256} $t" \&#x000A;        || exit 1; cat "$t"; } | tar xJf -&#x000A;&#x000A;WORKDIR /tmp/WireGuard-${WIREGUARD_VERSION}/src&#x000A;&#x000A;RUN KERNELDIR=/usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/build make -j$(nproc) &amp;&amp; make install&#x000A;</code></pre>
+
+<p>Stepping through the above, we are going to point out the key aspects. At the very start, we pass in three <code>ARG</code> directives. These are <code>WIREGUARD_VERSION</code>, <code>WIREGUARD_KERNEL_VERSION</code> and <code>WIREGUARD_SHA256</code>. We use these to pass in three variables: the booted kernel version of the Fedora 28 Atomic Host node, the version of WireGuard to build, and the SHA265 sum of the WireGuard source tarball.</p>
+
+<p>The <code>RUN</code> directive installs all of the packages required to build the WireGuard kernel module. It also uses <code>koji</code> to download the correct package versions of <code>kernel-core</code>, <code>kernel-devel</code>, and <code>kernel-modules</code> and it then installs them so it matches the current booted kernel of the Fedora Atomic Host node. From there it checks the SHA256 on the WireGuard source archive and extracts the it to <code>/usr/src</code>. Finally, it builds and installs the kernel module inside the container.</p>
+
+<p>Since Podman supports multi-stage Dockerfiles, we use a second stage without all of the extra installed packages that were required to build the kernel module and we copy over the <code>wireguard.ko</code> file and the <code>wg</code> binary to be used in the final container image.</p>
+<pre class="highlight plaintext"><code>FROM fedora&#x000A;MAINTAINER "Joe Doss" &lt;joe@solidadmin.com&gt;&#x000A;&#x000A;ARG WIREGUARD_KERNEL_VERSION&#x000A;&#x000A;WORKDIR /tmp&#x000A;&#x000A;RUN dnf update -y &amp;&amp; dnf install kmod koji -y &amp;&amp; \&#x000A;        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;&amp; \&#x000A;        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;&amp; \&#x000A;        dnf install /tmp/kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \&#x000A;        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \&#x000A;        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;&amp; \&#x000A;        dnf clean all &amp;&amp; rm -f /tmp/*.rpm&#x000A;&#x000A;COPY --from=builder /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko \&#x000A;                    /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko&#x000A;&#x000A;COPY --from=builder /usr/bin/wg /usr/bin/wg&#x000A;&#x000A;CMD /usr/bin/wg&#x000A;</code></pre>
+
+<p>Using <code>podman build</code> we can pass in the required variables using <code>--build-arg</code> to build the container and tag it with the <code>WIREGUARD_VERSION</code>. To save time, we are using the <code>podman build</code> feature to pull the Dockerfile from a <a href="https://github.com/projectatomic/libpod/blob/master/docs/podman-build.1.md#building-an-image-using-a-git-repository">git repository</a>. This will checkout the git repo to a temporary location and use the Dockerfile in the project root for the build context.</p>
+<pre class="highlight plaintext"><code>export WIREGUARD_VERSION=0.0.20180531&#x000A;export WIREGUARD_KERNEL_VERSION=$(uname -r)&#x000A;export WIREGUARD_SHA256=ff653095cc0e4c491ab6cd095ddf5d1db207f48f947fb92873a73220363f423c&#x000A;&#x000A;sudo podman build --build-arg WIREGUARD_VERSION=${WIREGUARD_VERSION} \&#x000A;    --build-arg WIREGUARD_SHA256=${WIREGUARD_SHA256} \&#x000A;    --build-arg WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION} \&#x000A;    -t wireguard:${WIREGUARD_VERSION} git://github.com/jdoss/atomic-wireguard&#x000A;</code></pre>
+
+<p>Once the kernel module is done building you can view the container using <code>podman images</code>.</p>
+<pre class="highlight plaintext"><code>$ sudo podman images&#x000A;REPOSITORY                 TAG            IMAGE ID       CREATED              SIZE&#x000A;docker.io/library/fedora   latest         cc510acfcd70   4 weeks ago          263MB&#x000A;localhost/wireguard        0.0.20180531   c035e1bd76da   About a minute ago   741MB&#x000A;</code></pre>
+
+<p>You can now load the kernel module on Fedora Atomic Host using the following:</p>
+<pre class="highlight plaintext"><code>export WIREGUARD_VERSION=0.0.20180531&#x000A;export WIREGUARD_KERNEL_VERSION=$(uname -r)&#x000A;&#x000A;sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \&#x000A;     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \&#x000A;     wireguard:${WIREGUARD_VERSION} modprobe udp_tunnel&#x000A;&#x000A;sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \&#x000A;     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \&#x000A;     wireguard:${WIREGUARD_VERSION} modprobe ip6_udp_tunnel&#x000A;&#x000A;sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \&#x000A;     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \&#x000A;     wireguard:${WIREGUARD_VERSION} \&#x000A;     insmod /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko&#x000A;</code></pre>
+
+<p>and then we can verify that it is loaded:</p>
+<pre class="highlight plaintext"><code>$ lsmod |grep wireguard&#x000A;wireguard             229376  0&#x000A;ip6_udp_tunnel         16384  1 wireguard&#x000A;udp_tunnel             16384  1 wireguard&#x000A;</code></pre>
+
+<p>From there you can use the built container to call the WireGuard <code>wg</code> binary to setup your WireGuard VPN on Fedora Atomic Host.</p>
+<pre class="highlight plaintext"><code>export WIREGUARD_VERSION=0.0.20180531&#x000A;export WIREGUARD_KERNEL_VERSION=$(uname -r)&#x000A;&#x000A;sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \&#x000A;-e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \&#x000A;wireguard:${WIREGUARD_VERSION} /usr/bin/wg --help&#x000A;Usage: /usr/bin/wg &lt;cmd&gt; [&lt;args&gt;]&#x000A;&#x000A;Available subcommands:&#x000A;  show: Shows the current configuration and device information&#x000A;  showconf: Shows the current configuration of a given WireGuard interface, for use with `setconf'&#x000A;  set: Change the current configuration, add peers, remove peers, or change peers&#x000A;  setconf: Applies a configuration file to a WireGuard interface&#x000A;  addconf: Appends a configuration file to a WireGuard interface&#x000A;  genkey: Generates a new private key and writes it to stdout&#x000A;  genpsk: Generates a new preshared key and writes it to stdout&#x000A;  pubkey: Reads a private key from stdin and writes a public key to stdout&#x000A;You may pass `--help' to any of these subcommands to view usage.&#x000A;&#x000A;</code></pre>
+
+<p>All of the above is an example of a manual process for building a kernel module on Atomic. In order to provide an automated DKMS-like experience you can check out the <a href="https://github.com/jdoss/atomic-wireguard">atomic-wireguard</a> project on GitHub and <a href="https://https//copr.fedorainfracloud.org/coprs/jdoss/atomic-wireguard/">Copr</a>.</p>
+
+<p>The goal of the <code>atomic-wireguard</code> project is to automate the process of building the WireGuard kernel module with Podman on boot by using a build script called via systemd unit. It hopefully can be used as a stopgap to help support third party kernel modules on Atomic until official kernel module support is figured out. If you have any questions, please feel free to reach out to me (<code>jdoss</code>) on Freenode in either the <code>#atomic</code> or <code>#wireguard</code> channels or on Twitter <a href="https://twitter.com/jdoss">@jdoss</a>.</p>
+
+<p>Special thanks to the Project Atomic and libpod teams. Especially Dan Walsh, Dusty Mabe, Tom Sweeney, Matthew Heon, and Colin Walters for their patient help and guidance on this endeavor.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kernel-modules/">kernel modules</a></li>
+<li><a href="/blog/tag/libpod/">libpod</a></li>
+<li><a href="/blog/tag/podman/">podman</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Doss
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/fc455d4c6882eb88dfccb6378da6abb5" /></div>
+<div class='author-blurb with-photo'>
+<p>Director of Engineering Operations <a href="https://twitter.com/KennaSecurity">@KennaSecurity</a>. Fedora/RHEL/CentOS Linux user. Passionate about enabling others to improve their lives with Open Source Software.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jdoss/">View all posts by Joe Doss &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

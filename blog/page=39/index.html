@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-39 blog_page-39_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/docker-credentials-store/">Docker Credential Store</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-16T13:25:00Z'>
+Wednesday 16 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>One security feature in the upcoming Docker 1.11 is the capability to use an external credential store for registry authentication. The new version will automatically detect a configured external store, if it is available, and use it instead of the JSON file. We&rsquo;ll be talking more about this in a few paragraphs, but first, let&rsquo;s see how Docker is currently storing credentials.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/docker-credentials-store/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/selinux-and-docker-part-2/">Extending SELinux Policy for Containers</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-15T12:12:00Z'>
+Tuesday 15 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A developer contacted me about building a container that will run as a log aggregator for
+<code>fluentd</code>.  This container needed to be a <a href="http://developers.redhat.com/blog/2014/11/06/introducing-a-super-privileged-container-concept/">SPC container</a> that would manage parts of the host system, namely the log files under /var/logs.</p>
+
+<p>Being a good conscientious developer, he wanted to run his application as securely as possible.
+The option he wanted to avoid was running the container in <code>--privileged</code> mode, removing all security from the container.  When he ran his container <code>SELinux</code> complained about the container processes trying to read log files.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/selinux-and-docker-part-2/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/introducing-atomic-devmode/">Introducing Atomic Developer Mode</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-11T17:02:00Z'>
+Friday 11 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s latest release of Fedora Atomic Host, you might notice something
+different when you boot the new image. There is now a <q>Developer Mode</q> entry in
+the GRUB boot menu. This blog post will describe why this new feature was added
+and what it does.</p>
+
+<p>One of the confusing things that newcomers encounter when they want to try out
+Atomic Host is setting up
+<a href="http://cloudinit.readthedocs.org/en/latest/">cloud-init</a>. Currently, it is
+impossible to use an Atomic Host image without providing cloud-init with a
+data source. In the absence of a source, cloud-init will try connecting to
+various known metadata URLs for about four minutes and then give up.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/introducing-atomic-devmode/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/cloud-init/">cloud-init</a></li>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+<li><a href="/blog/tag/developers/">developers</a></li>
+<li><a href="/blog/tag/devmode/">devmode</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/ADB-1-7-1/">ADB-Atomic Developer Bundle 1.7.1 Released</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/lala/">Lalatendu Mohanty</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-11T10:00:00Z'>
+Friday 11 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.7.1, a Vagrant box that provides a ready-to-use development environment for container based applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is available for Microsoft Windows, Apple OS X, and Linux distributions.</p>
+
+<p>The 1.7.1 release is primarily a bug fix and enhancement release.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/ADB-1-7-1/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/developer-tools/">Developer tools</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">OpenShift</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/atomic-site-on-atomic-app/">Projectatomic.io Running in Atomic App</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-07T12:00:00Z'>
+Monday  7 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Since Atomic App has released version 0.4.2, I decided it was past time
+to make the atomic-site into an Atomic App instead of using a shell script that
+wraps Docker to test it. The new setup is a big improvement, and a useful
+guide to <q>Nuleculizing</q> your own apps.</p>
+
+<p>As you know, the purpose of Atomic App and Nulecule is to give you a provider-agnostic
+way to specify multi-container applications and orchestration metadata that stays
+with the application image(s). Eventually, this will allow for single-command
+deploys of even large, scalable apps involving many containers. For now, it
+enables us get rid of some hackish shell scripting around Docker in our atomic-site
+test setup.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/atomic-site-on-atomic-app/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-app/">Atomic App</a></li>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/testing/">testing</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=38/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=35/">35</a>
+</li>
+<li>
+<a href="/blog/page=36/">36</a>
+</li>
+<li>
+<a href="/blog/page=37/">37</a>
+</li>
+<li>
+<a href="/blog/page=38/">38</a>
+</li>
+<li class='active'>
+<span>39</span>
+</li>
+<li>
+<a href="/blog/page=40/">40</a>
+</li>
+<li>
+<a href="/blog/page=41/">41</a>
+</li>
+<li>
+<a href="/blog/page=42/">42</a>
+</li>
+<li>
+<a href="/blog/page=43/">43</a>
+</li>
+<li>
+<a href="/blog/page=40/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

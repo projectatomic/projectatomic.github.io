@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Pxe</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/pxe.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Building and running live Atomic from PXE with iSCSI</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/05/building-and-running-live-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2015/05/building-and-running-live-atomic/</id>
+    <published>2015-05-26T04:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Radek Vykydal</name>
+    </author>
+    <content type="html">&lt;p&gt;In this post I&amp;rsquo;ll show how to build live Atomic Host image that can be run on diskless machine using PXE boot. Once we have the images, I&amp;rsquo;ll show you how to run the live system and customize it with boot options and cloud-config for better use of resources, leading to the goal of storing Docker images on iSCSI devices.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Servers you&amp;rsquo;ll need:&lt;/h3&gt;
+
+&lt;p&gt;To run the live image you will need to set up the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A PXE server to serve kernel and initramfs modified for booting into live Atomic image.&lt;/li&gt;
+&lt;li&gt;A HTTP server to serve live Atomic image and &lt;code&gt;cloud-init&lt;/code&gt; configuration.&lt;/li&gt;
+&lt;li&gt;(optional) An iSCSI target serving device used for storing docker images.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I won&amp;rsquo;t describe how to set these up here.&lt;/p&gt;
+
+&lt;p&gt;If you are not interested in building the images you can try &lt;a href="https://rvykydal.fedorapeople.org/atomic/pxetolive/"&gt;images I built during writing this blogpost&lt;/a&gt; or Fedora images if there are already some at the time you are reading this post, and jump right to the section &lt;em&gt;Build output - images and PXE config&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Building the live Atomic image&lt;/h3&gt;
+
+&lt;h4&gt;Using the livemedia-creator tool&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I will be using Fedora 22 Beta Server to build the live image. We need &lt;code&gt;lorax&lt;/code&gt; package containing &lt;code&gt;livemedia-creator&lt;/code&gt; - the tool for building the image, and kvm virtualization which livemedia-creator uses to create live image with Atomic installer iso. (Note, Fedora 22 Server will be released soon.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo dnf install wget lorax libvirt virt-install qemu-kvm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Download the Atomic &lt;strong&gt;installer iso&lt;/strong&gt; which will be used to install live Atomic to raw disk image in a virtual machine. For now let&amp;rsquo;s use Fedora 22 Test Candidate 3 (final ISO images for the current Fedora release should be available at &lt;a href="https://getfedora.org/en/cloud/download/"&gt;https://getfedora.org/en/cloud/download/&lt;/a&gt;, or you can try &lt;a href="http://download.fedoraproject.org/pub/fedora/linux/releases/test/22_Beta/Cloud_Atomic/x86_64/iso/Fedora-Cloud_Atomic-x86_64-22_Beta.iso"&gt;Fedora 22 Beta Atomic iso&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo wget http://alt.fedoraproject.org/pub/alt/stage/22_TC3/Cloud_Atomic/x86_64/iso/Fedora-Cloud_Atomic-x86_64-22_TC3.iso -O /var/lib/libvirt/images/atomic-installer.iso
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The ISO contains the repository Atomic Host will be installed from (it is also possible to use remote repository, see below).&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Download installer &lt;strong&gt;kickstart file&lt;/strong&gt; for live Atomic image.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;wget http://raw.githubusercontent.com/rvykydal/anaconda-kickstarts/master/atomic/fedora-atomic-pxe-live.ks
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The comments in the &lt;a href="https://github.com/rvykydal/anaconda-kickstarts/blob/master/atomic/fedora-atomic-pxe-live.ks"&gt;fedora-atomic-pxe-live.ks&lt;/a&gt; should explain the kickstart settings specific for live Atomic.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Build the live image with &lt;code&gt;livemedia-creator&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;livemedia-creator&lt;/code&gt; uses a kvm virtual machine:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo systemctl start libvirtd.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First it creates raw Atomic disk image by Anaconda installation in kvm using installer iso and kickstart.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo livemedia-creator --make-disk --image-name=atomic.disk --iso=/var/lib/libvirt/images/atomic-installer.iso --ks=fedora-atomic-pxe-live.ks --ram=1500 --vnc=spice
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then ext4 rootfs image (merging separate &lt;code&gt;/boot&lt;/code&gt; partition in) is created from the raw disk image and packed into squashfs image, and modules for fetching and using the live image are added into initrd in the process:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo livemedia-creator --make-ostree-live --disk-image=/var/tmp/atomic.disk  --live-rootfs-keep-size
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The two steps can be run in one shot:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo livemedia-creator --make-ostree-live --iso=/var/lib/libvirt/images/atomic-installer.iso --ks=fedora-atomic-pxe-live.ks  --live-rootfs-keep-size --ram=1500 --vnc=spice
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;--make-ostree-live&lt;/code&gt; option is a special version of &lt;code&gt;--make-pxe-live&lt;/code&gt; option for systems using ostree deployment and update model (as Atomic) where handling deployment root different from physical root is needed. &lt;code&gt;--live-rootfs-keep-size&lt;/code&gt; option makes the rootfs image honor the size defined in kickstart (by default it has the size close to the size occupied by the installed system). If you are interested about the details of build process, there is quite a lot of info in the logs (&lt;code&gt;program.log&lt;/code&gt;, &lt;code&gt;virt-install.log&lt;/code&gt;, &lt;code&gt;livemedia.log&lt;/code&gt;)&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Let&amp;rsquo;s look at the results. Due to a bug in F22 &lt;code&gt;--resultsdir&lt;/code&gt; option is not working currently so we have to look in &lt;code&gt;/var/tmp&lt;/code&gt; where the results are stored by default. There is a hint in the tool terminal output:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;2015-05-15 10:47:36,013: SUMMARY
+2015-05-15 10:47:36,014: -------
+2015-05-15 10:47:36,014: Logs are in /home/rvykydal
+2015-05-15 10:47:36,014: Disk image is at /var/tmp/diskiJGJzG.img
+2015-05-15 10:47:36,014: Results are in /var/tmp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We know where the intermediate Atomic disk image is, but we need to find &lt;strong&gt;live images&lt;/strong&gt; in a temporary directory with results in /var/tmp&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo find /var/tmp | grep PXE
+/var/tmp/tmpPHiQsv/PXE_CONFIG
+$ sudo ls -l /var/tmp/tmpPHiQsv
+total 425076
+-rw-r--r--. 1 root root  32584368 May 15 10:47 initramfs-4.0.1-300.fc22.x86_64.img
+-rw-r--r--. 1 root root 396787712 May 15 10:46 live-rootfs.squashfs.img
+-rw-r--r--. 1 root root       317 May 15 10:47 PXE_CONFIG
+-rwxr-xr-x. 1 root root   5895192 Jan  1  1970 vmlinuz-4.0.1-300.fc22.x86_64
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Building the image from non-local Atomic repo&lt;/h4&gt;
+
+&lt;p&gt;With the &lt;a href="https://github.com/rvykydal/anaconda-kickstarts/blob/master/atomic/fedora-atomic-pxe-live.ks"&gt;fedora-atomic-pxe-live.ks&lt;/a&gt; we were using Atomic repository embedded in the installer iso by including kickstart snippet from the installation image:
+&lt;code&gt;
+%include /usr/share/anaconda/interactive-defaults.ks
+&lt;/code&gt;
+The snippet contains &lt;code&gt;ostreesetup&lt;/code&gt; command pointing to the repository. To override it add &lt;code&gt;ostreesetup&lt;/code&gt; command pointing to repository of your choice some place after the &lt;code&gt;%include&lt;/code&gt; clause:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;%include /usr/share/anaconda/interactive-defaults.ks
+
+ostreesetup --nogpg --osname=fedora-atomic --remote=fedora-atomic --url=http://10.34.102.55:8000/ --ref=fedora-atomic/f22/x86_64/docker-host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This way the Atomic installer ISO can be used to create live Atomic image with updated content. It is not possible to update live Atomic Host in the normal way with &lt;code&gt;atomic host upgrade&lt;/code&gt; command, respin of the live image needs to be done. It is because (atomic) updates of system using ostree technology require rebooting into updated system (and allow for reboot or rollback to previous version of the system).&lt;/p&gt;
+
+&lt;h4&gt;Building image with rpm-ostree-toolbox&lt;/h4&gt;
+
+&lt;p&gt;To build Atomic repository locally there is the &lt;a href="https://github.com/projectatomic/rpm-ostree-toolbox"&gt;rpm-ostree-toolbox&lt;/a&gt; tool. The repository is built with &lt;code&gt;treecompose&lt;/code&gt; command. With the tool also installer iso can be built using &lt;code&gt;installer&lt;/code&gt; command, and there is even a &lt;code&gt;liveimage&lt;/code&gt; command for building live Atomic image. It is running &lt;code&gt;livemadia-creator&lt;/code&gt; in container so one big advangage is that the image can be built on other than target system without any issues. I may cover this in another blog post.&lt;/p&gt;
+
+&lt;h3&gt;Build output - images and PXE config&lt;/h3&gt;
+
+&lt;p&gt;To run live Atomic three images and PXE configuration are required:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;vmlinuz-4.0.1-300.fc22.x86_64&lt;/code&gt; - kernel image to be supplied by PXE (tftp) server&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;initramfs-4.0.1-300.fc22.x86_64.img&lt;/code&gt; - initrd image to be supplied by PXE (tftp) server. Compared to initrd image from Atomic repository it has two dracut modules added: &lt;code&gt;livenet&lt;/code&gt; for fetching live images and &lt;code&gt;dmsquash-live&lt;/code&gt; for running system from live root images.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PXE_CONFIG&lt;/code&gt; - template &lt;strong&gt;pxe configuration&lt;/strong&gt; file where location of images (kernel and initrd on PXE server, rootfs image on HTTP server) needs to be substituted according to your environment. The main reason for supplying this template is the &lt;code&gt;ostree&lt;/code&gt; option which tells dracut ostree module where to find deployment root that should be used.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# PXE configuration template generated by livemedia-creator
+kernel &amp;lt;PXE_DIR&amp;gt;/vmlinuz-4.0.1-300.fc22.x86_64
+append initrd=&amp;lt;PXE_DIR&amp;gt;/initramfs-4.0.1-300.fc22.x86_64.img root=live:&amp;lt;URL&amp;gt;/live-rootfs.squashfs.img ostree=/ostree/boot.0/Fedora-Cloud_Atomic/b71c9aba7a86fb046928c05d5175e65234589a82a471e7d3030f126b24211018/0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;live-rootfs.squashfs.img&lt;/code&gt; - the live rootfs ext4 image packed in squashfs image. Here is &lt;strong&gt;how the image is mounted&lt;/strong&gt; by dracut&amp;rsquo;s &lt;code&gt;dmsquash-live&lt;/code&gt; module with &lt;code&gt;root=live:&lt;/code&gt; option. It is using devicemapper&amp;rsquo;s read-write overlay (snapshot) on read-only loop-mounted rootfs image:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;live-rootfs.squashfs.img
+         |
+        (ro)
+         |
+         V
+     /dev/loop0
+         |
+     (squashfs ro)                    dd
+         |                             |
+         V                             V
+  LiveOS/rootfs.img (sparse)       /overlay (sparse)
+         |                             |
+        (ro)                          (rw)
+         |                             |
+         V                             V
+     /dev/loop1---------------     /dev/loop2
+         |                    \      /
+   (dm linear ro)         (dm snapshot rw)
+         |                       |
+         V                       V
+/dev/mapper/live-base   /dev/mapper/live-rw
+                                 |
+                                 /
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Yes, seems like quite a bit of layers. I&amp;rsquo;ll talk about another option which should be available in Fedora rawhide in &lt;em&gt;Mounting live image with rd.writable.fsimg?&lt;/em&gt; section.&lt;/p&gt;
+
+&lt;h3&gt;Running live Atomic Host from PXE:&lt;/h3&gt;
+
+&lt;p&gt;So, let&amp;rsquo;s move our kernel and initrd images to our PXE server, live image to our HTTP server, update PXE_CONFIG accordingly and set it up on the PXE server, e.g.:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# PXE configuration template generated by livemedia-creator
+label pxetolive_f22_atomic
+kernel test/rv/atomic_live_blog/vmlinuz-4.0.1-300.fc22.x86_64
+append initrd=test/rv/atomic_live_blog/initramfs-4.0.1-300.fc22.x86_64.img root=live:http://10.34.39.2/trees/rv/atomic_live_blog/live-rootfs.squashfs.img ostree=/ostree/boot.0/Fedora-Cloud_Atomic/b71c9aba7a86fb046928c05d5175e65234589a82a471e7d3030f126b24211018/0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And run it live! Be it on bare-metal or virtual (diskless if you like) machine. Oh, wait, we should supply cloud-init configuration.&lt;/p&gt;
+
+&lt;h4&gt;Cloud-init to configure access to host&lt;/h4&gt;
+
+&lt;p&gt;The live image is built with cloud-init service enabled, as configured in &lt;a href="https://github.com/rvykydal/anaconda-kickstarts/blob/master/atomic/fedora-atomic-pxe-live.ks"&gt;fedora-atomic-pxe-live.ks&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;services --enabled=cloud-init,cloud-init-local,cloud-final,cloud-config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;so if you don&amp;rsquo;t want to wait for fail of cloud-init service trying to fetch configuration from default location during boot, you need either to disable the service (&lt;code&gt;services --disabled=&lt;/code&gt;) in kickstart file for the live image build (but you&amp;rsquo;ll hardly want to do it as you&amp;rsquo;ll see it is useful) or to supply cloud-init configuration by this boot option added:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ds=nocloud-net;seedfrom=http://10.34.39.2/ks/rv/ci/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The option points to a directory containing &lt;code&gt;meta-data&lt;/code&gt; and &lt;code&gt;user-data&lt;/code&gt; files.&lt;/p&gt;
+
+&lt;p&gt;Here is an example of the &lt;a href="https://github.com/rvykydal/anaconda-kickstarts/blob/master/atomic/ci/pxe-to-live-with-iscsi/meta-data"&gt;meta-data&lt;/a&gt; file.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;instance-id: Atomic0
+local-hostname: atomic-00
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The actual host configuration goes into &lt;code&gt;user-data&lt;/code&gt; file. Let&amp;rsquo;s use it to configure &lt;strong&gt;ssh access&lt;/strong&gt;. The live image is built with root password set in kickstart file:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;rootpw --plaintext atomic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To be able to access the system with ssh, add your public ssh key for default &lt;code&gt;fedora&lt;/code&gt; user in &lt;code&gt;user-data&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;#cloud-config
+password: atomic
+chpasswd: {expire: False}
+ssh_pwauth: True
+ssh_authorized_keys:
+  - ssh-rsa AAA...SDvZ user1@domain.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;#cloud-config&lt;/code&gt; line is not a comment but actually a keyword.&lt;/p&gt;
+
+&lt;p&gt;The root password can be also changed by this &lt;code&gt;user-data&lt;/code&gt; configuration:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;chpasswd:
+  list: |
+    root:ciatomic
+  expire: False
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It is also possible to &lt;strong&gt;lock the root password&lt;/strong&gt; during compose of live image by modifying the installation kickstart.&lt;/p&gt;
+
+&lt;p&gt;Replace&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;rootpw --plaintext atomic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;with&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;rootpw --lock --iscrypted locked
+user --name=none
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and remove dummy user (probably required by installer because of locked root pw) in &lt;code&gt;%post&lt;/code&gt; section of kickstart:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;userdel -r none
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;How much data can we write?&lt;/h4&gt;
+
+&lt;p&gt;As we are running live system, it is basically limited by available RAM. But it is not so simple. First, let&amp;rsquo;s see our root fs size:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ df -h
+Filesystem           Size  Used Avail Use% Mounted on
+devtmpfs             2.0G     0  2.0G   0% /dev
+tmpfs                2.0G     0  2.0G   0% /dev/shm
+tmpfs                2.0G   17M  2.0G   1% /run
+tmpfs                2.0G     0  2.0G   0% /sys/fs/cgroup
+/dev/mapper/live-rw  4.9G  1.1G  3.9G  23% /
+tmpfs                399M     0  399M   0% /run/user/0
+tmpfs                399M     0  399M   0% /run/user/1000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It is roughly the same as the size defined in kickstart file.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;part / --fstype="ext4" --size=6000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Because we build the image with livemedia-creator using &lt;code&gt;--live-rootfs-keep-size&lt;/code&gt; option (I think the size from kickstart is truncated to number of GiBs, hence the 6000 MiB vs 4.9 GB difference). It is also possible to set the desired size directly by &lt;code&gt;--live-rootfs-size&lt;/code&gt; option. We don&amp;rsquo;t have to be afraid of overcommiting here as the image is sparse. But what we see reported by &lt;code&gt;df&lt;/code&gt; is not the real space available for writing our data. As said above, there is a read-write devicemapper layer using &lt;strong&gt;overlay image&lt;/strong&gt; (devicemapper shapshot) to store live data:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ lsblk
+NAME                         MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sr0                           11:0    1   623M  0 rom  
+loop0                          7:0    0 378.6M  1 loop 
+loop1                          7:1    0     5G  1 loop 
+├─live-rw                    253:0    0     5G  0 dm   /sysroot
+└─live-base                  253:1    0     5G  1 dm   
+loop2                          7:2    0   512M  0 loop 
+└─live-rw                    253:0    0     5G  0 dm   /sysroot
+loop3                          7:3    0   100G  0 loop 
+└─docker-253:0-278707-pool   253:2    0   100G  0 dm   
+  └─docker-253:0-278707-base 253:3    0    10G  0 dm   
+loop4                          7:4    0     2G  0 loop 
+└─docker-253:0-278707-pool   253:2    0   100G  0 dm   
+  └─docker-253:0-278707-base 253:3    0    10G  0 dm   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The size of overlay image (mounted to &lt;code&gt;loop2&lt;/code&gt;) which is used for storing data written over read-only loop-mounted rootfs image (&lt;code&gt;loop1&lt;/code&gt;, which is the 5G reported above) is 512M by default. So athough the root&amp;rsquo;s &lt;code&gt;live-rw&lt;/code&gt; device reports 3.9G available in &lt;code&gt;df&lt;/code&gt;, the actual available space can be obtained by &lt;code&gt;dmsetup&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo dmsetup status
+live-base: 0 10485760 linear 
+docker-253:0-278707-base: 0 20971520 thin 596992 20971519
+live-rw: 0 10485760 snapshot 632648/1048576 2472
+docker-253:0-278707-pool: 0 209715200 thin-pool 1 179/524288 4664/1638400 - rw discard_passdown queue_if_no_space 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at values for &lt;code&gt;live-rw&lt;/code&gt; we can see that there are 632648/1048576 of 512B sectors used, which is about a half of the total 512MB.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try to pull some docker image and look at the values.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo docker pull centos
+latest: Pulling from centos
+
+6941bfcbbfca: Pulling fs layer 
+6941bfcbbfca: Download complete 
+41459f052977: Download complete 
+fd44297e2ddb: Error pulling image (latest) from centos, endpoint: https://registry-1.docker.io/v1/, Driver devicemapper failed to create image rootfs fd44297e2ddb050ec4fa9752b7a4e3a8439061991886e2091e7c1f007c906d75: Error saving transaction metadata: Error syncing metadata file /fd44297e2ddb: Error pulling image (latest) from centos, Driver devicemapper failed to create image rootfs fd44297e2ddb050ec4fa9752b7a4e3a8439061991886e2091e7c1f007c906d75: Error saving transaction metadata: Error syncing metadata file /var/lib/docker/devicemapper/metadata/.tmp816100005: fsync: input/output error 
+FATA[0074] Error pulling image (latest) from centos, Driver devicemapper failed to create image rootfs fd44297e2ddb050ec4fa9752b7a4e3a8439061991886e2091e7c1f007c906d75: Error saving transaction metadata: Error syncing metadata file /var/lib/docker/devicemapper/metadata/.tmp816100005: fsync: input/output error 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Oops, we&amp;#39;we already run out of space trying to pull about 80 MB image (you&amp;rsquo;ll see also handful of Buffer I/O errors on device dm-0 and Ext4-fs errors in console). Indeed, the live-rw snapshot became invalid:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo dmsetup status
+live-base: 0 10485760 linear 
+docker-253:0-278707-base: 0 20971520 thin 596992 20971519
+live-rw: 0 10485760 snapshot Invalid
+docker-253:0-278707-pool: 0 209715200 thin-pool 3 224/524288 8633/1638400 - ro discard_passdown queue_if_no_space 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;rd.live.overlay.size&lt;/h4&gt;
+
+&lt;p&gt;The default overlay size is not big enough for storing docker images. And maybe even not enough for other system stuff. We&amp;rsquo;ve added dracut &lt;code&gt;rd.live.overlay.size&lt;/code&gt; boot option to set the size of overlay image, let&amp;rsquo;s try to double it to 1 GB. Again, you don&amp;rsquo;t have to be afraid of overcommiting the overlay size compared to available physical RAM as it is a sparse file. Now the pxe configuration looks like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# PXE configuration template generated by livemedia-creator
+label pxetolive_f22_atomic
+kernel test/rv/atomic_live_blog/vmlinuz-4.0.1-300.fc22.x86_64
+append initrd=test/rv/atomic_live_blog/initramfs-4.0.1-300.fc22.x86_64.img root=live:http://10.34.39.2/trees/rv/atomic_live_blog/live-rootfs.squashfs.img ostree=/ostree/boot.0/Fedora-Cloud_Atomic/b71c9aba7a86fb046928c05d5175e65234589a82a471e7d3030f126b24211018/0 ds=nocloud-net;seedfrom=http://10.34.39.2/ks/rv/ci/ rd.live.overlay.size=1024
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s reboot into the live Atomic with the option and pull CentOS Docker image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo docker pull centos
+latest: Pulling from centos
+
+6941bfcbbfca: Pulling fs layer 
+6941bfcbbfca: Download complete 
+41459f052977: Download complete 
+fd44297e2ddb: Download complete 
+Status: Downloaded newer image for centos:latest
+
+[fedora@atomic-00 ~]$ sudo dmsetup status
+live-base: 0 10485760 linear 
+docker-253:0-278707-base: 0 20971520 thin 596992 20971519
+live-rw: 0 10485760 snapshot 1144248/2097152 4464
+docker-253:0-278707-pool: 0 209715200 thin-pool 4 231/524288 8639/1638400 - rw discard_passdown queue_if_no_space 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looks better, we can see 1144248/2097152 sectors used, but anyway, pulling 80 MB image has eaten up about 0.25 GB of our overlay space. It is clear that for serious work we want to store docker images on network storage.&lt;/p&gt;
+
+&lt;h4&gt;Docker images on iSCSI&lt;/h4&gt;
+
+&lt;p&gt;As we can see also from &lt;code&gt;lsblk&lt;/code&gt; output and &lt;code&gt;docker info&lt;/code&gt;, docker on live Atomic (unlike on regular Atomic) is using devicemapper storage backend with loopdevices, which is highly discouraged for reliablility and performace reasons.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ lsblk
+NAME                         MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sr0                           11:0    1   623M  0 rom  
+loop0                          7:0    0 378.6M  1 loop 
+loop1                          7:1    0     5G  1 loop 
+├─live-rw                    253:0    0     5G  0 dm   /sysroot
+└─live-base                  253:1    0     5G  1 dm   
+loop2                          7:2    0     1G  0 loop 
+└─live-rw                    253:0    0     5G  0 dm   /sysroot
+loop3                          7:3    0   100G  0 loop 
+└─docker-253:0-278707-pool   253:2    0   100G  0 dm   
+  └─docker-253:0-278707-base 253:3    0    10G  0 dm   
+loop4                          7:4    0     2G  0 loop 
+└─docker-253:0-278707-pool   253:2    0   100G  0 dm   
+  └─docker-253:0-278707-base 253:3    0    10G  0 dm   
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo docker info
+Containers: 1
+Images: 3
+Storage Driver: devicemapper
+ Pool Name: docker-253:0-278707-pool
+ Pool Blocksize: 65.54 kB
+ Backing Filesystem: extfs
+ Data file: /dev/loop3
+ Metadata file: /dev/loop4
+ Data Space Used: 567.7 MB
+ Data Space Total: 107.4 GB
+ Data Space Available: 3.827 GB
+ Metadata Space Used: 1.004 MB
+ Metadata Space Total: 2.147 GB
+ Metadata Space Available: 2.146 GB
+ Udev Sync Supported: true
+ Data loop file: /var/lib/docker/devicemapper/devicemapper/data
+ Metadata loop file: /var/lib/docker/devicemapper/devicemapper/metadata
+ Library Version: 1.02.93 (2015-01-30)
+Execution Driver: native-0.2
+Kernel Version: 4.0.1-300.fc22.x86_64
+Operating System: Fedora 22 (Twenty Two)
+CPUs: 1
+Total Memory: 3.892 GiB
+ame: atomic-00.localdomain
+ID: 5TP5:IGTL:CWW3:2L43:G26P:M7T7:IICW:Y5PE:C56W:FA77:OTI7:65NG
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Recently we&amp;rsquo;ve added &lt;code&gt;iscsi-initiator-utils&lt;/code&gt; to Atomic Host so now it is possible to use devicemapper backend with LVM thin pool on iSCSI device which is set up for docker by &lt;code&gt;docker-storage-setup&lt;/code&gt; service (the service is disabled on live Atomic by kickstart command). We will use cloud-init to configure the storage, adding this configuration to &lt;code&gt;user-data&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;write_files:
+  - path: /etc/sysconfig/docker-storage-setup
+    permissions: 0644
+    owner: root
+    content: |
+      DEVS=/dev/sda
+      VG=docker-images
+      SETUP_LVM_THIN_POOL="yes"
+
+runcmd:
+  - iscsiadm --mode discoverydb --type sendtargets --portal 10.34.102.54 --discover
+  - iscsiadm --mode node --targetname iqn.2009-02.com.example:part --portal 10.34.102.54:3260 --login
+  - docker-storage-setup
+  - systemctl restart docker.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First we write configuration file for &lt;code&gt;docker-storage-service&lt;/code&gt; telling it what device (&lt;code&gt;DEVS=&lt;/code&gt;) it should use. We are assuming diskless machine where iSCSI device will become &lt;code&gt;/dev/sda&lt;/code&gt;, but in general any unpartitioned block device should work. By &lt;code&gt;VG=&lt;/code&gt; we configure the name of volume group the service creates for the thin pool logical volume. The SETUP_LVM_THIN_POOL flag tells docker-storage-setup to set up lvm thin pool for docker (otherwise it only creates data an metadata logical volumes for docker handling the thin pool on its own). This is option is not required in Fedora rawhide as it is become the default.&lt;/p&gt;
+
+&lt;p&gt;Then we run commands to attach the iSCSI device (the device must be unpartitioned), run &lt;code&gt;docker-storage-setup&lt;/code&gt; to prepare thin pool for docker and configure docker to use it, and restart docker service to use new storage configuration.&lt;/p&gt;
+
+&lt;p&gt;Running live Atomic with this cloud config we can see that docker&amp;rsquo;s devicemapper backend is using the pool created by &lt;code&gt;docker-storage-setup&lt;/code&gt; on iSCSI device.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ lsblk
+NAME                                  MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                                     8:0    0     2G  0 disk 
+└─sda1                                  8:1    0     2G  0 part 
+  ├─docker--images-docker--pool_tmeta 253:4    0     4M  0 lvm  
+  │ └─docker--images-docker--pool     253:6    0     2G  0 lvm  
+  │   └─docker-253:0-278707-base      253:2    0    10G  0 dm   
+  └─docker--images-docker--pool_tdata 253:5    0     2G  0 lvm  
+    └─docker--images-docker--pool     253:6    0     2G  0 lvm  
+      └─docker-253:0-278707-base      253:2    0    10G  0 dm   
+sr0                                    11:0    1   623M  0 rom  
+loop0                                   7:0    0 378.6M  1 loop 
+loop1                                   7:1    0     5G  1 loop 
+├─live-rw                             253:0    0     5G  0 dm   /sysroot
+└─live-base                           253:1    0     5G  1 dm   
+loop2                                   7:2    0     1G  0 loop 
+└─live-rw                             253:0    0     5G  0 dm   /sysroot
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo lvs
+  LV          VG            Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  docker-pool docker-images twi-aotz-- 1.95g             0.56   1.07                            
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo docker info
+Containers: 0
+Images: 0
+Storage Driver: devicemapper
+ Pool Name: docker--images-docker--pool
+ Pool Blocksize: 65.54 kB
+ Backing Filesystem: extfs
+ Data file: 
+ Metadata file: 
+ Data Space Used: 11.8 MB
+ Data Space Total: 2.093 GB
+ Data Space Available: 2.081 GB
+ Metadata Space Used: 45.06 kB
+ Metadata Space Total: 4.194 MB
+ Metadata Space Available: 4.149 MB
+ Udev Sync Supported: true
+ Library Version: 1.02.93 (2015-01-30)
+Execution Driver: native-0.2
+Kernel Version: 4.0.1-300.fc22.x86_64
+Operating System: Fedora 22 (Twenty Two)
+CPUs: 1
+Total Memory: 3.892 GiB
+Name: atomic-00.localdomain
+ID: RQHA:CJAF:B5WX:M3RN:W7UI:2LCZ:ULKB:7SZA:WJYH:HSJR:FRLE:VCPA
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And how much overlay space will pulling docker image eat up now?&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo dmsetup status live-rw
+0 10485760 snapshot 633144/2097152 2472
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo docker pull centos
+latest: Pulling from centos
+6941bfcbbfca: Pulling fs layer 
+6941bfcbbfca: Download complete 
+41459f052977: Download complete 
+fd44297e2ddb: Download complete 
+Status: Downloaded newer image for centos:latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[fedora@atomic-00 ~]$ sudo dmsetup status live-rw
+0 10485760 snapshot 633552/2097152 2480
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Far better, some 200 KB were consumed during the pull. With this setup we seem to have fairly usable live Atomic system.&lt;/p&gt;
+
+&lt;h4&gt;Mounitng live image with rd.writable.fsimg?&lt;/h4&gt;
+
+&lt;p&gt;There is a new patch in rawhide dracut allowing to mount rootfs image packed in squashfs image in a slightly different way, copying the rootrs image into RAM and loop mounting it read-write.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;live-rootfs.squashfs.img
+         |
+        (ro)
+         |
+         V
+     /dev/loop0
+         |
+     (squashfs ro)
+         |
+         V
+  LiveOS/rootfs.img (sparse)
+         |
+        cp
+         |
+         V
+/run/initramfs/fsimg/rootfs.img
+         |
+        (rw)
+         |
+         V
+     /dev/loop1
+         |
+   (dm linear rw)
+         |
+         V
+/dev/mapper/live-rw
+         |
+         /
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With this option there is no read-write overlay layer so you don&amp;rsquo;t need to care about its size and &lt;code&gt;rd.live.overlay.size&lt;/code&gt; option.&lt;/p&gt;
+
+&lt;p&gt;You should be able to try this dracut boot option with Atomic Host images built from rawhide repository. See the &lt;em&gt;Builiding image from non-local Atomic repo&lt;/em&gt; section for learning how to use another repository in place of the one embedded in installer ISO. The effectiveness of this approach compared to read-write overlay is something to be explored and will probably vary in aspects depending on use case.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

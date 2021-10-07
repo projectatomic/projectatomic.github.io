@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Running libvirtd in a container &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brent Baude, Scott Collier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Running libvirtd in a container' property='og:title'>
+<meta content='An Atomic host is a minimal system that is designed to run containers.  On an Atomic host, you don’t install additional software via the traditional package management tools.  The software running on the host is provided by composed upstream RPM content.  &#x000A;&#x000A;Because of this, everything running on an Atomic host should be running inside a container.  In this article we are going to show you how to deploy both  libvirtd and libvirtd-client onto a Atomic host and how you can deploy virtual machines with that configuration.&#x000A;&#x000A;Scenario 1: libvirtd in a container&#x000A;&#x000A;A libvirt installation on a single node, like a laptop, has become rather trivial theses days.  Users can, for example, issue a reasonably simple yum command and install a KVM environment that only needs a few tweaks to become runnable.  That simplification has masked the primary components of KVM like libvirtd, libvirt-client, virsh, and qemu.  The basic Atomic deployment has none of these.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/10/libvirtd_in_containers/' property='og:url'>
+<meta content='2014-10-02T00:00:00Z' property='article:published_time'>
+<meta content='Brent Baude, Scott Collier' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Running libvirtd in a container' name='twitter:title'>
+<meta content='An Atomic host is a minimal system that is designed to run containers.  On an Atomic host, you don’t install additional software via the traditional package management tools.  The software running on the host is provided by composed upstream RPM content.  &#x000A;&#x000A;Because of this, everything running on an Atomic host should be running inside a container.  In this article we are going to show you how to deploy both  libvirtd and libvirtd-client onto a Atomic host and how you can deploy virtual machines with that configuration.&#x000A;&#x000A;Scenario 1: libvirtd in a container&#x000A;&#x000A;A libvirt installation on a single node, like a laptop, has become rather trivial theses days.  Users can, for example, issue a reasonably simple yum command and install a KVM environment that only needs a few tweaks to become runnable.  That simplification has masked the primary components of KVM like libvirtd, libvirt-client, virsh, and qemu.  The basic Atomic deployment has none of these.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_10 blog_2014_10_libvirtd_in_containers blog_2014_10_libvirtd_in_containers_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Running libvirtd in a container
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/brent-baude-scott-collier/">Brent Baude, Scott Collier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-10-02T00:00:00Z'>
+Thursday  2 October 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>An Atomic host is a minimal system that is <a href="http://www.projectatomic.io/docs/introduction/">designed to run containers</a>.  On an Atomic host, you don’t install additional software via the traditional package management tools.  The software running on the host is provided by composed upstream RPM content.  </p>
+
+<p>Because of this, everything running on an Atomic host should be running inside a container.  In this article we are going to show you how to deploy both  libvirtd and libvirtd-client onto a Atomic host and how you can deploy virtual machines with that configuration.</p>
+
+<h3>Scenario 1: libvirtd in a container</h3>
+
+<p>A libvirt installation on a single node, like a laptop, has become rather trivial theses days.  Users can, for example, issue a reasonably simple yum command and install a KVM environment that only needs a few tweaks to become runnable.  That simplification has masked the primary components of KVM like libvirtd, libvirt-client, virsh, and qemu.  The basic Atomic deployment has none of these. </p>
+
+<p></p>
+
+<p>The first step to setting up a containerized KVM environment is to set up libvirtd in its own container without the libvirt-client.  Our libvirtd container will consist of the the <a href="https://access.redhat.com/search/browse/docker-images#?">Red Hat Base Image</a> as illustrated below.</p>
+
+<p><img src="../../../../images/libvirtd-simple_cropped.png"></p>
+
+<h4>Registering your Atomic system with subscription-manager</h4>
+
+<p>To use the Red Hat Base Images on any system, you must first register your system with subscription manager and subscribe to the proper pools.  The following is an outline to do this and you are expected to customize for your system. For more information on Red Hat Subscription Manager, check <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Subscription_Management/">here</a>.</p>
+<pre class="highlight plaintext"><code>$ sudo subscription-manager register --username&#x000A;$ sudo subscription-manager list --available | less&#x000A;$ sudo subscription-manager subscribe --pool &lt;pool_id&gt;&#x000A;</code></pre>
+
+<h4>Configuring a bridge</h4>
+
+<p>The Atomic host will ship with the bridge-utils package.  We can use brctl to create the bridge and then configure the interface files so the environment is set up properly.  Below is just one example of how to do this. You will need to change it for your environment.</p>
+
+<p>Add the bridge.</p>
+<pre class="highlight plaintext"><code>$ sudo  brctl addbr virbr0&#x000A;</code></pre>
+
+<p>Show the bridge and then configure the interfaces, notice how there is no physical interface assigned ot the virbr0 interface yet.</p>
+<pre class="highlight plaintext"><code>$ brctl show &#x000A;bridge name bridge id       STP enabled interfaces&#x000A;docker0     8000.56847afe9799   no      &#x000A;virbr0      8000.000000000000   no      &#x000A;&#x000A;$ sudo cat ifcfg-enp2s0f0 &#x000A;DEVICE="enp2s0f0"&#x000A;HWADDR="xx:xx:xx:xx:24:42"&#x000A;BOOTPROTO="dhcp"&#x000A;ONBOOT="yes"&#x000A;BRIDGE="virbr0"&#x000A;&#x000A;$ sudo cat ifcfg-virbr0&#x000A;DEVICE=virbr0&#x000A;TYPE=Bridge&#x000A;BOOTPROTO=dhcp&#x000A;ONBOOT=yes&#x000A;</code></pre>
+
+<p>Restart the network and ifup / ifdown the interfaces if needed.</p>
+<pre class="highlight plaintext"><code>$ sudo systemctl restart network&#x000A;</code></pre>
+
+<p>Show the newly created bridge interface and ensure that it has an IP address assigned now.  The enp2s0f0 interface does not have an IP now. </p>
+<pre class="highlight plaintext"><code>$ ip show dev virbr0&#x000A;38: virbr0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP &#x000A;    link/ether 00:x:x:x:24:42 brd ff:ff:ff:ff:ff:ff&#x000A;    inet 10.x.x.139/21 brd 10.19.143.255 scope global dynamic virbr0&#x000A;       valid_lft 21835sec preferred_lft 21835sec&#x000A;    inet6 2620:52:0:1388:217:a4ff:fe77:2442/64 scope global dynamic &#x000A;       valid_lft 2591937sec preferred_lft 604737sec&#x000A;    inet6 fe80::217:a4ff:fe77:2442/64 scope link &#x000A;       valid_lft forever preferred_lft forever&#x000A;</code></pre>
+
+<p>Now show the bridge again and you should see the ethernet interface assigned to the bridge.</p>
+<pre class="highlight plaintext"><code>brctl show&#x000A;bridge name bridge id       STP enabled interfaces&#x000A;docker0     8000.56847afe9799   no      &#x000A;virbr0      8000.0017a4772442   no      enp2s0f0&#x000A;</code></pre>
+
+<h4>Obtaining the libvirtd Dockerfile</h4>
+
+<p>Docker builds containers with a markup file, generally called ‘Dockerfile’.  These files are usually stored in git repositories and are trivial to obtain.  To grab the files related to this blog, clone the <a href="https://github.com/projectatomic/docker-image-examples">projectatomic/docker-image-examples</a> git repository and then change into the docker-image-examples/rhel-libvirt/libvirtd directory.</p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/projectatomic/docker-image-examples&#x000A;Cloning into 'docker-image-examples'...&#x000A;remote: Counting objects: 449, done.&#x000A;remote: Compressing objects: 100% (7/7), done.&#x000A;remote: Total 449 (delta 0), reused 0 (delta 0)&#x000A;Receiving objects: 100% (449/449), 1.17 MiB | 1.32 MiB/s, done.&#x000A;Resolving deltas: 100% (130/130), done.&#x000A;Checking connectivity... done.&#x000A;&#x000A;$ cd docker-image-examples/rhel-libvirt/libvirtd/&#x000A;</code></pre>
+
+<h4>Reviewing the libvirtd Dockerfile</h4>
+
+<p>Before building the libvirtd container, familiarize yourself with the Dockerfile in docker-image-examples/rhel-libvirt/libvirtd.  You can find more information on Dockerfile format and function at <a href="https://docs.docker.com/reference/builder/">https://docs.docker.com/reference/builder/</a>.</p>
+
+<p>The main points of consideration for running libvirtd in a container are: 
+<ul>
+<li>knowing the qemu URI and telling libvirtd to listen on a TCP socket</li>
+<li>getting the daemon to run on startup</li>
+<li>making sure that the /dev/kvm has correct permissions for the container</li>
+<li>setting a common volume mount for the KVM images (ISOs and virtual disk images)</li>
+</ul></p>
+
+<p>By default libvirtd and its client use a unix socket to communicate.  But now that the libvirtd process is running in a container, the socket cannot be shared with the host where you are running the libvirt-client unless you want to share it over a bind mounted volume.  In this case, we chose to use TCP/IP for the URI, which means our default URI will change from qemu:///system to qemu+tcp://<IP>/system.  In addition to that change, we must also make sure libvirtd will listen on a TCP socket by altering libvirtd’s configuration file (/etc/libvirt/libvirtd.conf) with the following:</p>
+
+<ul>
+<li>listen_tls = 0</li>
+<li>listen_tcp = 1 </li>
+<li>tls_port = &ldquo;16514&rdquo; </li>
+<li>tcp_port = &ldquo;16509&rdquo; </li>
+<li>auth_tcp = &ldquo;none&rdquo; </li>
+</ul>
+
+<p>The libvirtd service is being started by the the <code>/usr/bin/init</code> CMD that was provided by the Dockerfile during the image build process. We had to make a slight alteration to that systemd file to appropriately change permissions of the /dev/kvm device which is normally done by a udev rule.  And finally, the combination of the <code>mkdir -p /var/lib/libvirt/images</code> and the volume mounts creates a shared volume between the host and container.</p>
+
+<p>Depending on your setup, you may also need to configure a few items on your host.  For example, if you want network access, then using <code>brctl</code> to define a new bridge device would be required.</p>
+
+<h4>Building the libvirtd container</h4>
+
+<p>Building the libvirtd container is rather trivial now.  From the libvirtd directory, we simply issue a Docker build command, provide an image name for convenience, and provide a path to the Dockerfile.</p>
+<pre class="highlight plaintext"><code>$ sudo docker build -t libvirtd .&#x000A;Sending build context to Docker daemon 52.74 kB&#x000A;Sending build context to Docker daemon &#x000A;Step 0 : FROM rhel7&#x000A;Pulling repository rhel7&#x000A;e1f5733f050b: Download complete &#x000A; ---&gt; e1f5733f050b&#x000A;Step 1 : MAINTAINER "Brent Baude" &lt;bbaude@redhat.com&gt;&#x000A; ---&gt; Running in 787d56238d37&#x000A; ---&gt; 2baa2c55f2ac&#x000A;Removing intermediate container 787d56238d37&#x000A;Step 2 : ENV container docker&#x000A; ---&gt; Running in 75885e28f8a6&#x000A; ---&gt; 33eb09f7b0ae&#x000A;Removing intermediate container 75885e28f8a6&#x000A;Step 3 : RUN yum -y update &amp;&amp; yum clean all&#x000A; ---&gt; Running in ded63f2b04ce&#x000A;&#x000A;    {content deleted for space}&#x000A;&#x000A;Removing intermediate container f1795b2ee5b9&#x000A;Step 11 : RUN sed -i "/Service/a ExecStartPost=\/bin\/chmod 666 /dev/kvm" /usr/lib/systemd/system/libvirtd.service&#x000A; ---&gt; Running in f3ebcae1d8d2&#x000A; ---&gt; a4ad53d4bf53&#x000A;Removing intermediate container f3ebcae1d8d2&#x000A;Step 12 : VOLUME [ "/sys/fs/cgroup" ]&#x000A; ---&gt; Running in 5c7ab46c5a8d&#x000A; ---&gt; 8e3f24fe2442&#x000A;Removing intermediate container 5c7ab46c5a8d&#x000A;Step 13 : CMD ["/usr/sbin/init"]&#x000A; ---&gt; Running in a92838248486&#x000A; ---&gt; 8de6992bbdf1&#x000A;Removing intermediate container a92838248486&#x000A;Successfully built 8de6992bbdf1&#x000A;</code></pre>
+
+<p>To verify the build and image name, we can issue use the command <code>docker images</code>:</p>
+<pre class="highlight plaintext"><code>$ sudo docker images&#x000A;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&#x000A;libvirtd            latest              8de6992bbdf1        3 minutes ago       696.4 MB&#x000A;</code></pre>
+
+<h4>Running the libvirtd container</h4>
+
+<p>Now that the libvirtd image has been built, we are ready to start it.  The docker run command we use to start the container is:</p>
+<pre class="highlight plaintext"><code>$ sudo docker run --rm --privileged --net=host -ti -e 'container=docker' \&#x000A;-v /proc/modules:/proc/modules -v /var/lib/libvirt/:/var/lib/libvirt/ \&#x000A;-v /sys/fs/cgroup:/sys/fs/cgroup:rw libvirtd&#x000A;</code></pre>
+
+<p>Because of the <code>-i</code> (interactive) switch, this console will be consumed with this running container. For the next scenario, be prepared to open another terminal. The resulting output should look like the following:</p>
+<pre class="highlight plaintext"><code>Welcome to Red Hat Enterprise Linux Server 7.0 (Maipo)!&#x000A;&#x000A;Set hostname to &lt;&gt;.&#x000A;Cannot add dependency job for unit display-manager.service, ignoring: Unit display-manager.service failed to load: No such file or directory.&#x000A;[  OK  ] Reached target Paths.&#x000A;[  OK  ] Listening on Journal Socket.&#x000A;[  OK  ] Listening on Delayed Shutdown Socket.&#x000A;[  OK  ] Reached target Swap.&#x000A;[  OK  ] Created slice Root Slice.&#x000A;[  OK  ] Created slice System Slice.&#x000A;[  OK  ] Reached target Slices.&#x000A;[  OK  ] Reached target Local File Systems.&#x000A;         Starting Create Volatile Files and Directories...&#x000A;         Starting Journal Service...&#x000A;[  OK  ] Started Journal Service.&#x000A;[  OK  ] Started Create Volatile Files and Directories.&#x000A;[ INFO ] Update UTMP about System Reboot/Shutdown is not active.&#x000A;</code></pre>
+
+<p>We can verify if the libvirtd service is running by issuing a simple <code>virsh</code> command.  Remember that the Atomic image does not contain the libvirt-client packages, so for this first test, we will run virsh from our workstation:</p>
+<pre class="highlight plaintext"><code># virsh --connect qemu+tcp://&lt;ip_of_atomic_host&gt;/system list --all&#x000A; Id    Name                           State&#x000A;----------------------------------------------------&#x000A;</code></pre>
+
+<h3>Scenario 2: libvirtd, libvirt-client in containers</h3>
+
+<p>Building upon Scenario 1, our next step is to add a container to the Atomic host that can run common libvirt-client commands such as virt-install, virsh, and the like.  Our intention here is to be able to have the libvirt-client “communicate” with libvirtd in the other container. </p>
+
+<p><img src="../../../../images/libvirtd-wclient_cropped.png"></p>
+
+<p>By nature, it will be a smaller container because it does not need all the daemons and qemu-related software.  Let’s take a look at the (Dockerfile)[<a href="https://github.com/projectatomic/docker-image-examples/blob/master/rhel-libvirt/libvirt-client/Dockerfile">https://github.com/projectatomic/docker-image-examples/blob/master/rhel-libvirt/libvirt-client/Dockerfile</a>] in the <code>libvirtd/libvirt-client</code> directory.  Note we install very little extra software on top of RHBPI but we do add systemd, virt-install &ndash; which is handy for initiating new guests;  libvirt-client, and of course any dependencies that are brought in by yum.  The one key change that is noteworthy is we add the default URL for qemu to point at the docker bridge IP address.  This ensures that by default all libvirt-client commands will point to the libvirtd running in the other container.</p>
+
+<h4>Building the libvirt-client container</h4>
+
+<p>To build the libvirt-client container, we simply issue the docker build command from the libvirt-client directory like so:</p>
+<pre class="highlight plaintext"><code>$ sudo cd ~/docker-image-examples/rhel-libvirt/libvirt-client/&#x000A;&#x000A;$ sudo docker build -t libvirt-client .&#x000A;Sending build context to Docker daemon 3.072 kB&#x000A;Sending build context to Docker daemon &#x000A;Step 0 : FROM rhel7&#x000A; ---&gt; e1f5733f050b&#x000A;Step 1 : MAINTAINER "Brent Baude" &lt;bbaude@redhat.com&gt;&#x000A; ---&gt; Using cache&#x000A; ---&gt; 2baa2c55f2ac&#x000A;Step 2 : ENV container docker&#x000A; ---&gt; Using cache&#x000A; ---&gt; 33eb09f7b0ae&#x000A;Step 3 : RUN yum -y update &amp;&amp; yum clean all&#x000A; ---&gt; Using cache&#x000A; ---&gt; 6a8734c7d515&#x000A;&#x000A;    {content omitted for space}&#x000A;&#x000A;Step 7 : CMD ["/usr/sbin/init"]&#x000A; ---&gt; Running in 003487fb592b&#x000A; ---&gt; f0f0d37eec9d&#x000A;Removing intermediate container 003487fb592b&#x000A;Step 8 : RUN echo 'uri_default = "qemu+tcp://172.17.42.1/system"' &gt;&gt; /etc/libvirt/libvirt.conf&#x000A; ---&gt; Running in 390805a54caa&#x000A; ---&gt; 1060020db519&#x000A;Removing intermediate container 390805a54caa&#x000A;Successfully built 1060020db519&#x000A;</code></pre>
+
+<p>We can confirm the build and image name with the docker images command:</p>
+<pre class="highlight plaintext"><code>$ sudo docker images&#x000A;REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&#x000A;libvirt-client      latest              1060020db519        30 seconds ago      482.9 MB&#x000A;libvirtd            latest              8de6992bbdf1        16 minutes ago      696.4 MB&#x000A;</code></pre>
+
+<h4>Running the libvirt-client container</h4>
+
+<p>Unlike the libvirtd container, the libvirt-client container will not run as a daemon but instead will run interactively.  Lets ensure the basic libvirt connections are working with a simple virsh command.</p>
+<pre class="highlight plaintext"><code>$ sudo docker run -it --rm libvirt-client virsh list&#x000A; Id    Name                           State&#x000A;----------------------------------------------------&#x000A;</code></pre>
+
+<p>Just like our previous test from a workstation, the libvirt daemon responded.  Notice though, we did not have to pass the &ndash;connect argument like the previous test because the libvirt-client container has that defined already.</p>
+
+<h4>Booting the Fedora cloud image using the libvirt-client container</h4>
+
+<p>We have now proven that the libvirt communication now works between the containers and we are ready to start a KVM guest. Lets deploy the prepared Fedora cloud image via the same mechanism.  First we need to fetch the image.  We can do this with the libvirt-client container.</p>
+<pre class="highlight plaintext"><code>$ sudo mkdir /var/lib/libvirt/images&#x000A;&#x000A;$ sudo docker run -it --rm -v /var/lib/libvirt:/var/lib/libvirt \&#x000A;--net host libvirt-client curl -o /var/lib/libvirt/images/fedora.qcow2 \&#x000A;http://fedora.osuosl.org/linux/releases/20/Images/x86_64/Fedora-x86_64-20-20131211.1-sda.qcow2&#x000A;&#x000A;  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current&#x000A;                                 Dload  Upload   Total   Spent    Left  Speed&#x000A; 11  204M   11 23.8M    0     0  2512k      0  0:01:23  0:00:09  0:01:14 2145k&#x000A;&#x000A;</code></pre>
+
+<p>You might question why we are bind mounting volumes in with the libvirt-client container.  The above example is a good reason why.  Without it, the libvirt-client container would not have storage space it shares with the libvirtd container.  Moreover, when used in this fashion, it will most likely retain the correct permissions when interacting with files.</p>
+
+<p>To boot the image, we can use virt-install in the libvirt-client container.  </p>
+<pre class="highlight plaintext"><code>$ sudo docker run -it --rm -v /var/lib/libvirt:/var/lib/libvirt \&#x000A;libvirt-client virt-install --name fedora_test --ram 4096 --vcpus 2 \&#x000A;--disk path=/var/lib/libvirt/images/fedora.qcow2,format=qcow2,bus=virtio,size=15 \&#x000A;--network bridge=virbr0 --import&#x000A;&#x000A;Starting install...&#x000A;Creating domain...                                                                             |    0 B  00:00:00     &#x000A;Connected to domain fedora_test&#x000A;Escape character is ^]&#x000A;[    0.000000] Initializing cgroup subsys cpuset&#x000A;[    0.000000] Initializing cgroup subsys cpu&#x000A;[    0.000000] Initializing cgroup subsys cpuacct&#x000A;[    0.000000] Linux version 3.11.10-301.fc20.x86_64 (mockbuild@bkernel01.phx2.fedoraproject.org) (gcc version 4.8.2 20131017 (Red Hat 4.8.2-1) (GCC) ) #1 SMP Thu Dec 5 14:01:17 UTC 2013&#x000A;[    0.000000] Command line: ro root=UUID=d355e4e0-5805-45a4-a04c-cd4675044207 console=tty1 console=ttyS0,115200n8 initrd=/boot/initramfs-3.11.10-301.fc20.x86_64.img BOOT_IMAGE=/boot/vmlinuz-3.11.10-301.fc20.x86_64 &#x000A;[    0.000000] e820: BIOS-provided physical RAM map:&#x000A;&#x000A;    {content omitted for space}&#x000A;&#x000A;Fedora release 20 (Heisenbug)&#x000A;Kernel 3.11.10-301.fc20.x86_64 on an x86_64 (ttyS0)&#x000A;&#x000A;dhcp-119 login: &#x000A;</code></pre>
+
+<p>And within a few seconds, the image will have booted.</p>
+
+<p>In the authors’ experience, the use of <a href="http://libguestfs.org/virt-builder.1.html">virt-builder</a> would make these scenarios far more efficient.  Using virt-builder we can quickly create a customized image of Fedora instead of inheriting the cloud image.  Unfortunately as of this writing, virt-builder which is part of libguestfs is not available in Red Hat Enterprise Linux 7.</p>
+
+<h4>Reviewing some post installation items</h4>
+
+<p>Before we move onto the third scenario, this is a good time to review a few important things relative to this “split” libvirtd and libvirt-client setup.  It will also reveal some good to know information about docker and containers themselves.  Firstly, from the host, we can observe the KVM guest (cloud-init image) running in the system processes.</p>
+<pre class="highlight plaintext"><code>$ ps ax | grep qemu-kvm&#x000A; 10578 ?        Sl     0:12 /usr/libexec/qemu-kvm -name fedora_test &lt;output edited out by author&gt; &#x000A;</code></pre>
+
+<p>We can also see which containers are currently running use the <code>docker ps</code> command:</p>
+<pre class="highlight plaintext"><code>$ sudo docker ps&#x000A;CONTAINER ID        IMAGE                   COMMAND                CREATED             STATUS              PORTS               NAMES&#x000A;eed398122a78        libvirt-client:latest   "virt-install --name   32 minutes ago      Up 32 minutes                           hungry_brattain     &#x000A;1b1cdb5bfe7e        libvirtd:latest         "/usr/sbin/init"       37 minutes ago      Up 37 minutes                           agitated_nobel      &#x000A;</code></pre>
+
+<p>Notice how we see both the libvirtd and libvirt-client containing are active.  And if you look at your console session for the cloud-init guest we ran earlier, it is just sitting at a console login.  If you want to escape from that console session, you can issue a <code>ctrl-]</code> and you will exit the virsh console session.  If we re-run the <code>docker ps</code> command, you will notice a change:</p>
+<pre class="highlight plaintext"><code>$ sudo docker ps&#x000A;CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES&#x000A;1b1cdb5bfe7e        libvirtd:latest     "/usr/sbin/init"    38 minutes ago      Up 38 minutes                           agitated_nobel  &#x000A;</code></pre>
+
+<p>The libvirt-client container is no longer running.  That is because you escaped the virsh console session which was being provided by the libvirt-client container.  Therefore, with the virt-install command having completed and the console being exited, the container stopped itself.</p>
+
+<p>You can reconnect to the console of the fedora_test guest using the libclient-client image as well with a command like:</p>
+<pre class="highlight plaintext"><code>$ sudo docker run -it --rm -v /var/lib/libvirt:/var/lib/libvirt \ &#x000A;libvirt-client virsh console fedora_test&#x000A;Connected to domain fedora_test&#x000A;Escape character is ^]&#x000A;&#x000A;Fedora release 20 (Heisenbug)&#x000A;Kernel 3.11.10-301.fc20.x86_64 on an x86_64 (ttyS0)&#x000A;&#x000A;dhcp-119 login: &#x000A;&#x000A;</code></pre>
+
+<h3>Scenario 3:</h3>
+
+<p>In this scenario, we will build upon scenario two by showing you how to prepare to install a KVM guest using a Fedora network install method.  In addition, we will include the use of VNC for the graphical install which is commonly the default graphical device for KVM.</p>
+
+<h4>Starting the Fedora installation</h4>
+
+<p>From the atomic host, we can use the libvirt-client to begin the installation of Fedora.  In this case, we will use <code>virt-install</code> with the <code>-l</code> argument which allows you to install Fedora from a remote host without downloading any media first.  We do, however, need to manually create a directory for the -l downloaded images to temporarily reside in which by default is <code>var/lib/libvirt/boot</code>.</p>
+<pre class="highlight plaintext"><code>$ sudo mkdir /var/lib/libvirt/boot&#x000A;&#x000A;$ sudo docker run -it --rm -v /var/lib/libvirt:/var/lib/libvirt \&#x000A;--net=host libvirt-client virt-install --name fedora_vnc --ram 4096 \&#x000A;--vcpus 2 --disk path=/var/lib/libvirt/images/fedora_test.qcow2,format=qcow2,bus=virtio,size=15 \&#x000A;--network bridge=virbr0 -l http://fedora.osuosl.org/linux/releases/20/Fedora/x86_64/os/ \&#x000A;--graphics vnc,port=5910,listen=0.0.0.0 --noautoconsole&#x000A;&#x000A;Starting install...&#x000A;Retrieving file .treeinfo...                                                                   | 2.2 kB  00:00:00 !!! &#x000A;Retrieving file vmlinuz...                                                                     | 9.8 MB  00:00:03 !!! &#x000A;&#x000A;    {content omitted for space}&#x000A;&#x000A;Allocating 'fedora_test.qcow2'                                                                 |  15 GB  00:00:00     &#x000A;Creating domain...                                                                             |    0 B  00:00:00     &#x000A;Domain installation still in progress. You can reconnect to &#x000A;the console to complete the installation process.&#x000A;&#x000A;</code></pre>
+
+<p><em>Author Note: In some of our tests, we observed a python traceback when using <code>virt-install</code> with the <code>-l</code> parameter.  However, the command did complete successfully.</em></p>
+
+<p>It would be worthwhile to look at a few of the arguments in the install command we used:</p>
+
+<ul>
+<li>&ndash;net=host was added because the -l variable of virt-install requires a working network connection</li>
+<li>-l points to a valid Fedora repository</li>
+<li>&ndash;network is using a valid bridge as defined on the host</li>
+<li>&ndash;graphics defines the type of vnc and a specific port, the 0.0.0.0 instructs vnc to listen “everywhere” &ndash; a password can also be defined here.</li>
+<li>&ndash;noautoconsole instructs virt-install to not automatically set up a console as this will fail due to the container separation.</li>
+</ul>
+
+<p>In the example command we used to start virt-install, we did specifically define port of 5910.  That port will default to :10 for connecting your vnc client, but we can also verify using the virsh command and the libvirt-client container like so:</p>
+<pre class="highlight plaintext"><code>$ sudo docker run -it --rm -v /var/lib/libvirt:/var/lib/libvirt \&#x000A;libvirt-client virsh vncdisplay fedora_vnc&#x000A;:10&#x000A;</code></pre>
+
+<p>On your laptop or another client, you can then connect to the VNC session with a command like:</p>
+<pre class="highlight plaintext"><code># vncviewer&lt;atomic_host&gt;:10&#x000A;&#x000A;</code></pre>
+
+<p>Once connected with vnc, you can complete the Fedora install which is outside the scope of this blog post.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/10/libvirtd_in_containers/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/10/libvirtd_in_containers/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/10/libvirtd_in_containers/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

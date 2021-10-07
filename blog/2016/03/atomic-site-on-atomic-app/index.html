@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Projectatomic.io Running in Atomic App &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Projectatomic.io Running in Atomic App' property='og:title'>
+<meta content='Since Atomic App has released version 0.4.2, I decided it was past time&#x000A;to make the atomic-site into an Atomic App instead of using a shell script that&#x000A;wraps Docker to test it. The new setup is a big improvement, and a useful&#x000A;guide to Nuleculizing your own apps.&#x000A;&#x000A;As you know, the purpose of Atomic App and Nulecule is to give you a provider-agnostic&#x000A;way to specify multi-container applications and orchestration metadata that stays&#x000A;with the application image(s). Eventually, this will allow for single-command&#x000A;deploys of even large, scalable apps involving many containers. For now, it&#x000A;enables us get rid of some hackish shell scripting around Docker in our atomic-site&#x000A;test setup.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/' property='og:url'>
+<meta content='2016-03-07T12:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='Atomic App' property='article:tag'>
+<link href='/blog/tag/atomic app.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='development' property='article:tag'>
+<link href='/blog/tag/development.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Nulecule' property='article:tag'>
+<link href='/blog/tag/nulecule.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='testing' property='article:tag'>
+<link href='/blog/tag/testing.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Projectatomic.io Running in Atomic App' name='twitter:title'>
+<meta content='Since Atomic App has released version 0.4.2, I decided it was past time&#x000A;to make the atomic-site into an Atomic App instead of using a shell script that&#x000A;wraps Docker to test it. The new setup is a big improvement, and a useful&#x000A;guide to Nuleculizing your own apps.&#x000A;&#x000A;As you know, the purpose of Atomic App and Nulecule is to give you a provider-agnostic&#x000A;way to specify multi-container applications and orchestration metadata that stays&#x000A;with the application image(s). Eventually, this will allow for single-command&#x000A;deploys of even large, scalable apps involving many containers. For now, it&#x000A;enables us get rid of some hackish shell scripting around Docker in our atomic-site&#x000A;test setup.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_atomic-site-on-atomic-app blog_2016_03_atomic-site-on-atomic-app_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Projectatomic.io Running in Atomic App
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-07T12:00:00Z'>
+Monday  7 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Since Atomic App has released version 0.4.2, I decided it was past time
+to make the atomic-site into an Atomic App instead of using a shell script that
+wraps Docker to test it. The new setup is a big improvement, and a useful
+guide to <q>Nuleculizing</q> your own apps.</p>
+
+<p>As you know, the purpose of Atomic App and Nulecule is to give you a provider-agnostic
+way to specify multi-container applications and orchestration metadata that stays
+with the application image(s). Eventually, this will allow for single-command
+deploys of even large, scalable apps involving many containers. For now, it
+enables us get rid of some hackish shell scripting around Docker in our atomic-site
+test setup.</p>
+
+<p></p>
+
+<p>In order to turn atomic-site into an Atomic App, I had to do five things:</p>
+
+<ol>
+<li>Create and register an application image that expected the /source and /data
+directories to be mounted as volumes, and set permissions on those;</li>
+<li>Create a template Dockerfile for the Atomic App;</li>
+<li>Create a Nulecule configuration file;</li>
+<li>Create a provider file for Docker;</li>
+<li>Generate a an answers.conf file and edit it.</li>
+</ol>
+
+<p>Since the atomic-site is just a single-container app, and here we&rsquo;re just running
+it for testing purposes, we&rsquo;re only going to support Docker as a provider, and
+not Kubernetes or Mesos. However, either of those could be added with just a few
+lines of configuration and a single provider file (or more than one if we wanted
+a bunch of load-balanced webservers).</p>
+
+<p>I won&rsquo;t go over the first step in detail, since it&rsquo;s a standard Docker build; you
+can <a href="https://github.com/projectatomic/atomic-site/blob/master/Dockerfile">look at the dockerfile here</a>. The
+important thing is that both the <code>source</code> and <code>data</code> mounts are commented out
+because those are the parts of the Middleman application which change, and thus
+need to be mounted as volumes. I then pushed this image to <a href="https://hub.docker.com/r/jberkus/atomic-site/">jberkus/atomic-site</a> (eventually it will go to projectatomic/atomic-site).</p>
+
+<p>Because we&rsquo;re sharing some volumes and I have SELinux turned on (don&rsquo;t you?), I also
+need to tell SELinux that the container is allowed to share access to those directories.
+So I added a little <a href="https://github.com/projectatomic/atomic-site/blob/master/selinux_share.sh">selinux_share.sh</a>
+ script in the repo&rsquo;s home directory that sets those.</p>
+
+<p>The second part is to create a placeholder Dockerfile, which is used to build the Atomic App wrapper container. These files pretty much all look the same:</p>
+<pre class="highlight plaintext"><code>FROM projectatomic/atomicapp:0.4.2&#x000A;&#x000A;MAINTAINER Red Hat, Inc. &lt;container-tools@redhat.com&gt;&#x000A;&#x000A;LABEL io.projectatomic.nulecule.providers="docker" \&#x000A;      io.projectatomic.nulecule.specversion="0.0.2"&#x000A;&#x000A;ADD /Nulecule /Dockerfile README.md /application-entity/&#x000A;ADD /artifacts /application-entity/artifacts&#x000A;</code></pre>
+
+<p>The only thing that really changes is which providers you support and the spec
+and app versions.</p>
+
+<p>Now we get to the good stuff: the Nulecule file, which is most of the definition.
+Let&rsquo;s do this one a little at a time.</p>
+
+<p>First, we define the spec version and the application ID in the header. Nothing
+exciting here:</p>
+<pre class="highlight plaintext"><code>---&#x000A;specversion: 0.0.2&#x000A;id: atomic-site&#x000A;</code></pre>
+
+<p>Next we set some overall metadata, which is pretty much just for registry
+and future searching use:</p>
+<pre class="highlight plaintext"><code>metadata:&#x000A;  name: Atomic Site app&#x000A;  appversion: 0.1.0&#x000A;  description: Atomic app for testing the Atomic Website&#x000A;</code></pre>
+
+<p>The <q>graph</q> contains the definition of all of the app&rsquo;s objects. While ordering-independant, we&rsquo;re going to start it with the parameters that will need to be supplied by the answers.conf file:</p>
+<pre class="highlight plaintext"><code>graph:&#x000A;  - name: atomic-site&#x000A;    params:&#x000A;      - name: image&#x000A;        description: The webserver image&#x000A;        default: jberkus/atomic-site&#x000A;      - name: provider&#x000A;        description: only support Docker, so need to set it here&#x000A;        default: docker&#x000A;      - name: hostport&#x000A;        description: The host TCP port as the external endpoint&#x000A;        default: 4567&#x000A;      - name: sourcedir&#x000A;        description: location of the middleman source directory&#x000A;      - name: datadir&#x000A;        description: the middleman data directory&#x000A;</code></pre>
+
+<p>Here you&rsquo;ll notice that we supplied some defaults for the image name and the
+port to be used on the host, because we expect those to be the same for most
+users. We don&rsquo;t expect that most users will have the same path to their local
+copy of the atomic-site repo, though, so those parameters have no defaults, meaning
+that the user has to supply them. While expressly setting the <code>provider</code> here is
+optional, since we&rsquo;re only supporting docker for this app, we want to set it
+as the default.</p>
+
+<p>Finally, the <q>artifacts</q> section defines where the provider files live:</p>
+<pre class="highlight plaintext"><code>artifacts:&#x000A;  docker:&#x000A;    - file://artifacts/docker/atomic-site-run&#x000A;</code></pre>
+
+<p>Since we&rsquo;re supporting only Docker right now, one line is all we need. We also
+don&rsquo;t currently define any persistent volumes, even though we&rsquo;ll be using some
+volumes; this is because of a limitation that will be resolved when we start requiring
+Docker 1.9 or later.</p>
+
+<p>As a fourth step, we need to create that atomic-site-run file. Right now that&rsquo;s
+a bit of a messy command line because of the lack of volume support, but not
+too bad:</p>
+<pre class="highlight plaintext"><code>docker run --rm -p $hostport:4567 --volume $sourcedir:/tmp/source --volume $datadir:/tmp/data $image&#x000A;</code></pre>
+
+<p>One thing we are doing here is adding <code>--rm</code> because this Atomic App is strictly for testing; for production you might not want it. You&rsquo;ll notice that the parameters are supplied here as $variables.</p>
+
+<p>Finally, we generate the answers file from Nulecule:</p>
+<pre class="highlight plaintext"><code>cd Nulecule/&#x000A;atomicapp genanswers .&#x000A;sudo emacs answers.conf&#x000A;&#x000A;[atomic-site]&#x000A;image = jberkus/atomic-site&#x000A;hostport = 4567&#x000A;sourcedir = /home/josh/git/redhat/atomic-site-master/source&#x000A;datadir = /home/josh/git/redhat/atomic-site-master/data&#x000A;[general]&#x000A;namespace = default&#x000A;provider = docker&#x000A;</code></pre>
+
+<p>So the [general] section is something all Atomic Apps have. Here you supply a
+namespace and a provider, which in our case is docker. The parameters are supplied
+in the section named after the app. For atomic-site, you&rsquo;d want to change
+the full path to the directories to one which matches your own workstation.</p>
+
+<p>Now, with it all together, I can now run my atomic app:</p>
+<pre class="highlight plaintext"><code>[josh@redhat atomic-site-master]$ sudo atomicapp run Nulecule/&#x000A;2016-03-02 18:55:37,514 - [INFO] - main.py - Action/Mode Selected is: run&#x000A;2016-03-02 18:55:37,585 - [INFO] - docker.py - Deploying to provider: Docker&#x000A;&#x000A;== The Middleman is loading&#x000A;</code></pre>
+
+<p>&hellip;and access the site on <a href="http://127.0.0.1:4567">http://127.0.0.1:4567</a> so that I can test changes.</p>
+
+<p>Now, it&rsquo;s your turn to Nuleculize an app.</p>
+
+<p>Check out the config here on the <a href="https://github.com/projectatomic/atomic-site">atomic-site repo</a>, and additional sample Atomic App
+configurations in the
+<a href="https://github.com/projectatomic/nulecule-library">Nulecule-library</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-app/">Atomic App</a></li>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/testing/">testing</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

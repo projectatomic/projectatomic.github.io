@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Buildah - build your containers from the ground up! &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tom Sweeney' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Buildah - build your containers from the ground up!' property='og:title'>
+<meta content='Since I’m relatively new to the world of containers and images, I was excited to learn about the Buildah tool.  Especially since I’m a native New Englander and it’s a clever play on how we say Builder in these parts.&#x000A;&#x000A;Buildah is a newly released command line tool for efficiently and quickly building Open Container Initiative (OCI) compliant images and containers.  Buildah simplifies the process of creating, building and updating images while decreasing the learning curve of the container environment.  It is easily scriptable and can be used in an environment where one needs to spin up containers automatically based on calls from your application.  What’s really neat is there is no requirement for a container runtime daemon to be running on your system chewing up resources and complicating the build process.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/06/introducing-buildah/' property='og:url'>
+<meta content='2017-06-22T15:00:00Z' property='article:published_time'>
+<meta content='tsweeney' property='article:author:username'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='images' property='article:tag'>
+<link href='/blog/tag/images.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oci' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Buildah - build your containers from the ground up!' name='twitter:title'>
+<meta content='Since I’m relatively new to the world of containers and images, I was excited to learn about the Buildah tool.  Especially since I’m a native New Englander and it’s a clever play on how we say Builder in these parts.&#x000A;&#x000A;Buildah is a newly released command line tool for efficiently and quickly building Open Container Initiative (OCI) compliant images and containers.  Buildah simplifies the process of creating, building and updating images while decreasing the learning curve of the container environment.  It is easily scriptable and can be used in an environment where one needs to spin up containers automatically based on calls from your application.  What’s really neat is there is no requirement for a container runtime daemon to be running on your system chewing up resources and complicating the build process.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_06 blog_2017_06_introducing-buildah blog_2017_06_introducing-buildah_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Buildah - build your containers from the ground up!
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-06-22T15:00:00Z'>
+Thursday 22 June 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Since I&rsquo;m relatively new to the world of containers and images, I was excited to learn about <a href="https://github.com/projectatomic/buildah">the Buildah tool</a>.  Especially since I&rsquo;m a native New Englander and it&rsquo;s a clever play on how we say Builder in these parts.</p>
+
+<p>Buildah is a newly released command line tool for efficiently and quickly building <a href="https://www.opencontainers.org/">Open Container Initiative</a> (OCI) compliant images and containers.  Buildah simplifies the process of creating, building and updating images while decreasing the learning curve of the container environment.  It is easily scriptable and can be used in an environment where one needs to spin up containers automatically based on calls from your application.  What&rsquo;s really neat is there is no requirement for a container runtime daemon to be running on your system chewing up resources and complicating the build process.</p>
+
+<p></p>
+
+<h3>Testing Environment</h3>
+
+<p>Just to let you know my testing environment,  I&rsquo;m running Red Hat Enterprise Linux (RHEL) version 7 on a Lenovo T460p laptop (Dual Core Intel Core i7-6820HQ processor, 16GB of memory and a solid state drive) over a VPN on 50/50 Verizon FIOS.  I then used Virtual Machine Manager to create a <a href="https://fedoramagazine.org/announcing-the-release-of-fedora-26-beta/">Fedora 26 Beta</a> virtual machine (VM) with 2GB of memory and 20GB of disk space.  I installed and ran Buildah on this Fedora VM.</p>
+
+<h3>Setting Up Buildah</h3>
+
+<p>Before you can run Buildah, you need to install it.  One way is using the package which is now available on Fedora:</p>
+<pre class="highlight plaintext"><code># dnf -y install buildah&#x000A;</code></pre>
+
+<p>If the Buildah package is not available on your Linux distribution, or you would like to contribute to the project, you can <a href="https://github.com/projectatomic/buildah">clone it from GitHub</a>.  The configuration and installation process there is straightforward and is documented in the README.md file.  To configure and install Buildah using this method, I spun up my Fedora 26 Beta virtual machine (VM) and then installed the following packages using dnf on it.</p>
+<pre class="highlight plaintext"><code># dnf -y install make golang bats btrfs-progs-devel \&#x000A;  device-mapper-devel gpgme-devel libassuan-devel \&#x000A;  git bzip2 go-md2man runc skopeo-containers&#x000A;</code></pre>
+
+<p>After that completed I then did the following, as documented in the README.md, to build Buildah itself:</p>
+<pre class="highlight plaintext"><code># mkdir ~/buildah&#x000A;# cd ~/buildah&#x000A;# export GOPATH=`pwd`&#x000A;# git clone https://github.com/projectatomic/buildah \&#x000A; ./src/github.com/projectatomic/buildah&#x000A;# cd ./src/github.com/projectatomic/buildah&#x000A;# make&#x000A;# make install&#x000A;</code></pre>
+
+<p>To verify the install:</p>
+<pre class="highlight plaintext"><code># buildah --help&#x000A;</code></pre>
+
+<p>After installing Buildah via either method  you should be able to run <code>man buildah</code> and see all of the man pages associated with the tool.  From here you can get detailed examples of each of the commands.</p>
+
+<h3>Let&rsquo;s Play!</h3>
+
+<p>Now for the fun stuff.  I wanted to set up a little container running Fedora from the docker registry.  I simply issue the following command in BASH which sets my variable named <code>container</code> to the container&rsquo;s name for use later on :</p>
+<pre class="highlight plaintext"><code># container=$(buildah from fedora)&#x000A;Getting image source signatures&#x000A;Copying blob  sha256:691bc14ee27487db536172a1fcdbbf956f460d1e1e1b201828e3a2bab81c5ec8&#x000A; 72.22 MiB / 72.22 MiB   [=======================================================]&#x000A;Copying config sha256:15895ef0b3b2b4e61bf03d38f82b42011ff7f226c681705a4022ae3d1d643888&#x000A; 0 B / 2.29 KiB [--------------------------------------------------------------]&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;</code></pre>
+
+<p>This command completed relatively quickly for me (26 seconds), and most of that time was used for the initial download of the Fedora base image.</p>
+
+<p>Now I can verify that the image has been pulled and the container has been setup by using the buildah images and buildah containers commands respectively:</p>
+<pre class="highlight plaintext"><code># buildah images&#x000A;IMAGE ID     IMAGE NAME&#x000A;dc3a60619440 docker.io/library/fedora:latest&#x000A;# buildah containers&#x000A;CONTAINER ID IMAGE ID     IMAGE NAME CONTAINER NAME&#x000A;ae93de45778a dc3a60619440 fedora     fedora-working-container&#x000A;</code></pre>
+
+<h3>Look Ma!  No container runtime is running!</h3>
+
+<p>We&rsquo;ve now downloaded an image we can manipulate, without using the Docker daemon or even having it installed on the system:</p>
+<pre class="highlight plaintext"><code># systemctl status docker&#x000A;Unit docker.service could not be found.&#x000A;# rpm -qa docker&#x000A;#&#x000A;</code></pre>
+
+<p>We don&rsquo;t need any other container runtime, either. By not installing Docker or another container runtime we save file system space and lessen both memory usage and CPU processing time on the system. The daemons associated with those runtimes are not only not running, they&rsquo;re not even present. As we&rsquo;ll see in a future blog, Buildah also allows you to build smaller containers than Docker does. In addition to these advantages, Buildah is easily embeddable in automation scripts and inside other container-building tools as a server process is not required.</p>
+
+<h3>Manipulating the Image</h3>
+
+<p>In the initial buildah <code>from</code> command, I saved the container name in the <code>$container</code> variable, and I can now use that variable to manipulate the container.   First, let&rsquo;s mount the container on a local mount point, saving the location of the mount point in the <code>$mountpoint</code> variable and then we&rsquo;ll add a file from our local system into our container.  To do this, we use:</p>
+<pre class="highlight plaintext"><code># mountpoint=$(buildah mount $container)&#x000A;</code></pre>
+
+<p>Now that we&rsquo;ve the mountpoint in hand, let&rsquo;s play around a bit with it:</p>
+<pre class="highlight plaintext"><code># ls $mountpoint&#x000A;bin   dev  home  lib64  mnt  proc  run   srv  tmp  var&#x000A;boot  etc  lib   media  opt  root  sbin  sys  usr&#x000A;# cat /tmp/moveit.txt&#x000A;Move this file to the Buildah container's /tmp directory.&#x000A;# ls $mountpoint/tmp&#x000A;anaconda-post.log  ks-script-64xpp1a9  ks-script-sw0bp7j4&#x000A;# cp /tmp/moveit.txt $mountpoint/tmp&#x000A;# ls $mountpoint/tmp&#x000A;anaconda-post.log  ks-script-64xpp1a9  ks-script-sw0bp7j4  moveit.txt&#x000A;# cat $mountpoint/tmp/moveit.txt&#x000A;Move this file to the Buildah container's /tmp directory.&#x000A;</code></pre>
+
+<p>So in under 30 seconds we were able to pull down an image from a registry, create a corresponding container and then manipulate that container.  We now have a container that&rsquo;s unique to our needs, so let&rsquo;s save an image of it.  The <code>buildah commit</code> command creates a new image which will let us replicate the container later as we need to.  After we create and save the image we&rsquo;ll remove the first container that we created and then create a second container from our newly created image.  With luck our <code>moveit.txt</code> file will be in the new container&rsquo;s /tmp directory!</p>
+
+<p>Let&rsquo;s create an image based upon our container.</p>
+<pre class="highlight plaintext"><code># buildah commit $container containers-storage:first-new-image&#x000A;# buildah images&#x000A;IMAGE ID        IMAGE NAME&#x000A;dc3a60619440 docker.io/library/fedora:latest&#x000A;54e012885dcf docker.io/library/first-new-image:latest&#x000A;</code></pre>
+
+<p>Now let&rsquo;s clean up our containers leaving only our images behind.</p>
+<pre class="highlight plaintext"><code># buildah umount "$container"&#x000A;# buildah rm "$container"&#x000A;ae93de45778a5f3905c52de9378f14d54c2617e4336766efde6311596541e98c&#x000A;# buildah containers  # No more containers&#x000A;</code></pre>
+
+<p>If we want to create a new container using the saved image, we just execute the following:</p>
+<pre class="highlight plaintext"><code># container2=$(buildah from first-new-image)&#x000A;# buildah containers&#x000A;CONTAINER ID IMAGE ID     IMAGE NAME      CONTAINER NAME&#x000A;757b5b595f0a 54e012885dcf first-new-image first-new-image-working-container&#x000A;</code></pre>
+
+<p>Let&rsquo;s mount the container on a local mount point:</p>
+<pre class="highlight plaintext"><code># mountpoint2=$(buildah mount $container2)&#x000A;</code></pre>
+
+<p>Now check to see if our <code>moveit.txt</code> file is in the new container that we created from the image.</p>
+<pre class="highlight plaintext"><code># ls $mountpoint2/tmp&#x000A;anaconda-post.log  ks-script-64xpp1a9  ks-script-sw0bp7j4  moveit.txt&#x000A;# cat $mountpoint2/tmp/moveit.txt&#x000A;Move this file to the Buildah container's /tmp directory.&#x000A;</code></pre>
+
+<p>With just a few very scriptable steps we were able to create an image from the container that we had built and modified to fit our needs.  With this image in hand, we can then generate as many new containers as we need in the future based on that image.</p>
+
+<h3>Using Dockerfiles</h3>
+
+<p>I&rsquo;m sure folks with a lot more container time under their belts than I will have many Dockerfile specification files lying around.  These too can be used by Buildah to create a new image.  For instance let&rsquo;s look at this simple Dockerfile that runs a little “Hello World” python script.</p>
+<pre class="highlight plaintext"><code>FROM python&#x000A;ADD HelloFromContainer.py /&#x000A;CMD ["python","./HelloFromContainer.py"]&#x000A;</code></pre>
+
+<p>The HelloFromContainer.py file simply contains:</p>
+<pre class="highlight python"><code><span class="c">#!/usr/bin/env python3</span>&#x000A;<span class="c">#</span>&#x000A;&#x000A;<span class="kn">import</span> <span class="nn">sys</span>&#x000A;&#x000A;<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>&#x000A;    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>&#x000A;        <span class="k">print</span> <span class="p">(</span><span class="s">"Hello World from Container Land! Message # [</span><span class="si">%</span><span class="s">d]"</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>&#x000A;&#x000A;<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>&#x000A;    <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>&#x000A;</code></pre>
+
+<p>Let&rsquo;s put it all together and run the container.  First we&rsquo;ll create an image based on our DockerFile.</p>
+<pre class="highlight plaintext"><code># ls HelloFromContainer.py&#x000A;HelloFromContainer.py&#x000A;# ls Dockerfile&#x000A;Dockerfile&#x000A;# buildah bud -t hellofromcontainer .&#x000A;STEP 1: FROM python&#x000A;Getting image source signatures&#x000A;Copying blob sha256:ef0380f84d05d3cdc5a5f66023 ...&#x000A; 49.55 MiB / 50.13 MiB [==========================]&#x000A;...&#x000A;Copying config sha256:74145628c3310c1a8634aa04 ...&#x000A; 0 B / 6.91 KiB [---------------------------------]&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;STEP 2: ADD HelloFromContainer.py /&#x000A;STEP 3: CMD ["python","./HelloFromContainer.py"]&#x000A;STEP 4: COMMIT containers-storage:[overlay@/var/lib/containers/storage]docker.io/library/hellofromcontainer:latest&#x000A; 6.91 KiB / 6.91 KiB [============================]&#x000A;</code></pre>
+
+<p>For those wondering at home, this <code>buildah bud</code> command completed in 2 minutes and 3 seconds.  The first two minutes of that time was spent in <code>STEP 1</code> which pulls down the bits to run Python.  Now let&rsquo;s check that the image got created.</p>
+<pre class="highlight plaintext"><code># buildah images&#x000A;IMAGE ID        IMAGE NAME&#x000A;dc3a60619440 docker.io/library/fedora:latest&#x000A;54e012885dcf docker.io/library/first-new-image:latest&#x000A;35de96ee8fb5 docker.io/library/python:latest&#x000A;f19ac91f7e60 docker.io/library/hellofromcontainer:latest&#x000A;</code></pre>
+
+<p>And let&rsquo;s build the container from that image:</p>
+<pre class="highlight plaintext"><code># buildah from hellofromcontainer&#x000A;hellofromcontainer-working-container&#x000A;# buildah containers&#x000A;CONTAINER ID IMAGE ID        IMAGE NAME      CONTAINER NAME&#x000A;757b5b595f0a 54e012885dcf first-new-image first-new-image-working-container&#x000A;8cf6034f22e3 f19ac91f7e60 hellofromcontainer hellofromcontainer-working-container&#x000A;</code></pre>
+
+<p>This <code>buildah from</code> command finished in a second.  Now let&rsquo;s run our new container!</p>
+<pre class="highlight plaintext"><code># buildah run hellofromcontainer-working-container&#x000A;Hello World from Container Land! Message # [0]&#x000A;Hello World from Container Land! Message # [1]&#x000A;Hello World from Container Land! Message # [2]&#x000A;Hello World from Container Land! Message # [3]&#x000A;Hello World from Container Land! Message # [4]&#x000A;Hello World from Container Land! Message # [5]&#x000A;Hello World from Container Land! Message # [6]&#x000A;Hello World from Container Land! Message # [7]&#x000A;Hello World from Container Land! Message # [8]&#x000A;Hello World from Container Land! Message # [9]&#x000A;</code></pre>
+
+<h3>Give Buildah a Try</h3>
+
+<p>The Buildah command line tool simplifies the administration needed for containers and allows them to be run without the overhead of a container daemon on your system.  Buildah also allows you to create smaller containers with less overhead within them.  I&rsquo;ve just started to dive into containers and Buildah both, it&rsquo;s easy to see how this would be a great tool for a DevOps environment or any other environment that needs to easily spin up containers efficiently and cheaply.  I hope you find Buildah to be useful in your environments too and I&rsquo;d love to hear what you think!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/images/">images</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/06/introducing-buildah/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/06/introducing-buildah/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/06/introducing-buildah/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

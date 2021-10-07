@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Free Ipa</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/freeipa.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Containerized Directory Services with Docker and FreeIPA</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/"/>
+    <id>http://www.projectatomic.io/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/</id>
+    <published>2014-10-15T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;I&amp;rsquo;ve tried out a lot of different software applications in my time, so I&amp;rsquo;ve come to appreciate projects and products that make it easy to get up and running quickly and without the need for assembling a whole labful of equipment.&lt;/p&gt;
+
+&lt;p&gt;In this vein, the various components that comprise &lt;a href="http://www.ovirt.org/Home"&gt;oVirt&lt;/a&gt;, the open source virtualization management project, can be piled onto a single piece of hardware in form that works well enough to credibly kick the project&amp;rsquo;s tires. &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Well, mostly. In order to really get your oVirt on, you need to hook up a directory service of some sort. FreeIPA is an obvious choice to provide oVirt with directory services, but due to conflicts between their package sets, oVirt&amp;rsquo;s management engine can&amp;rsquo;t be installed on the same host as FreeIPA.&lt;/p&gt;
+
+&lt;p&gt;Sounds like a job for Docker, right? Just in time for the approaching release of &lt;a href="http://www.ovirt.org/OVirt_3.5_Release_Notes"&gt;oVirt 3.5&lt;/a&gt;, the good people behind the CentOS Dockerfiles repository (the same one I mentioned in a &lt;a href="http://www.projectatomic.io/blog/2014/09/exploring-web-apps-with-docker/"&gt;recent post&lt;/a&gt; about trying out WordPress 4.0) have recently added a &lt;a href="https://github.com/CentOS/CentOS-Dockerfiles/tree/master/freeipa/centos7"&gt;FreeIPA Dockerfile&lt;/a&gt; to the list of containerized components on offer.&lt;/p&gt;
+
+&lt;p&gt;I set out to deploy a dockerized FreeIPA instance on the same machine as the oVirt management engine, to see whether the combination would work well enough for testing oVirt&amp;rsquo;s multiuser capabilities.&lt;/p&gt;
+
+&lt;p&gt;I started off with a machine running a minimal install of CentOS 6.5, to which I added the EPEL repository (for Docker) and the oVirt 3.5 RC4 repository:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm epel-release
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, I added git, Docker, and the oVirt Engine:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo yum install -y git docker-io ovirt-engine
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, I set up oVirt Engine, by running the command &lt;code&gt;engine-setup&lt;/code&gt; and accepting all the defaults suggested by the install script.&lt;/p&gt;
+
+&lt;p&gt;With the engine up and running, I started up the Docker service, grabbed the source of the FreeIPA Dockerfile, and kicked off a build of the image:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;sudo service docker start
+git clone https://github.com/CentOS/CentOS-Dockerfiles.git
+cd CentOS-Dockerfiles/freeipa/centos7/
+sudo docker build -t freeipa-server .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, as described in the &lt;a href="https://github.com/CentOS/CentOS-Dockerfiles/blob/master/freeipa/centos7/README"&gt;README&lt;/a&gt;, I ran the container image:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run --privileged --name freeipa-server-container -ti -h ipa.example.test -e PASSWORD=Secret123 freeipa-server
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The FreeIPA image is set up to configure itself on first run, a process that takes a couple of minutes. When the setup was complete, I found myself at a bash prompt within the new container (couresy of the optional &lt;code&gt;-ti&lt;/code&gt; in the run command).  From this shell, I had to make a small configuration tweak to &lt;a href="http://www.ovirt.org/Troubleshooting#Adding_an_IPA_domain_to_ovirt_engine"&gt;deal with an issue&lt;/a&gt; between FreeIPA and oVirt Engine.&lt;/p&gt;
+
+&lt;p&gt;I needed to modify the file &lt;code&gt;/etc/dirsrv/slapd-EXAMPLE-TEST/dse.ldif&lt;/code&gt; and change the line &lt;code&gt;nsslapd-minssf: 0&lt;/code&gt; to &lt;code&gt;nsslapd-minssf: 1&lt;/code&gt; before stopping and restarting the container. &lt;/p&gt;
+
+&lt;p&gt;From the shell within the container, I could stop the container by typing &lt;code&gt;exit&lt;/code&gt;, and, once returned to the promt on my test machine, restart the container with the command &lt;code&gt;docker start -ai freeipa-server-container&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Once I was back at the shell within my FreeIPA container, I created a new user to use with oVirt:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;kinit admin&lt;/code&gt; &lt;em&gt;to authenticate as the FreeIPA admin, using the &lt;code&gt;Secret123&lt;/code&gt; password from the run command&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ipa user-add&lt;/code&gt; &lt;em&gt;to create my user account, I chose the user name &lt;code&gt;ouser&lt;/code&gt;&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ipa passwd ouser&lt;/code&gt; &lt;em&gt;to set an initial password for the new user&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;kinit ouser&lt;/code&gt; &lt;em&gt;to authenticate as ouser, and change its password, as required by FreeIPA&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After that, I ran &lt;code&gt;ip a&lt;/code&gt; from the container shell to figure out the container&amp;rsquo;s IP address. With that address in hand, I visited a separate terminal window, outside of the container, and I edited the &lt;code&gt;/etc/resolv.conf&lt;/code&gt; file in my test machine to include the line &lt;code&gt;namesever CONTAINER-IP-HERE&lt;/code&gt; so that my machine would use the new containerized FreeIPA for DNS.&lt;/p&gt;
+
+&lt;p&gt;Finally, I was ready to hook my containerized FreeIPA to oVirt&amp;rsquo;s management engine, using the account &lt;code&gt;admin&lt;/code&gt; and the &lt;code&gt;Secret123&lt;/code&gt; password referenced above, before adding superuser privileges to the &lt;code&gt;ouser&lt;/code&gt; account and restarting ovirt-engine for the new setup to take effect:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;engine-manage-domains add --domain=example.test --user=admin --provider=ipa
+engine-manage-domains edit --add-permissions --domain=example.test --user=ouser
+service ovirt-engine restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And there we have it, a containerized copy of FreeIPA to ride alongside the oVirt management engine, RPM conflicts be damned:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="http://www.projectatomic.io/images/ovirt-freeipa-docker.png"&gt;&lt;/p&gt;
+
+&lt;p&gt;After playing with this long enough to get it working, I do think that this is a decent option for testing oVirt&amp;rsquo;s various user permission-tied features in a lab setting, but it could use some smoothing-out before I could see using it more broadly. In particular, the way I used the container&amp;rsquo;s internal IP address for the host machine DNS is brittle, since that IP changes at every boot. &lt;/p&gt;
+
+&lt;p&gt;Also, since oVirt Engine and FreeIPA each expect to use port 443 for their web interfaces, I had to stick to accessing FreeIPA through the command line. &lt;/p&gt;
+
+&lt;p&gt;If the engine also ran within a container, I could use Docker&amp;rsquo;s linking functionality to deal with these changing IPs. Soon, I think I&amp;rsquo;ll try to pick up on the &lt;a href="http://allthingsopen.com/2013/12/19/building-docker-images-on-fedora/"&gt;experiments others have begun&lt;/a&gt; w/ oVirt Engine and Docker, and delve into running the hypervisor portion of the oVirt stack within a container as well, building on this recent howto on &lt;a href="http://www.projectatomic.io/blog/2014/10/libvirtd_in_containers/"&gt;running libvirtd within a container&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

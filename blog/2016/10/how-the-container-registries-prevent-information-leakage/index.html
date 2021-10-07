@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How container registries prevent information leakage &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Antonio Murdaca' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How container registries prevent information leakage' property='og:title'>
+<meta content='Recently people have been reporting unexpected errors when doing a skopeo copy versus a docker pull:  1347805, 235, and 27281.&#x000A;&#x000A;Skopeo is a command-line tool that that does various operations with container...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/' property='og:url'>
+<meta content='2016-10-25T13:41:13Z' property='article:published_time'>
+<meta content='runcom' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='registry' property='article:tag'>
+<link href='/blog/tag/registry.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='skopeo' property='article:tag'>
+<link href='/blog/tag/skopeo.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='troubleshooting' property='article:tag'>
+<link href='/blog/tag/troubleshooting.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How container registries prevent information leakage' name='twitter:title'>
+<meta content='Recently people have been reporting unexpected errors when doing a skopeo copy versus a docker pull:  1347805, 235, and 27281.&#x000A;&#x000A;Skopeo is a command-line tool that that does various operations with container...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_10 blog_2016_10_how-the-container-registries-prevent-information-leakage blog_2016_10_how-the-container-registries-prevent-information-leakage_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How container registries prevent information leakage
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-25T13:41:13Z'>
+Tuesday 25 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently people have been reporting unexpected errors when doing a <code>skopeo copy</code> versus a <code>docker pull</code>:  <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1347805">1347805</a>, <a href="https://github.com/projectatomic/skopeo/issues/235">235</a>, and <a href="https://github.com/docker/docker/issues/27281">27281</a>.</p>
+
+<p><a href="https://github.com/projectatomic/skopeo">Skopeo</a> is a command-line tool that that does various operations with container images and container image registries, including pulling the images to the host.  It is also used under the covers by the <a href="https://github.com/projectatomic/atomic">atomic</a> command-line tool.</p>
+
+<p>This post explains why those weird errors can come up when pulling images.</p>
+
+<p>Let&rsquo;s see what happens when a user tries to pull an image from the docker hub and the image doesn&rsquo;t exist:</p>
+<pre class="highlight plaintext"><code>$ docker pull thisimagedoesntexist&#x000A;Using default tag: latest&#x000A;Trying to pull repository docker.io/library/thisimagedoesntexist ...&#x000A;Pulling repository docker.io/library/thisimagedoesntexist&#x000A;Error: image library/thisimagedoesntexist:latest not found&#x000A;</code></pre>
+
+<p>We get an &lsquo;image not found&rsquo;, as expected, right?</p>
+
+<p>Let&rsquo;s try the same with skopeo copy:</p>
+<pre class="highlight plaintext"><code>$ skopeo --tls-verify=false copy docker://thisimagedoesntexist oci:what&#x000A;FATA[0002] Error initializing image from source docker://thisimagedoesntexist:latest: unauthorized: authentication required&#x000A;</code></pre>
+
+<p>What?</p>
+
+<p>Why are we getting an <code>unauthorized error</code> message?</p>
+
+<p>Let&rsquo;s see what&rsquo;s really happening under the hood:</p>
+
+<p>The docker daemon:</p>
+
+<ol>
+<li>Attempts to contact a V2 registry</li>
+<li>V2 registry returns &#39;unauthorized: authentication required&rsquo;</li>
+<li>Daemon falls back and try to pull the same image from a V1 registry</li>
+<li>Attempt to contact a V1 registry</li>
+<li>V1 registry isn&rsquo;t deployed, we get a 404</li>
+<li>The docker command line interprets the 404 as an image not found</li>
+</ol>
+
+<p>Skopeo:</p>
+
+<ol>
+<li>Attempts to contact a V2 registry</li>
+<li>V2 registry returns &#39;unauthorized: authentication required&rsquo;</li>
+<li>Skopeo errors out and shows the  &#39;unauthorized: authentication required&rsquo;</li>
+</ol>
+
+<h3>Why is docker trying to contact a V1 registry?</h3>
+
+<p>Docker still  supports the old V1 registry API (remember <a href="https://github.com/docker/docker-registry">docker-registry</a>?).
+Some registry deployments use both V1 and V2 registries.  When the docker engine fails to get a V2 Image, it falls back and tries to contact a V1 registry that may have the image.</p>
+
+<p>Yes, but:</p>
+
+<h3>Why does skopeo return &#39;unauthorized&rsquo;?</h3>
+
+<p>The V2 registry API is designed to prevent information leaks about private repositories (GitHub does the same, if you’re wondering).</p>
+
+<p>From the first example above, <em>library/imagedoesntexist</em> could be a private repository/image (or not!).  The registry can&rsquo;t tell you that the repository/image doesn&rsquo;t exist; it can only tell you that you&rsquo;re not authorized to access it.</p>
+
+<p>In fact, if you have a private repository/image on the docker hub and try to pull it with skopeo, you still get &#39;unauthorized&rsquo; (unless you&rsquo;re logged in of course).
+Skopeo only supports V2 registries. Since V1 registries are being purged, we decided to not add support for V1 to Skopeo.</p>
+
+<p>Let&rsquo;s see some examples with a private image named <em>runcom/what</em>:</p>
+
+<p>If <em>runcom/what</em> is a private image and I&rsquo;m <em>not</em> logged in:</p>
+<pre class="highlight plaintext"><code>$ skopeo --tls-verify=false copy docker://runcom/what oci:what&#x000A;FATA[0001] Error initializing image from source docker://runcom/what:latest: unauthorized: authentication required&#x000A;</code></pre>
+
+<p>As you can see it&rsquo;s not telling me whether the image exists or not on the registry. It just tells me that I&rsquo;m not authorized to pull the image.</p>
+
+<p>Now, if <em>runcom/what</em> is a private image and I&rsquo;m logged in:</p>
+<pre class="highlight plaintext"><code>$ skopeo --tls-verify=false copy docker://runcom/what oci:what&#x000A;FATA[0002] Error initializing image from source docker://runcom/what:latest: manifest unknown: manifest unknown&#x000A;</code></pre>
+
+<p>The above error is indeed an &#39;image not found&rsquo; (e.g., a 404 from the V2 registry). Since I’m logged in,  I have the rights to understand if the image is on the registry.</p>
+
+<p>Let&rsquo;s see what happens with docker instead when I&rsquo;m not logged in:</p>
+<pre class="highlight plaintext"><code>$ docker pull runcom/what                                                     &#x000A;Using default tag: latest&#x000A;Trying to pull repository docker.io/runcom/what ...&#x000A;Pulling repository docker.io/runcom/what&#x000A;Error: image runcom/what:latest not found&#x000A;</code></pre>
+
+<p>Well, remember the docker engine falls back to V1? Let’s have a look at the docker engine logs to really understand why it felt back to V1. We see the following error message:</p>
+<pre class="highlight plaintext"><code>Oct 24 16:51:19 localhost.localdomain docker[1408]: time='2016-10-24T16:51:19.548329131+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'&#x000A;Oct 24 16:51:20 localhost.localdomain docker[1408]: time='2016-10-24T16:51:20.113460151+02:00' level=error msg='Attempting next endpoint for pull after error: unauthorized: authentication required'&#x000A;</code></pre>
+
+<p>Great. Exactly like skopeo, before falling back to V1, it’s correctly telling us that I’m unauthorized to pull the image (note, it’s not telling me anything about the existence of that image on the docker hub!)</p>
+
+<p>If I try to pull the same image but this time logged in, I&rsquo;ll get the same image not found error, but this time I can spot the following in the logs:</p>
+<pre class="highlight plaintext"><code>Oct 24 16:54:11 localhost.localdomain docker[1408]: time='2016-10-24T16:54:11.706002616+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'&#x000A;Oct 24 16:54:12 localhost.localdomain docker[1408]: time='2016-10-24T16:54:12.283006158+02:00' level=error msg='Attempting next endpoint for pull after error: manifest unknown: manifest unknown'&#x000A;</code></pre>
+
+<p>The errors in the logs are exactly the same as the ones we get with skopeo. Just that docker falls back and tries a V1 registry while skopeo doesn’t fall back.</p>
+
+<p>That means that skopeo is indeed providing the correct error message from the V2 registry while docker is reporting &#39;image not found&rsquo; because it hides the real/correct unauthorized error from the V2 registry and only shows the V1 error.  Docker command line might actually be giving you bogus information, when the container image is actually stored in V2, but reports the image does not exist when you are not logged in.  When upstream docker eventually drops backward support for V1, it will report the same error that skopeo does.</p>
+
+<p>I hope this post will shed some light about why these errors differ between docker and skopeo.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/registry/">registry</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+<li><a href="/blog/tag/troubleshooting/">troubleshooting</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

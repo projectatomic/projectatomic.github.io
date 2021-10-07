@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-48 blog_page-48_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/">Why we don't let non-root users run Docker in CentOS, Fedora, or RHEL</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-08-10T14:53:25Z'>
+Monday 10 August 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I often get bug reports from users asking <em><q>why can&rsquo;t I use `docker` as a non root user, by default?</q></em></p>
+
+<p>Docker has the ability to change the group ownership of the /run/docker.socket to have group permission of 660, with the <code>group</code> ownership the docker group.  This would allow users added to the docker group to be able to run docker containers without having to execute <code>sudo</code> or <code>su</code> to become root. Sounds great&hellip;<br>
+
+<a class="more-link read-more" href="/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+<li><a href="/blog/tag/sudo/">sudo</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/08/why-containers-are-worth-the-hype/">El-Deko - Why Containers Are Worth the Hype</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/johnmark/">John Mark Walker</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-08-05T17:23:28Z'>
+Wednesday  5 August 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vqtnG1TBdxM" frameborder="0" allowfullscreen></iframe>
+
+<p>Video above from Kubernetes 1.0 Launch event at <a href="http://www.oscon.com/open-source-2015">OSCON</a></p>
+
+<p>In the above video, I attempted to put Red Hat&rsquo;s container efforts into a bit of context, especially with respect to our history of Linux platform development. Having now watched the above video (they forced me to watch!) I thought it would be good to expound on what I discussed in the video.</p>
+
+<p>Admit it, you’ve read one of the umpteen millions of articles breathlessly talking about the new Docker/Kubernetes/Flannel/CoreOS/whatever hotness and thought to yourself, <q>Wow, is this stuff overhyped.</q> There is some truth to that knee-jerk reaction, and the buzzworthiness of all things container-related should give one pause - <q>It&rsquo;s turt^H^H^H^Hcontainers all the way down!</q></p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/08/why-containers-are-worth-the-hype/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/cloud-native/">cloud native</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/open-container-initiative/">open container initiative</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/08/testing-nulecule-on-debian/">Testing Nulecule on Debian</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bexelbie/">Brian (bex) Exelbierd</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-08-05T04:00:00Z'>
+Wednesday  5 August 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Testing Nulecule on Debian</h3>
+
+<p><img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fglobal3.memecdn.com%2Fa-whole-new-world_o_941765.jpg&f=1"> Unless you&rsquo;ve recently returned from a sabbatical year in a remote monastery with no internet, you know that Containers have arrived, and it&rsquo;s a whole new world.</p>
+
+<p>I&rsquo;ll save you five minutes of reading, and 90 minutes of watching Disney&rsquo;s Alladin and assume you know about containers.  If not, take a look at <a href="https://github.com/docker">Docker</a>, <a href="https://github.com/coreos/rkt">rkt</a> and the <a href="http://www.opencontainers.org/">Open Container Project</a>.  For bonus points, watch <a href="http://www.motivp.com/shop/video/How_Docker_did_not_invent_the_containers">How Docker Didn&rsquo;t Invent Containers</a> from the <a href="http://www.projectatomic.io/blog/2015/05/docker-meetup-brno/">First Docker Meetup</a> in my adopted hometown of Brno, Czech Republic.  When you&rsquo;re done singing the fantastic Disney songs, come back.  I&rsquo;ll wait.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/08/testing-nulecule-on-debian/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/07/follow-us-the-nulecule-has-moved/">Follow us, the Nulecule has moved!</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/goern/">Christoph Görn</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-07-16T21:23:08Z'>
+Thursday 16 July 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The past weeks have been packed with preparations for Red Hat Summit 2015 and getting <a href="http://www.projectatomic.io/docs/atomicapp/">Atomic App</a> and the <a href="https://github.com/projectatomic/nulecule/">Nulecule Specification</a> into good shape. Now that we have finished that, we put at new release process in place and found a new home for the normative Nulecule Specification documents.</p>
+
+<p>Additionally, the first extension of the Nulecule Specification has been started!</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/07/follow-us-the-nulecule-has-moved/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-app/">Atomic App</a></li>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/nulecule/">nulecule</a></li>
+<li><a href="/blog/tag/specification/">specification</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/07/what-are-docker-none-none-images/">What are Docker &lt;none&gt;:&lt;none&gt; images?</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/shishir/">Shishir Mahajan</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-07-16T12:17:44Z'>
+Thursday 16 July 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The last few days, I have spent some time playing around with Docker&rsquo;s <code>&lt;none&gt;:&lt;none&gt;</code> images. I&rsquo;m writing this post to explain how they work, and how they affect docker users. This article will try to address questions like:</p>
+
+<ol>
+<li> What are <code>&lt;none&gt;:&lt;none&gt;</code> images ?</li>
+<li> What are dangling images ?</li>
+<li> Why do I see a lot of <code>&lt;none&gt;:&lt;none&gt;</code> images when I do <code>docker images -a</code> ?</li>
+<li> What is the difference between <code>docker images</code> and <code>docker images -a</code> ?</li>
+</ol>
+
+<p>Before I start answering these questions, let’s take a moment to remember that there are two kinds of <code>&lt;none&gt;:&lt;none&gt;</code> images, the good and the bad.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/07/what-are-docker-none-none-images/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/best-practices/">best practices</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/filesystem/">filesystem</a></li>
+<li><a href="/blog/tag/images/">images</a></li>
+<li><a href="/blog/tag/space/">space</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=47/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=44/">44</a>
+</li>
+<li>
+<a href="/blog/page=45/">45</a>
+</li>
+<li>
+<a href="/blog/page=46/">46</a>
+</li>
+<li>
+<a href="/blog/page=47/">47</a>
+</li>
+<li class='active'>
+<span>48</span>
+</li>
+<li>
+<a href="/blog/page=49/">49</a>
+</li>
+<li>
+<a href="/blog/page=50/">50</a>
+</li>
+<li>
+<a href="/blog/page=51/">51</a>
+</li>
+<li>
+<a href="/blog/page=52/">52</a>
+</li>
+<li>
+<a href="/blog/page=49/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Pinning Deployments in OSTree Based Systems &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Pinning Deployments in OSTree Based Systems' property='og:title'>
+<meta content='Introduction&#x000A;&#x000A;RPM-OSTree/OSTree conveniently allows you to rollback if you upgrade and don’t like the upgraded software. This is done by keeping around the old deployment; the old software you booted in to. After a single upgrade you’ll have a booted deployement and the rollback deployment. On the next upgrade the current rollback deployment will be discarded and the current booted deployment will become the new rollback deployment.&#x000A;&#x000A;Typically these two deployments are all that is kept around. However, recently a new pinning feature was added that allows the user to pin a deployment to make sure it doesn’t get garbage collected.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/05/pinning-deployments-ostree-based-systems/' property='og:url'>
+<meta content='2018-05-23T00:00:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Pinning Deployments in OSTree Based Systems' name='twitter:title'>
+<meta content='Introduction&#x000A;&#x000A;RPM-OSTree/OSTree conveniently allows you to rollback if you upgrade and don’t like the upgraded software. This is done by keeping around the old deployment; the old software you booted in to. After a single upgrade you’ll have a booted deployement and the rollback deployment. On the next upgrade the current rollback deployment will be discarded and the current booted deployment will become the new rollback deployment.&#x000A;&#x000A;Typically these two deployments are all that is kept around. However, recently a new pinning feature was added that allows the user to pin a deployment to make sure it doesn’t get garbage collected.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_05 blog_2018_05_pinning-deployments-ostree-based-systems blog_2018_05_pinning-deployments-ostree-based-systems_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Pinning Deployments in OSTree Based Systems
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-23T00:00:00Z'>
+Wednesday 23 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>RPM-OSTree/OSTree conveniently allows you to rollback if you upgrade and don&rsquo;t like the upgraded software. This is done by keeping around the old <strong>deployment</strong>; the old software you booted in to. After a single upgrade you&rsquo;ll have a booted deployement and the rollback deployment. On the next upgrade the current rollback deployment will be discarded and the current booted deployment will become the new rollback deployment.</p>
+
+<p>Typically these two deployments are all that is kept around. However, recently a new <a href="https://github.com/ostreedev/ostree/issues/1460">pinning</a> feature was added that allows the user to <q>pin</q> a deployment to make sure it doesn&rsquo;t get garbage collected.</p>
+
+<p></p>
+
+<p>Here is the current state of my system:</p>
+<pre class="highlight plaintext"><code>[dustymabe@dhcp137-98 ~]$ rpm-ostree status&#x000A;State: idle; auto updates disabled&#x000A;Deployments:&#x000A;● ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.122 (2018-04-18 23:34:24)&#x000A;                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;&#x000A;  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.81 (2018-02-12 17:50:48)&#x000A;                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;</code></pre>
+
+<p>I have the current booted deployment (<code>27.122</code>) and the rollback deployment
+(<code>27.81</code>) from before the last time I upgraded. I am about to do a rebase
+from Fedora 27 to Fedora 28 so I&rsquo;d like have a little more control and not lose
+either of the two deployments I already have on the system. I&rsquo;ll pin them both:</p>
+<pre class="highlight plaintext"><code>[dustymabe@dhcp137-98 ~]$ sudo ostree admin pin 0&#x000A;Deployment is now pinned&#x000A;[dustymabe@dhcp137-98 ~]$ sudo ostree admin pin 1&#x000A;Deployment is now pinned&#x000A;[dustymabe@dhcp137-98 ~]$ rpm-ostree status&#x000A;State: idle; auto updates disabled&#x000A;Deployments:&#x000A;● ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.122 (2018-04-18 23:34:24)&#x000A;                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;&#x000A;  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.81 (2018-02-12 17:50:48)&#x000A;                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;</code></pre>
+
+<p>You can see in the output that the deployments now show up as <code>Pinned</code>.</p>
+
+<p>Now I can rebase to Fedora 28:</p>
+<pre class="highlight plaintext"><code>[dustymabe@dhcp137-98 ~]$ sudo ostree remote add --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-28-primary unifiedrepo https://kojipkgs.fedoraproject.org/atomic/repo/&#x000A;[dustymabe@dhcp137-98 ~]$ sudo rpm-ostree rebase unifiedrepo:fedora/28/x86_64/atomic-host&#x000A;&#x000A;25 delta parts, 9 loose fetched; 273519 KiB transferred in 115 seconds&#x000A;Checking out tree a29367c... done&#x000A;...&#x000A;Run "systemctl reboot" to start a reboot&#x000A;</code></pre>
+
+<p>After the rebase we can see that we have three (not two) deployments:</p>
+<pre class="highlight plaintext"><code>[dustymabe@dhcp137-98 ~]$ rpm-ostree status&#x000A;State: idle; auto updates disabled&#x000A;Deployments:&#x000A;  ostree://unifiedrepo:fedora/28/x86_64/atomic-host&#x000A;                   Version: 28.20180515.1 (2018-05-15 16:32:35)&#x000A;                BaseCommit: a29367c58417c28e2bd8306c1f438b934df79eba13706e078fe8564d9e0eb32b&#x000A;              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;&#x000A;● ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.122 (2018-04-18 23:34:24)&#x000A;                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;&#x000A;  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.81 (2018-02-12 17:50:48)&#x000A;                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;</code></pre>
+
+<p>And after reboot they are all still there:</p>
+<pre class="highlight plaintext"><code>[dustymabe@dhcp137-98 ~]$ rpm-ostree status&#x000A;State: idle; auto updates disabled&#x000A;Deployments:&#x000A;● ostree://unifiedrepo:fedora/28/x86_64/atomic-host&#x000A;                   Version: 28.20180515.1 (2018-05-15 16:32:35)&#x000A;                BaseCommit: a29367c58417c28e2bd8306c1f438b934df79eba13706e078fe8564d9e0eb32b&#x000A;              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;&#x000A;  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.122 (2018-04-18 23:34:24)&#x000A;                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;&#x000A;  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.81 (2018-02-12 17:50:48)&#x000A;                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat&#x000A;                    Pinned: yes&#x000A;</code></pre>
+
+<p>And we can unpin any of them we like. In this case I&rsquo;ll unpin the oldest one:</p>
+<pre class="highlight plaintext"><code>[dustymabe@dhcp137-98 ~]$ sudo ostree admin pin --unpin 2&#x000A;Deployment is now unpinned&#x000A;</code></pre>
+
+<p>Cheers!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/05/pinning-deployments-ostree-based-systems/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/05/pinning-deployments-ostree-based-systems/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/05/pinning-deployments-ostree-based-systems/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using kubeadm with CRI-O &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Antonio Murdaca' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Using kubeadm with CRI-O' property='og:title'>
+<meta content='CRI-O is a Kubernetes incubator project which is meant to provide an integration path between Open Containers Initiative (OCI) conformant runtimes and the kubelet. Specifically, it implements the Container Runtime Interface (CRI) using OCI conformant runtimes. CRI-O uses runc as its default runtime to run Kubernetes pods. For more information you can read a brief introduction here. If you’re interested into why you should use CRI-O instead of other container runtimes you can read more here.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/' property='og:url'>
+<meta content='2017-06-09T16:00:00Z' property='article:published_time'>
+<meta content='runcom' property='article:author:username'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='cri-o' property='article:tag'>
+<link href='/blog/tag/cri-o.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubeadm' property='article:tag'>
+<link href='/blog/tag/kubeadm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Using kubeadm with CRI-O' name='twitter:title'>
+<meta content='CRI-O is a Kubernetes incubator project which is meant to provide an integration path between Open Containers Initiative (OCI) conformant runtimes and the kubelet. Specifically, it implements the Container Runtime Interface (CRI) using OCI conformant runtimes. CRI-O uses runc as its default runtime to run Kubernetes pods. For more information you can read a brief introduction here. If you’re interested into why you should use CRI-O instead of other container runtimes you can read more here.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_06 blog_2017_06_using-kubeadm-with-cri-o blog_2017_06_using-kubeadm-with-cri-o_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Using kubeadm with CRI-O
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-06-09T16:00:00Z'>
+Friday  9 June 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong><a href="https://github.com/kubernetes-incubator/cri-o">CRI-O</a></strong> is a Kubernetes incubator project which is meant to provide an integration path between Open Containers Initiative (OCI) conformant runtimes and the kubelet. Specifically, it implements the Container Runtime Interface (CRI) using OCI conformant runtimes. CRI-O uses <a href="https://github.com/opencontainers/runc">runc</a> as its default runtime to run Kubernetes pods. For more information you can read a brief introduction <a href="https://www.projectatomic.io/blog/2017/02/crio-runtimes/">here</a>. If you&rsquo;re interested into why you should use CRI-O instead of other container runtimes you can read more <a href="https://www.projectatomic.io/blog/2017/06/6-reasons-why-cri-o-is-the-best-runtime-for-kubernetes/">here</a>.</p>
+
+<p></p>
+
+<h3>Introduction</h3>
+
+<p>First things first, I&rsquo;m pleased to announce that <a href="https://github.com/kubernetes-incubator/cri-o">CRI-O</a> can be seamlessy used with <a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/">kubeadm</a> to install kubernetes. This allows containers to be run under Kubernetes without the docker-engine being present on your servers.</p>
+
+<h3>Getting  started with CRI-O and kubeadm</h3>
+
+<p>To begin, you first provision machines with CRI-O using a <a href="https://github.com/cri-o/cri-o-ansible">handy ansible playbook</a>. The playbook will compile CRI-O from source and is the only installation method currently available. Installation packages for all of the major distributions are under development and should be available in the near future. Stay tuned!</p>
+
+<p>Once you have  successfully installed CRI-O, you can follow this blog post to install Kubernetes. We&rsquo;re also going to add a network  add-on to provide networking for the cluster.</p>
+
+<h3>Environment</h3>
+
+<p>You will be creating a three servers cluster using local virtual machines with <code>libvirt</code>. The master will be running on Fedora 25, the nodes will be a CentOS 7.3 machine and an Ubuntu 16.04 machine. Here is the identifying information for the two servers:</p>
+<pre class="highlight plaintext"><code>| Role       |      IP        | Hostname    |&#x000A;|------------|----------------|-------------|&#x000A;| master     | 192.168.122.34 | fedora.vm   |&#x000A;| node       | 192.168.122.35 | centos.vm   |&#x000A;| node       | 192.168.122.36 | ubuntu.vm   |&#x000A;</code></pre>
+
+<p>If you&rsquo;re going through this tutorial using machines in the cloud you can skip the following check. Machines in public clouds can usually  reach each other.</p>
+
+<h3>Setup SSH</h3>
+
+<p>Make sure machines are reachable using ssh using private keys to authenticate. We&rsquo;re going to need this for the ansible playbook:</p>
+<pre class="highlight shell"><code>laptop <span class="nv">$ </span>ssh-copy-id root@192.168.122.34 <span class="c"># fedora.vm</span>&#x000A;laptop <span class="nv">$ </span>ssh-copy-id root@192.168.122.35 <span class="c"># centos.vm</span>&#x000A;laptop <span class="nv">$ </span>ssh-copy-id root@192.168.122.36 <span class="c"># ubuntu.vm</span>&#x000A;</code></pre>
+
+<h3>Check connectivity</h3>
+
+<p>First  you&rsquo;re going to  make sure both servers can communicate via hostname by checking their <code>/etc/hosts</code> files:</p>
+
+<p>On the fedora host:</p>
+<pre class="highlight shell"><code>fedora.vm <span class="nv">$ </span>cat /etc/hosts&#x000A;<span class="o">[</span>...]&#x000A;192.168.122.34 fedora.vm&#x000A;192.168.122.35 centos.vm&#x000A;192.168.122.36 ubuntu.vm&#x000A;</code></pre>
+
+<p>On the ubuntu host:</p>
+<pre class="highlight shell"><code>ubuntu.vm <span class="nv">$ </span>cat /etc/hosts&#x000A;<span class="o">[</span>...]&#x000A;192.168.122.34 fedora.vm&#x000A;192.168.122.35 centos.vm&#x000A;192.168.122.36 ubuntu.vm&#x000A;</code></pre>
+
+<p>On the centos hosts:</p>
+<pre class="highlight shell"><code>centos.vm <span class="nv">$ </span>cat /etc/hosts&#x000A;<span class="o">[</span>...]&#x000A;192.168.122.34 fedora.vm&#x000A;192.168.122.35 centos.vm&#x000A;192.168.122.36 ubuntu.vm&#x000A;</code></pre>
+
+<h3>Clone and run the ansible playbook</h3>
+
+<p>Now clone the ansible playbook needed to install CRI-O:</p>
+<pre class="highlight shell"><code>laptop <span class="nv">$ </span>git clone https://github.com/cri-o/cri-o-ansible&#x000A;laptop <span class="nv">$ </span><span class="nb">cd </span>cri-o-ansible&#x000A;</code></pre>
+
+<p>The last thing you need to do is now launch the ansible playbook on each server.</p>
+<pre class="highlight shell"><code>laptop <span class="nv">$ </span><span class="nb">pwd</span>&#x000A;/home/runcom/cri-o-ansible&#x000A;laptop <span class="nv">$ </span>cat hosts&#x000A;192.168.122.35&#x000A;192.168.122.34 <span class="nv">ansible_python_interpreter</span><span class="o">=</span>’python3’&#x000A;192.168.122.36 <span class="nv">ansible_python_interpreter</span><span class="o">=</span>’python3’&#x000A;laptop <span class="nv">$ </span>ansible-playbook -i hosts cri-o.yml&#x000A;<span class="o">[</span>...]&#x000A;laptop <span class="err">$</span>&#x000A;</code></pre>
+
+<p>Currently the ansible playbook supports Ubuntu 16.04, CentOS 7.3 and Fedora 25+. We&rsquo;re planning to add support for other distributions. Feel free to open a PR for other distributions as well!</p>
+
+<h3>kubeadm</h3>
+
+<p>Now that you have correctly provisioned the two servers you need to follow the official <code>kubeadm</code> documentation to install kubernetes.  You don’t need  to install the <code>docker</code> package on any server!  It&rsquo;s not needed even though the kubeadm documentation says to install it.  CRI-O is replacing the functionality of the docker engine for  Kubernetes.</p>
+
+<h4>Setting up the Master</h4>
+
+<p>Start by logging into the <code>fedora.vm</code> machine which will be the master node:</p>
+<pre class="highlight shell"><code>fedora.vm <span class="c"># cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span>&#x000A;<span class="o">[</span>kubernetes]&#x000A;<span class="nv">name</span><span class="o">=</span>Kubernetes&#x000A;<span class="nv">baseurl</span><span class="o">=</span>https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64&#x000A;<span class="nv">enabled</span><span class="o">=</span>1&#x000A;<span class="nv">gpgcheck</span><span class="o">=</span>1&#x000A;<span class="nv">repo_gpgcheck</span><span class="o">=</span>1&#x000A;<span class="nv">gpgkey</span><span class="o">=</span>https://packages.cloud.google.com/yum/doc/yum-key.gpg&#x000A;        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg&#x000A;EOF&#x000A;fedora.vm <span class="c"># dnf install -y kubelet kubeadm kubernetes-cni</span>&#x000A;fedora.vm <span class="c"># systemctl restart crio</span>&#x000A;fedora.vm <span class="c"># systemctl enable kubelet &amp;&amp; systemctl start kubelet</span>&#x000A;</code></pre>
+
+<p>Run <code>kubeadm</code> to install the master node:</p>
+<pre class="highlight shell"><code>fedora.vm <span class="c"># kubeadm init --pod-network-cidr=10.244.0.0/16 --skip-preflight-checks</span>&#x000A;<span class="o">[</span>kubeadm] WARNING: kubeadm is <span class="k">in </span>beta, please <span class="k">do </span>not use it <span class="k">for </span>production clusters.&#x000A;<span class="o">[</span>init] Using Kubernetes version: v1.6.4&#x000A;<span class="o">[</span>init] Using Authorization mode: RBAC&#x000A;<span class="o">[</span>preflight] Skipping pre-flight checks&#x000A;<span class="o">[</span>certificates] Generated CA certificate and key.&#x000A;<span class="o">[</span>certificates] Generated API server certificate and key.&#x000A;<span class="o">[</span>certificates] API Server serving cert is signed <span class="k">for </span>DNS names <span class="o">[</span>kubeadm-master kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs <span class="o">[</span>10.96.0.1 10.138.0.4]&#x000A;<span class="o">[</span>certificates] Generated API server kubelet client certificate and key.&#x000A;<span class="o">[</span>certificates] Generated service account token signing key and public key.&#x000A;<span class="o">[</span>certificates] Generated front-proxy CA certificate and key.&#x000A;<span class="o">[</span>certificates] Generated front-proxy client certificate and key.&#x000A;<span class="o">[</span>certificates] Valid certificates and keys now exist <span class="k">in</span> <span class="s2">"/etc/kubernetes/pki"</span>&#x000A;<span class="o">[</span>kubeconfig] Wrote KubeConfig file to disk: <span class="s2">"/etc/kubernetes/admin.conf"</span>&#x000A;<span class="o">[</span>kubeconfig] Wrote KubeConfig file to disk: <span class="s2">"/etc/kubernetes/kubelet.conf"</span>&#x000A;<span class="o">[</span>kubeconfig] Wrote KubeConfig file to disk: <span class="s2">"/etc/kubernetes/controller-manager.conf"</span>&#x000A;<span class="o">[</span>kubeconfig] Wrote KubeConfig file to disk: <span class="s2">"/etc/kubernetes/scheduler.conf"</span>&#x000A;<span class="o">[</span>apiclient] Created API client, waiting <span class="k">for </span>the control plane to become ready&#x000A;<span class="o">[</span>apiclient] All control plane components are healthy after 16.772251 seconds&#x000A;<span class="o">[</span>apiclient] Waiting <span class="k">for </span>at least one node to register and become ready&#x000A;<span class="o">[</span>apiclient] First node is ready after 5.002536 seconds&#x000A;<span class="o">[</span>apiclient] Test deployment succeeded&#x000A;<span class="o">[</span>token] Using token: &lt;token&gt;&#x000A;<span class="o">[</span>apiconfig] Created RBAC rules&#x000A;<span class="o">[</span>addons] Created essential addon: kube-proxy&#x000A;<span class="o">[</span>addons] Created essential addon: kube-dns&#x000A;&#x000A;Your Kubernetes master has initialized successfully!&#x000A;&#x000A;To start using your cluster, you need to run <span class="o">(</span>as a regular user<span class="o">)</span>:&#x000A;&#x000A;  sudo cp /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/&#x000A;  sudo chown <span class="k">$(</span>id -u<span class="k">)</span>:<span class="k">$(</span>id -g<span class="k">)</span> <span class="nv">$HOME</span>/admin.conf&#x000A;  <span class="nb">export </span><span class="nv">KUBECONFIG</span><span class="o">=</span><span class="nv">$HOME</span>/admin.conf&#x000A;&#x000A;You should now deploy a pod network to the cluster.&#x000A;Run <span class="s2">"kubectl apply -f [podnetwork].yaml"</span> with one of the options listed at:&#x000A;  http://kubernetes.io/docs/admin/addons/&#x000A;&#x000A;You can now join any number of machines by running the following on each node&#x000A;as root:&#x000A;&#x000A;  kubeadm join --token 6b7a29.95a2995f65e1d3c9 192.168.122.34:6443&#x000A;</code></pre>
+
+<p><em>Do not follow <code>kubeadm</code> commands in the output above as we&rsquo;re going to use some custom flags to make <code>kubeadm</code> works nicely with CRI-O</em></p>
+
+<p>Make a record of the <code>kubeadm join</code> token that <code>kubeadm init</code> outputs. You will need this in a moment when setting up the nodes.</p>
+
+<p>Let&rsquo;s explain the flags you used:</p>
+
+<ul>
+<li><code>--pod-network-cidr=10.244.0.0/16</code>: this is required as you&rsquo;re going to use Flannel to provide network for the cluster</li>
+<li><code>--skip-preflight-checks</code>: <code>kubeadm</code> still assumes docker as the only container runtime which can be used with Kubernetes. You need this flag in order to silence <code>kubeadm init</code> when it warns us that docker is not installed.  We&rsquo;ve  opened an issue upstream to take care of this at <a href="https://github.com/kubernetes/kubeadm/issues/285">https://github.com/kubernetes/kubeadm/issues/285</a>.</li>
+</ul>
+
+<p>The master is now up and running. Only thing remaining to do on the master is deploying a network add-on for the cluster. We&rsquo;re going to use a custom Flannel network add-on but we also tested the <a href="https://www.weave.works/docs/net/latest/kube-addon/">official Weave network add-on</a> if you wish to use it instead.</p>
+<pre class="highlight shell"><code>fedora.vm <span class="c"># export KUBECONFIG=/etc/kubernetes/admin.conf</span>&#x000A;fedora.vm <span class="c"># kubectl apply -f https://gist.githubusercontent.com/sameo/cf92f65ae54a87807ed294f3de658bcf/raw/95d9a66a2268b779dbb25988541136d1ed2fbfe2/flannel.yaml</span>&#x000A;serviceaccount <span class="s2">"flannel"</span> created&#x000A;clusterrolebinding <span class="s2">"flannel"</span> created&#x000A;clusterrole <span class="s2">"flannel"</span> created&#x000A;serviceaccount <span class="s2">"calico-policy-controller"</span> created&#x000A;configmap <span class="s2">"kube-flannel-cfg"</span> created&#x000A;daemonset <span class="s2">"kube-flannel-ds"</span> created&#x000A;</code></pre>
+
+<p>The master is now fully configured.</p>
+
+<h4>Setting up the Nodes</h4>
+
+<p>On the Ubuntu node:</p>
+<pre class="highlight shell"><code>ubuntu.vm <span class="c"># apt-get update &amp;&amp; apt-get install -y apt-transport-https</span>&#x000A;ubuntu.vm <span class="c"># curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -</span>&#x000A;ubuntu.vm <span class="c"># cat &lt;&lt;EOF &gt;/etc/apt/sources.list.d/kubernetes.list</span>&#x000A;deb http://apt.kubernetes.io/ kubernetes-xenial main&#x000A;EOF&#x000A;ubuntu.vm <span class="c"># apt-get update</span>&#x000A;ubuntu.vm <span class="c"># systemctl restart crio</span>&#x000A;ubuntu.vm <span class="c"># apt-get install -y kubelet kubeadm kubectl kubernetes-cni</span>&#x000A;</code></pre>
+
+<p>On the Centos node:</p>
+<pre class="highlight shell"><code>centos.vm <span class="c"># cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo</span>&#x000A;<span class="o">[</span>kubernetes]&#x000A;<span class="nv">name</span><span class="o">=</span>Kubernetes&#x000A;<span class="nv">baseurl</span><span class="o">=</span>https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64&#x000A;<span class="nv">enabled</span><span class="o">=</span>1&#x000A;<span class="nv">gpgcheck</span><span class="o">=</span>1&#x000A;<span class="nv">repo_gpgcheck</span><span class="o">=</span>1&#x000A;<span class="nv">gpgkey</span><span class="o">=</span>https://packages.cloud.google.com/yum/doc/yum-key.gpg&#x000A;        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg&#x000A;EOF&#x000A;centos.vm <span class="c"># yum install -y kubelet kubeadm kubernetes-cni</span>&#x000A;centos.vm <span class="c"># systemctl restart crio</span>&#x000A;centos.vm <span class="c"># systemctl enable kubelet &amp;&amp; systemctl start kubelet</span>&#x000A;</code></pre>
+
+<p>Installing Kubernetes on the nodes is just a matter of running the <code>kubeadm join</code> command. You now need to use the token taken from the first <code>kubeadm join</code> on the master. In case you missed it, run the following command on the master and grab it:</p>
+<pre class="highlight shell"><code>fedora.vm <span class="c"># kubeadm token list</span>&#x000A;</code></pre>
+
+<p>On the Centos node:</p>
+<pre class="highlight shell"><code>centos.vm <span class="c"># kubeadm join --skip-preflight-checks --token 6b7a29.95a2995f65e1d3c9 192.168.122.34:6443</span>&#x000A;<span class="o">[</span>kubeadm] WARNING: kubeadm is <span class="k">in </span>beta, please <span class="k">do </span>not use it <span class="k">for </span>production clusters.&#x000A;<span class="o">[</span>preflight] Skipping pre-flight checks&#x000A;<span class="o">[</span>discovery] Trying to connect to API Server <span class="s2">"192.168.122.34:6443"</span>&#x000A;<span class="o">[</span>discovery] Created cluster-info discovery client, requesting info from <span class="s2">"https://192.168.122.34.4:6443"</span>&#x000A;<span class="o">[</span>discovery] Cluster info signature and contents are valid, will use API Server <span class="s2">"https://192.168.122.34:6443"</span>&#x000A;<span class="o">[</span>discovery] Successfully established connection with API Server <span class="s2">"192.168.122.34:6443"</span>&#x000A;<span class="o">[</span>bootstrap] Detected server version: v1.6.4&#x000A;<span class="o">[</span>bootstrap] The server supports the Certificates API <span class="o">(</span>certificates.k8s.io/v1beta1<span class="o">)</span>&#x000A;<span class="o">[</span>csr] Created API client to obtain unique certificate <span class="k">for </span>this node, generating keys and certificate signing request&#x000A;<span class="o">[</span>csr] Received signed certificate from the API server, generating KubeConfig...&#x000A;<span class="o">[</span>kubeconfig] Wrote KubeConfig file to disk: <span class="s2">"/etc/kubernetes/kubelet.conf"</span>&#x000A;&#x000A;Node join <span class="nb">complete</span>:&#x000A;<span class="k">*</span> Certificate signing request sent to master and response&#x000A;  received.&#x000A;<span class="k">*</span> Kubelet informed of new secure connection details.&#x000A;&#x000A;Run <span class="s1">'kubectl get nodes'</span> on the master to see this machine join.&#x000A;</code></pre>
+
+<p>On the Ubuntu node:</p>
+<pre class="highlight shell"><code>ubuntu.vm <span class="c"># kubeadm join --skip-preflight-checks --token 6b7a29.95a2995f65e1d3c9 192.168.122.34:6443</span>&#x000A;<span class="o">[</span>kubeadm] WARNING: kubeadm is <span class="k">in </span>beta, please <span class="k">do </span>not use it <span class="k">for </span>production clusters.&#x000A;<span class="o">[</span>preflight] Skipping pre-flight checks&#x000A;<span class="o">[</span>discovery] Trying to connect to API Server <span class="s2">"192.168.122.34:6443"</span>&#x000A;<span class="o">[</span>discovery] Created cluster-info discovery client, requesting info from <span class="s2">"https://192.168.122.34.4:6443"</span>&#x000A;<span class="o">[</span>discovery] Cluster info signature and contents are valid, will use API Server <span class="s2">"https://192.168.122.34:6443"</span>&#x000A;<span class="o">[</span>discovery] Successfully established connection with API Server <span class="s2">"192.168.122.34:6443"</span>&#x000A;<span class="o">[</span>bootstrap] Detected server version: v1.6.4&#x000A;<span class="o">[</span>bootstrap] The server supports the Certificates API <span class="o">(</span>certificates.k8s.io/v1beta1<span class="o">)</span>&#x000A;<span class="o">[</span>csr] Created API client to obtain unique certificate <span class="k">for </span>this node, generating keys and certificate signing request&#x000A;<span class="o">[</span>csr] Received signed certificate from the API server, generating KubeConfig...&#x000A;<span class="o">[</span>kubeconfig] Wrote KubeConfig file to disk: <span class="s2">"/etc/kubernetes/kubelet.conf"</span>&#x000A;&#x000A;Node join <span class="nb">complete</span>:&#x000A;<span class="k">*</span> Certificate signing request sent to master and response&#x000A;  received.&#x000A;<span class="k">*</span> Kubelet informed of new secure connection details.&#x000A;&#x000A;Run <span class="s1">'kubectl get nodes'</span> on the master to see this machine join.&#x000A;</code></pre>
+
+<p>Nodes setup is now completed.</p>
+
+<h3>Enjoy</h3>
+
+<p>Congratulations! You installed Kubernetes on the cluster and you&rsquo;re using CRI-O as the container runtime!</p>
+
+<p>To start using your cluster, you need to run (as a regular user) on the master:</p>
+<pre class="highlight shell"><code>fedora.vm <span class="nv">$ </span> sudo cp /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/&#x000A;fedora.vm <span class="nv">$ </span> sudo chown <span class="k">$(</span>id -u<span class="k">)</span>:<span class="k">$(</span>id -g<span class="k">)</span> <span class="nv">$HOME</span>/admin.conf&#x000A;fedora.vm <span class="nv">$ </span> <span class="nb">export </span><span class="nv">KUBECONFIG</span><span class="o">=</span><span class="nv">$HOME</span>/admin.conf&#x000A;fedora.vm <span class="nv">$ </span>kubectl get nodes&#x000A;NAME        STATUS    AGE      VERSION&#x000A;centos.vm   Ready     17s      v1.6.4&#x000A;fedora.vm   Ready     15m      v1.6.4&#x000A;ubuntu.vm   Ready     12m      v1.6.4&#x000A;fedora.vm <span class="err">$</span>&#x000A;</code></pre>
+
+<p>Play around with your cluster in any way you want. I suggest following the great examples at <a href="http://kubernetesbyexample.com/">kubernetesbyexample.com</a>.</p>
+
+<h3>Conclusions</h3>
+
+<p>Kubernetes runs well with alternative runtimes like CRI-O.  Since CRI-O is dedicated to the kubernetes runtime, it is an excellent alternative to the upstream docker engine.</p>
+
+<p>We&rsquo;re currently working on making CRI-O available for every major distribution.  This will allow you to install it from your favorite package manager, as opposed to installing it from source. We&rsquo;ll make an official announcement when the packages are ready.  We’re always looking for help and would welcome anyone that would like to join the development effort for CRI-O!</p>
+
+<p>If you run into issues following these installation instructions, please report them in one of the following places:</p>
+
+<ul>
+<li><a href="https://github.com/kubernetes-incubator/cri-o">The CRI-O github repository</a></li>
+<li>The #cri-o channel on chat.freenode.net</li>
+<li>In the comments below</li>
+</ul>
+
+<p>Grazie mille!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/cri-o/">cri-o</a></li>
+<li><a href="/blog/tag/kubeadm/">kubeadm</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/06/using-kubeadm-with-cri-o/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

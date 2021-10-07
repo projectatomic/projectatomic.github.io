@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Don't Run yum update Within a Running Container &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brent Baude' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content="Don't Run yum update Within a Running Container" property='og:title'>
+<meta content='Recently, I have been reviewing a massive collection of Dockerfiles and interacting with customers&#x000A;and ISVs alike. In this time, I have seen all sorts of actions being taken for container design and how&#x000A;those containers should be run. One such action I really struggle with is when users are either told&#x000A;or take the initiative themselves to update packages within a running container. For example, they execute something like:&#x000A;docker run -it foobar yum -y update' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/02/dont-run-yum-update-within-a-running-container/' property='og:url'>
+<meta content='2016-02-04T10:04:54Z' property='article:published_time'>
+<meta content='baude' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Dockerfiles' property='article:tag'>
+<link href='/blog/tag/dockerfiles.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content="Don't Run yum update Within a Running Container" name='twitter:title'>
+<meta content='Recently, I have been reviewing a massive collection of Dockerfiles and interacting with customers&#x000A;and ISVs alike. In this time, I have seen all sorts of actions being taken for container design and how&#x000A;those containers should be run. One such action I really struggle with is when users are either told&#x000A;or take the initiative themselves to update packages within a running container. For example, they execute something like:&#x000A;docker run -it foobar yum -y update' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_02 blog_2016_02_dont-run-yum-update-within-a-running-container blog_2016_02_dont-run-yum-update-within-a-running-container_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Don't Run yum update Within a Running Container
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/baude/">Brent Baude</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-02-04T10:04:54Z'>
+Thursday  4 February 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently, I have been reviewing a massive collection of Dockerfiles and interacting with customers
+and ISVs alike. In this time, I have seen all sorts of actions being taken for container design and how
+those containers should be run. One such action I really struggle with is when users are either told
+or take the initiative themselves to update packages within a running container. For example, they execute something like:</p>
+<pre class="highlight plaintext"><code>docker run -it foobar yum -y update&#x000A;</code></pre>
+
+<p></p>
+
+<p>While there could be a litany of reasons for doing this, consider the potential consequences:</p>
+
+<ul>
+<li>Only the container itself is updated, the image remains unchanged</li>
+<li>If you were running 10 of these containers, that would result in 10 separate yum updates</li>
+<li>With multiple updated containers, perhaps at different times, each container could potentially have different packages in it.</li>
+<li>The author of the image may not have tested with the updated packages and therefore you may encounter undesirable results.</li>
+</ul>
+
+<p>That said, there are certainly a lot of images on various registries that have grown stale or are not updated with the frequency users desire.  Clearly, in this case, it would be ideal if there was an automated build service from the provider to rebuild the images if its packages were updated.</p>
+
+<p>Absent of that, I think there is a better way.  If we follow the container paradigm, it would be more prudent to update <em>the image</em> in question rather than the container.  This can simply be done with Docker, where you would use the image from the registry as a seed image and then run <code>yum update</code> to create a new image.  The Dockerfile could be as simple as:</p>
+<pre class="highlight plaintext"><code># Use the image from the registry as a seed&#x000A;FROM 192.168.122.161:5000/foobar&#x000A;&#x000A;# Run yum update and then clean the cache&#x000A;RUN yum -y update &amp;&amp; yum clean all&#x000A;</code></pre>
+
+<p>Then build the image and name it with some obvious marker to differentiate it:</p>
+<pre class="highlight plaintext"><code>docker build -t foobar-updated .&#x000A;</code></pre>
+
+<p>Now, instead of running an image based on <em><code>foobar</code></em>, use <em><code>foobar-updated</code></em> instead.</p>
+
+<p>By following this paradigm, you will now be able to push the image through your lifecycle testing and verify functionality. All you need to do is stop the existing containers and start new ones based on your newly updated image. You will now have consistent and well-formed images.</p>
+
+<h3>atomic verify Can Help</h3>
+
+<p>The <code>verify</code> subcommand of the <a href="https://github.com/projectatomic/atomic">atomic application</a> can also be helpful in this scenario. It can be used to determine if an image or its layers have been updated. <code>verify</code> uses the <em><code>Version</code></em> label to store its version as metadata within the image. For more information about labels, see the <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels">ContainerApplicationGenericLabels</a> GitHub repository. Carrying our example from earlier, suppose we have pulled our <em>foobar</em> image from a registry, like so:</p>
+<pre class="highlight plaintext"><code>docker pull 192.168.122.161:5000/foobar&#x000A;</code></pre>
+
+<p>Using the advice from above, we can then use that image as a seed image to rebuild <em><code>foobar</code></em> having run a <code>yum update</code> and now have a <em><code>foobar-updated</code></em> image present on our system.  This can be observed with using Docker:</p>
+<pre class="highlight plaintext"><code># docker images&#x000A;REPOSITORY                    TAG                 IMAGE ID            CREATED             VIRTUAL SIZE&#x000A;foobar-updated                latest              9045d1c4d8c0        5 minutes ago       194.7 MB&#x000A;192.168.122.161:5000/foobar   latest              ff7d910bca97        7 minutes ago       194.7 MB&#x000A;</code></pre>
+
+<p>Supposing the foobar image is updated, we can use <code>atomic verify</code> to identify that:</p>
+<pre class="highlight plaintext"><code># sudo ./atomic verify -v foobar-updated&#x000A;&#x000A;foobar-updated contains the following images:&#x000A;&#x000A;     Local Version                  Latest Version&#x000A;     -------------                  --------------&#x000A;     foobar-updated-1.0-5-updated   foobar-updated-1.0-5-updated&#x000A;     foobar-1.0-5                   foobar-1.0-6                   *&#x000A;&#x000A;     * = version difference&#x000A;</code></pre>
+
+<p>Notice how the version level has been updated from 1.0.5 to 1.0.6 on the remote registry. This is a sign we should now use the new version on the registry and, if desired, rebuild our local <code>-updated</code> version updates as needed.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/dockerfiles/">Dockerfiles</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/02/dont-run-yum-update-within-a-running-container/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/02/dont-run-yum-update-within-a-running-container/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/02/dont-run-yum-update-within-a-running-container/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

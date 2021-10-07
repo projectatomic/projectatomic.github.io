@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+skopeo: inspect remote images &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Antonio Murdaca' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='skopeo: inspect remote images' property='og:title'>
+<meta content='The atomic verify command checks whether there is a newer image available remotely and scans through all layers to see if any of the layers, which are base images themselves, have a new version available.  If the tool finds an out-of-date image, it will report as such. The command attempts to reach out the registry where the image has been downloaded from to understand if the local image is outdated.&#x000A;&#x000A;Currently, atomic verify relies on a Docker patch that Red Hat is carrying called remote repository inspection. It adds a new REST route that basically returns docker inspect-like information about a given image as found in the remote registry the image is hosted. We need this feature because atomic verify uses LABEL(s)—and in particular the Version LABEL—to check whether the local image needs to be updated. For more information about labels, see  the projectatomic/ContainerApplicationGenericLabels.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/' property='og:url'>
+<meta content='2016-03-01T10:39:51Z' property='article:published_time'>
+<meta content='runcom' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='skopeo: inspect remote images' name='twitter:title'>
+<meta content='The atomic verify command checks whether there is a newer image available remotely and scans through all layers to see if any of the layers, which are base images themselves, have a new version available.  If the tool finds an out-of-date image, it will report as such. The command attempts to reach out the registry where the image has been downloaded from to understand if the local image is outdated.&#x000A;&#x000A;Currently, atomic verify relies on a Docker patch that Red Hat is carrying called remote repository inspection. It adds a new REST route that basically returns docker inspect-like information about a given image as found in the remote registry the image is hosted. We need this feature because atomic verify uses LABEL(s)—and in particular the Version LABEL—to check whether the local image needs to be updated. For more information about labels, see  the projectatomic/ContainerApplicationGenericLabels.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_skopeo-inspect-remote-images blog_2016_03_skopeo-inspect-remote-images_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+skopeo: inspect remote images
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-01T10:39:51Z'>
+Tuesday  1 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The <code>atomic verify</code> command checks whether there is a newer image available remotely and scans through all layers to see if any of the layers, which are base images themselves, have a new version available.  If the tool finds an out-of-date image, it will report as such. The command attempts to reach out the registry where the image has been downloaded from to understand if the local image is outdated.</p>
+
+<p>Currently, <code>atomic verify</code> relies on a Docker patch that Red Hat is carrying called <em>remote repository inspection</em>. It adds a new REST route that basically returns <code>docker inspect</code>-like information about a given image as found in the remote registry the image is hosted. We need this feature because <code>atomic verify</code> uses <code>LABEL</code>(s)&mdash;and in particular the <code>Version</code> <code>LABEL</code>&mdash;to check whether the local image needs to be updated. For more information about labels, see  the <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels">projectatomic/ContainerApplicationGenericLabels</a>.</p>
+
+<p></p>
+
+<p>We&rsquo;ve been trying to push this patch upstream but the pull request got closed:  <a href="https://github.com/docker/docker/pull/14258">docker/docker#14258</a>. The linked issue is still open, though: <a href="https://github.com/docker/docker/issues/14257">docker/docker#14257</a>.</p>
+
+<p>To avoid carrying a huge patch just to retrieve information about an image on registry with <code>docker</code>, we decided to put this feature into a small go binary called <a href="https://github.com/runcom/skopeo">skopeo</a>.</p>
+
+<p>The <code>skopeo</code> binary is really simple, you just need to provide a fully qualified image (plus a reference&mdash;tag or digest&mdash;if you want to. By fully qualified, we mean you need to provide the registry url as part of the full image name (as opposed to what <code>docker</code> does when you run <code>FROM ubuntu</code>, which resolves to the <code>docker.io</code> public registry).</p>
+<pre class="highlight plaintext"><code>$ skopeo docker.io/ubuntu:12.04&#x000A;&#x000A;{"Tag":"12.04","Digest":"sha256:bb0c00ca5e62017928cdb26324f7f6fe266cdfa21743857fd503d6ea73bc348a","RepoTags":["10.04","12.04.5","12.04","12.10","13.04","13.10","14.04.1","14.04.2","14.04.3","14.04.4","14.04","14.10","15.04","15.10","16.04","latest","lucid","precise-20150212","precise-20150228.11","precise-20150320","precise-20150427","precise-20150528","precise-20150612","precise-20150626","precise-20150729","precise-20150813","precise-20150924","precise-20151020","precise-20151028","precise-20151208","precise-20160108","precise-20160217","precise-20160225","precise","quantal","raring","saucy","trusty-20150218.1","trusty-20150228.11","trusty-20150320","trusty-20150427","trusty-20150528","trusty-20150612","trusty-20150630","trusty-20150730","trusty-20150806","trusty-20150814","trusty-20151001","trusty-20151009","trusty-20151021","trusty-20151028","trusty-20151208","trusty-20151218","trusty-20160119","trusty-20160217","trusty-20160226","trusty","utopic-20150211","utopic-20150228.11","utopic-20150319","utopic-20150418","utopic-20150427","utopic-20150528","utopic-20150612","utopic-20150625","utopic","vivid-20150218","vivid-20150309","vivid-20150319.1","vivid-20150421","vivid-20150427","vivid-20150528","vivid-20150611","vivid-20150802","vivid-20150813","vivid-20150930","vivid-20151021","vivid-20151106","vivid-20151111","vivid-20151208","vivid-20160122","vivid","wily-20150528.1","wily-20150611","wily-20150708","wily-20150731","wily-20150807","wily-20150818","wily-20150829","wily-20151006","wily-20151009","wily-20151019","wily-20151208","wily-20160121","wily-20160217","wily","xenial-20151218.1","xenial-20160119.1","xenial-20160125","xenial-20160217.2","xenial-20160226","xenial"],"Comment":"","Created":"2016-02-26T22:10:13.587480841Z","ContainerConfig":{"Hostname":"4ca411e46fda","Domainname":"","User":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":[],"Cmd":["/bin/sh","-c","#(nop) CMD [\"/bin/bash\"]"],"Image":"98bef3c5ecfd87001d7bf9783237987cbe29663909410e997ba4f601fcbdbf60","Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":{}},"DockerVersion":"1.9.1","Author":"","Config":{"Hostname":"4ca411e46fda","Domainname":"","User":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":[],"Cmd":["/bin/bash"],"Image":"98bef3c5ecfd87001d7bf9783237987cbe29663909410e997ba4f601fcbdbf60","Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":{}},"Architecture":"amd64","Os":"linux"}&#x000A;</code></pre>
+
+<p>The tool will output a json representation of the image available in the registry, instead of downloading it and later performing the inspection. As part of the output, <code>skopeo</code> lists also all available tags the image has on the given registry.
+The full json output is really similar to the <code>docker inspect</code> output, but it lacks some information such as the size of the image (which is not relevant in a remote inspection).</p>
+
+<p>The <code>skopeo</code> app also supports registries that require authentication (such as private images on <code>docker.io</code>):</p>
+<pre class="highlight plaintext"><code>$ skopeo docker.io/runcom/busyboxt&#x000A;&#x000A;{"Tag":"latest","Digest":"sha256:24c4959faaaa08af2b964fa753f6608163bde0b0a8db4250d58989f4737ac4c2","RepoTags":["latest"],"Comment":"","Created":"2016-01-15T18:06:41.282540103Z","ContainerConfig":{"Hostname":"aded96b43f48","Domainname":"","User":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":null,"Cmd":["/bin/sh","-c","#(nop) CMD [\"sh\"]"],"Image":"9e77fef7a1c9f989988c06620dabc4020c607885b959a2cbd7c2283c91da3e33","Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":null},"DockerVersion":"1.8.3","Author":"","Config":{"Hostname":"aded96b43f48","Domainname":"","User":"","AttachStdin":false,"AttachStdout":false,"AttachStderr":false,"Tty":false,"OpenStdin":false,"StdinOnce":false,"Env":null,"Cmd":["sh"],"Image":"9e77fef7a1c9f989988c06620dabc4020c607885b959a2cbd7c2283c91da3e33","Volumes":null,"WorkingDir":"","Entrypoint":null,"OnBuild":null,"Labels":null},"Architecture":"amd64","Os":"linux"}&#x000A;</code></pre>
+
+<p>In our case, we can now provide everything needed to <code>atomic verify</code> by just running:</p>
+<pre class="highlight plaintext"><code>$ skopeo registry.access.redhat.com/rhel7 | jq '.Config.Labels.Version'&#x000A;&#x000A;"7.2"&#x000A;</code></pre>
+
+<p>The <code>skopeo</code> binary is relatively new and in the future we aim to support <a href="https://github.com/appc/spec">appc</a> images as well. However, right now, <em>appc</em> images need to be downloaded before being inspected, so it might be worth working on exposing image metadata as part of the their discovery procedure.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

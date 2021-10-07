@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cockpit 0.113 Released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Stef Walter' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Cockpit 0.113 Released' property='og:title'>
+<meta content="Cockpit releases every week. Here's highlights from 0.112 and 0.113." property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/07/cockpit-0.113/' property='og:url'>
+<meta content='2016-07-08T12:00:00Z' property='article:published_time'>
+<meta content='stef' property='article:author:username'>
+<meta content='cockpit' property='article:tag'>
+<link href='/blog/tag/cockpit.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='linux' property='article:tag'>
+<link href='/blog/tag/linux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='technical' property='article:tag'>
+<link href='/blog/tag/technical.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Cockpit 0.113 Released' name='twitter:title'>
+<meta content="Cockpit releases every week. Here's highlights from 0.112 and 0.113." name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_07 blog_2016_07_cockpit-0 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Cockpit 0.113 Released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/stef/">Stef Walter</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-08T12:00:00Z'>
+Friday  8 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Cockpit is the <a href="http://cockpit-project.org/">modern Linux admin interface</a>. There&rsquo;s a new release every week.</p>
+
+<p>Here are the highlights from this week&rsquo;s 0.111 and 0.112 releases.</p>
+
+<p></p>
+
+<h3>Display Time Information for systemd Timer Jobs</h3>
+
+<p>Harish Anand, a Google Summer of Code student working on Cockpit, has implemented
+systemd timers. These are similar to cron jobs and are a structured way of running
+a command or other systemd unit at a specific time. Some of his initial work got merged,
+and you can see it in action here:</p>
+
+<iframe width="853" height="480" src="https://www.youtube.com/embed/2mGAlpZWQUQ?rel=0"
+frameborder="0" allowfullscreen></iframe>
+
+<h3>Hide Unmanaged Network Interfaces</h3>
+
+<p>NetworkManager has the concept of marking certain network interfaces as <q>unmanaged</q>.
+This is done with a <code>NM_CONTROLLED=&quot;no&quot;</code> setting in a file placed in
+<code>/etc/sysconfig/network-scripts/</code>. Cockpit now respects the admins wishes and
+and hides such interfaces from its Network configuration.</p>
+
+<p>The <em>On/Off</em> switch is also disabled appropriately for unknown interfaces.</p>
+
+<h3>Network Bonds are Created with Active/Backup</h3>
+
+<p>When a new network bond is created the <em>Active/Backup</em> mode is used as
+the default. This is a more common choice for admins, and makes sense
+to point people in this direction.</p>
+
+<p><img alt="Bond Active/Backup" width="816" height="473" src="/images/cockpit-active-backup.png?1633620578" /></p>
+
+<h3>Added Textual Fields to Container Resource Sliders</h3>
+
+<p>Users can now type actual amounts in memory megabytes, or CPU shares
+when starting a container, in addition to being able to use a slider.</p>
+
+<p><img alt="Resource Slider Text" width="813" height="502" src="/images/cockpit-resource-sliders-text.png?1633620578" /></p>
+
+<h3>Disable Tuned Correctly when Disabling Performance Profiles</h3>
+
+<p>The tuned service needs to be stopped and disabled when choosing the <q>none</q>
+performance profile. The behavior now lines up with what users expect
+using the <code>tuned-adm</code> command line tooling.</p>
+
+<h3>From the Future</h3>
+
+<p>Lars <a href="https://github.com/cockpit-project/cockpit/pull/4633">is working on</a> making the
+terminal be resizable, so you&rsquo;re not limited to a small display when working on
+the machine.</p>
+
+<h3>Try It Out</h3>
+
+<p>Cockpit 0.113 is available now:</p>
+
+<ul>
+<li><a href="http://cockpit-project.org/running.html">For your Linux system</a></li>
+<li><a href="https://github.com/cockpit-project/cockpit/releases/tag/0.113">Source Tarball</a></li>
+<li><a href="https://bodhi.fedoraproject.org/updates/cockpit-0.113-1.fc24">Fedora 24</a></li>
+<li><a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/">COPR for Fedora 23, CentOS and RHEL</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+<li><a href="/blog/tag/linux/">linux</a></li>
+<li><a href="/blog/tag/technical/">technical</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/07/cockpit-0.113/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/07/cockpit-0.113/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/07/cockpit-0.113/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

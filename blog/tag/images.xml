@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Images</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/images.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Buildah - build your containers from the ground up!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/06/introducing-buildah/"/>
+    <id>http://www.projectatomic.io/blog/2017/06/introducing-buildah/</id>
+    <published>2017-06-22T15:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;p&gt;Since I&amp;rsquo;m relatively new to the world of containers and images, I was excited to learn about &lt;a href="https://github.com/projectatomic/buildah"&gt;the Buildah tool&lt;/a&gt;.  Especially since I&amp;rsquo;m a native New Englander and it&amp;rsquo;s a clever play on how we say Builder in these parts.&lt;/p&gt;
+
+&lt;p&gt;Buildah is a newly released command line tool for efficiently and quickly building &lt;a href="https://www.opencontainers.org/"&gt;Open Container Initiative&lt;/a&gt; (OCI) compliant images and containers.  Buildah simplifies the process of creating, building and updating images while decreasing the learning curve of the container environment.  It is easily scriptable and can be used in an environment where one needs to spin up containers automatically based on calls from your application.  What&amp;rsquo;s really neat is there is no requirement for a container runtime daemon to be running on your system chewing up resources and complicating the build process.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Testing Environment&lt;/h3&gt;
+
+&lt;p&gt;Just to let you know my testing environment,  I&amp;rsquo;m running Red Hat Enterprise Linux (RHEL) version 7 on a Lenovo T460p laptop (Dual Core Intel Core i7-6820HQ processor, 16GB of memory and a solid state drive) over a VPN on 50/50 Verizon FIOS.  I then used Virtual Machine Manager to create a &lt;a href="https://fedoramagazine.org/announcing-the-release-of-fedora-26-beta/"&gt;Fedora 26 Beta&lt;/a&gt; virtual machine (VM) with 2GB of memory and 20GB of disk space.  I installed and ran Buildah on this Fedora VM.&lt;/p&gt;
+
+&lt;h3&gt;Setting Up Buildah&lt;/h3&gt;
+
+&lt;p&gt;Before you can run Buildah, you need to install it.  One way is using the package which is now available on Fedora:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf -y install buildah
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If the Buildah package is not available on your Linux distribution, or you would like to contribute to the project, you can &lt;a href="https://github.com/projectatomic/buildah"&gt;clone it from GitHub&lt;/a&gt;.  The configuration and installation process there is straightforward and is documented in the README.md file.  To configure and install Buildah using this method, I spun up my Fedora 26 Beta virtual machine (VM) and then installed the following packages using dnf on it.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf -y install make golang bats btrfs-progs-devel \
+  device-mapper-devel gpgme-devel libassuan-devel \
+  git bzip2 go-md2man runc skopeo-containers
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that completed I then did the following, as documented in the README.md, to build Buildah itself:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# mkdir ~/buildah
+# cd ~/buildah
+# export GOPATH=`pwd`
+# git clone https://github.com/projectatomic/buildah \
+ ./src/github.com/projectatomic/buildah
+# cd ./src/github.com/projectatomic/buildah
+# make
+# make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To verify the install:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah --help
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After installing Buildah via either method  you should be able to run &lt;code&gt;man buildah&lt;/code&gt; and see all of the man pages associated with the tool.  From here you can get detailed examples of each of the commands.&lt;/p&gt;
+
+&lt;h3&gt;Let&amp;rsquo;s Play!&lt;/h3&gt;
+
+&lt;p&gt;Now for the fun stuff.  I wanted to set up a little container running Fedora from the docker registry.  I simply issue the following command in BASH which sets my variable named &lt;code&gt;container&lt;/code&gt; to the container&amp;rsquo;s name for use later on :&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# container=$(buildah from fedora)
+Getting image source signatures
+Copying blob  sha256:691bc14ee27487db536172a1fcdbbf956f460d1e1e1b201828e3a2bab81c5ec8
+ 72.22 MiB / 72.22 MiB   [=======================================================]
+Copying config sha256:15895ef0b3b2b4e61bf03d38f82b42011ff7f226c681705a4022ae3d1d643888
+ 0 B / 2.29 KiB [--------------------------------------------------------------]
+Writing manifest to image destination
+Storing signatures
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command completed relatively quickly for me (26 seconds), and most of that time was used for the initial download of the Fedora base image.&lt;/p&gt;
+
+&lt;p&gt;Now I can verify that the image has been pulled and the container has been setup by using the buildah images and buildah containers commands respectively:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah images
+IMAGE ID     IMAGE NAME
+dc3a60619440 docker.io/library/fedora:latest
+# buildah containers
+CONTAINER ID IMAGE ID     IMAGE NAME CONTAINER NAME
+ae93de45778a dc3a60619440 fedora     fedora-working-container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Look Ma!  No container runtime is running!&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ve now downloaded an image we can manipulate, without using the Docker daemon or even having it installed on the system:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# systemctl status docker
+Unit docker.service could not be found.
+# rpm -qa docker
+#
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We don&amp;rsquo;t need any other container runtime, either. By not installing Docker or another container runtime we save file system space and lessen both memory usage and CPU processing time on the system. The daemons associated with those runtimes are not only not running, they&amp;rsquo;re not even present. As we&amp;rsquo;ll see in a future blog, Buildah also allows you to build smaller containers than Docker does. In addition to these advantages, Buildah is easily embeddable in automation scripts and inside other container-building tools as a server process is not required.&lt;/p&gt;
+
+&lt;h3&gt;Manipulating the Image&lt;/h3&gt;
+
+&lt;p&gt;In the initial buildah &lt;code&gt;from&lt;/code&gt; command, I saved the container name in the &lt;code&gt;$container&lt;/code&gt; variable, and I can now use that variable to manipulate the container.   First, let&amp;rsquo;s mount the container on a local mount point, saving the location of the mount point in the &lt;code&gt;$mountpoint&lt;/code&gt; variable and then we&amp;rsquo;ll add a file from our local system into our container.  To do this, we use:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# mountpoint=$(buildah mount $container)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we&amp;rsquo;ve the mountpoint in hand, let&amp;rsquo;s play around a bit with it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ls $mountpoint
+bin   dev  home  lib64  mnt  proc  run   srv  tmp  var
+boot  etc  lib   media  opt  root  sbin  sys  usr
+# cat /tmp/moveit.txt
+Move this file to the Buildah container's /tmp directory.
+# ls $mountpoint/tmp
+anaconda-post.log  ks-script-64xpp1a9  ks-script-sw0bp7j4
+# cp /tmp/moveit.txt $mountpoint/tmp
+# ls $mountpoint/tmp
+anaconda-post.log  ks-script-64xpp1a9  ks-script-sw0bp7j4  moveit.txt
+# cat $mountpoint/tmp/moveit.txt
+Move this file to the Buildah container's /tmp directory.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So in under 30 seconds we were able to pull down an image from a registry, create a corresponding container and then manipulate that container.  We now have a container that&amp;rsquo;s unique to our needs, so let&amp;rsquo;s save an image of it.  The &lt;code&gt;buildah commit&lt;/code&gt; command creates a new image which will let us replicate the container later as we need to.  After we create and save the image we&amp;rsquo;ll remove the first container that we created and then create a second container from our newly created image.  With luck our &lt;code&gt;moveit.txt&lt;/code&gt; file will be in the new container&amp;rsquo;s /tmp directory!&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s create an image based upon our container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah commit $container containers-storage:first-new-image
+# buildah images
+IMAGE ID        IMAGE NAME
+dc3a60619440 docker.io/library/fedora:latest
+54e012885dcf docker.io/library/first-new-image:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s clean up our containers leaving only our images behind.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah umount "$container"
+# buildah rm "$container"
+ae93de45778a5f3905c52de9378f14d54c2617e4336766efde6311596541e98c
+# buildah containers  # No more containers
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we want to create a new container using the saved image, we just execute the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# container2=$(buildah from first-new-image)
+# buildah containers
+CONTAINER ID IMAGE ID     IMAGE NAME      CONTAINER NAME
+757b5b595f0a 54e012885dcf first-new-image first-new-image-working-container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s mount the container on a local mount point:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# mountpoint2=$(buildah mount $container2)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now check to see if our &lt;code&gt;moveit.txt&lt;/code&gt; file is in the new container that we created from the image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ls $mountpoint2/tmp
+anaconda-post.log  ks-script-64xpp1a9  ks-script-sw0bp7j4  moveit.txt
+# cat $mountpoint2/tmp/moveit.txt
+Move this file to the Buildah container's /tmp directory.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With just a few very scriptable steps we were able to create an image from the container that we had built and modified to fit our needs.  With this image in hand, we can then generate as many new containers as we need in the future based on that image.&lt;/p&gt;
+
+&lt;h3&gt;Using Dockerfiles&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;m sure folks with a lot more container time under their belts than I will have many Dockerfile specification files lying around.  These too can be used by Buildah to create a new image.  For instance let&amp;rsquo;s look at this simple Dockerfile that runs a little “Hello World” python script.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM python
+ADD HelloFromContainer.py /
+CMD ["python","./HelloFromContainer.py"]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The HelloFromContainer.py file simply contains:&lt;/p&gt;
+&lt;pre class="highlight python"&gt;&lt;code&gt;&lt;span class="c"&gt;#!/usr/bin/env python3&lt;/span&gt;
+&lt;span class="c"&gt;#&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Hello World from Container Land! Message # [&lt;/span&gt;&lt;span class="si"&gt;%&lt;/span&gt;&lt;span class="s"&gt;d]"&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s put it all together and run the container.  First we&amp;rsquo;ll create an image based on our DockerFile.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ls HelloFromContainer.py
+HelloFromContainer.py
+# ls Dockerfile
+Dockerfile
+# buildah bud -t hellofromcontainer .
+STEP 1: FROM python
+Getting image source signatures
+Copying blob sha256:ef0380f84d05d3cdc5a5f66023 ...
+ 49.55 MiB / 50.13 MiB [==========================]
+...
+Copying config sha256:74145628c3310c1a8634aa04 ...
+ 0 B / 6.91 KiB [---------------------------------]
+Writing manifest to image destination
+Storing signatures
+STEP 2: ADD HelloFromContainer.py /
+STEP 3: CMD ["python","./HelloFromContainer.py"]
+STEP 4: COMMIT containers-storage:[overlay@/var/lib/containers/storage]docker.io/library/hellofromcontainer:latest
+ 6.91 KiB / 6.91 KiB [============================]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For those wondering at home, this &lt;code&gt;buildah bud&lt;/code&gt; command completed in 2 minutes and 3 seconds.  The first two minutes of that time was spent in &lt;code&gt;STEP 1&lt;/code&gt; which pulls down the bits to run Python.  Now let&amp;rsquo;s check that the image got created.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah images
+IMAGE ID        IMAGE NAME
+dc3a60619440 docker.io/library/fedora:latest
+54e012885dcf docker.io/library/first-new-image:latest
+35de96ee8fb5 docker.io/library/python:latest
+f19ac91f7e60 docker.io/library/hellofromcontainer:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And let&amp;rsquo;s build the container from that image:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah from hellofromcontainer
+hellofromcontainer-working-container
+# buildah containers
+CONTAINER ID IMAGE ID        IMAGE NAME      CONTAINER NAME
+757b5b595f0a 54e012885dcf first-new-image first-new-image-working-container
+8cf6034f22e3 f19ac91f7e60 hellofromcontainer hellofromcontainer-working-container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This &lt;code&gt;buildah from&lt;/code&gt; command finished in a second.  Now let&amp;rsquo;s run our new container!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah run hellofromcontainer-working-container
+Hello World from Container Land! Message # [0]
+Hello World from Container Land! Message # [1]
+Hello World from Container Land! Message # [2]
+Hello World from Container Land! Message # [3]
+Hello World from Container Land! Message # [4]
+Hello World from Container Land! Message # [5]
+Hello World from Container Land! Message # [6]
+Hello World from Container Land! Message # [7]
+Hello World from Container Land! Message # [8]
+Hello World from Container Land! Message # [9]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Give Buildah a Try&lt;/h3&gt;
+
+&lt;p&gt;The Buildah command line tool simplifies the administration needed for containers and allows them to be run without the overhead of a container daemon on your system.  Buildah also allows you to create smaller containers with less overhead within them.  I&amp;rsquo;ve just started to dive into containers and Buildah both, it&amp;rsquo;s easy to see how this would be a great tool for a DevOps environment or any other environment that needs to easily spin up containers efficiently and cheaply.  I hope you find Buildah to be useful in your environments too and I&amp;rsquo;d love to hear what you think!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Making Docker images read-only in production</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/"/>
+    <id>http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/</id>
+    <published>2015-12-16T22:06:42+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new &lt;code&gt;--tmpfs&lt;/code&gt; you can run a container as read only, but still use writeable directories for things like &lt;code&gt;/etc&lt;/code&gt;, &lt;code&gt;/tmp&lt;/code&gt; or &lt;code&gt;/run&lt;/code&gt; but discard changes when a container is stopped.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Developer Mode vs Production Mode&lt;/h3&gt;
+
+&lt;p&gt;One of the reasons Docker has taken off is because it made it easier for developers to ship and update their software. Docker has streamlined the development process and allowed developers to choose the runtime environments that their applications are going to run.  The runtime/userspace that the developer (or developers) chooses can be tested by the QE Team and the exact same runtime can be deployed in production.&lt;/p&gt;
+
+&lt;p&gt;Part of the development process is usually built around updating the application and the userspace. The developer team does things like &lt;code&gt;yum install&lt;/code&gt; or &lt;code&gt;dnf install&lt;/code&gt;, and then copies in code that is particular to the application. But, once developers hand off to the quality engineers (QE) or operations, they expect content to be treated as read-only. &lt;/p&gt;
+
+&lt;p&gt;I believe that the image of a container should be put into production in a read only mode, which would prevent the application or processes within the container from writing to the container, it would only allow these processes to write to volumes mounted into the container.  &lt;/p&gt;
+
+&lt;h4&gt;Security&lt;/h4&gt;
+
+&lt;p&gt;From a security point of view, this would be great.  Imagine you are running an application that gets hacked.  The first thing the hacker wants to do is to write the exploit into the application, so that the next time the application starts up, it starts up with the exploit in place.  If the image was read-only the hacker would be prevented from leaving a back door in place and be forced to start the cycle from the beginning. &lt;/p&gt;
+
+&lt;p&gt;Docker added a feature to handle this via &lt;code&gt;docker run -d --read-only image ...&lt;/code&gt;  a while ago. But it is difficult to use, since a lot of applications need to write to temporary directories like &lt;code&gt;/run&lt;/code&gt; or &lt;code&gt;/tmp&lt;/code&gt; When these are read-only the apps fail. You could set up temporary locations on your host to volume mount into the container, but this ends up exposing temporary data to the host.  &lt;/p&gt;
+
+&lt;p&gt;What I wanted to be able to do is mount a tmpfs into the container. I have been working on a fix for this since last May, and it was finally merged in on December 2, from &lt;a href="https://github.com/docker/docker/pull/13587"&gt;this pull request&lt;/a&gt;. It will show up in docker-1.10.&lt;/p&gt;
+
+&lt;p&gt;With this patch you can set up tmpfs as &lt;code&gt;/run&lt;/code&gt; and &lt;code&gt;/tmp&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -d --read-only --tmpfs /run --tmpfs /tmp IMAGE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I would actually recommend all applications in production run with this mode.  You might want to continue to mount in volumes from the host for permanent data.&lt;/p&gt;
+
+&lt;h3&gt;Other cool stuff.&lt;/h3&gt;
+
+&lt;p&gt;One cool thing about this patch is that it &lt;code&gt;tar&lt;/code&gt;s up the contents of the underlying directory in the image on top of the tmpfs. So if you have &lt;code&gt;/run/httpd&lt;/code&gt; directory in the container image, you will have &lt;code&gt;/run/httpd&lt;/code&gt; in the container&amp;rsquo;s tmpfs.&lt;/p&gt;
+
+&lt;p&gt;You can also do some other stuff with this patch like setting up a temporary &lt;code&gt;/var&lt;/code&gt; or &lt;code&gt;/etc&lt;/code&gt; inside of your container.&lt;/p&gt;
+
+&lt;p&gt;If you execute &lt;code&gt;docker run -ti --tmpfs /etc fedora /bin/sh&lt;/code&gt; then docker will mount a tmpfs on &lt;code&gt;/etc&lt;/code&gt;, and tar up the content of the underlying &lt;code&gt;/etc&lt;/code&gt; onto the new &lt;code&gt;/etc&lt;/code&gt; tmpfs.  This means you could make changes to the &lt;code&gt;/etc&lt;/code&gt; but it will not survive a container stop.  The container will be fresh every time you start and stop the container.&lt;/p&gt;
+
+&lt;p&gt;You can also pass tmpfs mount options on the command line, like so:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -ti --tmpfs /etc:rw,noexec,nosuid,size=2g container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Docker will pass down these mount options.&lt;/p&gt;
+
+&lt;h3&gt;Call to action&lt;/h3&gt;
+
+&lt;p&gt;It would be nice in the future if developers told QE and operations to run in production with the &lt;code&gt;--read-only&lt;/code&gt; docker run/create flags. Or better yet set up &lt;a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command/"&gt;atomic labels&lt;/a&gt; to do this by default. Then we can separate the way a container application runs in development from the way it runs in production.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>What are Docker &amp;lt;none&amp;gt;:&amp;lt;none&amp;gt; images?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/"/>
+    <id>http://www.projectatomic.io/blog/2015/07/what-are-docker-none-none-images/</id>
+    <published>2015-07-16T12:17:44+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Shishir Mahajan</name>
+    </author>
+    <content type="html">&lt;p&gt;The last few days, I have spent some time playing around with Docker&amp;rsquo;s &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images. I&amp;rsquo;m writing this post to explain how they work, and how they affect docker users. This article will try to address questions like:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt; What are &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images ?&lt;/li&gt;
+&lt;li&gt; What are dangling images ?&lt;/li&gt;
+&lt;li&gt; Why do I see a lot of &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images when I do &lt;code&gt;docker images -a&lt;/code&gt; ?&lt;/li&gt;
+&lt;li&gt; What is the difference between &lt;code&gt;docker images&lt;/code&gt; and &lt;code&gt;docker images -a&lt;/code&gt; ?&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Before I start answering these questions, let’s take a moment to remember that there are two kinds of &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images, the good and the bad.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;The Good &amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/h3&gt;
+
+&lt;p&gt;To understand this, we need to understand how Docker&amp;rsquo;s image file system works, and how the image layers are organized. For the purpose of this article we will be using a Fedora image as an example. The Docker daemon is running on my laptop, and I am going to pull a fedora image from docker hub.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker images" width="1002" height="403" src="/images/fedora_pull.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see in the above screenshot, &lt;code&gt;docker images&lt;/code&gt; just shows &lt;code&gt;fedora:latest&lt;/code&gt; however &lt;code&gt;docker images -a&lt;/code&gt; shows two images &lt;code&gt;fedora:latest&lt;/code&gt; and &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt;. As a Docker user you&amp;rsquo;ll observe that these &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images grow exponentially with the numbers of images we download.&lt;/p&gt;
+
+&lt;p&gt;What do these &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images stand for? To understand that let’s dive into how Docker&amp;rsquo;s file system layers are organized. Each docker image is composed of layers, with these layers having a parent-child hierarchical relationship with each other. All docker file system layers are by default stored at &lt;code&gt;/var/lib/docker/graph&lt;/code&gt;. Docker calls it the graph database. In this example &lt;code&gt;fedora:latest&lt;/code&gt; is composed of 2 layers which we can find at &lt;code&gt;/var/lib/docker/graph&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="docker graph" width="1276" height="187" src="/images/graph.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see the &lt;code&gt;IMAGE ID&lt;/code&gt; corresponds to the layers in the &lt;code&gt;/var/lib/docker/graph&lt;/code&gt; directory. When I did &lt;code&gt;docker pull fedora&lt;/code&gt;, the image was downloaded one layer at a time. First docker downloaded the layer &lt;code&gt;48ecf305d2cf&lt;/code&gt; and named it &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; since this is only one of the layers of the complete image &lt;code&gt;fedora:latest&lt;/code&gt;. Docker calls this an intermediate image hence the flag &lt;code&gt;-a&lt;/code&gt;. &lt;/p&gt;
+
+&lt;p&gt;Next it downloaded the layer &lt;code&gt;ded7cd95e059&lt;/code&gt; and named it &lt;code&gt;fedora:latest&lt;/code&gt;. The fedora:latest image is composed of both these layers, forming a parent child hierarchical relationship as shown below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="parent child" width="321" height="260" src="/images/parent-child.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Just to double check that we got the parent-child relationship right, we can check the JSON file of the layer &lt;code&gt;ded7cd95e059&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="parent JSON" width="1363" height="128" src="/images/JSON.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;All right! So we got that right. Now we understand what these &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images stand for. They stand for intermediate images and can be seen using &lt;code&gt;docker images -a&lt;/code&gt;. They don’t result into a disk space problem but it is definitely a screen real estate problem. Since all these &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images can be quite confusing as what they signify.&lt;/p&gt;
+
+&lt;p&gt;We have already covered points (1), (3) and (4). Lets throw some light onto point (2).&lt;/p&gt;
+
+&lt;h3&gt;The Bad &amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/h3&gt;
+
+&lt;p&gt;Another style of &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images are the dangling images which can cause disk space problems.&lt;/p&gt;
+
+&lt;p&gt;In programming languages like Java or Golang a dangling block of memory is a block that is not referenced by any piece of code. The garbage collection system of those languages periodically marks the dangling blocks and return it back to the heap, so that these memory blocks are available for future allocations. Similarly a dangling file system layer in Docker is something that is unused and is not being referenced by any images. Hence we need a mechanism for Docker to clear these dangling images. &lt;/p&gt;
+
+&lt;p&gt;We already know what &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; in &lt;code&gt;docker images -a&lt;/code&gt; stand for. Those are the intermediate images as described above. However if I do &lt;code&gt;docker images&lt;/code&gt; and see &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images in the list, these are dangling images and needs to be pruned. But where do they come from?&lt;/p&gt;
+
+&lt;p&gt;These dangling images are produced as a result of &lt;code&gt;docker build&lt;/code&gt; or &lt;code&gt;pull&lt;/code&gt; command. To give a more concrete example, &lt;/p&gt;
+
+&lt;p&gt;Let’s build a &lt;code&gt;hello_world&lt;/code&gt; image using our fedora base image that we downloaded earlier. We will build the &lt;code&gt;hello_world&lt;/code&gt; image using a Dockerfile. &lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="hello world" width="642" height="293" src="/images/hello_world.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As we can see in the above screenshot, we were successfully able to build our &lt;code&gt;hello_world&lt;/code&gt; image using the Dockerfile.&lt;/p&gt;
+
+&lt;p&gt;A month has passed after building our &lt;code&gt;hello_world&lt;/code&gt; image, and a new version of Fedora is available. So Let’s pull this new Fedora image.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="new fedora" width="744" height="123" src="/images/new_fedora.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;I got my new Fedora image. Now I would want to build my &lt;code&gt;hello_world&lt;/code&gt; image again with this new Fedora. So, let’s build the image again using the same Dockerfile.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="dangling" width="643" height="322" src="/images/dangling.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you go back and check, the old Fedora image had an IMAGE ID (&lt;code&gt;ded7cd95e059&lt;/code&gt;) and the new Fedora image in the above screenshot has an IMAGE ID (&lt;code&gt;5c6d07393f9f&lt;/code&gt;), which means our Fedora image was updated successfully. The important thing that we need to look for in the above screenshot is the &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; image.&lt;/p&gt;
+
+&lt;p&gt;If you remember &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; images listed in &lt;code&gt;docker images -a&lt;/code&gt; are intermediate images (The good ones), but this &lt;code&gt;&amp;lt;none&amp;gt;:&amp;lt;none&amp;gt;&lt;/code&gt; image is being listed as part of docker images. This is a dangling image and needs to be pruned. When our &lt;code&gt;hello_world&lt;/code&gt; image was rebuilt using the Dockerfile, its reference to old Fedora became untagged and dangling.&lt;/p&gt;
+
+&lt;p&gt;The next command can be used to clean up these dangling images.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker rmi $(docker images -f "dangling=true" -q)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Docker doesn’t have an automatic garbage collection system as of now. That would definitely be a nice feature to have. For now this command can be used to do a manual garbage collection.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

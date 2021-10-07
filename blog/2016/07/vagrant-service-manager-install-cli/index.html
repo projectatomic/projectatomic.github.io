@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Client Binary Installation Now Included in the ADB &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Budh Ram Gurung' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Client Binary Installation Now Included in the ADB' property='og:title'>
+<meta content="As part of the effort to continually improve the developer experience and make getting started easier, the ADB now supports client binary downloads. These downloads are facilitated by a new feature in ‘vagrant-service-manger’, the install-cli command.&#x000A;&#x000A;The vagrant-service-manager plugin enables easier access to the features and services provided by the Atomic Developer Bundle (ADB). More information can be found in the README of 'vagrant-service-manager’ repo.&#x000A;&#x000A;The install-cli command was released as part of 'vagrant-service-manager’ version 1.2.0. This command installs the client binary for services provided by the ADB. Today it can download client binaries for docker and OpenShift. This feature allows developers to know they have the best client for use with the ADB services they are using." property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/07/vagrant-service-manager-install-cli/' property='og:url'>
+<meta content='2016-07-22T09:56:00Z' property='article:published_time'>
+<meta content='budhram' property='article:author:username'>
+<meta content='atomic-developer-bundle' property='article:tag'>
+<link href='/blog/tag/atomic-developer-bundle.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant-service-manager' property='article:tag'>
+<link href='/blog/tag/vagrant-service-manager.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Client Binary Installation Now Included in the ADB' name='twitter:title'>
+<meta content="As part of the effort to continually improve the developer experience and make getting started easier, the ADB now supports client binary downloads. These downloads are facilitated by a new feature in ‘vagrant-service-manger’, the install-cli command.&#x000A;&#x000A;The vagrant-service-manager plugin enables easier access to the features and services provided by the Atomic Developer Bundle (ADB). More information can be found in the README of 'vagrant-service-manager’ repo.&#x000A;&#x000A;The install-cli command was released as part of 'vagrant-service-manager’ version 1.2.0. This command installs the client binary for services provided by the ADB. Today it can download client binaries for docker and OpenShift. This feature allows developers to know they have the best client for use with the ADB services they are using." name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_07 blog_2016_07_vagrant-service-manager-install-cli blog_2016_07_vagrant-service-manager-install-cli_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Client Binary Installation Now Included in the ADB
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/budhram/">Budh Ram Gurung</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-22T09:56:00Z'>
+Friday 22 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As part of the effort to continually improve the developer experience and make getting started easier, the ADB now supports client binary downloads. These downloads are facilitated by a new feature in &lsquo;vagrant-service-manger&rsquo;, the <code>install-cli</code> command.</p>
+
+<p>The <a href="https://github.com/projectatomic/vagrant-service-manager">vagrant-service-manager</a> plugin enables easier access to the features and services provided by the <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">Atomic Developer Bundle (ADB)</a>. More information can be found in the README of &#39;vagrant-service-manager&rsquo; repo.</p>
+
+<p>The <code>install-cli</code> command was released as part of &#39;vagrant-service-manager&rsquo; version 1.2.0. This command installs the client binary for services provided by the ADB. Today it can download client binaries for docker and OpenShift. This feature allows developers to know they have the best client for use with the ADB services they are using.</p>
+
+<p></p>
+
+<p>To use the &#39;install-cli&rsquo; command, you must have version 1.2.0 or later of &#39;vagrant-service-manager&rsquo; installed. You can verify the version you have installed with the following command:</p>
+<pre class="highlight plaintext"><code>$ vagrant plugin list&#x000A;</code></pre>
+
+<p>You can install the plugin with the following command:</p>
+<pre class="highlight plaintext"><code>$ vagrant plugin install vagrant-service-manager&#x000A;</code></pre>
+
+<p>The usage of the &#39;install-cli&rsquo; command is very straightforward:</p>
+<pre class="highlight plaintext"><code>vagrant service-manager install-cli [service]&#x000A;&#x000A;Where 'service' can be 'docker' and 'openshift'.&#x000A;</code></pre>
+
+<p>Here is how you can use the command. In this example, we will use an ADB set up and running OpenShift Origin. To setup the ADB and start OpenShift, use the following commands:</p>
+<pre class="highlight plaintext"><code>$ mkdir adb-openshift&#x000A;$ cd adb-openshift&#x000A;$ curl -o Vagrantfile https://raw.githubusercontent.com/projectatomic/adb-atomic-developer-bundle/master/components/centos/centos-openshift-setup/Vagrantfile&#x000A;$ vagrant up&#x000A;</code></pre>
+
+<p><code>vagrant up</code> will take a few minutes (and longer in the case of a slow network connection) to finish as it has to download the OpenShift Origin images from the Docker Hub. Once everything is ready you will see the information about how to access OpenShift Origin.</p>
+
+<p>Now, the OpenShift origin server is ready and you may need a client to access it and perform your desired operations. You can manually download the client binary from <a href="https://github.com/openshift/origin/releases">OpenShift repository</a> but we recommend you to use &#39;install-cli&rsquo; command provided.</p>
+
+<p>To get started, let&rsquo;s review the help:</p>
+<pre class="highlight plaintext"><code>$ vagrant service-manager install-cli --help&#x000A;</code></pre>
+
+<p>Now, if you want to install the OpenShift client binary, &#39;oc&rsquo;, run the following command:</p>
+<pre class="highlight plaintext"><code>$ vagrant service-manager install-cli openshift&#x000A;# Binary now available at /home/budhram/.vagrant.d/data/service-manager/bin/openshift/1.1.1/oc&#x000A;# run binary as:&#x000A;# oc &lt;command&gt;&#x000A;export PATH=/home/budhram/.vagrant.d/data/service-manager/bin/openshift/1.1.1:$PATH&#x000A;&#x000A;# run following command to configure your shell:&#x000A;# eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli openshift | tr -d '\r')"&#x000A;</code></pre>
+
+<p>Now, the binary has been downloaded and made available in the listed directory. You can configure your shell with the command mentioned in the output. This will make sure that the &#39;oc&rsquo; binary is in your executable path.</p>
+
+<p>You can verify everything worked by running the <code>oc version</code> command as is shown below:</p>
+<pre class="highlight plaintext"><code>$ oc version&#x000A;oc v1.1.1&#x000A;kubernetes v1.1.0-origin-1107-g4c8e6f4&#x000A;</code></pre>
+
+<p>Great!</p>
+
+<p>Now the OpenShift binary client has been set up and you can play around with it. You may wish to watch <a href="https://www.youtube.com/watch?v=HiE7TgjLjAk">OpenShift Origin quickstart with Atomic Developer Bundle</a> as a next step.</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HiE7TgjLjAk" frameborder="0" allowfullscreen></iframe>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-developer-bundle/">atomic-developer-bundle</a></li>
+<li><a href="/blog/tag/vagrant-service-manager/">vagrant-service-manager</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/07/vagrant-service-manager-install-cli/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/07/vagrant-service-manager-install-cli/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/07/vagrant-service-manager-install-cli/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Clustering Atomic Hosts with Kubernetes, Ansible, and Vagrant &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Clustering Atomic Hosts with Kubernetes, Ansible, and Vagrant' property='og:title'>
+<meta content='A single Atomic Host is a fine place to run your containers, but these hosts are much more fun when bunched into clusters, a task that we can manage with the help of Kubernetes. &#x000A;&#x000A;There are a lot of great guides for setting up a kubernetes cluster, but my favorite involves ansible and vagrant, and lives in the kubernetes contrib repository on Github. &#x000A;&#x000A;This install method can be used with the libvirt, virtualbox or openstack vagrant providers. You can also use the ansible scripts on their own, if vagrant isn’t your thing.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/' property='og:url'>
+<meta content='2015-09-21T18:31:32Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomicapp' property='article:tag'>
+<link href='/blog/tag/atomicapp.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='libvirt' property='article:tag'>
+<link href='/blog/tag/libvirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openstack' property='article:tag'>
+<link href='/blog/tag/openstack.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Clustering Atomic Hosts with Kubernetes, Ansible, and Vagrant' name='twitter:title'>
+<meta content='A single Atomic Host is a fine place to run your containers, but these hosts are much more fun when bunched into clusters, a task that we can manage with the help of Kubernetes. &#x000A;&#x000A;There are a lot of great guides for setting up a kubernetes cluster, but my favorite involves ansible and vagrant, and lives in the kubernetes contrib repository on Github. &#x000A;&#x000A;This install method can be used with the libvirt, virtualbox or openstack vagrant providers. You can also use the ansible scripts on their own, if vagrant isn’t your thing.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_09 blog_2015_09_clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant blog_2015_09_clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Clustering Atomic Hosts with Kubernetes, Ansible, and Vagrant
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-09-21T18:31:32Z'>
+Monday 21 September 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A single Atomic Host is a fine place to run your containers, but these hosts are much more fun when bunched into clusters, a task that we can manage with the help of <a href="http://kubernetes.io/">Kubernetes</a>. </p>
+
+<p>There are a lot of <a href="https://github.com/kubernetes/kubernetes/blob/release-1.0/docs/getting-started-guides/README.md">great guides</a> for setting up a kubernetes cluster, but my favorite involves ansible and vagrant, and lives in the kubernetes <a href="https://github.com/kubernetes/contrib/">contrib</a> repository on Github. </p>
+
+<p>This install method can be used with the libvirt, virtualbox or openstack vagrant providers. You can also use the ansible scripts on their own, if vagrant isn&rsquo;t your thing.</p>
+
+<p></p>
+
+<h3>Prerequisites</h3>
+
+<p>To follow along, you&rsquo;ll need a machine with vagrant and a provider for libvirt, virtualbox, or openstack. I typically use libvirt on Fedora, but I&rsquo;ve had success with virtualbox on Fedora as well &ndash; if someone wants to test this with virtualbox and Windows or OS X, please let me know if it works.</p>
+
+<p>I&rsquo;m using Fedora 23, and this command pulled in the specific dependencies I needed:</p>
+<pre class="highlight plaintext"><code>dnf install -y vagrant-libvirt libvirt-devel gcc gcc-c++ ruby-devel python-netaddr git wget unzip libselinux-python ansible&#x000A;</code></pre>
+
+<p>For Fedora 22, which ships with an older version of vagrant (<code>1.7.2</code>), and for CentOS 7, which doesn&rsquo;t have vagrant in its software repositories, you&rsquo;ll need to install vagrant from the <a href="https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4_x86_64.rpm">upstream package</a>. And run <code>vagrant plugin install vagrant-libvirt</code> to get the libvirt provider.</p>
+
+<p>The way that this <code>Vagrantfile</code> is currently written, you&rsquo;re required to have the <code>vagrant-openstack-provider</code> installed, whether you&rsquo;re using it or not, so either install it:</p>
+<pre class="highlight plaintext"><code>$ vagrant plugin install vagrant-openstack-provider&#x000A;</code></pre>
+
+<p>Or, comment out this line in the <code>Vagrantfile</code>:</p>
+<pre class="highlight plaintext"><code> require 'vagrant-openstack-provider' &#x000A;</code></pre>
+
+<p>If you do intend to use openstack, you&rsquo;ll need to copy <code>openstack_config.yml.example</code> to <code>openstack_config.yml</code> and edit <code>openstack_config.yml</code> to include your own credentials and other details specific to your openstack cloud. You&rsquo;ll need to upload one of the <a href="http://www.projectatomic.io/download/">qcow2-formatted atomic images</a> to openstack, as well, and specify that image by name in this config file. </p>
+
+<h3>DNS, kube-addons, and SELinux</h3>
+
+<p>One of the nice things about this method of bringing up a kubernetes cluster is that it configures the set of <a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons">kubernetes addons</a>, which includes <a href="https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/dns/README.md">DNS support</a>. However, a major open issue with the DNS addon (and at least some of the others) is the way that it conflicts with SELinux. The ansible scripts take care of putting SELinux into permissive mode &ndash; a workaround I hope won&rsquo;t be required for too long.</p>
+
+<h3>Get the code</h3>
+
+<p>I made a fork of the kubernetes contrib repo with a <a href="https://github.com/kubernetes/contrib/compare/master...jasonbrooks:atomic">small set of changes</a> to make atomic hosts work. </p>
+
+<p>Mostly, the changes boil down to <em>skip this step if you&rsquo;re on an atomic host</em>, but I&rsquo;ve also modded the Vagrantfile to add support for setting a <code>distro_type</code>, so you can indicate whether you want to use Fedora Atomic (<code>export DISTRO_TYPE=fedora-atomic</code>), or CentOS Atomic (<code>export DISTRO_TYPE=centos-atomic</code>). The default in the script is CentOS Atomic.</p>
+
+<p>Grab my fork by git cloning it or by downloading the zip archive: </p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/jasonbrooks/contrib.git&#x000A;$ cd contrib/ansible/vagrant&#x000A;</code></pre>
+<pre class="highlight plaintext"><code>$ wget https://github.com/jasonbrooks/contrib/archive/atomic.zip&#x000A;$ unzip atomic.zip&#x000A;$ cd contrib-atomic/ansible/vagrant&#x000A;</code></pre>
+
+<h3>Bring up the cluster</h3>
+
+<p>We&rsquo;ll use vagrant to bring up our kube-master and kube-nodes. The default number of nodes is 2, but you can change this by setting a different env variable for <code>NUM_NODES</code>.</p>
+<pre class="highlight plaintext"><code>$ vagrant up --no-provision --provider=libvirt&#x000A;</code></pre>
+
+<p>If your Atomic Host image needs updating, you can do it before provisioning, like this:</p>
+<pre class="highlight plaintext"><code>$ for i in {kube-node-1,kube-master,kube-node-2}; do vagrant ssh $i -c "sudo atomic host upgrade"; done&#x000A;$ vagrant reload --no-provision&#x000A;</code></pre>
+
+<p>Time to configure kubernetes, by running the ansible playbook on the kube-master:</p>
+<pre class="highlight plaintext"><code>$ vagrant provision kube-master&#x000A;</code></pre>
+
+<p>Kubernetes should be all set up now.</p>
+
+<h3>Testing it out</h3>
+
+<p>I typically test out my kubernetes clusters by running the upstream project&rsquo;s <a href="https://github.com/kubernetes/kubernetes/tree/master/examples/guestbook-go">guestbook-go sample application</a>, which features a simple front end app that runs across multiple hosts, and a redis-based backend that divides its work between a master node and a few slave nodes. I&rsquo;ve <a href="https://github.com/projectatomic/nulecule/tree/master/examples/guestbook-go">packaged guestbook-go</a> into an <a href="http://www.projectatomic.io/docs/atomicapp/">Atomicapp</a> for ease of deployment:</p>
+<pre class="highlight plaintext"><code>$ vagrant ssh kube-master&#x000A;&#x000A;$ mkdir guest &amp;&amp; cd guest&#x000A;$ sudo atomic run projectatomic/guestbookgo-atomicapp&#x000A;</code></pre>
+
+<p>Once the app is up and running, which you can discern by watching <code>kubectl get pods</code>, you can figure out the IP and port on which to access the app in your browser:</p>
+<pre class="highlight plaintext"><code>$ kubectl get pods --watch&#x000A;NAME                 READY     STATUS    RESTARTS   AGE&#x000A;guestbook-hv1cy      1/1       Running   0          1m&#x000A;guestbook-nkkew      1/1       Running   0          1m&#x000A;guestbook-w2urm      1/1       Running   0          1m&#x000A;redis-master-4qr7s   1/1       Running   0          1m&#x000A;redis-slave-3gvcn    1/1       Running   0          1m&#x000A;redis-slave-btki8    1/1       Running   0          1m&#x000A;&#x000A;$ kubectl describe nodes kube-node-1 | grep Addresses&#x000A;Addresses:  192.168.121.66&#x000A;&#x000A;$ kubectl describe service guestbook | grep NodePort&#x000A;NodePort:       &lt;unnamed&gt;   32615/TCP&#x000A;</code></pre>
+
+<p>Based on the output above, you&rsquo;d be able to reach your app at <code>http://192.168.121.66:32615</code>:</p>
+
+<p><img src="/images/guestbook-go.png" /></p>
+
+<h3>Next steps</h3>
+
+<p>I&rsquo;m keen to see / help realize a fix for running SELinux in enforcing mode. Also, I&rsquo;m working on getting my atomic-friendly changes merged upstream, so we won&rsquo;t need to mess with a fork.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/ansible/">ansible</a></li>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/libvirt/">libvirt</a></li>
+<li><a href="/blog/tag/openstack/">openstack</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

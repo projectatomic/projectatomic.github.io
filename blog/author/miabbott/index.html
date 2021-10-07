@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+About
+Micah Abbott &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_author blog_author_miabbott blog_author_miabbott_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<h2>
+About
+Micah Abbott
+</h2>
+<p>Quality Enginer for Red Hat focused on Atomic Host.</p>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/09/creating-custom-ostree-composes-for-atomic-testing/">Creating Custom ostree Composes for Atomic Testing</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-09-28T09:00:28Z'>
+Monday 28 September 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I recently was tasked with testing a change in the upstream <code>ostree</code> code on an Atomic Host.</p>
+
+<p>Well, since Atomic hosts use <code>ostree</code> as their distribution model, that means I couldn&rsquo;t just get an RPM and install it that way. (I could have just copied over the compiled binary, but where is the fun in that?)</p>
+
+<p>My task list was as follows:</p>
+
+<ol>
+<li> build <code>ostree</code> from source</li>
+<li> package <code>ostree</code> into an RPM</li>
+<li> create an custom <code>ostree</code> compose</li>
+<li> rebase an existing Atomic host to the custom compose</li>
+</ol>
+
+<p>As someone who hadn&rsquo;t really accomplished any of these tasks before, I had to reach out for some help on multiple occasions, but I got through it all and hopefully this guide will help you along the way.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/09/creating-custom-ostree-composes-for-atomic-testing/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+<li><a href="/blog/tag/testing/">testing</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/">Migrating the Docker Storage Driver to overlay2</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-05-08T14:00:00Z'>
+Monday  8 May 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>On the <a href="https://lists.projectatomic.io/projectatomic-archives/atomic/2017-March/msg00015.html">Project Atomic mailing list</a>, <a href="https://twitter.com/cgwalters">Colin Walters</a> posted
+a quick set of instructions on how to migrate the Docker storage driver from <code>devicemapper</code> to <code>overlay2</code> on Fedora Atomic Host.</p>
+
+<p>The <code>overlay2</code> driver will be the <a href="https://fedoraproject.org/wiki/Changes/DockerOverlay2">default storage driver in Fedora 26</a>, but you can use it on Fedora 25 Atomic now.  To switch storage drivers on an installed system, either before or after you <code>rpm-ostree rebase</code> to Fedora 26, you can use the following procedure.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/overlay2/">overlay2</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2017/05/oo-standalone-registry/">Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-05-25T18:00:00Z'>
+Thursday 25 May 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><strong>Update: Removed links to Atomic Registry as discontinued.</strong></p>
+
+<p>The Project Atomic site has had a section dedicated to the Atomic Registry, which has been discontinued in favor of <a href="https://docs.openshift.com/enterprise/3.0/architecture/infrastructure_components/image_registry.html">OpenShift Registry</a>. It was useful for getting a registry up and running as quickly as possible.  However, the software powering the quickstart installation has not always kept up with the <a href="https://www.openshift.org">OpenShift Origin</a> software which powers the actual registry and web UI.  This has lead to an increase in users reporting issues in the #atomic Freenode IRC channel.  And often it ends with someone pointing to the <a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html">stand-alone registry documentation</a> that is provided by the OpenShift Origin project.</p>
+
+<p>It turns out that deploying the stand-alone registry on a single Fedora 25 Atomic Host system is quite straight-forward and can quickly provide a usable registry. In this blog post, we&rsquo;ll deploy a proof-of-concept stand-alone registry on a single node, which will end up using self-signed certificates in the process.  In a later blog post, we&rsquo;ll show you how to setup a stand-alone registry using multiple nodes and your own SSL certificates.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2017/05/oo-standalone-registry/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+<li><a href="/blog/tag/registry/">registry</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/03/the-many-ways-to-build-oci-images/">The Many Ways to Build an OCI Image without Docker</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-06T00:00:00Z'>
+Tuesday  6 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>When containers initially made their big splash into the industry via Docker,
+users were almost required to use the <code>docker</code> CLI and daemon to create and
+manage their container images.  But a lot has happened since then and now it
+is easier than ever to create a container image without using <code>docker</code> at all,
+since the Docker image format has been standardized as the
+<a href="https://github.com/opencontainers/image-spec">OCI Image format</a>.</p>
+
+<p>In this post, we&rsquo;ll review some of the ways you can create and manage your
+container images without ever having to start the <code>docker</code> daemon.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/03/the-many-ways-to-build-oci-images/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2018/05/fedora-atomic-27-to-28-upgrade/">Fedora 27->28 Atomic Host Upgrade Guide</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-01T00:00:00Z'>
+Tuesday  1 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>This week we put out the <a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-May/msg00001.html">first</a>
+release of Fedora 28 Atomic Host. Some quick notes:</p>
+
+<ul>
+<li>For Fedora 28 we are using a <a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-March/msg00012.html">unified repo</a>
+that will serve up the Fedora 28 Atomic Host and Atomic Workstation
+content.  This includes all the content for the multi-arch platforms
+<code>aarch64</code> and <code>ppcle64</code>.</li>
+</ul>
+
+<p>For today we&rsquo;ll talk about updating an existing Fedora 27 Atomic Host
+system to Fedora 28. We&rsquo;ll cover preparing the system for upgrade and
+performing the upgrade.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2018/05/fedora-atomic-27-to-28-upgrade/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

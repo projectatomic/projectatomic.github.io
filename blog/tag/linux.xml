@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Linux</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/linux.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 148 supports Internet Explorer</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/cockpit-148/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/cockpit-148/</id>
+    <published>2017-08-04T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://cockpit-project.org/blog/cockpit-148.html"&gt;Cockpit 148&lt;/a&gt; has been released, including support for using Cockpit in Internet Explorer.  You can read more about it in &lt;a href="http://cockpit-project.org/blog/cockpit-148.html"&gt;the Cockpit Blog&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 145 with Machines and Terminal improvements</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/07/cockpit-145/"/>
+    <id>http://www.projectatomic.io/blog/2017/07/cockpit-145/</id>
+    <published>2017-07-07T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release regularly.
+Here are the release notes from versions 144 and 145.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Terminal size&lt;/h3&gt;
+
+&lt;p&gt;The Terminal now uses the full window size and dynamically resizes with it.
+Previously its size was fixed to 80x24 characters.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Full-window terminal" width="1147" height="595" src="/images/cockpit-145/terminal-full-window.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Machines page reactiveness&lt;/h3&gt;
+
+&lt;p&gt;The Machines page now listens to libvirt events instead of reading the entire
+state of all virtual machines every ten seconds. This makes the page much more
+reactive to state changes and reduces the number of calls to &lt;code&gt;virsh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Delete VM functionality&lt;/h3&gt;
+
+&lt;p&gt;A &lt;q&gt;Delete&lt;/q&gt; button/dialog was added to the Machines page. If the VM is still
+running, it will be force-stopped first. The dialog also offers you the choice
+to remove the VM&amp;rsquo;s disk images as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Delete VM" width="1349" height="922" src="/images/cockpit-145/machines-delete.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Retire external Machines provider API&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 132 introduced an external API for the Machines page that allowed third
+party plugins to dynamically add/manage virtual machines from providers other
+than libvirt. This was found to be not supportable in the long run and thus was
+discontinued.&lt;/p&gt;
+
+&lt;h3&gt;ABRT integration&lt;/h3&gt;
+
+&lt;p&gt;On Fedora 26 the Logs Page now shows Problem reports from the ABRT crash
+reporting tool. They appear as new message class &lt;q&gt;Problem&lt;/q&gt; in the journal view,
+and their details can be visited when clicking on them:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="ABRT list view" width="1145" height="301" src="/images/cockpit-145/logs-abrt-list.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="ABRT detail view" width="962" height="357" src="/images/cockpit-145/logs-abrt-details.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks to Matej Marusak for this feature!&lt;/p&gt;
+
+&lt;h3&gt;Always recommend restarting after applying Software Updates&lt;/h3&gt;
+
+&lt;p&gt;Most supported operating systems in Cockpit don&amp;rsquo;t provide a reliable
+detection of whether they require restarting the machine after applying updates
+for them to fully take effect. This particularly affects updates to the kernel,
+but also restarting services. For now, Cockpit will always recommend to
+restart the machine after applying updates:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Restart after Updates" width="772" height="350" src="/images/cockpit-145/updates-restart.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Cancelling Software Updates&lt;/h3&gt;
+
+&lt;p&gt;The Software Updates page now has a Cancel button that is enabled while it is
+still safe to abort a running update, i.e. while the updates are still being
+downloaded.&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 145 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/145"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-145-1.fc26"&gt;Fedora 26&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit Virtual Hackfest</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/"/>
+    <id>http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/</id>
+    <published>2017-06-27T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;There&amp;rsquo;s a Cockpit Hackfest underway in Karlsruhe, Germany. We&amp;rsquo;re working on the
+virtual machine functionality in Cockpit.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Hackfest" width="4128" height="2322" src="/images/hackfest-1.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;That means interacting with libvirt. Although libvirt has remoting functionality
+it has no API that&amp;rsquo;s actually remotable and callable from Cockpit javascript code.
+So Lars and Pavel started working on a DBus wrapper for the API.&lt;/p&gt;
+
+&lt;p&gt;At the same time, Martin is working on making the current
+&lt;a href="http://libvirt.org/virshcmdref.html"&gt;virsh&lt;/a&gt; based access to libvirt more
+performant, so we don&amp;rsquo;t block on waiting until the DBus wrapper is done.&lt;/p&gt;
+
+&lt;p&gt;Lots of work was done understanding &lt;a href="http://redux.js.org/"&gt;redux&lt;/a&gt;. The initial
+machines code in Cockpit was written using redux, and we needed to map it&amp;rsquo;s
+concept of models and state to the Cockpit way of storing state on the server
+and UI concepts like dialogs. Everyone was involved.&lt;/p&gt;
+
+&lt;p&gt;Andreas, Garrett have been working on designs for creating a virtual machine
+and editing virtual machines. Dominik started work on implementing that code.&lt;/p&gt;
+
+&lt;p&gt;Marius worked on deletion of virtual machines, and already has a
+&lt;a href="https://github.com/cockpit-project/cockpit/pull/7113"&gt;pull request&lt;/a&gt; open.&lt;/p&gt;
+
+&lt;p&gt;Stef worked is working on the integration tests for the virtual machine stuff
+and is booting nested VMs &lt;a href="https://github.com/cockpit-project/cockpit/pull/7117"&gt;using nested images&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Hackfest" width="4032" height="3024" src="/images/hackfest-2.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Wheeee.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 143 with New Software Updates Page</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/06/cockpit-143/"/>
+    <id>http://www.projectatomic.io/blog/2017/06/cockpit-143/</id>
+    <published>2017-06-20T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release regularly.
+Here are the release notes from version 143.&lt;/p&gt;
+
+&lt;h3&gt;&lt;q&gt;Software Updates&lt;/q&gt; page for package based operating systems&lt;/h3&gt;
+
+&lt;p&gt;There is a new &lt;q&gt;Software Updates&lt;/q&gt; page for classic dnf/yum/apt based systems,
+to complement the already existing one for OSTree on
+&lt;a href="https://www.projectatomic.io"&gt;Atomic&lt;/a&gt;. This uses the &lt;a href="https://www.freedesktop.org/software/PackageKit/"&gt;PackageKit
+API&lt;/a&gt; for platform
+independence. This feature is shipped in the new &lt;code&gt;cockpit-packagekit&lt;/code&gt;
+sub-package.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;See it in action:&lt;/p&gt;
+
+&lt;iframe width="720" height="540" src="https://www.youtube.com/embed/BENWI-dTKMs?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Inline VNC consoles&lt;/h3&gt;
+
+&lt;p&gt;The inline VNC console advertised in &lt;a href="http://cockpit-project.org/blog/cockpit-142.html"&gt;Cockpit 142&lt;/a&gt;
+was not actually working from the released &lt;code&gt;cockpit-machine&lt;/code&gt; package due to a
+packaging problem. Cockpit 143 corrects this problem. Thanks to Marek Libra!&lt;/p&gt;
+
+&lt;h3&gt;Kubernetes RBAC authorization support&lt;/h3&gt;
+
+&lt;p&gt;The Kubernetes page can now be used to log into Kubernetes installations that
+use &lt;a href="https://kubernetes.io/docs/admin/authorization/rbac/"&gt;RBAC authorization&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;RPM packages for IBM Z systems&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;cockpit-docker&lt;/code&gt; RPM package is now being built on the s390x (IBM Z
+Systems) architecture, as the Fedora Docker package is available there.
+(&lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1462113"&gt;#1462113&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 143 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/143"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-143-1.fc26"&gt;Fedora 26&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 134 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/03/cockpit-134/"/>
+    <id>http://www.projectatomic.io/blog/2017/03/cockpit-134/</id>
+    <published>2017-03-10T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release regularly.
+Here are the release notes from version 134.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Login page is now translatable&lt;/h3&gt;
+
+&lt;p&gt;The majority of Cockpit has long been translatable. Since the login page is a bit of a special case, it required some
+special attention to make that also play well with the language display settings. Take a look at the video below for a demo.
+Check out the Zanata link below, it&amp;rsquo;s very easy to contribute translations to Cockpit.
+At this time our top 3 translations (&amp;gt;90%) are Polish (pl), Ukranian (uk) and Chinese (zh-CN). Every bit of help
+here is greatly appreciated and a big thank you to our contributors!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://fedora.zanata.org/project/view/cockpit?dswid=-8859"&gt;Cockpit translations&lt;/a&gt;&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/_4jQ6NYSL-c?ecver=1" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Show message of the day on the System page&lt;/h3&gt;
+
+&lt;p&gt;Cockpit now supports one more feature it was previously missing compared to the command line login: the &lt;code&gt;System&lt;/code&gt;
+page now shows the current message of the day (&lt;code&gt;/etc/motd&lt;/code&gt;). When dismissed by clicking on the &lt;code&gt;X&lt;/code&gt; close button,
+the message is hidden until it changes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Message of the day" src="http://cockpit-project.org/blog/images/cockpit-motd.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Expose fewer system service actions&lt;/h3&gt;
+
+&lt;p&gt;Cockpit previously exposed systemd unit actions such as &lt;code&gt;Reload or Try Restart&lt;/code&gt; which are primarily intended for
+scripts. The dropdown list now only shows actions which are useful for interactive human usage: &lt;code&gt;Start&lt;/code&gt;, &lt;code&gt;Stop&lt;/code&gt;,
+&lt;code&gt;Restart&lt;/code&gt; and &lt;code&gt;Reload&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Service actions" src="http://cockpit-project.org/blog/images/cockpit-service-actions.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 134 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/134"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-134-1.fc25"&gt;Fedora 25&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

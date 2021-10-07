@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Docker, CentOS 6, and You &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Docker, CentOS 6, and You' property='og:title'>
+<meta content='Recently, I blogged about docker-on-loopback-storage woes and workarounds – a topic that came up during several conversations I had at last month’s Dockercon. Another frequently-discussed item from the conference involved Docker on CentOS 6, and whether and for how long users can count on running this combination.&#x000A;&#x000A;Docker and CentOS 6 have never been a terrific fit, which shouldn’t be surprising considering that the version of the Linux kernel that CentOS ships was first released over three years before Docker’s first public release (0.1.0). The OS and kernel version you use matter a great deal, because with Docker, that’s where all your contained processes run.&#x000A;&#x000A;With a hypervisor such as KVM, it’s not uncommon or problematic for an elder OS to host, through the magic of virtualization, all manner of bleeding-edge software components. In fact, if you’re attached to CentOS 6, virtualization is a solid option for running containers in a more modern, if virtual, host.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/07/docker-centos-6-and-you/' property='og:url'>
+<meta content='2015-07-14T16:18:24Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Docker, CentOS 6, and You' name='twitter:title'>
+<meta content='Recently, I blogged about docker-on-loopback-storage woes and workarounds – a topic that came up during several conversations I had at last month’s Dockercon. Another frequently-discussed item from the conference involved Docker on CentOS 6, and whether and for how long users can count on running this combination.&#x000A;&#x000A;Docker and CentOS 6 have never been a terrific fit, which shouldn’t be surprising considering that the version of the Linux kernel that CentOS ships was first released over three years before Docker’s first public release (0.1.0). The OS and kernel version you use matter a great deal, because with Docker, that’s where all your contained processes run.&#x000A;&#x000A;With a hypervisor such as KVM, it’s not uncommon or problematic for an elder OS to host, through the magic of virtualization, all manner of bleeding-edge software components. In fact, if you’re attached to CentOS 6, virtualization is a solid option for running containers in a more modern, if virtual, host.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_07 blog_2015_07_docker-centos-6-and-you blog_2015_07_docker-centos-6-and-you_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Docker, CentOS 6, and You
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-07-14T16:18:24Z'>
+Tuesday 14 July 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently, I blogged about <a href="http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/">docker-on-loopback-storage woes and workarounds</a> &ndash; a topic that came up during several conversations I had at last month&rsquo;s Dockercon. Another frequently-discussed item from the conference involved Docker on CentOS 6, and whether and for how long users can count on running this combination.</p>
+
+<p>Docker and CentOS 6 have never been a terrific fit, which shouldn&rsquo;t be surprising considering that the version of the Linux kernel that CentOS ships was first released over three years before Docker&rsquo;s first public release (0.1.0). The OS and kernel version you use matter a great deal, because with Docker, that&rsquo;s where all your contained processes run.</p>
+
+<p>With a hypervisor such as KVM, it&rsquo;s not uncommon or problematic for an elder OS to host, through the magic of virtualization, all manner of bleeding-edge software components. In fact, if you&rsquo;re attached to CentOS 6, virtualization is a solid option for running containers in a more modern, if virtual, host.</p>
+
+<p></p>
+
+<p>If you&rsquo;re set on CentOS 6, and set on hosting your containers on bare metal, you&rsquo;ve had a few options, however. Docker has been available in EPEL, under the name <a href="https://dl.fedoraproject.org/pub/epel/6/x86_64/repoview/docker-io.html"><code>docker-io</code></a>, for some time, although that package version has been sitting at 1.5.0 since February.</p>
+
+<p>The Docker project, for its part, has counted CentOS 6 among its supported OSes, and provided CentOS 6 packages for the <a href="https://get.docker.com/rpm/1.7.0/centos-6/RPMS/x86_64/docker-engine-1.7.0-1.el6.x86_64.rpm">1.7.0</a> release that dropped during the conference. Even then, the project includes this note of kernel-related caution:</p>
+
+<blockquote>
+<p>Docker requires a 64-bit installation regardless of your CentOS version. Also, your kernel must be 3.10 at minimum. CentOS 7 runs the 3.10 kernel, 6.5 does not. We make an exception for CentOS 6.5. To run Docker on CentOS-6.5 or later, you need kernel 2.6.32-431 or higher.</p>
+
+<p><em>from: <a href="https://docs.docker.com/installation/centos/">https://docs.docker.com/installation/centos/</a></em></p>
+</blockquote>
+
+<p>Kernel version exception or no, it didn&rsquo;t take long for users to encounter a <a href="https://github.com/docker/docker/issues/14024">regression</a> in Docker 1.7.0 that prevented the service from starting on hosts running CentOS 6. Soon after, the project announced that beginning with the next major Docker release, CentOS 6 will exit the project&rsquo;s list of supported OSes:</p>
+
+<blockquote>
+<p>Current state of things:</p>
+
+<p>Those distros are supported as per <a href="http://docs.docker.com/installation/rhel/and">http://docs.docker.com/installation/rhel/and</a> <a href="http://docs.docker.com/installation/centos/">http://docs.docker.com/installation/centos/</a></p>
+
+<p>Red Hat themselves only support Docker on RHEL7 (as stated by <a href="https://access.redhat.com/solutions/1378023">https://access.redhat.com/solutions/1378023</a>, and confirmed by several people)</p>
+
+<p>1.7.0 is broken on these (most notably because of libnetwork bridge creation code: <a href="https://github.com/docker/docker/issues/14024">#14024</a>)</p>
+
+<p>We shipped 1.7.0 without mentioning we would break compatibility, so this will be fixed in 1.7.1, but we will drop support in 1.8.0.</p>
+
+<p><em>from: <a href="https://github.com/docker/docker/issues/14365">https://github.com/docker/docker/issues/14365</a></em></p>
+</blockquote>
+
+<p>There are already <a href="https://test.docker.com/rpm/1.7.1-rc1/centos-6/RPMS/x86_64/docker-engine-1.7.1-0.1.rc1.el6.x86_64.rpm">release candidate packages</a> for 1.7.1 available to test now, but a somewhat longer-term solution will require a newer kernel. While the official CentOS 6 kernel won&rsquo;t be making any huge leaps forward, there&rsquo;s a newer kernel maintained by the CentOS <a href="http://wiki.centos.org/SpecialInterestGroup/Virtualization">virtualization Special Interest Group</a> for its <a href="http://wiki.centos.org/Manuals/ReleaseNotes/Xen4-01">Xen4CentOS</a> variant.</p>
+
+<p>I installed this kernel on a CentOS 6 VM, alongside the 1.7.0 package from Docker, and managed to start and use Docker normally:</p>
+<pre class="highlight plaintext"><code># yum install -y centos-release-xen&#x000A;# echo includepkgs=kernel kernel-firmware &gt;&gt; /etc/yum.repos.d/CentOS-Xen.repo&#x000A;# yum update -y kernel&#x000A;# reboot&#x000A;# yum install -y https://get.docker.com/rpm/1.7.0/centos-6/RPMS/x86_64/docker-engine-1.7.0-1.el6.x86_64.rpm&#x000A;# service docker start&#x000A;</code></pre>
+
+<p>Docker worked fine &ndash; I gave it a solid run-through using this slick <a href="https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/docker.md">kubernetes-in-containers walkthrough</a> and it performed as expected. </p>
+
+<p>I couldn&rsquo;t, however, figure out how to switch the default storage driver from loopback to direct-lvm. It&rsquo;s possible that I&rsquo;d need a newer device-mapper package to make this work. </p>
+
+<p>If you&rsquo;re interested in helping figure out what additional dependencies are required to get and keep Docker running well on CentOS 6, check out this <a href="http://lists.centos.org/pipermail/centos-devel/2015-July/013585.html">mailing list thread</a> about getting involved with the effort, or come introduce yourself in #centos-devel on Freenode.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/07/docker-centos-6-and-you/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/07/docker-centos-6-and-you/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/07/docker-centos-6-and-you/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

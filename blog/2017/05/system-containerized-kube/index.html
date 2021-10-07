@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Testing System-Containerized Kubernetes &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Testing System-Containerized Kubernetes' property='og:title'>
+<meta content='I’ve blogged here in the past about different ways of running Kubernetes and its dependencies in containers. In that post, I discussed how you could side-step the chicken-and-egg complexities of trying to use Docker to run components on which Docker itself relies by running Flannel and etcd in system containers, which don’t rely on Docker to run.&#x000A;&#x000A;Recently, I’ve been working on running Kubernetes in system containers, too.  Since I was already running etcd and Flannel in system containers, I could save on a bit of storage by having Flannel, etcd, and Kubernetes all share the same image in the ostree-based storage that system containers use.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/05/system-containerized-kube/' property='og:url'>
+<meta content='2017-05-09T12:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='system containers' property='article:tag'>
+<link href='/blog/tag/system containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Testing System-Containerized Kubernetes' name='twitter:title'>
+<meta content='I’ve blogged here in the past about different ways of running Kubernetes and its dependencies in containers. In that post, I discussed how you could side-step the chicken-and-egg complexities of trying to use Docker to run components on which Docker itself relies by running Flannel and etcd in system containers, which don’t rely on Docker to run.&#x000A;&#x000A;Recently, I’ve been working on running Kubernetes in system containers, too.  Since I was already running etcd and Flannel in system containers, I could save on a bit of storage by having Flannel, etcd, and Kubernetes all share the same image in the ostree-based storage that system containers use.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_05 blog_2017_05_system-containerized-kube blog_2017_05_system-containerized-kube_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Testing System-Containerized Kubernetes
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-05-09T12:00:00Z'>
+Tuesday  9 May 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I&rsquo;ve blogged here in the past about different ways of <a href="http://www.projectatomic.io/blog/2016/09/running-kubernetes-in-containers-on-atomic/">running Kubernetes and its dependencies in containers</a>. In that post, I discussed how you could side-step the chicken-and-egg complexities of trying to use Docker to run components on which Docker itself relies by running Flannel and etcd in <a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">system containers</a>, which don&rsquo;t rely on Docker to run.</p>
+
+<p>Recently, I’ve been working on running Kubernetes in system containers, too.  Since I was already running etcd and Flannel in system containers, I could save on a bit of storage by having Flannel, etcd, and Kubernetes all share the same image in the ostree-based storage that system containers use.</p>
+
+<p></p>
+
+<p>More compelling than the storage-savings, though, is the way that system containers integrate with systemd, which is how I wanted to manage my containerized Kubernetes components, anyway. When I run the Kubernetes master components on CentOS Atomic Host using Docker, I create <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/ContainerizedMaster">systemd unit files</a> for each component. With system containers, the systemd unit files are rolled in and deployed automatically when you run <code>atomic install --system foo</code>, as opposed to storing them somewhere separate from the containers, and copying them into place.</p>
+
+<p>The <a href="https://github.com/jasonbrooks/atomic-system-containers/tree/kube-containers">system containers</a> I&rsquo;m testing with are based on the Fedora 25 Kubernetes Docker containers I maintain, and come with Kubernetes v1.5.3. I made a second set of containers <a href="https://github.com/jasonbrooks/atomic-system-containers/tree/kube-rawhide">based on rawhide</a>, and those come with Kubernetes v1.6.2.</p>
+
+<p>I&rsquo;ve modified a <a href="https://github.com/jasonbrooks/contrib/tree/system-containers/ansible">fork of the Ansible scripts</a> in the Kubernetes contrib repository to deploy a cluster using these etcd, Flannel and Kubernetes system containers. The <code>inventory/group_vars/all.yml</code> file in my fork is set to pull containers from my namespace in the Docker Hub, using the fc25 tag, but you can change fc25 to rawhide to get that version of the images.</p>
+
+<p>You can test it yourself like this:</p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/jasonbrooks/contrib.git&#x000A;$ cd contrib&#x000A;$ git checkout system-containers&#x000A;$ cd ansible&#x000A;$ vi inventory/inventory&#x000A;&#x000A;[masters]&#x000A;kube-master-test.example.com&#x000A;&#x000A;[etcd:children]&#x000A;masters&#x000A;&#x000A;[nodes]&#x000A;kube-minion-test-[1:2].example.com&#x000A;&#x000A;$ cd scripts&#x000A;$ ./deploy-cluster.sh&#x000A;</code></pre>
+
+<p>Substitute those hostnames above with ones that match your own test machines. Alternatively, you should be able to use the Vagrantfile in the vagrant directory of that repo, though I haven’t tested that yet.</p>
+
+<p>Depending on your setup, you may have to edit several variables in <code>group_vars/all.yml</code>, such as the <code>ansible_root_user</code>, the <code>flannel_subnet</code>, and <code>ansible_python_interpreter</code>.  See the <a href="https://github.com/kubernetes/contrib/blob/master/ansible/README.md">docs</a> for more details.</p>
+
+<p>If you run the script as laid out above, you&rsquo;ll get etcd, Flannel, and kubernetes containers from my namespace in the Docker Hub, because the current upstream Fedora containers (in the case of etcd and Flannel) need a couple of changes. Further, in the case of Kubernetes, the upstream Fedora containers aren&rsquo;t yet modified to run as system containers.  </p>
+
+<p>Once it&rsquo;s set up, you can see that you have a bunch of system containers:</p>
+<pre class="highlight plaintext"><code># kubectl get nodes&#x000A;NAME                             STATUS    AGE&#x000A;kube-minion-test-1.example.com   Ready     6m&#x000A;kube-minion-test-2.example.com   Ready     6m&#x000A;&#x000A;# atomic containers list&#x000A;   CONTAINER ID IMAGE                COMMAND              CREATED          STATE     RUNTIME   &#x000A;   etcd         docker.io/jasonbrook /usr/bin/etcd-env.sh 2017-05-08 23:26 running   ostree    &#x000A;   flanneld     docker.io/jasonbrook /usr/bin/flanneld-ru 2017-05-08 23:28 running   ostree    &#x000A;   kube-apiserv docker.io/jasonbrook /usr/bin/kube-apiser 2017-05-08 23:31 running   ostree    &#x000A;   kube-control docker.io/jasonbrook /usr/bin/kube-contro 2017-05-08 23:31 running   ostree    &#x000A;   kube-schedul docker.io/jasonbrook /usr/bin/kube-schedu 2017-05-08 23:31 running   ostree&#x000A;</code></pre>
+
+<p>But these are not Docker containers:</p>
+<pre class="highlight plaintext"><code># docker ps&#x000A;CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES&#x000A;#&#x000A;</code></pre>
+
+<p>To make this work, I&rsquo;ve changed the etcd and Flannel containers to bind mount config dirs in /etc, so that the Ansible can config them using the same operations it&rsquo;d use for non-system containers. I&rsquo;m using tmpfiles.d to put a link to the etcdctl from the container into /usr/local/bin/etcd because
+Ansible expects and needs etcdctl to be on the host to set up the Flannel network, and linking to the etcdctl from the container again lets us reuse the same Ansible operations as for non system container case.</p>
+
+<p>The Kubernetes containers are based on the ones I&rsquo;m maintaining in the fedora and centos container registries, and they also get configs from bind mounted /etc/kubernetes. Like with the etcd container, I&rsquo;m creating a link from the kube-apiserver container&rsquo;s kubectl to /usr/local/bin/kubectl on the host, because the kube-addons service expects kubectl to be on the host.</p>
+
+<p>One of the cool things about system containers is that they can also be run as regular Docker containers. My next step will be to get my changes merged into the existing etcd, Flannel and Kubernetes containers that live in the Fedora and CentOS container registries, which will give users the option of running these components either as system containers or via Docker.</p>
+
+<p>In my next blog post, we&rsquo;ll launch Kubeadm in system containers for an even easier way to install Kubernetes clusters.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/system-containers/">system containers</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/05/system-containerized-kube/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/05/system-containerized-kube/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/05/system-containerized-kube/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

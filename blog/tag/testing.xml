@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Testing</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/testing.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Projectatomic.io Running in Atomic App</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/</id>
+    <published>2016-03-07T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Since Atomic App has released version 0.4.2, I decided it was past time
+to make the atomic-site into an Atomic App instead of using a shell script that
+wraps Docker to test it. The new setup is a big improvement, and a useful
+guide to &lt;q&gt;Nuleculizing&lt;/q&gt; your own apps.&lt;/p&gt;
+
+&lt;p&gt;As you know, the purpose of Atomic App and Nulecule is to give you a provider-agnostic
+way to specify multi-container applications and orchestration metadata that stays
+with the application image(s). Eventually, this will allow for single-command
+deploys of even large, scalable apps involving many containers. For now, it
+enables us get rid of some hackish shell scripting around Docker in our atomic-site
+test setup.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to turn atomic-site into an Atomic App, I had to do five things:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create and register an application image that expected the /source and /data
+directories to be mounted as volumes, and set permissions on those;&lt;/li&gt;
+&lt;li&gt;Create a template Dockerfile for the Atomic App;&lt;/li&gt;
+&lt;li&gt;Create a Nulecule configuration file;&lt;/li&gt;
+&lt;li&gt;Create a provider file for Docker;&lt;/li&gt;
+&lt;li&gt;Generate a an answers.conf file and edit it.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Since the atomic-site is just a single-container app, and here we&amp;rsquo;re just running
+it for testing purposes, we&amp;rsquo;re only going to support Docker as a provider, and
+not Kubernetes or Mesos. However, either of those could be added with just a few
+lines of configuration and a single provider file (or more than one if we wanted
+a bunch of load-balanced webservers).&lt;/p&gt;
+
+&lt;p&gt;I won&amp;rsquo;t go over the first step in detail, since it&amp;rsquo;s a standard Docker build; you
+can &lt;a href="https://github.com/projectatomic/atomic-site/blob/master/Dockerfile"&gt;look at the dockerfile here&lt;/a&gt;. The
+important thing is that both the &lt;code&gt;source&lt;/code&gt; and &lt;code&gt;data&lt;/code&gt; mounts are commented out
+because those are the parts of the Middleman application which change, and thus
+need to be mounted as volumes. I then pushed this image to &lt;a href="https://hub.docker.com/r/jberkus/atomic-site/"&gt;jberkus/atomic-site&lt;/a&gt; (eventually it will go to projectatomic/atomic-site).&lt;/p&gt;
+
+&lt;p&gt;Because we&amp;rsquo;re sharing some volumes and I have SELinux turned on (don&amp;rsquo;t you?), I also
+need to tell SELinux that the container is allowed to share access to those directories.
+So I added a little &lt;a href="https://github.com/projectatomic/atomic-site/blob/master/selinux_share.sh"&gt;selinux_share.sh&lt;/a&gt;
+ script in the repo&amp;rsquo;s home directory that sets those.&lt;/p&gt;
+
+&lt;p&gt;The second part is to create a placeholder Dockerfile, which is used to build the Atomic App wrapper container. These files pretty much all look the same:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM projectatomic/atomicapp:0.4.2
+
+MAINTAINER Red Hat, Inc. &amp;lt;container-tools@redhat.com&amp;gt;
+
+LABEL io.projectatomic.nulecule.providers="docker" \
+      io.projectatomic.nulecule.specversion="0.0.2"
+
+ADD /Nulecule /Dockerfile README.md /application-entity/
+ADD /artifacts /application-entity/artifacts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The only thing that really changes is which providers you support and the spec
+and app versions.&lt;/p&gt;
+
+&lt;p&gt;Now we get to the good stuff: the Nulecule file, which is most of the definition.
+Let&amp;rsquo;s do this one a little at a time.&lt;/p&gt;
+
+&lt;p&gt;First, we define the spec version and the application ID in the header. Nothing
+exciting here:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;---
+specversion: 0.0.2
+id: atomic-site
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we set some overall metadata, which is pretty much just for registry
+and future searching use:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;metadata:
+  name: Atomic Site app
+  appversion: 0.1.0
+  description: Atomic app for testing the Atomic Website
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;q&gt;graph&lt;/q&gt; contains the definition of all of the app&amp;rsquo;s objects. While ordering-independant, we&amp;rsquo;re going to start it with the parameters that will need to be supplied by the answers.conf file:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;graph:
+  - name: atomic-site
+    params:
+      - name: image
+        description: The webserver image
+        default: jberkus/atomic-site
+      - name: provider
+        description: only support Docker, so need to set it here
+        default: docker
+      - name: hostport
+        description: The host TCP port as the external endpoint
+        default: 4567
+      - name: sourcedir
+        description: location of the middleman source directory
+      - name: datadir
+        description: the middleman data directory
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here you&amp;rsquo;ll notice that we supplied some defaults for the image name and the
+port to be used on the host, because we expect those to be the same for most
+users. We don&amp;rsquo;t expect that most users will have the same path to their local
+copy of the atomic-site repo, though, so those parameters have no defaults, meaning
+that the user has to supply them. While expressly setting the &lt;code&gt;provider&lt;/code&gt; here is
+optional, since we&amp;rsquo;re only supporting docker for this app, we want to set it
+as the default.&lt;/p&gt;
+
+&lt;p&gt;Finally, the &lt;q&gt;artifacts&lt;/q&gt; section defines where the provider files live:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;artifacts:
+  docker:
+    - file://artifacts/docker/atomic-site-run
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since we&amp;rsquo;re supporting only Docker right now, one line is all we need. We also
+don&amp;rsquo;t currently define any persistent volumes, even though we&amp;rsquo;ll be using some
+volumes; this is because of a limitation that will be resolved when we start requiring
+Docker 1.9 or later.&lt;/p&gt;
+
+&lt;p&gt;As a fourth step, we need to create that atomic-site-run file. Right now that&amp;rsquo;s
+a bit of a messy command line because of the lack of volume support, but not
+too bad:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run --rm -p $hostport:4567 --volume $sourcedir:/tmp/source --volume $datadir:/tmp/data $image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One thing we are doing here is adding &lt;code&gt;--rm&lt;/code&gt; because this Atomic App is strictly for testing; for production you might not want it. You&amp;rsquo;ll notice that the parameters are supplied here as $variables.&lt;/p&gt;
+
+&lt;p&gt;Finally, we generate the answers file from Nulecule:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cd Nulecule/
+atomicapp genanswers .
+sudo emacs answers.conf
+
+[atomic-site]
+image = jberkus/atomic-site
+hostport = 4567
+sourcedir = /home/josh/git/redhat/atomic-site-master/source
+datadir = /home/josh/git/redhat/atomic-site-master/data
+[general]
+namespace = default
+provider = docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So the [general] section is something all Atomic Apps have. Here you supply a
+namespace and a provider, which in our case is docker. The parameters are supplied
+in the section named after the app. For atomic-site, you&amp;rsquo;d want to change
+the full path to the directories to one which matches your own workstation.&lt;/p&gt;
+
+&lt;p&gt;Now, with it all together, I can now run my atomic app:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[josh@redhat atomic-site-master]$ sudo atomicapp run Nulecule/
+2016-03-02 18:55:37,514 - [INFO] - main.py - Action/Mode Selected is: run
+2016-03-02 18:55:37,585 - [INFO] - docker.py - Deploying to provider: Docker
+
+== The Middleman is loading
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;and access the site on &lt;a href="http://127.0.0.1:4567"&gt;http://127.0.0.1:4567&lt;/a&gt; so that I can test changes.&lt;/p&gt;
+
+&lt;p&gt;Now, it&amp;rsquo;s your turn to Nuleculize an app.&lt;/p&gt;
+
+&lt;p&gt;Check out the config here on the &lt;a href="https://github.com/projectatomic/atomic-site"&gt;atomic-site repo&lt;/a&gt;, and additional sample Atomic App
+configurations in the
+&lt;a href="https://github.com/projectatomic/nulecule-library"&gt;Nulecule-library&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Creating Custom ostree Composes for Atomic Testing</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/09/creating-custom-ostree-composes-for-atomic-testing/"/>
+    <id>http://www.projectatomic.io/blog/2015/09/creating-custom-ostree-composes-for-atomic-testing/</id>
+    <published>2015-09-28T09:00:28+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Micah Abbott</name>
+    </author>
+    <content type="html">&lt;p&gt;I recently was tasked with testing a change in the upstream &lt;code&gt;ostree&lt;/code&gt; code on an Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;Well, since Atomic hosts use &lt;code&gt;ostree&lt;/code&gt; as their distribution model, that means I couldn&amp;rsquo;t just get an RPM and install it that way. (I could have just copied over the compiled binary, but where is the fun in that?)&lt;/p&gt;
+
+&lt;p&gt;My task list was as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt; build &lt;code&gt;ostree&lt;/code&gt; from source&lt;/li&gt;
+&lt;li&gt; package &lt;code&gt;ostree&lt;/code&gt; into an RPM&lt;/li&gt;
+&lt;li&gt; create an custom &lt;code&gt;ostree&lt;/code&gt; compose&lt;/li&gt;
+&lt;li&gt; rebase an existing Atomic host to the custom compose&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;As someone who hadn&amp;rsquo;t really accomplished any of these tasks before, I had to reach out for some help on multiple occasions, but I got through it all and hopefully this guide will help you along the way.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Practice ostree compose (the verbose version)&lt;/h3&gt;
+
+&lt;p&gt;Before I get into the some of the details of doing a custom &lt;code&gt;ostree&lt;/code&gt; compose, I found it was helpful to do a vanilla &lt;code&gt;ostree&lt;/code&gt; compose to learn some of the mechanics.&lt;/p&gt;
+
+&lt;p&gt;I used Brent Baude&amp;rsquo;s &lt;a href="https://developers.redhat.com/blog/2015/01/08/creating-custom-atomic-trees-images-and-installers-part-1/"&gt;post on the Red Hat Developer Blog&lt;/a&gt; as a guide for doing my first compose. It was critical to my success in this task! I would recommend reviewing that post for more details about how this works.&lt;/p&gt;
+
+&lt;p&gt;For this example, I booted up the latest &lt;a href="https://getfedora.org/en/cloud/download/"&gt;Fedora 22 Cloud image&lt;/a&gt; in a VM on my workstation. (Additionally, Fedora 22 Server or Workstation should work.)&lt;/p&gt;
+
+&lt;p&gt;The first step was to install the necessary tools, which are &lt;code&gt;git&lt;/code&gt; and &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install git rpm-ostree-toolbox
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the tools installed, we are going to do a &lt;code&gt;git clone&lt;/code&gt; of the &lt;a href="https://pagure.io/fedora-atomic.git"&gt;fedora-atomic git repo&lt;/a&gt; which contains the necessary input files for creating a Fedora Atomic &lt;code&gt;ostree&lt;/code&gt; compose. (Additionally, I first made a &amp;lsquo;working&amp;rsquo; directory to perform the compose in.)&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# mkdir /home/working
+# cd /home/working
+# git clone https://pagure.io/fedora-atomic.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This cloned repo includes a number of branches, including &lt;strong&gt;f22&lt;/strong&gt;, which contains the files necessary for doing a Fedora 22 Atomic compose. Since I had the best luck with this branch, we&amp;rsquo;re going to use this for the example.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cd fedora-atomic
+# git checkout f22
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the right branch selected we can do a compose right away with the &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; command. I&amp;rsquo;ll dig into some of the options right after this.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cd /home/working
+# rpm-ostree-toolbox treecompose -c fedora-atomic/config.ini  --ostreerepo /srv/rpm-ostree/fedora-atomic/22/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command is going to generate a lot of output, so you can sit back and watch all the magic happens while we discuss the various options passed to the &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;treecompose&lt;/code&gt; sub-command is pretty self-explanatory; it tells &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; that we want to do a new &lt;code&gt;ostree&lt;/code&gt; compose.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;-c fedora-atomic/config.ini&lt;/code&gt; option tells &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; to use the config file specified in the fedora-atomic repo (also kind of self-explanatory). I&amp;rsquo;m not going to get into the details of the config file at the moment; the blog post linked above has some additional details about the config file.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;--ostreerepo /srv/rpm-ostree/fedora-atomic/22/&lt;/code&gt; option instructs &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; where the resulting &lt;code&gt;ostree&lt;/code&gt; compose will land on the disk. You don&amp;rsquo;t have to create the directory structure beforehand; the toolbox will create it as part of its job.&lt;/p&gt;
+
+&lt;p&gt;If everything was successful, the last few lines of output that &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; will produce, looks like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+Moving /boot
+Using boot location: both
+Copying toplevel compat symlinks
+Adding tmpfiles-ostree-integration.conf
+Ignored user missing from new passwd file: root
+Ignored user missing from new passwd file: root
+Committing '/var/tmp/rpm-ostree.HI9E5X/rootfs.tmp' ...
+Labeling with SELinux policy 'targeted'
+fedora-atomic/f22/x86_64/docker-host =&gt; edbe79d713059e4ce5c73346112ef5a33beb54683ddf41b8a6afc81c1dc28083
+Complete
+fedora-atomic/f22/x86_64/docker-host =&gt; edbe79d713059e4ce5c73346112ef5a33beb54683ddf41b8a6afc81c1dc28083
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With our freshly composed &lt;code&gt;ostree&lt;/code&gt;, let&amp;rsquo;s see if we can actually use it with an Atomic host.&lt;/p&gt;
+
+&lt;p&gt;First, we&amp;rsquo;ll make the new &lt;code&gt;ostree&lt;/code&gt; compose available on the network with the built-in &lt;code&gt;trivial-httpd&lt;/code&gt; server that comes with the &lt;code&gt;ostree&lt;/code&gt; command. We just point it to the location of the &lt;code&gt;ostree&lt;/code&gt; that was just composed (&lt;code&gt;/srv/rpm-ostree/fedora-atomic/22/&lt;/code&gt;)&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ostree trivial-httpd -p - /srv/rpm-ostree/fedora-atomic/22/
+43620
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note the number that is printed out; this is the port which the &lt;code&gt;ostree&lt;/code&gt; compose is being served via HTTP. We&amp;rsquo;ll need this number in the next step.&lt;/p&gt;
+
+&lt;p&gt;Next, I booted up a &lt;a href="https://getfedora.org/atomic/download/"&gt;Fedora 22 Atomic host&lt;/a&gt; in a VM and checked the existing &lt;code&gt;rpm-ostree status&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# rpm-ostree status
+  TIMESTAMP (UTC)         VERSION   ID             OSNAME            REFSPEC
+* 2015-05-21 19:01:46     22.17     06a63ecfcf     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then I added a new &lt;code&gt;ostree&lt;/code&gt; remote that pointed to the trivial-httpd server and verified the remotes configured:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# ostree remote add f22-test http://192.168.122.219:43620 --no-gpg-verify
+f22-atomic-host# ostree remote list -u
+f22-test http://192.168.122.219:43620
+fedora-atomic http://dl.fedoraproject.org/pub/fedora/linux/atomic/22/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we can use &lt;code&gt;rpm-ostree rebase&lt;/code&gt; to pull down the compose to the Atomic host&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+f22-atomic-host# rpm-ostree rebase f22-test:fedora-atomic/f22/x86_64/docker-host
+
+37 metadata, 38 content objects fetched; 86458 KiB transferred in 4 secondsCopying /etc changes: 25 modified, 0 removed, 42 added
+Transaction complete; bootconfig swap: yes deployment count change: 1
+Deleting ref 'fedora-atomic:fedora-atomic/f22/x86_64/docker-host'
+Removed:
+  docker-storage-setup-0.0.4-2.fc22.noarch
+Added:
+  iptables-services-1.4.21-14.fc22.x86_64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not a lot happened with this rebase, since only two packages had changed. But this was a successful rebase and we can try rebooting into it with &lt;code&gt;systemctl reboot&lt;/code&gt;. But first, we can check &lt;code&gt;rpm-ostree status&lt;/code&gt; to see how the new deployment has landed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# rpm-ostree status
+  TIMESTAMP (UTC)         VERSION   ID             OSNAME            REFSPEC
+  2015-09-23 13:52:23     22        edbe79d713     fedora-atomic     f22-test:fedora-atomic/f22/x86_64/docker-host      
+* 2015-05-21 19:01:46     22.17     06a63ecfcf     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After the reboot, we can check &lt;code&gt;rpm-ostree status&lt;/code&gt; again. But we should also see if that &lt;code&gt;docker-storage-setup&lt;/code&gt; package was actually removed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# rpm-ostree status
+  TIMESTAMP (UTC)         VERSION   ID             OSNAME            REFSPEC                                            
+* 2015-09-23 13:52:23     22        edbe79d713     fedora-atomic     f22-test:fedora-atomic/f22/x86_64/docker-host      
+  2015-05-21 19:01:46     22.17     06a63ecfcf     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host 
+f22-atomic-host# rpm -qi docker-storage-setup
+package docker-storage-setup is not installed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There! We did an &lt;code&gt;ostree&lt;/code&gt; compose and had an Atomic host rebase to it successfully!&lt;/p&gt;
+
+&lt;h3&gt;Practice custom ostree compose&lt;/h3&gt;
+
+&lt;p&gt;With the vanilla compose under out belt, let&amp;rsquo;s try to add some packages to our compose. The mechanics are the same that is covered in the blog post mentioned earlier, so I&amp;rsquo;m going to keep these steps relatively short.&lt;/p&gt;
+
+&lt;p&gt;For the custom &lt;code&gt;ostree&lt;/code&gt; compose, we are going to add &lt;code&gt;emacs&lt;/code&gt; and &lt;code&gt;vim&lt;/code&gt;. This is done by creating a custom JSON file in the fedora-atomic git checkout on the Fedora system where we did the original compose.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cat /home/working/fedora-atomic/fedora-atomic-editors.json
+{
+  "include": "fedora-atomic-docker-host.json",
+  "packages": ["emacs", "vim"]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we create a new profile in the &lt;code&gt;fedora-atomic/config.ini&lt;/code&gt; file. The profile is indicated by the new &lt;strong&gt;[editors]&lt;/strong&gt; section in the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# tail /home/working/fedora-atomic/config.ini
+ref         = %(os_name)s/%(release)s/%(arch)s/%(tree_name)s
+yum_baseurl = https://dl.fedoraproject.org/pub/fedora/linux/releases/22/Everything/%(arch)s/os/
+# lorax_additional_repos = http://127.0.0.1/fedora-atomic/local-overrides
+lorax_include_packages = fedora-productimg-atomic
+docker_os_name = fedora
+
+[editors]
+tree_name = editors
+ref       = %(os_name)s/%(release)s/%(arch)s/%(tree_name)s
+tree_file = %(os_name)s-editors.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can do a new compose using nearly the same &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; command as before. The only change is we supply the &lt;code&gt;-p editors&lt;/code&gt; argument to the command, which instructs the toolbox to use the new &lt;strong&gt;editors&lt;/strong&gt; profile we created.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cd /home/working/
+# rpm-ostree-toolbox treecompose -c fedora-atomic/config.ini --ostreerepo /srv/rpm-ostree/fedora-atomic/22/ -p editors
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that compose has completed, we can do the same steps to serve up the tree on the network and rebase to it on the Atomic host.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ostree trivial-httpd -p - /srv/rpm-ostree/fedora-atomic/22/
+52867
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the Atomic host, we&amp;rsquo;ll add another remote pointing to the new port and then do a rebase. Note that when we do the rebase, we specify the &lt;strong&gt;editors&lt;/strong&gt; ref.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# ostree remote add f22-editors http://192.168.122.219:52867 --no-gpg-verify
+f22-atomic-host# ostree remote list -u
+f22-editors http://192.168.122.219:52867 
+f22-test http://192.168.122.219:43620
+fedora-atomic http://dl.fedoraproject.org/pub/fedora/linux/atomic/22/ 
+f22-atomic-host# rpm-ostree rebase f22-editors:fedora-atomic/f22/x86_64/editors
+668 metadata, 13543 content objects fetched; 192236 KiB transferred in 19 secondsCopying /etc changes: 25 modified, 0 removed, 43 added
+Transaction complete; bootconfig swap: yes deployment count change: 0
+Freed objects: 100.5 MB
+Deleting ref 'f22-test:fedora-atomic/f22/x86_64/docker-host'
+Added:
+  GConf2-3.2.6-11.fc22.x86_64
+  ImageMagick-libs-6.8.8.10-9.fc22.x86_64
+  OpenEXR-libs-2.2.0-1.fc22.x86_64
+  adwaita-cursor-theme-3.16.2.1-1.fc22.noarch
+  adwaita-icon-theme-3.16.2.1-1.fc22.noarch
+...
+  vim-common-2:7.4.640-4.fc22.x86_64
+  vim-enhanced-2:7.4.640-4.fc22.x86_64
+  vim-filesystem-2:7.4.640-4.fc22.x86_64
+  xorg-x11-font-utils-1:7.5-28.fc22.x86_64
+# rpm-ostree status
+  TIMESTAMP (UTC)         VERSION    ID             OSNAME            REFSPEC                                       
+  2015-09-23 14:55:56     22         bed6673466     fedora-atomic     f22-editors:fedora-atomic/f22/x86_64/editors  
+* 2015-09-23 13:52:23     22         edbe79d713     fedora-atomic     f22-test:fedora-atomic/f22/x86_64/docker-host 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see that a number of packages were added in support of &lt;code&gt;emacs&lt;/code&gt; and &lt;code&gt;vim&lt;/code&gt;. And when we reboot into the new deployment, we can confirm that &lt;code&gt;emacs&lt;/code&gt; and &lt;code&gt;vim&lt;/code&gt; are installed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# rpm-ostree status
+  TIMESTAMP (UTC)         VERSION    ID             OSNAME            REFSPEC                                       
+* 2015-09-23 14:55:56     22         bed6673466     fedora-atomic     f22-editors:fedora-atomic/f22/x86_64/editors  
+  2015-09-23 13:52:23     22         edbe79d713     fedora-atomic     f22-test:fedora-atomic/f22/x86_64/docker-host 
+f22-atomic-host# rpm -qa | grep emacs
+emacs-common-24.5-2.fc22.x86_64
+emacs-24.5-2.fc22.x86_64
+emacs-filesystem-24.5-2.fc22.noarch
+f22-atomic-host# rpm -qa | grep vim
+vim-enhanced-7.4.640-4.fc22.x86_64
+vim-filesystem-7.4.640-4.fc22.x86_64
+vim-minimal-7.4.640-4.fc22.x86_64
+vim-common-7.4.640-4.fc22.x86_64
+f22-atomic-host# file /usr/bin/vim
+/usr/bin/vim: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=ab955a8dd49fcab6dcbc0a08178fe498a33f384e, stripped
+f22-atomic-host# file /usr/bin/emacs
+/usr/bin/emacs: symbolic link to `/etc/alternatives/emacs'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Another tree composed and rebased to! Onward to building &lt;code&gt;ostree&lt;/code&gt; from source!&lt;/p&gt;
+
+&lt;h3&gt;Building ostree from source&lt;/h3&gt;
+
+&lt;p&gt;To start, we are going to need all the tools and dependencies that building &lt;code&gt;ostree&lt;/code&gt; requires. The easiest way to do this is to use &lt;code&gt;yum-builddep&lt;/code&gt;. On the Fedora server where we have been doing the composes, install those dependencies.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# yum-builddep ostree
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once those dependencies have been installed, we can clone the &lt;a href="https://github.com/ostreedev/ostree.git"&gt;ostree repo&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /home/working 
+# git clone https://github.com/ostreedev/ostree.git
+Cloning into 'ostree'...
+remote: Counting objects: 15576, done.
+remote: Compressing objects: 100% (29/29), done.
+remote: Total 15576 (delta 14), reused 0 (delta 0), pack-reused 15547
+Receiving objects: 100% (15576/15576), 7.61 MiB | 1.87 MiB/s, done.
+Resolving deltas: 100% (10184/10184), done.
+Checking connectivity... done.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we can try building it. The &lt;a href="https://github.com/ostreedev/ostree/blob/master/README.md"&gt;README.md&lt;/a&gt; in the &lt;code&gt;ostree&lt;/code&gt; repo has some straightforward instructions on how to do this. I picked up some additional options to be used from &lt;a href="https://github.com/cgwalters"&gt;Colin Walters&lt;/a&gt; along the way.&lt;/p&gt;
+
+&lt;p&gt;First, we use the &lt;code&gt;autogen.sh&lt;/code&gt; script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /home/working/ostree/
+# env NOCONFIGURE=1 ./autogen.sh
+Submodule 'bsdiff' (https://github.com/mendsley/bsdiff) registered for path 'bsdiff'
+Submodule 'libglnx' (https://git.gnome.org/browse/libglnx) registered for path 'libglnx'
+Cloning into 'bsdiff'...
+remote: Counting objects: 224, done.
+remote: Total 224 (delta 0), reused 0 (delta 0), pack-reused 224
+Receiving objects: 100% (224/224), 52.41 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (86/86), done.
+Checking connectivity... done.
+Submodule path 'bsdiff': checked out '1edf9f656850c0c64dae260960fabd8249ea9c60'
+Cloning into 'libglnx'...
+remote: Counting objects: 204, done.
+remote: Compressing objects: 100% (204/204), done.
+remote: Total 204 (delta 128), reused 0 (delta 0)
+Receiving objects: 100% (204/204), 63.31 KiB | 0 bytes/s, done.
+Resolving deltas: 100% (128/128), done.
+Checking connectivity... done.
+Submodule path 'libglnx': checked out 'e684ef07f03dd563310788c90b3cdb00bac551eb'
+autoreconf: Entering directory `.'
+autoreconf: configure.ac: not using Gettext
+autoreconf: running: aclocal --force -I m4 ${ACLOCAL_FLAGS}
+autoreconf: configure.ac: tracing
+autoreconf: running: libtoolize --copy --force
+libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `build-aux'.
+libtoolize: copying file `build-aux/ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `m4'.
+libtoolize: copying file `m4/libtool.m4'
+libtoolize: copying file `m4/ltoptions.m4'
+libtoolize: copying file `m4/ltsugar.m4'
+libtoolize: copying file `m4/ltversion.m4'
+libtoolize: copying file `m4/lt~obsolete.m4'
+autoreconf: running: /usr/bin/autoconf --force
+autoreconf: running: /usr/bin/autoheader --force
+autoreconf: running: automake --add-missing --copy --force-missing
+configure.ac:11: installing 'build-aux/compile'
+configure.ac:31: installing 'build-aux/config.guess'
+configure.ac:31: installing 'build-aux/config.sub'
+configure.ac:7: installing 'build-aux/install-sh'
+configure.ac:7: installing 'build-aux/missing'
+Makefile.am: installing 'build-aux/depcomp'
+parallel-tests: installing 'build-aux/test-driver'
+autoreconf: Leaving directory `.'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we use &lt;code&gt;./configure&lt;/code&gt; with some of those extra options&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ./configure --prefix=/usr --libdir=/usr/lib64 --sysconfdir=/etc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The end result should look something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+config.status: executing libtool commands
+    OSTree 2015.8
+    ===============
+    introspection:                                yes
+    libsoup (retrieve remote HTTP repositories):  yes
+    libsoup TLS client certs:                     yes
+    SELinux:                                      yes
+    libarchive (parse tar files directly):        yes
+    static deltas:                                yes
+    documentation:                                no
+    gjs-based tests:                              yes
+    dracut:                                       no
+    mkinitcpio:                                   no
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can use &lt;code&gt;make&lt;/code&gt; (I&amp;rsquo;ve removed a lot of the output generated by &lt;code&gt;make&lt;/code&gt;&amp;hellip;)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# make
+make  all-recursive
+make[1]: Entering directory '/home/working/ostree'
+Making all in .
+make[2]: Entering directory '/home/working/ostree'
+...
+  GISCAN   OSTree-1.0.gir
+  GICOMP   OSTree-1.0.gir
+make[2]: Leaving directory '/home/working/ostree'
+make[1]: Leaving directory '/home/working/ostree'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And you should have a functional &lt;code&gt;ostree&lt;/code&gt; command in the current directory&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# pwd
+/home/working/ostree
+# ./ostree --version
+ostree 2015.8
+  +libsoup +gpgme +libarchive +selinux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we&amp;rsquo;ve proved we can build &lt;code&gt;ostree&lt;/code&gt; from source, let&amp;rsquo;s package it in an RPM so that we can include it in a custom &lt;code&gt;ostree&lt;/code&gt; compose. Thankfully, the folks working on &lt;code&gt;ostree&lt;/code&gt; have made it very simple. We just need to make sure we have the &lt;code&gt;rpm-build&lt;/code&gt; package (and dependencies) installed.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install rpm-build
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create the RPM, we go into the &lt;code&gt;ostree/packaging&lt;/code&gt; directory and just run a simple &lt;code&gt;make&lt;/code&gt; command specifying the &lt;strong&gt;rpm&lt;/strong&gt; target. There will be a ton of output generated, probably some warnings too, but if it gets to &lt;code&gt;exit 0&lt;/code&gt; at the end, it has more than likely been successful.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /home/working/ostree/packaging/
+# ls
+91-ostree.preset  Makefile.dist-packaging  ostree.spec.in  rpmbuild-cwd
+# make -f Makefile.dist-packaging rpm
+rm -f *.tar.xz
+set -x; \
+echo "PACKAGE=ostree"; \
+TARFILE_TMP=ostree-2015.8.16.g1181833.tar.tmp; \
+...
+Processing files: ostree-debuginfo-2015.8.16.g1181833-3.fc22.x86_64
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/working/ostree/packaging/tmp-packaging/.build/ostree-2015.8.16.g1181833-3.fc22.x86_64
+Wrote: /home/working/ostree/packaging/tmp-packaging/x86_64/ostree-2015.8.16.g1181833-3.fc22.x86_64.rpm
+Wrote: /home/working/ostree/packaging/tmp-packaging/x86_64/ostree-devel-2015.8.16.g1181833-3.fc22.x86_64.rpm
+Wrote: /home/working/ostree/packaging/tmp-packaging/x86_64/ostree-grub2-2015.8.16.g1181833-3.fc22.x86_64.rpm
+Wrote: /home/working/ostree/packaging/tmp-packaging/x86_64/ostree-debuginfo-2015.8.16.g1181833-3.fc22.x86_64.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.JgCDTd
++ umask 022
++ cd /home/working/ostree/packaging/tmp-packaging
++ cd ostree-2015.8.16.g1181833
++ rm -rf /home/working/ostree/packaging/tmp-packaging/.build/ostree-2015.8.16.g1181833-3.fc22.x86_64
++ exit 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can inspect the results and look for the newly created RPM files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# pwd
+/home/working/ostree/packaging/
+# ls -l *rpm
+-rw-r--r--. 1 root root 319928 Sep 22 20:11 ostree-2015.8.14.ged86160-3.fc22.x86_64.rpm
+-rw-r--r--. 1 root root 926916 Sep 22 20:11 ostree-debuginfo-2015.8.14.ged86160-3.fc22.x86_64.rpm
+-rw-r--r--. 1 root root 115440 Sep 22 20:11 ostree-devel-2015.8.14.ged86160-3.fc22.x86_64.rpm
+-rw-r--r--. 1 root root   7448 Sep 22 20:11 ostree-grub2-2015.8.14.ged86160-3.fc22.x86_64.rpm
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sure enough, there are our new &lt;code&gt;ostree&lt;/code&gt; RPM files! Now we can use them in another custom &lt;code&gt;ostree&lt;/code&gt; compose.&lt;/p&gt;
+
+&lt;h3&gt;Creating custom ostree composes with local repos&lt;/h3&gt;
+
+&lt;p&gt;To include these new &lt;code&gt;ostree&lt;/code&gt; RPMs in a custom compose, we have to create a local &lt;code&gt;yum&lt;/code&gt; repo first. This is easily accomplished with the &lt;code&gt;createrepo&lt;/code&gt; command.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install createrepo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the &lt;code&gt;createrepo&lt;/code&gt; tool installed, we&amp;rsquo;re going to copy over the RPMs into a directory (can be named anything you like) that will be used as our local &lt;code&gt;yum&lt;/code&gt; repo. And then use &lt;code&gt;createrepo&lt;/code&gt; to make it a local repo.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# mkdir -p /srv/local-repo
+# cp /home/working/ostree/packaging/*rpm /srv/local-repo/
+# createrepo /srv/local-repo/
+Spawning worker 0 with 4 pkgs
+Workers Finished
+Saving Primary metadata
+Saving file lists metadata
+Saving other metadata
+Generating sqlite DBs
+Sqlite DBs complete
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we are going create a custom repo file in the &lt;code&gt;fedora-atomic&lt;/code&gt; directory we were using before.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /home/working/fedora-atomic/
+# cat local-testing.repo
+[local-testing]
+name=ostree local-testing
+baseurl=file:///srv/local-repo/
+enabled=0
+gpgcheck=0
+metadata_expire=1d
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the repo file in place, we can create another custom JSON file that includes our local repo and &lt;code&gt;ostree&lt;/code&gt; package we want to include in the &lt;code&gt;ostree&lt;/code&gt; compose&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cat fedora-atomic-ostree-testing.json
+{
+  "include": "fedora-atomic-docker-host.json",
+  "repos": ["local-testing"],
+  "packages" : ["ostree"]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And include a profile in the &lt;code&gt;config.ini&lt;/code&gt; file for our special &lt;code&gt;ostree&lt;/code&gt; package&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cat config.ini
+...
+[ostree-testing]
+tree_name = ostree-testing
+ref = %(os_name)s/%(release)s/%(arch)s/%(tree_name)s
+tree_file = %(os_name)s-ostree-testing.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, we use &lt;code&gt;rpm-ostree-toolbox&lt;/code&gt; as before to create our compose, specifying the &lt;strong&gt;ostree-testing&lt;/strong&gt; profile&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cd /home/working
+# rpm-ostree-toolbox treecompose -c fedora-atomic/config.ini --ostreerepo /srv/rpm-ostree/fedora-atomic/22/ -p ostree-testing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It is useful during this step to inspect the file list that is generated during the compose to make sure the right version of the package is included in the compose:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;---&amp;gt; Package ostree.x86_64 0:2015.8.16.g1181833-3.fc22 will be installed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When the compose is complete, serve it up with &lt;code&gt;ostree trivial-httpd&lt;/code&gt; and point your Atomic host at the new remote.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+Moving /boot
+Using boot location: both
+Copying toplevel compat symlinks
+Adding tmpfiles-ostree-integration.conf
+Ignored user missing from new passwd file: root
+Ignored user missing from new passwd file: root
+Committing '/var/tmp/rpm-ostree.SU5O5X/rootfs.tmp' ...
+Labeling with SELinux policy 'targeted'
+fedora-atomic/f22/x86_64/ostree-testing =&gt; d6b2df2246475378bb42399e52886acf145e8a5d6f85c5854cada650de727521
+Complete
+fedora-atomic/f22/x86_64/ostree-testing =&gt; d6b2df2246475378bb42399e52886acf145e8a5d6f85c5854cada650de727521
+# ostree trivial-httpd -p - /srv/rpm-ostree/fedora-atomic/22/
+38824
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the Atomic host:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# ostree remote add f22-ostree-testing http://192.168.122.219:38824 --no-gpg-verify
+f22-atomic-host# rpm-ostree rebase f22-ostree-testing:fedora-atomic/f22/x86_64/ostree-testing
+21 metadata, 30 content objects fetched; 86750 KiB transferred in 2 secondsCopying /etc changes: 25 modified, 0 removed, 44 added
+Transaction complete; bootconfig swap: yes deployment count change: 0
+Freed objects: 100.6 MB
+Deleting ref 'f22-editors:fedora-atomic/f22/x86_64/editors'
+Changed:
+  ostree-2015.8.16.g1181833-3.fc22.x86_64
+  ostree-grub2-2015.8.16.g1181833-3.fc22.x86_64
+Removed:
+  GConf2-3.2.6-11.fc22.x86_64
+  ImageMagick-libs-6.8.8.10-9.fc22.x86_64
+...
+  rest-0.7.93-1.fc22.x86_64
+  urw-fonts-3:2.4-20.fc22.noarch
+  vim-common-2:7.4.640-4.fc22.x86_64
+  vim-enhanced-2:7.4.640-4.fc22.x86_64
+  vim-filesystem-2:7.4.640-4.fc22.x86_64
+  xorg-x11-font-utils-1:7.5-28.fc22.x86_64
+f22-atomic-host# rpm-ostree status
+  TIMESTAMP (UTC)         VERSION    ID             OSNAME            REFSPEC
+  2015-09-23 16:59:39     22         d6b2df2246     fedora-atomic     f22-ostree-testing:fedora-atomic/f22/x86_64/ostree-testing
+* 2015-09-23 14:55:56     22         bed6673466     fedora-atomic     f22-editors:fedora-atomic/f22/x86_64/editors     
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When we reboot into the new deployment, we can verify that the custom built &lt;code&gt;ostree&lt;/code&gt; package was included in the tree.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;f22-atomic-host# rpm-ostree status
+  TIMESTAMP (UTC)         VERSIONID             OSNAME            REFSPEC                                               
+* 2015-09-23 16:59:39     22     d6b2df2246     fedora-atomic     f22-ostree-testing:fedora-atomic/f22/x86_64/ostree-testing  
+  2015-09-23 14:55:56     22     bed6673466     fedora-atomic     f22-editors:fedora-atomic/f22/x86_64/editors                
+f22-atomic-host# rpm -qa | grep ostree
+ostree-2015.8.16.g1181833-3.fc22.x86_64
+ostree-grub2-2015.8.16.g1181833-3.fc22.x86_64
+rpm-ostree-2015.3-8.fc22.x86_64
+f22-atomic-host# ostree --version
+ostree 2015.8
+  +libsoup +gpgme +libarchive +selinux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Success!&lt;/p&gt;
+
+&lt;p&gt;This likely just scratches the surface of what you can do with custom &lt;code&gt;ostree&lt;/code&gt; composes. But it is the first step.&lt;/p&gt;
+
+&lt;p&gt;I want to give a shout out to all those people who helped along the way:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;  &lt;a href="https://github.com/baude"&gt;Brent Baude&lt;/a&gt; - who did all the hard work by documenting the custom tree compose steps on the Red Hat Developer Blog&lt;/li&gt;
+&lt;li&gt;  &lt;a href="https://github.com/cgwalters"&gt;Colin Walters&lt;/a&gt; - who is the architect of &lt;code&gt;ostree&lt;/code&gt; and taught me how to build it from source&lt;/li&gt;
+&lt;li&gt;  &lt;a href="https://github.com/mbarnes"&gt;Matthew Barnes&lt;/a&gt; - who fielded all my questions about packaging &lt;code&gt;ostree&lt;/code&gt; into an RPM, creating a local repo with it, and doing a custom compose with that repo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please let me know if you have any questions or feedback. Or drop in at #atomic on Freenode.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>CentOS 7 Alpha Builds for Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/08/centos-7-alpha-builds-for-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2014/08/centos-7-alpha-builds-for-atomic/</id>
+    <published>2014-08-28T17:48:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Yesterday, Karanbir Singh &lt;a href="http://lists.centos.org/pipermail/centos-devel/2014-August/011784.html"&gt;announced an alpha-quality build of CentOS 7 Atomic&lt;/a&gt; that&amp;rsquo;s suitable for developing rpm-ostree tools and helping the SIG get started.&lt;/p&gt;
+
+&lt;p&gt;As KB points out, the images contain unsigned content that&amp;rsquo;s produced outside the CentOS.org build system. You should be able to run Docker containers just fine, but it doesn&amp;rsquo;t yet include Cockpit or Kubernetes packages. &lt;/p&gt;
+
+&lt;p&gt;Also, there&amp;rsquo;s not an upstream ostree repo yet, but KB plans to set up a repo set up under cloud.centos.org soon. Even better, he plans to start running builds every two days as the content stabilizes, and eventually get the builds up on CentOS.org.&lt;/p&gt;
+
+&lt;p&gt;Please give it a whirl, though, and report any problems found to the &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;CentOS-devel&lt;/a&gt; mailing list. &lt;/p&gt;
+</content>
+  </entry>
+</feed>

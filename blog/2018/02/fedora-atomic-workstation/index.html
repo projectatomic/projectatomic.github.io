@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+An Introduction to Fedora Atomic Workstation &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='An Introduction to Fedora Atomic Workstation' property='og:title'>
+<meta content='For the last few Fedora releases, the Workstation WG has been working on&#x000A;combining the best of the Project Atomic pattern with the Fedora Workstation&#x000A;Edition into a deliverable dubbed “Fedora Atomic Workstation”. In&#x000A;Fedora 27, we have reached a point where we feel comfortable inviting other&#x000A;developers and enthusiasts to try it out and even make it their daily driver.&#x000A;&#x000A;Read on to discover what Fedora Atomic Workstation is, what its benefits are,&#x000A;and how you can get started today!&#x000A;&#x000A;Note: this blog post is based on a talk I gave at&#x000A;DevConf.cz 2018. Head over to&#x000A;YouTube if you’d prefer listening&#x000A;to it.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/' property='og:url'>
+<meta content='2018-02-06T00:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='desktop' property='article:tag'>
+<link href='/blog/tag/desktop.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='workstation' property='article:tag'>
+<link href='/blog/tag/workstation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='An Introduction to Fedora Atomic Workstation' name='twitter:title'>
+<meta content='For the last few Fedora releases, the Workstation WG has been working on&#x000A;combining the best of the Project Atomic pattern with the Fedora Workstation&#x000A;Edition into a deliverable dubbed “Fedora Atomic Workstation”. In&#x000A;Fedora 27, we have reached a point where we feel comfortable inviting other&#x000A;developers and enthusiasts to try it out and even make it their daily driver.&#x000A;&#x000A;Read on to discover what Fedora Atomic Workstation is, what its benefits are,&#x000A;and how you can get started today!&#x000A;&#x000A;Note: this blog post is based on a talk I gave at&#x000A;DevConf.cz 2018. Head over to&#x000A;YouTube if you’d prefer listening&#x000A;to it.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_02 blog_2018_02_fedora-atomic-workstation blog_2018_02_fedora-atomic-workstation_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+An Introduction to Fedora Atomic Workstation
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-06T00:00:00Z'>
+Tuesday  6 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>For the last few Fedora releases, the Workstation WG has been working on
+combining the best of the Project Atomic pattern with the Fedora Workstation
+Edition into a deliverable dubbed &ldquo;Fedora Atomic Workstation&rdquo;. In
+Fedora 27, we have reached a point where we feel comfortable inviting other
+developers and enthusiasts to try it out and even make it their daily driver.</p>
+
+<p>Read on to discover what Fedora Atomic Workstation is, what its benefits are,
+and how you can get started today!</p>
+
+<p>Note: this blog post is based on a talk I gave at
+<a href="https://devconf.cz/cz/2018">DevConf.cz 2018</a>. Head over to
+<a href="https://www.youtube.com/watch?v=7c3GdfhWzcc">YouTube</a> if you&rsquo;d prefer listening
+to it.</p>
+
+<p></p>
+
+<h3>What is Atomic Workstation?</h3>
+
+<p>Just like Atomic Host, Atomic Workstation uses RPM-OSTree as its update manager.
+However, Atomic Workstation is geared towards all the same use cases that the
+regular Workstation Edition is meant to fulfill. Though there are some
+differences between the two beyond the update model.</p>
+
+<p>In an Atomic Workstation, desktop applications are shipped and run as
+<a href="https://flatpak.org/">flatpaks</a>, and development mostly happens inside
+containers. For example, you may have a pet container with your development
+environment set up as well as an <code>oc cluster up</code> OpenShift cluster to develop
+server applications.</p>
+
+<h3>Why should I use Atomic Workstation?</h3>
+
+<p>So what are the advantages of this strategy? Many of the reasons below are
+shared with Atomic Host. Though I will try to give a more Workstation-centric
+point-of-view.</p>
+
+<h4>1. Transactional Updates</h4>
+
+<p>The main reason to use Atomic Workstation of course is transactional updates.
+This is as relevant in the server case as it is for desktops. Most people would
+consider their workstations to be the stereotypical pet system: set up and
+customized just the way they want them, and a huge hindrance to productivity if
+anything should happen to them. Using an update model which greatly reduces
+<a href="https://www.happyassassin.net/2016/10/04/x-crash-during-fedora-update-when-system-has-hybrid-graphics-and-systemd-udev-is-in-update/">risks</a>
+of
+<a href="https://bugzilla.redhat.com/show_bug.cgi?id=1398698">failures</a> is thus well
+justified.</p>
+
+<p>I will not stay on this subject any longer since I assume readers of this blog
+are familiar with the benefits there and what pitfalls the Atomic model helps us
+avoid. If you are not familiar with these ideas, definitely check out the
+<a href="http://ostree.readthedocs.io/en/latest/manual/introduction/">OSTree docs</a>
+and the
+<a href="http://www.projectatomic.io/docs/os-updates/">Project Atomic update docs</a> if
+you&rsquo;d like more information.</p>
+
+<h4>2. Immutability and Isolation</h4>
+
+<p>As discussed in
+<a href="../../../2016/07/hacking-and-extending-atomic-host/">a previous blog entry</a>,
+all the great features of an OSTree-based system require immutability of the
+base OS. For example, <code>/usr</code> is <em>not</em> writable by default. This is equally true
+in Atomic Workstation as it is in Atomic Host. This is a <em>good</em> thing, because
+(1) it protects you from
+<a href="https://github.com/MrMEEE/bumblebee-Old-and-abbandoned/issues/123">accidental damage</a>,
+and (2) it encourages a healthier workflow.</p>
+
+<p>For example, on <code>yum/dnf</code>-managed systems, RPM scriptlets run unconfined
+<em>as root</em> during update transactions, which opens the door for accidental (or
+intentional) corruption. On <code>rpm-ostree</code>-managed systems, all scriptlets are run
+on the server when composing the update. (As mentioned lower down, we do also
+support layering additional RPMs; their scriptlets are run in a locked down
+container and cannot affect the running system).</p>
+
+<p>By running your applications in flatpaks and doing your development in
+containers, you not only help protect your base OS from harm but also minimize
+the number of packages standing between you and a successful boot.</p>
+
+<p>Basing your development workflow around pet containers could warrant a blog post
+of its own. There have been some great talks around that area at DevConf.cz this
+year (linked below).</p>
+
+<h4>3. Effortless Change Tracking</h4>
+
+<p>Now, part of customizing your workstation will undoubtedly require installing
+packages that are not part of the base OSTree and aren&rsquo;t quite fit for
+containerization (e.g. drivers, virtualization stacks, <code>$FAVOURITE_EDITOR</code>).
+Because RPM-OSTree is a <em>hybrid</em> model, it understands both RPMs and OSTrees.
+We can, for example, do <code>rpm-ostree install vim-enhanced libvirt-client</code> to
+layer additional packages. <code>rpm-ostree status</code> will then show:</p>
+<pre class="highlight plaintext"><code>$ rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● faw27:fedora/27/x86_64/workstation&#x000A;                   Version: 27.62 (2018-01-31 21:39:54)&#x000A;                BaseCommit: a052d7482a186f1979f8bba90cfe1a1d0c13e75a43a416b580d2f2a83c18fe5a&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;           LayeredPackages: libvirt-client vim-enhanced&#x000A;</code></pre>
+
+<p>In contrast to <code>dnf/yum</code>-managed systems, which provide a &ldquo;bag of
+packages&rdquo; approach, <code>rpm-ostree status</code> allows to know <em>exactly</em> what we
+changed from the base OSTree commit, and how to go back to the initial state (in
+this case, <code>rpm-ostree uninstall libvirt-client vim-enhanced</code>).</p>
+
+<p>For completeness, I will mention that RPM-OSTree not only supports pure
+additions, but also <em>replacing</em> and <em>removing</em> base packages. All these changes
+can equally be tracked in <code>rpm-ostree status</code> and easily reverted.</p>
+
+<p>Additionally, because in the OSTree model configuration defaults are stored in
+<code>/usr/etc</code>, one can also perform a simple diff to figure out which defaults were
+changed (e.g. <code>diff /usr/etc /etc | less</code>).</p>
+
+<h4>4. Upstream Testing</h4>
+
+<p>Having updates delivered as concrete units allows the content provider to more
+easily test them, which translates into a more stable operating system for end
+users. In contrast, it&rsquo;s effectively impossible in the &ldquo;bag of
+packages&rdquo; approach to sanely test all permutations. This mostly means that
+testing is limited to the package-level.</p>
+
+<p>In an OSTree model however, it&rsquo;s possible to gate updates on higher-level
+integration tests such as what we&rsquo;ve been doing in the two-week releases of
+Fedora Atomic Host. Note though that Atomic Workstation updates are not
+currently being gated on tests; we are still at the onset of these discussions.</p>
+
+<h4>5. Automatic Updates</h4>
+
+<p>In RPM-OSTree, we are currently working on adding an
+<a href="https://github.com/projectatomic/rpm-ostree/issues/247">automatic update feature</a>.
+Similar functionality on <code>dnf</code>-managed systems does
+<a href="https://fedoraproject.org/wiki/AutoUpdates">exist</a>. The difference is that the
+OSTree model allows us to eliminate or minimize
+<a href="https://fedoraproject.org/wiki/AutoUpdates#Reasons_AGAINST_using_automatic_updates">many of the issues</a>
+involved in such a scheme. For example, the ability to roll back updates is
+critical here, and this is something that RPM-OSTree does with ease.</p>
+
+<p>In the future, we&rsquo;d like to get to a point where (if enabled) the system
+automatically prepares updates in the background and <q>upgrading</q> simply involves
+rebooting your computer for minimal downtime.</p>
+
+<h3>How can I get started with Atomic Workstation?</h3>
+
+<p>You can either
+<a href="https://download.fedoraproject.org/pub/fedora/linux/releases/27/WorkstationOstree/x86_64/iso/">download the ISO</a>
+and re-install from scratch, or you can convert your existing <code>dnf</code>-based system
+using the steps from
+<a href="https://pagure.io/workstation-ostree-config/blob/master/f/README-install-inside.md">this</a>
+document. The latter also allows you to switch back and forth between the two
+models if you&rsquo;re not yet ready to dive in.</p>
+
+<p>Once booted into Atomic Workstation, check out the &ldquo;Using the system&rdquo;
+section <a href="https://pagure.io/workstation-ostree-config">here</a>. To learn more about
+how to manage upgrades, check out the Project Atomic
+<a href="http://www.projectatomic.io/docs/os-updates/">docs</a> and the RPM-OSTree
+<a href="http://rpm-ostree.readthedocs.io/en/latest/manual/administrator-handbook/">docs</a>.</p>
+
+<p>If you need any help, you can pop into the <code>freenode/#atomic</code> channel, or send
+an email to the
+<a href="http://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel</a>
+mailing list.</p>
+
+<h3>More information</h3>
+
+<ul>
+<li><a href="https://fedoraproject.org/wiki/Changes/WorkstationOstree">Fedora Change Proposal</a></li>
+<li><a href="https://pagure.io/workstation-ostree-config">workstation-ostree-config</a></li>
+<li><a href="https://www.youtube.com/watch?v=Yc7lvkl5atE">Kalev Lember: Atomic Workstation</a></li>
+<li><a href="https://www.youtube.com/watch?v=a4IPWlfkJSo">Sanja Bonic and Colin Walters: You want a Clean Desktop OS? Containerize it.</a></li>
+<li><a href="https://www.youtube.com/watch?v=eWoFpOoA-tE">Jan Pazdziora: Minimizing workstation installation</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/desktop/">desktop</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/workstation/">workstation</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

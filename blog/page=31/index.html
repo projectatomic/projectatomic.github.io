@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-31 blog_page-31_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/08/docker-patches/">Project Atomic Docker Patches</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-18T12:00:00Z'>
+Thursday 18 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic&rsquo;s version of the Docker-based container runtime has been carrying a series of patches on the upstream Docker project for a while now.  Each time we carry a patch, it adds significant effort as we continue to track upstream, therefore we would prefer to never carry any patches.  We always strive to get our patches upstream and do it in the open.</p>
+
+<p>This post, and the accompanying document, will attempt to describe the patches we are currently carrying:</p>
+
+<ul>
+<li>Explanation on types of patches.</li>
+<li>Description of patches.</li>
+<li>Links to GitHub discussions, and pull requests for upstreaming the patches to Docker.</li>
+</ul>
+
+<p>Some people have asserted that <a href="https://github.com/projectatomic/docker">our repo</a> is a fork of the upstream Docker project.</p>
+
+<h3>What Does It Mean To Be a Fork?</h3>
+
+<p>I have been in open source for a long time, and my definition of a <q>fork</q> might be dated. I think of a <q>fork</q> as a hostile action taken by one group to get others to use and contribute to their version of an upstream project and ignore the <q>original</q> version. For example, LibreOffice forking off of OpenOffice or going way back Xorg forking off of Xfree86.</p>
+
+<p>Nowadays, GitHub has changed the meaning. When a software repository exists on GitHub or a similar platform, everyone who wants to contribute has to hit the <q>fork</q> button, and start building their patches. As of this writing, Docker on GitHub has 9,860 forks, including ours. By this definition, however, all packages that distributions ship that include patches are forks. Red Hat ships the Linux Kernel, and I have not heard this referred to as a fork. But it would be considered a <q>fork</q> if you&rsquo;re considering any upstream project shipped with patches a fork.</p>
+
+<p><em>The Docker upstream even relies on Ubuntu carrying patches for AUFS that were never merged into the upstream kernel.</em> Since Red Hat-based distributions don’t carry the AUFS patches, we contributed the support for Devicemapper, OverlayFS, and Btrfs backends, which are fully supported in the upstream kernel.  This is what enterprise distributions should do: attempt to ship packages configured in a way that they can be supported for a long time.</p>
+
+<p>At the end of the day, we continue to track the changes made to the upstream Docker Project and re-apply our patches to that project. We believe this is an important distinction to allow freedom in software to thrive while continually building stronger communities.  It’s very different than a hostile fork that divides communities&mdash;we are still working very hard to maintain continuity around unified upstreams.</p>
+
+<h3>How Can I Find Out About Patches for a Particular Version of Docker?</h3>
+
+<p>All of the patches we ship are described in the README.md file on the appropriate branch of <a href="https://github.com/projectatomic/docker">our repository</a>. If you want to look at the patches for Docker 1.12 you would look at <a href="https://github.com/projectatomic/docker/tree/docker-1.12">the 1.12 branch</a>.</p>
+
+<p>You can then look on the <a href="/docs/docker_patches">patches list page</a> for information about these patches.</p>
+
+<h3>What Kind of Patches does Project Atomic Include?</h3>
+
+<p>Here is a quick overview of the kinds of patches we carry, and then guidance on finding information on specific patches.</p>
+
+<h4>Upstream Fixes</h4>
+
+<p>The Docker Project upstream tends to fix issues in the <strong>next</strong> version of Docker. This means if a user finds an issue in Docker 1.11 and we provide a fix for this to upstream, the patch gets merged in to the master branch, and it will probably not get back ported to Docker 1.11.</p>
+
+<p>Since Docker is releasing at such a rapid rate, they tell users to just install Docker 1.12 when it is available. This is fine for people who want to be on the bleeding edge, but in a lot of cases the newer version of Docker comes with new issues along with the fixes.</p>
+
+<p>For example, Docker 1.11 split the Docker daemon into three parts: Docker daemon, containerd, and runc.  We did not feel this was stable enough to ship to enterprise customers right when it came out, yet it had multiple fixes for the Docker 1.10 version. Many users want to only get new fixes to their existing software and not have to re-certify their apps every two months.</p>
+
+<p>Another issue with supporting stable software with rapidly changing dependencies is that developers on the stable projects must spend time ensuring that their product remains stable every time one of their dependencies is updated. This is an expensive process, dependencies end up being updated only infrequently. This causes us to <q>cherry-pick</q> fixes from upstream Docker and to ship these fixes on older versions so that we can get the benefits from the bug fixes without the cost of updating the entire dependency. This is the same approach we take in order to add capabilities to the Linux kernel, a practice that has proven to be very valuable to our users.</p>
+
+<h4>Proposed Patches for Upstream</h4>
+
+<p>We carry patches that we know our users require right now, but have not yet been merged into the upstream project.  Every patch that we add to the Project Atomic repository also gets proposed to the upstream Docker repository.</p>
+
+<p>These sorts of patches remain on the Project Atomic repository briefly while they’re being considered upstream, or forever if the upstream community rejects them. If we don&rsquo;t agree with upstream Docker and feel our users need these patches, we continue to carry them. In some cases we have worked out alternative solutions like building authorization plugins.</p>
+
+<p>For example, users of RHEL images are not supposed to push these images onto public web sites. We wanted a way to prevent users from accidentally pushing RHEL based images to Docker Hub, so we originally created a patch to block the pushing.  When authorization plugins were added we then created a plugin to protect users from pushing RHEL content to a public registry like Docker Hub, and no longer had to carry the custom patch.</p>
+
+<h3>Detailed List of Patches</h3>
+
+<p>Want to know more about specific patches? You can find the current table and list of patches on our new <a href="/docs/docker_patches">patches list page</a>.</p>
+
+<a class="more-link view-article" href="/blog/2016/08/docker-patches/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/patches/">patches</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/08/vagrant-service-manager-1-3-0-release/">Vagrant Service Manager 1.3.0 Released</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/budhram/">Budh Ram Gurung</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-16T12:54:00Z'>
+Tuesday 16 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This version of <a href="https://github.com/projectatomic/vagrant-service-manager">vagrant-service-manager</a> introduces support for displaying Kubernetes configuration information. This enable users to access the Kubernetes server that runs inside ADB virtual machine from their host machine.</p>
+
+<p>This version also includes binary installation support for Kubernetes. This support is extended to users of the <a href="http://developers.redhat.com/products/cdk/overview">Red Hat Container Development Kit</a>. For information about client binary installation, see the previous release announcement <a href="../../../../blog/2016/07/vagrant-service-manager-install-cli"><q>Client Binary Installation Now Included in the ADB</q></a>.</p>
+
+<p>The full list of features from this version are:</p>
+
+<ul>
+<li>Configuration information for Kubernetes provided as part of the <code>env</code> command</li>
+<li>Client binary installation support for Kubernetes added to the ADB</li>
+<li>Client binary installation support for OpenShift, Kubernetes and Docker in the Red Hat Container Development Kit</li>
+<li>Auto-detection of a previously downloaded <code>oc</code> executable binary on Windows operating systems</li>
+<li>Unit and acceptance tests for the Kubernetes service</li>
+<li>Option to enable Kubernetes from a Vagrantfile  with the following command:</li>
+</ul>
+<pre class="highlight plaintext"><code>  config.servicemanager.services = 'kubernetes'&#x000A;</code></pre>
+
+<h3>1. Install the kubernetes client binary</h3>
+
+<h4>Run the following command to install the kubernetes binary, <code>kubectl</code></h4>
+<pre class="highlight plaintext"><code>$ vagrant service-manager install-cli kubernetes&#x000A;# Binary now available at /home/budhram/.vagrant.d/data/service-manager/bin/kubernetes/1.2.0/kubectl&#x000A;# run binary as:&#x000A;# kubectl &lt;command&gt;&#x000A;export PATH=/home/budhram/.vagrant.d/data/service-manager/bin/kubernetes/1.2.0:$PATH&#x000A;&#x000A;# run following command to configure your shell:&#x000A;# eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli kubernetes | tr -d '\r')"&#x000A;&#x000A;</code></pre>
+
+<h4>Run the following command to configure your shell</h4>
+<pre class="highlight plaintext"><code>$ eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli kubernetes | tr -d '\r')"&#x000A;</code></pre>
+
+<h3>2. Enable access to the kubernetes server that runs inside of the ADB</h3>
+
+<h4>Run the following command to display environment variable for kubernetes</h4>
+<pre class="highlight plaintext"><code>$ vagrant service-manager env kubernetes&#x000A;# Set the following environment variables to enable access to the&#x000A;# kubernetes server running inside of the vagrant virtual machine:&#x000A;export KUBECONFIG=/home/budhram/.vagrant.d/data/service-manager/kubeconfig&#x000A;&#x000A;# run following command to configure your shell:&#x000A;# eval "$(vagrant service-manager env kubernetes)"&#x000A;</code></pre>
+
+<h4>Run the following command to configure your shell</h4>
+<pre class="highlight plaintext"><code>eval "$(vagrant service-manager env kubernetes)"&#x000A;</code></pre>
+
+<p>For a full list of changes in version 1.3.0, see <a href="https://github.com/projectatomic/vagrant-service-manager/releases/tag/v1.3.0">the release log</a>.</p>
+
+<a class="more-link view-article" href="/blog/2016/08/vagrant-service-manager-1-3-0-release/">View article &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/devtools/">devtools</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/08/ocitools-libgen/">Creating OCI configurations with the ocitools generate library</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/haiyan-meng/">Haiyan Meng</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-09T14:00:00Z'>
+Tuesday  9 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://github.com/opencontainers/runc">OCI runc</a> is a cool new tool for running containers on Linux machines. It follows the OCI container runtime specification. As of docker-1.11 it is the main mechanism that docker uses for launching containers.</p>
+
+<p>The really cool thing is that you can use runc without even using docker. First you create a rootfs on your disk: a directory that includes all of your software and usually follows the basic layout of <code>/</code>. There are several tools that can create a rootfs, including dnf or the <code>atomic</code> command. Once you have a rootfs, you need to create a <code>config.json</code> file which runc will read. <code>config.json</code> has all of the specifications for running a container, things like which namespaces to use, which capabilities to use in your container, and what is the pid 1 of your container. It is somewhat similar to the output of <code>docker inspect</code>.</p>
+
+<p>Creating and editing the config.json is not for the faint of heart, so we developed a command line tool called <code>ocitools generate</code> that can do the hard work of creating the config.json file.</p>
+
+<h3>Creating OCI Configurations</h3>
+
+<p>This post will guide you through the steps of creating <a href="https://github.com/opencontainers/runtime-spec/">OCI</a> configurations
+using the <a href="https://github.com/opencontainers/ocitools/tree/master/generate">ocitools generate library</a>
+for the go programming language.</p>
+
+<p>There are four steps to create an OCI configuration using the ocitools generate library:</p>
+
+<ol>
+<li>Import the ocitools generate library into your project;</li>
+<li>Create an OCI specification generator;</li>
+<li>Modify the specification by calling different methods of the specification generator;</li>
+<li>Save the specification.</li>
+</ol>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/08/ocitools-libgen/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/oci/">OCI</a></li>
+<li><a href="/blog/tag/ocitools/">ocitools</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/download-and-get-involved-with-fedora-atomic-24/">Download and Get Involved with Fedora Atomic 24</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-29T07:00:00Z'>
+Friday 29 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This week, the Fedora Project released updated images for its Fedora 24-based Atomic Host. Fedora Atomic Host is a leading-edge operating system designed around Kubernetes and Docker containers.</p>
+
+<p>Fedora Atomic Host images are updated roughly every two weeks, rather than on the main six-month Fedora cadence. Because development is moving quickly, only the latest major Fedora release is supported.</p>
+
+<p><strong>Note:</strong> Due to an issue with the image-building process, the current Fedora Atomic Host images include an older version of the system tree. Be sure to <code>atomic host upgrade</code> to  get the latest set of components. The next two-week media refresh will include an up-to-date tree.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/download-and-get-involved-with-fedora-atomic-24/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/07/atomic-app-0-6-2-release/">Atomic App 0.6.2 released with new index CLI command</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-07-27T16:55:00Z'>
+Wednesday 27 July 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This release of Atomic App introduces the new <code>atomicapp index</code> command.</p>
+
+<p>We add this command in order to give a quick overview of all available featured and tested Nuleculized applications on <a href="https://github.com/projectatomic/nulecule-library">github.com/projectatomic/nulecule-library</a>. The ability to generate your own list is available as well with the <code>atomicapp index generate</code> command.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/07/atomic-app-0-6-2-release/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=30/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=27/">27</a>
+</li>
+<li>
+<a href="/blog/page=28/">28</a>
+</li>
+<li>
+<a href="/blog/page=29/">29</a>
+</li>
+<li>
+<a href="/blog/page=30/">30</a>
+</li>
+<li class='active'>
+<span>31</span>
+</li>
+<li>
+<a href="/blog/page=32/">32</a>
+</li>
+<li>
+<a href="/blog/page=33/">33</a>
+</li>
+<li>
+<a href="/blog/page=34/">34</a>
+</li>
+<li>
+<a href="/blog/page=35/">35</a>
+</li>
+<li>
+<a href="/blog/page=32/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

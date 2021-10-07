@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Cent Os</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/centos.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>CentOS Atomic Host 7.1712 Available for Download</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/01/centos-atomic-1712/"/>
+    <id>http://www.projectatomic.io/blog/2018/01/centos-atomic-1712/</id>
+    <published>2018-01-10T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;The CentOS Atomic SIG has released an &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;updated version&lt;/a&gt; of
+CentOS Atomic Host (7.1712), a lean operating system designed to run
+Linux containers, built from standard CentOS 7 RPMs, and tracking the
+component versions included in Red Hat Enterprise Linux Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;This release includes updated &lt;a href="https://lists.centos.org/pipermail/centos-announce/2018-January/022696.html"&gt;kernel&lt;/a&gt;, &lt;a href="https://lists.centos.org/pipermail/centos-announce/2018-January/022698.html"&gt;linux-firmware&lt;/a&gt; and
+&lt;a href="https://lists.centos.org/pipermail/centos-announce/2018-January/022697.html"&gt;microcode_ctl&lt;/a&gt; packages to address recent security advisories, alongside other minor updates that shipped during the month of
+December.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host includes these core component versions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;atomic-1.20.1-9.git436cf5d.el7.centos.x86_64&lt;/li&gt;
+&lt;li&gt;cloud-init-0.7.9-9.el7.centos.2.x86_64&lt;/li&gt;
+&lt;li&gt;docker-1.12.6-68.gitec8512b.el7.centos.x86_64&lt;/li&gt;
+&lt;li&gt;etcd-3.2.9-3.el7.x86_64&lt;/li&gt;
+&lt;li&gt;flannel-0.7.1-2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-3.10.0-693.11.6.el7.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-node-1.5.2-0.7.git269f928.el7.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-2017.11-1.el7.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-ostree-client-2017.9-1.atomic.el7.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Download CentOS Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted
+Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image.
+For links to media, see the &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;CentOS wiki&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;rsquo;re running a previous version of CentOS Atomic Host, you can
+upgrade to the current image by running the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic host upgrade
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Release Cycle&lt;/h3&gt;
+
+&lt;p&gt;The CentOS Atomic Host image follows the upstream Red Hat Enterprise
+Linux Atomic Host cadence. After sources are released, they&amp;rsquo;re rebuilt
+and included in new images. After the images are tested by the SIG and
+deemed ready, we announce them.&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is produced by the &lt;a href="http://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS Atomic SIG&lt;/a&gt;, based on
+upstream work from  &lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt;. If
+you&amp;rsquo;d like to work on testing images, help with packaging,
+documentation - join us!&lt;/p&gt;
+
+&lt;p&gt;The SIG meets every two weeks as part of the Project Atomic community
+meeting at 16:00 UTC on Monday in the #atomic channel. You&amp;rsquo;ll often
+find us in #atomic and/or #centos-devel if you have questions. You can
+also join the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt; mailing
+list if you&amp;rsquo;d like to discuss the direction of Project Atomic, its
+components, or have other questions.&lt;/p&gt;
+
+&lt;h3&gt;Getting Help&lt;/h3&gt;
+
+&lt;p&gt;If you run into any problems with the images or components, feel free
+to ask on the &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;centos-devel&lt;/a&gt; mailing list.&lt;/p&gt;
+
+&lt;p&gt;Have questions about using Atomic? See the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic"&gt;atomic&lt;/a&gt; mailing list
+or find us in the #atomic channel on Freenode.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>New CentOS Atomic Release and Kubernetes System Containers Now Available</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/09/new-centos-atomic-release-with-overlayfs/"/>
+    <id>http://www.projectatomic.io/blog/2017/09/new-centos-atomic-release-with-overlayfs/</id>
+    <published>2017-09-25T18:15:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;The CentOS Atomic SIG has &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;released an updated version&lt;/a&gt; of
+CentOS Atomic Host (7.1708), a lean operating system designed to run
+Linux containers, built from standard CentOS 7 RPMs, and tracking the
+component versions included in Red Hat Enterprise Linux Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;This release, which is &lt;a href="https://seven.centos.org/2017/08/centos-linux-7-1708-based-on-rhel-7-4-source-code/"&gt;based on the RHEL 7.4 source code&lt;/a&gt;,
+includes an updated kernel that supports overlayfs container storage,
+among other enhancements.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host includes these core component versions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;atomic-1.18.1-3.1.git0705b1b.el7.x86_64&lt;/li&gt;
+&lt;li&gt;cloud-init-0.7.9-9.el7.centos.2.x86_64&lt;/li&gt;
+&lt;li&gt;docker-1.12.6-48.git0fdc778.el7.centos.x86_64&lt;/li&gt;
+&lt;li&gt;etcd-3.1.9-2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;flannel-0.7.1-2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-3.10.0-693.2.2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-node-1.5.2-0.7.git269f928.el7.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-2017.7-1.el7.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-ostree-client-2017.6-6.atomic.el7.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;OverlayFS Storage&lt;/h3&gt;
+
+&lt;p&gt;In previous releases of CentOS Atomic Host, SELinux had to be in
+permissive or disabled mode for OverlayFS storage to work. Now you can
+run the OverlayFS file system with SELinux in enforcing mode. CentOS
+Atomic Host still defaults to devicemapper storage, but you can switch
+to OverlayFS using the following commands:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ systemctl stop docker
+$ atomic storage reset
+# Reallocate space to the root VG - tweak how much to your liking
+$ lvm lvextend -r -l +50%FREE atomicos/root
+$ atomic storage modify --driver overlay2
+$ systemctl start docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For more information on storage management options, see &lt;a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/managing_containers/#overlay_graph_driver"&gt;the
+RHEL documentation about container storage&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Containerized Master&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host ships without the kubernetes-master package built
+into the image. For information on how to run these kubernetes
+components as system containers, &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;consult the CentOS wiki&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you prefer to run Kubernetes from installed rpms, you can layer the
+master components onto your Atomic Host image using rpm-ostree package
+layering with the command: &lt;code&gt;atomic host install kubernetes-master -r&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Download CentOS Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted
+Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image.
+For links to media, &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;see the CentOS wiki&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;rsquo;re running a previous version of CentOS Atomic Host, you can
+upgrade to the current image by running the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo atomic host upgrade
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Release Cycle&lt;/h3&gt;
+
+&lt;p&gt;The CentOS Atomic Host image follows the upstream Red Hat Enterprise
+Linux Atomic Host cadence. After sources are released, they&amp;rsquo;re rebuilt
+and included in new images. After the images are tested by the SIG and
+deemed ready, we announce them.&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is produced by the &lt;a href="http://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS Atomic SIG&lt;/a&gt;, based on
+upstream work from Project Atomic. If
+you&amp;rsquo;d like to work on testing images, help with packaging,
+documentation &amp;mdash; join us!&lt;/p&gt;
+
+&lt;p&gt;The SIG meets every two weeks on Tuesday at 04:00 UTC in
+&lt;code&gt;#centos-devel&lt;/code&gt; on irc.freenode.net, and on the alternating weeks, meets as part of the
+Project Atomic community meeting at 16:00 UTC on Monday in the #atomic
+channel. You&amp;rsquo;ll often find us in #atomic and/or #centos-devel if you
+have questions. You can also join the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel mailing list&lt;/a&gt; if you&amp;rsquo;d like to discuss the direction of Project Atomic, its
+components, or have other questions.&lt;/p&gt;
+
+&lt;h3&gt;Getting Help&lt;/h3&gt;
+
+&lt;p&gt;If you run into any problems with the images or components, feel free
+to ask on the &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;centos-devel&lt;/a&gt; mailing list.&lt;/p&gt;
+
+&lt;p&gt;Have questions about using Atomic? See &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;the atomic mailing list&lt;/a&gt; 
+or find us in the #atomic channel on Freenode.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Last Week In Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/</id>
+    <published>2017-08-14T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Since Project Atomic has now spread out across several blogs and websites, this is the second of what will become regular updates on events and posts around the Atomic community.  This is also a useful catch-up for anyone who doesn&amp;rsquo;t have time to backfill on all of the individual blog posts.&lt;/p&gt;
+
+&lt;p&gt;This week includes kpod, vagrant-buildah, Fedora Atomic Host, CentOS Atomic Host, Kubernetes containers, and more.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;New Projects and Tools&lt;/h3&gt;
+
+&lt;p&gt;As a sub-project of CRI-O, that team has now &lt;a href="https://medium.com/cri-o/introducing-kpod-f06109b96374"&gt;announced development of the &lt;code&gt;kpod&lt;/code&gt; command&lt;/a&gt;.  &lt;code&gt;kpod&lt;/code&gt; is an administrative and troubleshooting tool for containers running on individual kubernetes nodes, especially if the docker daemon is not involved.  Current commands include &lt;a href="https://medium.com/cri-o/kpod-version-b9fd7175c730"&gt;version&lt;/a&gt;, &lt;a href="https://medium.com/cri-o/kpod-push-62bce8705c3f"&gt;push&lt;/a&gt;, and &lt;a href="https://medium.com/cri-o/kpod-pull-36765d2e5fb8"&gt;pull&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tyler Britten released some scripts for &lt;a href="https://github.com/vmtyler/vagrant-buildah"&gt;playing with Buildah on Windows or Mac&lt;/a&gt;, using Vagrant.&lt;/p&gt;
+
+&lt;h3&gt;Releases&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fedora released their &lt;a href="http://www.projectatomic.io/blog/2017/08/fedora-atomic-august-08/"&gt;August 8th Update for Fedora 26 Atomic&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;CentOS released &lt;a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"&gt;version 7.1707 of CentOS Atomic Host&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;The CentOS Virt SIG and Atomic SIG released &lt;a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"&gt;new Kubernetes system containers&lt;/a&gt; based on version 1.7.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Blog Posts&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dusty Mabe explained &lt;a href="https://dustymabe.com/2017/08/08/how-do-we-create-ostree-repos-and-artifacts-in-fedora/"&gt;how the Fedora OSTree repos get built&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Tom Sweeney blogged about &lt;a href="http://www.projectatomic.io/blog/2017/08/buildah-getting-fit/"&gt;using Buildah to create &lt;q&gt;fit&lt;/q&gt; images&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Joe Brockmeier lays out &lt;a href="http://rhelblog.redhat.com/2017/08/01/whats-new-in-red-hat-enterprise-linux-atomic-host-7-4/"&gt;what will be in RHEL Atomic 7.4&lt;/a&gt;, coming soon.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Events&lt;/h3&gt;
+
+&lt;p&gt;The Fedora Atomic WG will be participating heavily in the upcoming &lt;a href="https://flocktofedora.org/"&gt;Flock to Fedora&lt;/a&gt; conference.  This includes sessions on multi-architecture containers, becoming a container package maintainer, system containers, an Atomic Host documentation writeathon, and many more sessions.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://2017.container.camp/uk/speakers/michael-hausenblas/"&gt;ContainerCamp UK&lt;/a&gt; will feature Michael Hausenblas of the OpenShift team talking about Kubernetes backup.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://events.linuxfoundation.org/events/open-source-summit-north-america"&gt;OSS Summit NA&lt;/a&gt; will have an Atomic booth presence in the Red Hat pavillion. We could use booth volunteers if you love Atomic.  We will also have a &lt;a href="http://sched.co/BDpX"&gt;BOF on Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://events.linuxfoundation.org/events/cloudnativecon-and-kubecon-north-america"&gt;Kubecon US&lt;/a&gt; still has their CfP open.  Sumbit talks involving Atomic projects!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>New CentOS Atomic Release and Kubernetes System Containers Now Available</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/</id>
+    <published>2017-08-11T19:22:35+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Last week, the CentOS Atomic SIG released an &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;updated version&lt;/a&gt; of CentOS Atomic Host (7.1707), a lean operating system designed to run Docker containers, built from standard CentOS 7 RPMs, and tracking the component versions included in Red Hat Enterprise Linux Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;The release, which came as part of the monthly CentOS release stream, was a modest one, including only a single &lt;a href="https://lists.centos.org/pipermail/centos-announce/2017-July/022505.html"&gt;glibc bugfix update&lt;/a&gt;. The next Atomic Host release will be based on the &lt;a href="https://seven.centos.org/2017/08/centos-linux-7-1708-based-on-rhel-7-4-source-code/"&gt;RHEL 7.4 source code&lt;/a&gt; and will include support for overlayfs container storage, among other enhancements.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Outside of the Atomic Host itself, the SIG has updated its Kubernetes container images to be usable as &lt;a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;system containers&lt;/a&gt;. What&amp;rsquo;s more, in addition to the Kubernetes 1.5.x-based containers that derive from RHEL, the Atomic SIG is now producing packages and containers that provide the current 1.7.x version of Kubernetes.&lt;/p&gt;
+
+&lt;h3&gt;Containerized Master&lt;/h3&gt;
+
+&lt;p&gt;The downstream release of CentOS Atomic Host ships without the kubernetes-master package built into the image. You can install the master kubernetes components (apiserver, scheduler, and controller-manager) as system containers, using the following commands:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-apiserver registry.centos.org/centos/kubernetes-apiserver:latest&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-scheduler registry.centos.org/centos/kubernetes-scheduler:latest&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-controller-manager registry.centos.org/centos/kubernetes-controller-manager:latest&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Kubernetes 1.7.x&lt;/h3&gt;
+
+&lt;p&gt;The CentOS Virt SIG is now producing Kubernetes 1.7.x rpms, available through &lt;a href="https://github.com/CentOS/CentOS-Dockerfiles/blob/master/kubernetes-sig/master/virt7-container-common-candidate.repo"&gt;this yum repo&lt;/a&gt;. The Atomic SIG is maintaining system containers based on these rpms that can be installed as as follows:&lt;/p&gt;
+
+&lt;h4&gt;on your master&lt;/h4&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-apiserver registry.centos.org/centos/kubernetes-sig-apiserver:latest&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-scheduler registry.centos.org/centos/kubernetes-sig-scheduler:latest&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-controller-manager registry.centos.org/centos/kubernetes-sig-controller-manager:latest&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;on your node(s)&lt;/h4&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kubelet registry.centos.org/centos/kubernetes-sig-kubelet:latest&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-proxy registry.centos.org/centos/kubernetes-sig-proxy:latest&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Both the 1.5.x and 1.7.x sets of containers have been tested with the &lt;a href="https://github.com/kubernetes/contrib/tree/master/ansible"&gt;kubernetes ansible scripts&lt;/a&gt; provided in the upstream contrib repository, and function as drop-in replacements for the installed rpms. If you prefer to run Kubernetes from installed rpms, you can layer the master components onto your Atomic Host image using rpm-ostree package layering with the command: &lt;code&gt;atomic host install kubernetes-master&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The containers referenced in these systemd service files are built in and hosted from the &lt;a href="https://wiki.centos.org/ContainerPipeline"&gt;CentOS Community Container Pipeline&lt;/a&gt;, based on Dockerfiles from
+the &lt;a href="https://github.com/CentOS/CentOS-Dockerfiles/tree/master/kubernetes"&gt;CentOS-Dockerfiles repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Download CentOS Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image. For links to media, see the &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;CentOS wiki&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;rsquo;re running a previous version of CentOS Atomic Host, you can upgrade to the current image by running the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo atomic host upgrade
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Release Cycle&lt;/h3&gt;
+
+&lt;p&gt;The CentOS Atomic Host image follows the upstream Red Hat Enterprise Linux Atomic Host cadence. After sources are released, they&amp;rsquo;re rebuilt and included in new images. After the images are tested by the SIG and deemed ready, we announce them.&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is produced by the &lt;a href="http://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS Atomic SIG&lt;/a&gt;, based on upstream work from  &lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt;. If you&amp;rsquo;d like to work on testing images, help with packaging, documentation &amp;ndash; join us!&lt;/p&gt;
+
+&lt;p&gt;The SIG meets every two weeks on Tuesday at 04:00 UTC in #centos-devel, and on the alternating weeks, meets as part of the Project Atomic community meeting at 16:00 UTC on Monday in the #atomic channel. You&amp;rsquo;ll often find us in #atomic and/or #centos-devel if you have questions. You can also join the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt; mailing list if you&amp;rsquo;d like to discuss the direction of Project Atomic, its components, or have other questions.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>CentOS Atomic Host 1706 Release</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/07/centos-atomic-july-2017/"/>
+    <id>http://www.projectatomic.io/blog/2017/07/centos-atomic-july-2017/</id>
+    <published>2017-07-20T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;An updated version of &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download"&gt;CentOS Atomic Host&lt;/a&gt; (tree version 7.1706), is now
+available.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host includes these core component versions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;  atomic-1.17.2-9.git2760e30.el7.x86_64&lt;/li&gt;
+&lt;li&gt;  cloud-init-0.7.5-10.el7.centos.1.x86_64&lt;/li&gt;
+&lt;li&gt;  docker-1.12.6-32.git88a4867.el7.centos.x86_64&lt;/li&gt;
+&lt;li&gt;  etcd-3.1.9-1.el7.x86_64&lt;/li&gt;
+&lt;li&gt;  flannel-0.7.1-1.el7.x86_64&lt;/li&gt;
+&lt;li&gt;  kernel-3.10.0-514.26.2.el7.x86_64&lt;/li&gt;
+&lt;li&gt;  kubernetes-node-1.5.2-0.7.git269f928.el7.x86_64&lt;/li&gt;
+&lt;li&gt;  ostree-2017.5-3.el7.x86_64&lt;/li&gt;
+&lt;li&gt;  rpm-ostree-client-2017.5-1.atomic.el7.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted
+Vagrant box, or as an installable ISO, qcow2 or Amazon Machine image.
+These images are available for download at cloud.centos.org. The backing
+ostree repo is published to mirror.centos.org.&lt;/p&gt;
+
+&lt;h3&gt;Containerized kubernetes-master&lt;/h3&gt;
+
+&lt;p&gt;The downstream release of CentOS Atomic Host ships without the
+kubernetes-master package built into the image. Instead, you can run the
+master kubernetes components (apiserver, scheduler, and
+controller-manager) in containers, managed via systemd, using the
+service files and instructions on the CentOS wiki. The containers
+referenced in these systemd service files are built in and hosted from
+the CentOS Community Container Pipeline, based on Dockerfiles from the
+CentOS-Dockerfiles repository.&lt;/p&gt;
+
+&lt;p&gt;These containers have been tested with the kubernetes ansible scripts
+provided in the upstream contrib repository, and they work as expected,
+provided you first copy the service files onto your master.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, you can install the kubernetes-master components using
+rpm-ostree package layering using the command:
+atomic host install kubernetes-master.&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;rsquo;re running a previous version of CentOS Atomic Host, you can
+upgrade to the current image by running the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo atomic host upgrade
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Images&lt;/h3&gt;
+
+&lt;h4&gt;Vagrant&lt;/h4&gt;
+
+&lt;p&gt;CentOS-Atomic-Host-7-Vagrant-Libvirt.box and
+CentOS-Atomic-Host-7-Vagrant-Virtualbox.box are Vagrant boxes for
+Libvirt and Virtualbox providers.&lt;/p&gt;
+
+&lt;p&gt;The easiest way to consume these images is via the Atlas / Vagrant Cloud
+setup (see &lt;a href="https://atlas.hashicorp.com/centos/boxes/atomic-host"&gt;https://atlas.hashicorp.com/centos/boxes/atomic-host&lt;/a&gt;). For
+example, getting the VirtualBox instance up would involve running the
+following two commands on a machine with vagrant installed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;    $ vagrant init centos/atomic-host &amp;amp;&amp;amp; vagrant up --provider virtualbox
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;ISO&lt;/h4&gt;
+
+&lt;p&gt;The installer ISO can be used via regular install methods (PXE, CD, USB
+image, etc.) and uses the Anaconda installer to deliver the CentOS
+Atomic Host. This image allows users to control the install using
+kickstarts and to define custom storage, networking and user accounts.
+This is the recommended option for getting CentOS Atomic Host onto bare
+metal machines, or for generating your own image sets for custom
+environments.&lt;/p&gt;
+
+&lt;h4&gt;QCOW2&lt;/h4&gt;
+
+&lt;p&gt;The CentOS-Atomic-Host-7-GenericCloud.qcow2 image is suitable for use in
+on-premise and local virtualized environments. We test this on
+OpenStack, AWS and local Libvirt installs. If your virtualization
+platform does not provide its own cloud-init metadata source, you can
+create your own NoCloud iso image.&lt;/p&gt;
+
+&lt;h4&gt;Amazon Machine Images&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Region           Image ID
+---------------- --------------
+us-east-1        ami-70e8fd66
+ap-south-1       ami-c0c4bdaf
+eu-west-2        ami-dba8bebf
+eu-west-1        ami-42b6593b
+ap-northeast-2   ami-7b5e8015
+ap-northeast-1   ami-597a9e3f
+sa-east-1        ami-95aedaf9
+ca-central-1     ami-473e8123
+ap-southeast-1   ami-93b425f0
+ap-southeast-2   ami-e1332f82
+eu-central-1     ami-e95ffd86
+us-east-2        ami-1690b173
+us-west-1        ami-189fb178
+us-west-2        ami-a52a34dc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;SHA Sums&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;f854d6ea3fd63b887d644b1a5642607450826bbb19a5e5863b673936790fb4a4
+CentOS-Atomic-Host-7.1706-GenericCloud.qcow2
+9e35d7933f5f36f9615dccdde1469fcbf75d00a77b327bdeee3dbcd9fe2dd7ac
+CentOS-Atomic-Host-7.1706-GenericCloud.qcow2.gz
+836a27ff7f459089796ccd6cf02fcafd0d205935128acbb8f71fb87f4edb6f6e
+CentOS-Atomic-Host-7.1706-GenericCloud.qcow2.xz
+e15dded673f21e094ecc13d498bf9d3f8cf8653282cd1c83e5d163ce47bc5c4f
+CentOS-Atomic-Host-7.1706-Installer.iso
+5266a753fa12c957751b5abba68e6145711c73663905cdb30a81cd82bb906457
+CentOS-Atomic-Host-7.1706-Vagrant-Libvirt.box
+b85c51420de9099f8e1e93f033572f28efbd88edd9d0823c1b9bafa4216210fd
+CentOS-Atomic-Host-7.1706-Vagrant-VirtualBox.box
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Release Cycle&lt;/h3&gt;
+
+&lt;p&gt;The CentOS Atomic Host image follows the upstream Red Hat Enterprise
+Linux Atomic Host cadence. After sources are released, they&amp;rsquo;re rebuilt
+and included in new images. After the images are tested by the SIG and
+deemed ready, we announce them.&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;CentOS Atomic Host is produced by the CentOS Atomic SIG, based on
+upstream work from Project Atomic. If you&amp;rsquo;d like to work on testing
+images, help with packaging, documentation &amp;ndash; join us!&lt;/p&gt;
+
+&lt;p&gt;The SIG meets weekly on Thursdays at 16:00 UTC in the #centos-devel
+channel, and you&amp;rsquo;ll often find us in #atomic and/or #centos-devel if you
+have questions. You can also join the atomic-devel mailing list if you&amp;rsquo;d
+like to discuss the direction of Project Atomic, its components, or have
+other questions.&lt;/p&gt;
+
+&lt;h3&gt;Getting Help&lt;/h3&gt;
+
+&lt;p&gt;If you run into any problems with the images or components, feel free to
+ask on the centos-devel mailing list.&lt;/p&gt;
+
+&lt;p&gt;Have questions about using Atomic? See the atomic mailing list or find
+us in the #atomic channel on Freenode.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

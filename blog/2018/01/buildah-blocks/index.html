@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Buildah Blocks - OCI Shell Game &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Tom Sweeney' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Buildah Blocks - OCI Shell Game' property='og:title'>
+<meta content='I’ve always been fascinated by the three shells and a pea game that street hustlers have used for years to make a bit of coin. I love watching a talented person running the game, but I know better than to bet on it! However, playing the game with Buildah leads to everyone being a winner.&#x000A;&#x000A;I had a bit of time to play, so I tried out a variant of the shell game with Open Containers Initiative (OCI) containers. I made a quick example showing how you can create an OCI image with Buildah, saved the image to a repository on Docker Hub and then used both Docker and Buildah to run that  image from Docker Hub. Nothing terribly fancy, but the video does illustrate that Buildah is OCI-compliant and the images it creates can be used by other OCI-compliant technologies.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/01/buildah-blocks/' property='og:url'>
+<meta content='2018-01-16T00:00:00Z' property='article:published_time'>
+<meta content='tsweeney' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Buildah Blocks - OCI Shell Game' name='twitter:title'>
+<meta content='I’ve always been fascinated by the three shells and a pea game that street hustlers have used for years to make a bit of coin. I love watching a talented person running the game, but I know better than to bet on it! However, playing the game with Buildah leads to everyone being a winner.&#x000A;&#x000A;I had a bit of time to play, so I tried out a variant of the shell game with Open Containers Initiative (OCI) containers. I made a quick example showing how you can create an OCI image with Buildah, saved the image to a repository on Docker Hub and then used both Docker and Buildah to run that  image from Docker Hub. Nothing terribly fancy, but the video does illustrate that Buildah is OCI-compliant and the images it creates can be used by other OCI-compliant technologies.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_01 blog_2018_01_buildah-blocks blog_2018_01_buildah-blocks_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Buildah Blocks - OCI Shell Game
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/tsweeney/">Tom Sweeney</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-16T00:00:00Z'>
+Tuesday 16 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I’ve always been fascinated by the <a href="https://en.wikipedia.org/wiki/Shell_game">three shells and a pea game</a> that street hustlers have used for years to make a bit of coin. I love watching a talented person running the game, but I know better than to bet on it! However, playing the game with <a href="https://github.com/projectatomic/buildah">Buildah</a> leads to everyone being a winner.</p>
+
+<p>I had a bit of time to play, so I tried out a variant of the shell game with Open Containers Initiative (OCI) containers. I made a quick example showing how you can create an OCI image with Buildah, saved the image to a repository on Docker Hub and then used both Docker and Buildah to run that  image from Docker Hub. Nothing terribly fancy, but the video does illustrate that Buildah is OCI-compliant and the images it creates can be used by other OCI-compliant technologies.</p>
+
+<p></p>
+
+<p>The <a href="https://asciinema.org/a/biE5aEvLRJK6uMBwd106eB7S1">demo</a> was recorded on a Fedora 27 virtual machine that was installed and then updated on December 23, 2017.  I decided to <q>leverage</q> William Henry’s <a href="https://github.com/projectatomic/buildah/blob/master/docs/tutorials/tutorials.md">Buildah Tutorial #1</a> a bit to create a Dockerfile that runs his <code>runecho.sh</code> file. Prior to the video, I did the following on the virtual machine:</p>
+<pre class="highlight plaintext"><code># dnf install -y docker buildah&#x000A;# dnf update -y&#x000A;# systemctl start docker&#x000A;</code></pre>
+
+<p>I also created a Dockerfile with these contents:</p>
+<pre class="highlight plaintext"><code>FROM alpine&#x000A;ADD runecho.sh /usr/bin&#x000A;CMD ["/bin/sh", "/usr/bin/runecho.sh"]&#x000A;</code></pre>
+
+<p>In the same directory I created <code>runecho.sh</code> with these contents:</p>
+<pre class="highlight shell"><code><span class="c">#!/bin/bash</span>&#x000A;<span class="k">for </span>i <span class="k">in</span> <span class="sb">`</span>seq 0 9<span class="sb">`</span>;&#x000A;<span class="k">do&#x000A;    </span><span class="nb">echo</span> <span class="s2">"This is a new container from ipbabble ["</span> <span class="nv">$i</span> <span class="s2">"]"</span>&#x000A;<span class="k">done</span>&#x000A;</code></pre>
+
+<p>I then modified the privileges on <code>runecho.sh</code> with:</p>
+<pre class="highlight plaintext"><code># chmod +x runecho.sh&#x000A;</code></pre>
+
+<p>The <a href="https://asciinema.org/a/biE5aEvLRJK6uMBwd106eB7S1">demo</a> shows an image built by Buildah being placed on Docker Hub and then run by both Docker and Buildah from there.  I’ve included the commands used in the video at the bottom of this blog.  I will note that Red Hat is currently developing <a href="https://github.com/projectatomic/libpod">Podman</a>. Once that is fully developed, the <code>podman run</code> command will be the suggested way to run your container; the Buildah variant of that command will be positioned for quick testing purposes.</p>
+
+<p>I hope that you enjoyed the video and this article gives you a little more information on the Buildah project. Buildah is an Open Source project and contributors are always welcome. We’d love to see you there!</p>
+
+<p>Buildah == Simplicity</p>
+
+<p>Commands used in the video for your perusal:</p>
+<pre class="highlight plaintext"><code>docker --version&#x000A;buildah --version&#x000A;docker login docker.io&#x000A;buildah bud -t echo .&#x000A;buildah push echo docker.io/tomsweeneyredhat/blog:echo&#x000A;docker run docker.io/tomsweeneyredhat/blog:echo&#x000A;buildah images&#x000A;docker images&#x000A;buildah from docker.io/tomsweeneyredhat/blog:echo --name echo&#x000A;buildah run echo&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/01/buildah-blocks/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/01/buildah-blocks/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/01/buildah-blocks/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

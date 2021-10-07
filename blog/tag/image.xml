@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Image</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/image.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic Docker Hub Namespace Changes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/12/project-atomic-docker-hub-namespace-changes/"/>
+    <id>http://www.projectatomic.io/blog/2017/12/project-atomic-docker-hub-namespace-changes/</id>
+    <published>2017-12-20T10:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stephen Milner</name>
+    </author>
+    <content type="html">&lt;p&gt;As many people are aware the Project Atomic team has provided container images via its &lt;a href="https://hub.docker.com/u/projectatomic/"&gt;Docker Hub namespace&lt;/a&gt;. As more and more image registries come online it has become apparent that it is time to refocus how our Docker Hub namespace is used. Read on for a rundown of upcoming changes!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Pruning&lt;/h3&gt;
+
+&lt;p&gt;The first change to the namespace will be image pruning. Today there are 18 images that are available in the namespace. Images which are not being actively built and pulled will be removed from the Project Atomic namespace. By removing older and no longer used images from the registry it should be easier to follow what images are in development.&lt;/p&gt;
+
+&lt;h3&gt;Automated Building&lt;/h3&gt;
+
+&lt;p&gt;New images, as well as images which are currently active, will start to be built upon source code changes. This means that images provided in the Project Atomic namespace will represent the master branch in source control. This change will allow users to pull the latest images to test and play with without the need to rebuild locally. It also means that the images available in the Project Atomic Docker Hub namespace will be &lt;strong&gt;bleeding edge&lt;/strong&gt; and should be considered similar to rpm packages in Rawhide. If you are wanting to use a supported image you should use an official image.&lt;/p&gt;
+
+&lt;h3&gt;System Container Inclusion&lt;/h3&gt;
+
+&lt;p&gt;Bleeding edge &lt;a href="https://github.com/projectatomic/atomic-system-containers/"&gt;System Containers&lt;/a&gt; will be moved from their respective authors namespaces in to the Project Atomic namespace. As an example, Giuseppe Scrivano&amp;rsquo;s &lt;a href="https://hub.docker.com/r/gscrivano/etcd/"&gt;etcd System Container&lt;/a&gt; will be moved to &lt;a href="https://hub.docker.com/u/projectatomic/"&gt;Project Atomic&amp;rsquo;s Namespace&lt;/a&gt;. Not only does this widen the ability for other members of Project Atomic to update the image in the namespace but it also firmly cements it as an image developed by the team.&lt;/p&gt;
+
+&lt;h3&gt;Official Images&lt;/h3&gt;
+
+&lt;p&gt;Officially released images will be available in their respective registries. As an example, the &lt;code&gt;etcd&lt;/code&gt; system container built on Fedora and supported by said community will be available through the Fedora Layered Image Builds System (FLIBS).&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Hopefully these changes will make using images which are in development and fast moving easier to test, play with, and develop. As always, if there are questions drop in to the #atomic on Freenode or send an email to our mailing list!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

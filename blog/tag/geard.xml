@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Gear D</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/geard.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Why Project Atomic?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/04/why-project-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2014/04/why-project-atomic/</id>
+    <published>2014-04-16T17:25:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;The response to the Project Atomic launch has been overwhelming, and we&amp;rsquo;re getting a lot of interest &amp;ndash; and &lt;a href="http://ask.projectatomic.io/en/questions/"&gt;questions&lt;/a&gt; &amp;ndash; about the project. In particular, many developers and admins want to know what sets Atomic apart from other Docker-focused offerings. &lt;/p&gt;
+
+&lt;h3&gt;A Distribution You Know and Trust&lt;/h3&gt;
+
+&lt;p&gt;One of the most compelling reasons for users of Fedora, CentOS, and Red Hat Enterprise Linux is that the Atomic host &lt;em&gt;brings the advantages of its base distribution&lt;/em&gt;. &lt;/p&gt;
+
+&lt;p&gt;The packages are used to create an Atomic host bring the same advantages of the base distribution &amp;ndash; you get the base features you&amp;rsquo;d get with Fedora, CentOS, or RHEL (like SELinux, filesystem options, kernel tuning, and so forth). For RHEL customers, there&amp;rsquo;s also the certification and training ecosystem you can rely on with Red Hat Enterprise Linux Atomic Host. &lt;/p&gt;
+
+&lt;p&gt;Tools like Anaconda, which many admins and developers depend on for deploying and managing systems, will be available with Atomic hosts. This means Kickstart support, for instance, carries forward with Atomic hosts.&lt;/p&gt;
+
+&lt;h3&gt;RPM Ecosystem&lt;/h3&gt;
+
+&lt;p&gt;Because Atomic hosts are built with rpm-ostree, they benefit from the RPM ecosystem and will let projects and vendors distribute updates concurrently with the mainline distribution. So, for instance, when Fedora sends out an OpenSSL update the same RPMs used to deliver the update to users of the traditional Fedora distribution can be quickly used to generate a new tree for Atomic users. &lt;/p&gt;
+
+&lt;p&gt;What&amp;rsquo;s more, users will have the ability to roll back updates when necessary.&lt;/p&gt;
+
+&lt;p&gt;Want to roll your own custom Atomic hosts? Want to do something crazy like including GNU Emacs on the Atomic Host? You can use the rpm-ostree technology to do just that.&lt;/p&gt;
+
+&lt;h3&gt;GearD Support&lt;/h3&gt;
+
+&lt;p&gt;A major feature that will be integrated into Atomic hosts is &lt;a href="http://openshift.github.io/geard/"&gt;GearD&lt;/a&gt;, technology we&amp;rsquo;ve pulled in from the OpenShift Origin project, which helps bind systemd and Docker to make containers easier to configure and manage. &lt;/p&gt;
+
+&lt;h3&gt;Cockpit Support&lt;/h3&gt;
+
+&lt;p&gt;Finally, Atomic hosts feature &lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt;, a server manager that makes managing hosts, services, and containers easier. Cockpit is also coming to Fedora, CentOS, and RHEL, giving you another standard tool to work with for all of your systems.&lt;/p&gt;
+
+&lt;h3&gt;We&amp;rsquo;re Open&lt;/h3&gt;
+
+&lt;p&gt;We are excited to show this work to the larger community, and to invite you to not only use Atomic &amp;ndash; but we&amp;rsquo;re also excited about working with the larger community to make Atomic hosts the best way to run Docker containers. Join our &lt;a href="http://www.projectatomic.io/community/"&gt;developer community&lt;/a&gt;, and let&amp;rsquo;s make Atomic even better.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

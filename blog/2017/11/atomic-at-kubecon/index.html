@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic and Friends at KubeCon &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic and Friends at KubeCon' property='og:title'>
+<meta content='Going to KubeCon?  Contributors from Project Atomic, OpenShift Origin, and other related projects will be all over the conference, including talks, salons, and a whole schedule of back-to-back demos in the Red Hat booth. Read on for details on what to see at Kubecon.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/' property='og:url'>
+<meta content='2017-11-29T18:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Atomic Host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='CRI-O' property='article:tag'>
+<link href='/blog/tag/cri-o.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='events' property='article:tag'>
+<link href='/blog/tag/events.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='KubeVirt' property='article:tag'>
+<link href='/blog/tag/kubevirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic and Friends at KubeCon' name='twitter:title'>
+<meta content='Going to KubeCon?  Contributors from Project Atomic, OpenShift Origin, and other related projects will be all over the conference, including talks, salons, and a whole schedule of back-to-back demos in the Red Hat booth. Read on for details on what to see at Kubecon.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_11 blog_2017_11_atomic-at-kubecon blog_2017_11_atomic-at-kubecon_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic and Friends at KubeCon
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-11-29T18:00:00Z'>
+Wednesday 29 November 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Going to KubeCon?  Contributors from Project Atomic, OpenShift Origin, and other related projects will be all over the conference, including talks, salons, and a whole schedule of back-to-back demos in the Red Hat booth. Read on for details on what to see at Kubecon.</p>
+
+<p></p>
+
+<p>The week kicks off with <a href="http://openshiftgathering.com/openshiftgathering/austin">OpenShift Commons</a>, including <q>The State of the Container Ecosystem</q> with Dan Walsh and Mrunal Patel, and <q>OpenShift on AWS</q> by Fedora Atomic contributor David Duncan.  As of this post, registration is still open.</p>
+
+<p>Mrunal Patel is then <a href="https://kccncna17.sched.com/event/CU6T/cri-o-all-the-runtime-kubernetes-needs-and-nothing-more-mrunal-patel-red-hat">explaining CRI-O</a> during the main conference, and there&rsquo;s a <a href="https://kccncna17.sched.com/event/CU8j/cri-o-hosted-by-daniel-walsh-red-hat">CRI-O BOF</a>.  Clayton Coleman is keynoting about &ldquo;<a href="https://kccncna17.sched.com/event/CUEB/keynote-red-hat-making-containers-boring-again-clayton-coleman-architect-kubernetes-and-openshift-red-hat">Making containers boring</a>.&rdquo;  Fabian Deutsch of KubeVirt is hosting a salon on <a href="https://kccncna17.sched.com/event/CU8m/virtualizing-workloads-on-kubernetes-hosted-by-fabian-deutsch-red-hat">virtualization in Kubernetes</a>.  Plus lots of other interesting sessions.</p>
+
+<p>Then there&rsquo;s the main action, in the Red Hat Booth on the show floor.  We&rsquo;ll have back-to-back demos in the mini-theater all conference long, so that you can see lots of cool technology without ever leaving the show floor.  Here&rsquo;s a full schedule for you to track what&rsquo;s going on; most demos will be given twice.  </p>
+
+<table class="waffle" cellspacing="2" cellpadding="2"><tbody>
+<tr style='height:16px;'><td><strong>Start Time</strong></td><td><strong>Topic</strong></td><td><strong>Speaker</strong></td></tr>
+<tr style='height:16px;'><td class="s1" dir="ltr" colspan="3"><strong>Wednesday</strong></td></tr>
+<tr style='height:16px;'><td>11:00:00 AM</td><td>MiniShift Hands-On</td><td>Adam Miller</td></tr>
+<tr style='height:16px;'><td>11:30:00 AM</td><td>Live Hot Security Patching on OpenShift</td><td>Ryan Jarvinen</td></tr>
+<tr style='height:16px;'><td>12:00:00 PM</td><td>System containers</td><td>Jason Brooks</td></tr>
+<tr style='height:16px;'><td>12:30:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>01:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>01:30:00 PM</td><td>Container Native Storage</td><td>Jose Rivera</td></tr>
+<tr style='height:16px;'><td>02:00:00 PM</td><td>ManageIQ-for-Kubernetes</td><td>Federico Simoncelli</td></tr>
+<tr style='height:16px;'><td>02:30:00 PM</td><td>CI/CD Flow</td><td>Mauricio &ldquo;Maltron&rdquo; Leal</td></tr>
+<tr style='height:16px;'><td>03:00:00 PM</td><td>OpenShift Native Postgres</td><td>Josh Berkus</td></tr>
+<tr style='height:16px;'><td>03:30:00 PM</td><td>OpenShift On Multi-Architecture Clusters</td><td>Jason DeTiberus</td></tr>
+<tr style='height:16px;'><td>04:00:00 PM</td><td>OpenShift On Multi-Architecture Clusters</td><td>Jason DeTiberus</td></tr>
+<tr style='height:16px;'><td>04:30:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>05:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td class="s1" dir="ltr" colspan="3"><strong>Wednesday Evening Booth Crawl</strong></td></tr>
+<tr style='height:16px;'><td>06:45:00 PM</td><td>New Container Tools</td><td>Dan Walsh</td></tr>
+<tr style='height:16px;'><td>07:30:00 PM</td><td>KubeVirt</td><td class="s3" dir="ltr">Fabian Deutch</td></tr>
+<tr style='height:16px;'><td class="s1" dir="ltr" colspan="3"><strong>Thursday</strong></td></tr>
+<tr style='height:16px;'><td>10:30:00 AM</td><td>CI/CD Flow</td><td>Mauricio &ldquo;Maltron&rdquo; Leal</td></tr>
+<tr style='height:16px;'><td>11:00:00 AM</td><td>CRI-O</td><td>Mrunal Patel</td></tr>
+<tr style='height:16px;'><td>11:30:00 AM</td><td class="s3" dir="ltr">OpenShift Developer Workflow</td><td>Ryan Jarvinen</td></tr>
+<tr style='height:16px;'><td>12:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>12:30:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>01:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>01:30:00 PM</td><td>MiniShift Hands-On</td><td>Adam Miller</td></tr>
+<tr style='height:16px;'><td>02:00:00 PM</td><td>OpenShift Native Postgres</td><td>Josh Berkus</td></tr>
+<tr style='height:16px;'><td>02:30:00 PM</td><td>System containers</td><td>Jason Brooks</td></tr>
+<tr style='height:16px;'><td>03:00:00 PM</td><td>KubeVirt</td><td class="s3" dir="ltr">Fabian Deutch</td></tr>
+<tr style='height:16px;'><td>03:30:00 PM</td><td>Container Native Storage</td><td>Jose Rivera</td></tr>
+<tr style='height:16px;'><td>04:00:00 PM</td><td>ManageIQ-for-Kubernetes</td><td>Federico Simoncelli</td></tr>
+<tr style='height:16px;'><td>04:30:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>05:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td class="s1" dir="ltr" colspan="3"><strong>Friday</strong></td></tr>
+<tr style='height:16px;'><td>10:30:00 AM</td><td>OpenShift On Multi-Architecture Clusters</td><td>Jason DeTiberus</td></tr>
+<tr style='height:16px;'><td>11:00:00 AM</td><td>OpenShift On Multi-Architecture Clusters</td><td>Jason DeTiberus</td></tr>
+<tr style='height:16px;'><td>11:30:00 AM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>12:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>12:30:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>01:00:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr>
+<tr style='height:16px;'><td>01:30:00 PM</td><td>OpenShift Self-paced Lab</td><td>OpenShift Team</td></tr></tbody></table>
+
+<p>See you at KubeCon!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">Atomic Host</a></li>
+<li><a href="/blog/tag/cri-o/">CRI-O</a></li>
+<li><a href="/blog/tag/events/">events</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/kubevirt/">KubeVirt</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

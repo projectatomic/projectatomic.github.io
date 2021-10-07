@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora Atomic Host Available in DigitalOcean &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora Atomic Host Available in DigitalOcean' property='og:title'>
+<meta content='With the latest release&#x000A;of Fedora Atomic Host we are now live in&#x000A;DigitalOcean! This was a popular user&#x000A;request.&#x000A;Thanks to the folks at DigitalOcean and the&#x000A;Fedora Atomic Working Group, we now have Fedora Atomic Host as an&#x000A;option when creating a droplet. Go ahead and spin up a droplet in the&#x000A;web interface or via the doctl&#x000A;CLI today!' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/04/fedora-atomic-digitalocean/' property='og:url'>
+<meta content='2017-04-27T19:30:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='cloud' property='article:tag'>
+<link href='/blog/tag/cloud.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora Atomic Host Available in DigitalOcean' name='twitter:title'>
+<meta content='With the latest release&#x000A;of Fedora Atomic Host we are now live in&#x000A;DigitalOcean! This was a popular user&#x000A;request.&#x000A;Thanks to the folks at DigitalOcean and the&#x000A;Fedora Atomic Working Group, we now have Fedora Atomic Host as an&#x000A;option when creating a droplet. Go ahead and spin up a droplet in the&#x000A;web interface or via the doctl&#x000A;CLI today!' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_04 blog_2017_04_fedora-atomic-digitalocean blog_2017_04_fedora-atomic-digitalocean_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora Atomic Host Available in DigitalOcean
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-04-27T19:30:00Z'>
+Thursday 27 April 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With the <a href="http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr27/">latest release</a>
+of Fedora Atomic Host we are now live in
+<a href="https://www.digitalocean.com/">DigitalOcean</a>! This was a popular <a href="https://digitalocean.uservoice.com/forums/136585-digitalocean/suggestions/5984177-project-atomic-docker-centos-fedora-scalab">user
+request</a>.
+Thanks to the folks at DigitalOcean and the
+<a href="https://pagure.io/atomic-wg/">Fedora Atomic Working Group</a>, we now have Fedora Atomic Host as an
+option when creating a droplet. Go ahead and spin up a droplet in the
+web interface or via the <a href="https://github.com/digitalocean/doctl">doctl</a>
+CLI today!</p>
+
+<p></p>
+
+<h3>Important Notes</h3>
+
+<p>A few things to note:</p>
+
+<ul>
+<li>  Usually Fedora Atomic images have you log in as user <em>fedora</em>. But,
+as with other DigitalOcean images, <strong>log into the Fedora 25
+DigitalOcean cloud image with your ssh key as the <code>root</code> user</strong>.</li>
+<li>  In these images there&rsquo;s <strong>no firewall on by default</strong>. There&rsquo;s also
+<strong>no cloud provided firewall solution</strong>. We recommend that you
+secure your system immediately after you log in.</li>
+<li>  Fedora Atomic Host should be <strong>available in all datacenters</strong> across
+the globe.</li>
+<li>  If you have a problem with these images then drop us an email at
+<a href="mailto:atomic-devel@projectatomic.io">atomic-devel@projectatomic.io</a>, or ping us in
+<a href="https://webchat.freenode.net/?channels=#atomic">#atomic</a> on
+Freenode.</li>
+</ul>
+
+<h3>Preparing to Launch a Droplet</h3>
+
+<p>In order to secure our system let&rsquo;s create some <code>user-data</code> that will
+instruct cloud-init to enable the default system firewall on bringup.
+This default firewall basically blocks everything but ssh:</p>
+<pre class="highlight plaintext"><code>#cloud-config&#x000A;bootcmd:&#x000A;  - systemctl enable iptables --now&#x000A;</code></pre>
+
+<p>Later, we will have more complete instructions on setting up iptables with the correct ports for Kubernetes or OpenShift.  If you are in the right datacenter region, we also recommend setting up <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-use-digitalocean-private-networking">Private Networking</a> for your Atomic cluster.</p>
+
+<h3>Getting Started with the Web UI</h3>
+
+<p>You can create a Fedora 25 Atomic instance just like you can any other
+droplet within DigitalOcean. On the <strong>Create Droplets</strong> page we can
+select <code>25 x64 Atomic</code>:</p>
+
+<p><img alt="image" width="921" height="393" src="/images/2017-04-27_select-fedora-atomic.png?1633620578" /></p>
+
+<p>Then, after selecting <code>size</code> and <code>region</code>, we can populate the user-data
+in the <code>Select additional options</code> section:</p>
+
+<p><img alt="image" width="925" height="186" src="/images/2017-04-27_cloud-init-user-data.png?1633620578" /></p>
+
+<p>After that we can go ahead and create the Droplet. Once it is up and
+running we have a nice little status that shows us the IP address of the
+machine:</p>
+
+<p><img alt="image" width="919" height="173" src="/images/2017-04-27_droplet-created.png?1633620578" /></p>
+
+<p>And finally we should be able to access our droplet:</p>
+<pre class="highlight plaintext"><code>$ ssh root@162.243.26.249&#x000A;Warning: Permanently added '162.243.26.249' (ECDSA) to the list of known hosts.&#x000A;[root@fedora-2gb-nyc2-01 ~]#&#x000A;[root@fedora-2gb-nyc2-01 ~]# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;             Version: 25.113 (2017-04-25 01:47:29)&#x000A;              Commit: 3492546bc1ef6bca1bc7801ed6bb041 ...&#x000A;              OSName: fedora-atomic&#x000A;</code></pre>
+
+<h3>Getting Started with the CLI</h3>
+
+<p>In addition to the Web UI, DigitalOcean has provided a tool for managing
+droplets from the command line, known as
+<a href="https://github.com/digitalocean/doctl">doctl</a>. You can grab the <code>doctl</code>
+binary from the <a href="https://github.com/digitalocean/doctl/releases">releases
+page</a> on GitHub and
+interact with the API. In order to do this you need to <a href="https://cloud.digitalocean.com/settings/api/tokens">generate an API
+token</a>. One way to
+use this token is by setting the <code>DIGITALOCEAN_ACCESS_TOKEN</code> environment
+variable to the value of the token.</p>
+
+<p><strong>Note</strong> DigitalOcean has provided a full tutorial on using doctl
+<a href="https://www.digitalocean.com/community/tutorials/how-to-use-doctl-the-official-digitalocean-command-line-client">here</a>.</p>
+
+<p>First we&rsquo;ll set the access token and retrieve the fingerprint for our
+ssh key we use within DigitalOcean:</p>
+<pre class="highlight plaintext"><code>$ export DIGITALOCEAN_ACCESS_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ...&#x000A;$ doctl compute ssh-key list&#x000A;ID       Name     FingerPrint&#x000A;84000    Ocean    xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx&#x000A;</code></pre>
+
+<p>Next we&rsquo;ll create a file with the contents of the user-data we
+determined in the previous section:</p>
+<pre class="highlight plaintext"><code>$ cat &lt;&lt;EOF &gt; ./user-data.txt&#x000A;#cloud-config&#x000A;bootcmd:&#x000A;  - systemctl enable iptables --now&#x000A;EOF&#x000A;</code></pre>
+
+<p>Now we can spin up the droplet based off the <code>fedora-25-x64-atomic</code>
+image. We&rsquo;ll name it <code>atomicdroplet</code>:</p>
+<pre class="highlight plaintext"><code>$ doctl compute droplet create --image fedora-25-x64-atomic \&#x000A;  --region nyc3 --size 4gb \&#x000A;  --ssh-keys xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx \&#x000A;  --user-data-file ./user-data.txt atomicdroplet&#x000A;ID          Name             Public IPv4    Private IPv4    Public IPv6    Memory    VCPUs    Disk    Region    Image                   Status    Tags&#x000A;47047971    atomicdroplet                                                  4096      2        60      nyc3      Fedora 25 x64 Atomic    new&#x000A;</code></pre>
+
+<p>Next we&rsquo;ll query the API again to see the status and to see what the IP
+address is set to:</p>
+<pre class="highlight plaintext"><code>$ doctl compute droplet list&#x000A;ID          Name             Public IPv4       Private IPv4    Public IPv6    Memory    VCPUs    Disk    Region    Image                   Status    Tags&#x000A;47047971    atomicdroplet    159.203.94.102                                   4096      2        60      nyc3      Fedora 25 x64 Atomic    active&#x000A;</code></pre>
+
+<p>And on to accessing the droplet:</p>
+<pre class="highlight plaintext"><code>$ ssh root@159.203.94.102&#x000A;[root@atomicdroplet ~]# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;             Version: 25.113 (2017-04-25 01:47:29)&#x000A;              Commit: 3492546bc1ef6bca1bc7801ed6bb0414f90 ...&#x000A;              OSName: fedora-atomic&#x000A;</code></pre>
+
+<h3>And Beyond</h3>
+
+<p>Now that you have a Fedora Atomic Host droplet you can explore the world
+of containers by either running individual containers by hand or by
+utilizing a more advanced platform for container orchestration and
+life-cycle management. There are some docs on <a href="http://www.projectatomic.io/docs">projectatomic.io</a> which can
+help get you started.  </p>
+
+<p>We&rsquo;ll add DigitalOcean to <a href="https://getfedora.org/en/atomic/download/">getfedora.org</a> as soon as we can.</p>
+
+<h3>Thanks</h3>
+
+<p>A special thanks to Ben Howard
+(<a href="https://twitter.com/utlemming">@utlemming</a>) from the DigitalOcean team
+as well as Lars Kellogg-Stedman (<a href="https://twitter.com/larsks">@larsks</a>)
+from the Fedora Community for helping us
+<a href="https://bugs.launchpad.net/cloud-init/+bug/1669504">find</a>
+<a href="https://bugs.launchpad.net/cloud-init/+bug/1670052">and</a>
+<a href="https://bugs.launchpad.net/cloud-init/+bug/1665441">fix</a>
+<a href="https://cgit.freedesktop.org/NetworkManager/NetworkManager/commit/?id=3cc00dd550fcbd83ec2f1af9eeb83bf5ec921d21">many</a>
+<a href="https://cgit.freedesktop.org/NetworkManager/NetworkManager/commit/?id=a8f0d88596d8dd2b807a7b0adee272c4f077dad">bugs</a>
+in order to better support cloud-init static networking and ifcfg file
+support within NetworkManager.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/cloud/">cloud</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/04/fedora-atomic-digitalocean/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/04/fedora-atomic-digitalocean/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/04/fedora-atomic-digitalocean/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

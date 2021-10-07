@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Why The Operating System Will Never Die &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brian Proffitt' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Why The Operating System Will Never Die' property='og:title'>
+<meta content='A strange thing is going on in IT these days, an unintentional fake out that on the surface could lead people to wonder if operating systems are becoming more and more irrelevant–when actually the opposite is going on.&#x000A;&#x000A;In 2011, I addressed this topic from the perspective of the desktop, arguing that while the software as a service (SaaS) way of doing things would seem to suggest that applications that run in the browser don’t really need to care about the desktop operating system, the then-rising app-store model of application deployment made the choice of operating system all the more important. Native apps installed on operating systems kept the notion of operating systems alive (even if those apps were merely tricked-up portals to the same web services to which a browser could link).' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/05/why-the-operating-system-will-never-die/' property='og:url'>
+<meta content='2014-05-23T14:35:00Z' property='article:published_time'>
+<meta content='bkp' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Enterprise' property='article:tag'>
+<link href='/blog/tag/enterprise.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OpenShift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='RHEL' property='article:tag'>
+<link href='/blog/tag/rhel.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Why The Operating System Will Never Die' name='twitter:title'>
+<meta content='A strange thing is going on in IT these days, an unintentional fake out that on the surface could lead people to wonder if operating systems are becoming more and more irrelevant–when actually the opposite is going on.&#x000A;&#x000A;In 2011, I addressed this topic from the perspective of the desktop, arguing that while the software as a service (SaaS) way of doing things would seem to suggest that applications that run in the browser don’t really need to care about the desktop operating system, the then-rising app-store model of application deployment made the choice of operating system all the more important. Native apps installed on operating systems kept the notion of operating systems alive (even if those apps were merely tricked-up portals to the same web services to which a browser could link).' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_05 blog_2014_05_why-the-operating-system-will-never-die blog_2014_05_why-the-operating-system-will-never-die_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Why The Operating System Will Never Die
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bkp/">Brian Proffitt</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-05-23T14:35:00Z'>
+Friday 23 May 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A strange thing is going on in IT these days, an unintentional fake out that on the surface could lead people to wonder if operating systems are becoming more and more irrelevant&ndash;when actually the opposite is going on.</p>
+
+<p>In 2011, I <a href="http://www.itworld.com/it-managementstrategy/230479/return-operating-system">addressed this topic from the perspective of the desktop</a>, arguing that while the software as a service (SaaS) way of doing things would seem to suggest that applications that run in the browser don&rsquo;t really need to care about the desktop operating system, the then-rising app-store model of application deployment made the choice of operating system all the more important. Native apps installed on operating systems kept the notion of operating systems alive (even if those apps were merely tricked-up portals to the same web services to which a browser could link).</p>
+
+<p></p>
+
+<p>Interestingly, three years later I hear many familiar-sounding arguments about operating systems when it comes to platform as a service (PaaS) and DevOps. Get enough consistency in your operating systems, the arguments go, and then, for most intents and purposes, the operating system becomes more abstracted.</p>
+
+<p>And when you get into containers, that argument becomes even more compelling: containers hold the applications and just the libraries and tools those applications need to work. That could be a whole operating system inside that container or (more likely) a smaller set of tools that is more portable for sysadmins to work with and more stable and easier to code for developers. </p>
+
+<p>Big or small, containers are application-centric and would seem to free both sides of the DevOps equation from the shackles of operating systems. </p>
+
+<p>Has the arrival of containers heralded the departure of operating systems?</p>
+
+<p>As you might expect from someone working for a company that distributes an operating system, the answer is pretty much <q>no.</q></p>
+
+<p>While it is difficult to unwind the need for self-preservation from this discussion, there is a huge reason why operating systems are not going to fade into nothing: they are the foundation on which all of these powerful tools must run.</p>
+
+<p>Yes, containers can abstract the operating system away from developers and system administrators, but containers can&rsquo;t run on bare metal. There has to be something on which they sit. Or, in the case of Atomic, something on which <a href="http://openshift.github.io/geard/">geard</a> can sit and manage containers alongside <a href="http://cockpit-project.org/">Cockpit</a> and <a href="http://selinuxproject.org/">SELinux</a>.</p>
+
+<p>The missing element here is innovation. Containers are great for creating individual applications and services, but for broader frameworks, we still very much need stable operating systems to put those frameworks together. In other words, I can cook a meal in my cast-iron skillet, but there still needs to be a foundry to cast that skillet in the first place. And engineers and craftsworkers to create better skillets.</p>
+
+<p>Operating systems may be taking less of a role in day-to-day IT operations, and that&rsquo;s a good thing sometimes, because you just need to code fast and deploy faster without worrying about what the latest security update did to your libraries.</p>
+
+<p>There will always be a place for operating systems in our IT environments, to help create the Next New Thing. Container technology itself, for instance, is not derived solely from the efforts of <a href="https://www.docker.io/">Docker</a> for their containers and <a href="https://www.openshift.com/">OpenShift</a> for their gears. The core foundation for containers lies directly within the Linux kernel, where technologies like OpenShift, Docker, and <a href="https://linuxcontainers.org/">LXC</a> can make use of it.</p>
+
+<p>Operating systems are not going away; the emphasis on them is changing. But their presence is needed just as much as before, running the latest and greatest software to keep information flowing.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/enterprise/">Enterprise</a></li>
+<li><a href="/blog/tag/openshift/">OpenShift</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/05/why-the-operating-system-will-never-die/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/05/why-the-operating-system-will-never-die/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/05/why-the-operating-system-will-never-die/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

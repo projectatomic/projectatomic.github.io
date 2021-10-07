@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora Atomic March 1 Release and Security Fix &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora Atomic March 1 Release and Security Fix' property='og:title'>
+<meta content='The latest Fedora Atomic Host bi-weekly release now available.  Per the prior Fedora Atomic blog post, OSTree updates and biweekly releases are now fully synchronized.  We have also added latest links to make downloading the most current version simple.&#x000A;&#x000A;As this release contains a security update, users of Atomic Host are urged to update their systems as soon as they can. It fixes CVE-2017-6074: DCCP double-free vulnerability.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/03/fedora_atomic_2week/' property='og:url'>
+<meta content='2017-03-06T19:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora Atomic March 1 Release and Security Fix' name='twitter:title'>
+<meta content='The latest Fedora Atomic Host bi-weekly release now available.  Per the prior Fedora Atomic blog post, OSTree updates and biweekly releases are now fully synchronized.  We have also added latest links to make downloading the most current version simple.&#x000A;&#x000A;As this release contains a security update, users of Atomic Host are urged to update their systems as soon as they can. It fixes CVE-2017-6074: DCCP double-free vulnerability.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_03 blog_2017_03_fedora_atomic_2week blog_2017_03_fedora_atomic_2week_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora Atomic March 1 Release and Security Fix
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-03-06T19:00:00Z'>
+Monday  6 March 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The latest Fedora Atomic Host bi-weekly release now available.  Per the prior <a href="/blog/2017/02/matching-fedora-ostree-released-content-with-each-2week-atomic-release/">Fedora Atomic blog post</a>, OSTree updates and biweekly releases are now fully synchronized.  We have also added <q>latest</q> links to make downloading the most current version simple.</p>
+
+<p>As this release contains a security update, users of Atomic Host are urged to update their systems as soon as they can. It fixes <a href="https://access.redhat.com/security/cve/cve-2017-6074">CVE-2017-6074: DCCP double-free vulnerability</a>.</p>
+
+<p></p>
+
+<p>On existing Atomic Host systems, users may update to the following OSTree commit:</p>
+<pre class="highlight plaintext"><code>Commit: ba95a4665776b58d342ad9cc367111179f9b8fcf19c6606f8964a8ec1622cadc&#x000A;Version: 25.67&#x000A;</code></pre>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or
+<code>atomic host deploy</code>.</p>
+
+<p>Corresponding image media for new installations can be downloaded from <a href="https://getfedora.org/en/cloud/download/atomic.html">getfedora.org</a>.</p>
+
+<p>Respective signed CHECKSUM files can be found here:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-25-20170228.0/Atomic/x86_64/iso/Fedora-Atomic-25-20170228.0-x86_64-CHECKSUM">ISO checksum</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-25-20170228.0/CloudImages/x86_64/images/Fedora-CloudImages-25-20170228.0-x86_64-CHECKSUM">Cloud image checksum</a></li>
+</ul>
+
+<p>For direct download, the <q>latest</q> targets are always available at the following URLs:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest">Latest ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest">Latest QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest">Latest raw image</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest">Latest LibVirt VM</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest">Latest VirtualBox VM</a></li>
+</ul>
+
+<p>Filename fetching URLs for downloading to remote systems are available by querying the following links:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest_filename">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest_filename">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest_filename">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename">VirtualBox</a></li>
+</ul>
+
+<p>For more information about the latest targets, please reference <a href="https://fedoraproject.org/wiki/Cloud#Quick_Links">the Fedora
+Cloud Wiki space</a>.</p>
+
+<p>This release contains the following changes since last release from
+5a9de04163a60c5f2771b3d307601fa4e2234f12b662c97e28290b7bcbdb43f0 to
+ba95a4665776b58d342ad9cc367111179f9b8fcf19c6606f8964a8ec1622cadc</p>
+
+<p>Changed:</p>
+
+<ul>
+<li>audit 2.7.2-2.fc25 -&gt; 2.7.3-1.fc25</li>
+<li>audit-libs 2.7.2-2.fc25 -&gt; 2.7.3-1.fc25</li>
+<li>audit-libs-python 2.7.2-2.fc25 -&gt; 2.7.3-1.fc25</li>
+<li>audit-libs-python3 2.7.2-2.fc25 -&gt; 2.7.3-1.fc25</li>
+<li>cockpit-bridge 130-1.fc25 -&gt; 131-1.fc25</li>
+<li>cockpit-docker 130-1.fc25 -&gt; 131-1.fc25</li>
+<li>cockpit-networkmanager 130-1.fc25 -&gt; 131-1.fc25</li>
+<li>cockpit-ostree 130-1.fc25 -&gt; 131-1.fc25</li>
+<li>cockpit-system 130-1.fc25 -&gt; 131-1.fc25</li>
+<li>container-selinux 2:2.5-1.fc25 -&gt; 2:2.6-1.fc25</li>
+<li>crypto-policies 20160921-2.git75b9b04.fc25 -&gt; 20160921-4.gitf3018dd.fc25</li>
+<li>dbus 1:1.11.8-1.fc25 -&gt; 1:1.11.10-1.fc25</li>
+<li>dbus-libs 1:1.11.8-1.fc25 -&gt; 1:1.11.10-1.fc25</li>
+<li>fedora-repos 25-1 -&gt; 25-2</li>
+<li>glib2 2.50.2-1.fc25 -&gt; 2.50.3-1.fc25</li>
+<li>gnutls 3.5.8-2.fc25 -&gt; 3.5.9-2.fc25</li>
+<li>gomtree 0.3.0-1.fc25 -&gt; 0.3.1-1.fc25</li>
+<li>grep 2.27-1.fc25 -&gt; 2.27-2.fc25</li>
+<li>iptables 1.6.0-2.fc25 -&gt; 1.6.0-3.fc25</li>
+<li>iptables-libs 1.6.0-2.fc25 -&gt; 1.6.0-3.fc25</li>
+<li>iptables-services 1.6.0-2.fc25 -&gt; 1.6.0-3.fc25</li>
+<li>kernel 4.9.9-200.fc25 -&gt; 4.9.12-200.fc25</li>
+<li>kernel-core 4.9.9-200.fc25 -&gt; 4.9.12-200.fc25</li>
+<li>kernel-modules 4.9.9-200.fc25 -&gt; 4.9.12-200.fc25</li>
+<li>libblkid 2.28.2-1.fc25 -&gt; 2.28.2-2.fc25</li>
+<li>libfdisk 2.28.2-1.fc25 -&gt; 2.28.2-2.fc25</li>
+<li>libmount 2.28.2-1.fc25 -&gt; 2.28.2-2.fc25</li>
+<li>libnetfilter_conntrack 1.0.4-6.fc24 -&gt; 1.0.6-2.fc25</li>
+<li>libsmartcols 2.28.2-1.fc25 -&gt; 2.28.2-2.fc25</li>
+<li>libsolv 0.6.25-1.fc25 -&gt; 0.6.26-1.fc25</li>
+<li>libuuid 2.28.2-1.fc25 -&gt; 2.28.2-2.fc25</li>
+<li>nfs-utils 1:2.1.1-1.fc25 -&gt; 1:2.1.1-2.rc1.fc25</li>
+<li>openssh 7.4p1-2.fc25 -&gt; 7.4p1-3.fc25</li>
+<li>openssh-clients 7.4p1-2.fc25 -&gt; 7.4p1-3.fc25</li>
+<li>openssh-server 7.4p1-2.fc25 -&gt; 7.4p1-3.fc25</li>
+<li>ostree 2017.1-2.fc25 -&gt; 2017.2-3.fc25</li>
+<li>ostree-grub2 2017.1-2.fc25 -&gt; 2017.2-3.fc25</li>
+<li>pcre 8.40-1.fc25 -&gt; 8.40-4.fc25</li>
+<li>publicsuffix-list-dafsa 20170116-1.fc25 -&gt; 20170206-1.fc25</li>
+<li>rpm-ostree 2016.13-1.fc25 -&gt; 2017.2-2.fc25</li>
+<li>selinux-policy 3.13.1-225.6.fc25 -&gt; 3.13.1-225.10.fc25</li>
+<li>selinux-policy-targeted 3.13.1-225.6.fc25 -&gt; 3.13.1-225.10.fc25</li>
+<li>sos 3.2-4.fc25 -&gt; 3.3-1.fc25</li>
+<li>strace 4.15-1.fc25 -&gt; 4.16-1.fc25</li>
+<li>systemd 231-12.fc25 -&gt; 231-14.fc25</li>
+<li>systemd-container 231-12.fc25 -&gt; 231-14.fc25</li>
+<li>systemd-libs 231-12.fc25 -&gt; 231-14.fc25</li>
+<li>systemd-pam 231-12.fc25 -&gt; 231-14.fc25</li>
+<li>systemd-udev 231-12.fc25 -&gt; 231-14.fc25</li>
+<li>util-linux 2.28.2-1.fc25 -&gt; 2.28.2-2.fc25</li>
+<li>vim-minimal 2:8.0.324-1.fc25 -&gt; 2:8.0.347-2.fc25</li>
+</ul>
+
+<p>Added:</p>
+
+<ul>
+<li>ostree-libs-2017.2-3.fc25.x86_64</li>
+</ul>
+
+<p>Note that this release contains kernel-4.9.12-200.fc25 which contains
+the fix for CVE-2017-6074: DCCP double-free vulnerability.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/03/fedora_atomic_2week/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/03/fedora_atomic_2week/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/03/fedora_atomic_2week/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

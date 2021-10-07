@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Crio</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/crio.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Podman and insecure registries</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/podman-tls/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/podman-tls/</id>
+    <published>2018-05-07T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brent Baude</name>
+    </author>
+    <content type="html">&lt;h3&gt;Podman and insecure registries&lt;/h3&gt;
+
+&lt;p&gt;The last few weeks, we have had a number of bugs and questions about how to pull from an insecure registry. The obvious advice here is that you should always be using a registry which implements &lt;em&gt;tls-verify&lt;/em&gt;. But if you are a container or image developer or you are just plain breaking new ground, your registry may not use &lt;em&gt;tls-verify&lt;/em&gt;. And &lt;a href="https://github.com/projectatomic/libpod/"&gt;Podman&lt;/a&gt; can handle this; and I wanted to spend a minute or two explaining how it does and the logic behind it.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;Podman pull&lt;/h4&gt;
+
+&lt;p&gt;We first need to talk about the various components in play here. To start with, lets use an example of the &lt;code&gt;podman pull&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman pull --help
+NAME:
+   podman pull - pull an image from a registry
+
+USAGE:
+   podman pull [command options] [arguments...]
+
+DESCRIPTION:
+   Pulls an image from a registry and stores it locally.
+An image can be pulled using its tag or digest. If a tag is not
+specified, the image with the 'latest' tag (if it exists) is pulled.
+
+OPTIONS:
+   --authfile value             Path of the authentication file. Default is ${XDG_RUNTIME_DIR}/containers/auth.json
+   --cert-dir pathname          pathname of a directory containing TLS certificates and keys
+   --creds credentials          credentials (USERNAME:PASSWORD) to use for authenticating to a registry
+   --quiet, -q                  Suppress output information when pulling images
+   --signature-policy pathname  pathname of signature policy file (not usually used)
+   --tls-verify                 require HTTPS and verify certificates when contacting registries (default: true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Most noteworthy, the podman pull command has a &lt;em&gt;tls-verify&lt;/em&gt; command line switch. It can accept a booleon (true/false) argument and you will notice it is set to true by default.&lt;/p&gt;
+
+&lt;h4&gt;System-wide registries configuration file&lt;/h4&gt;
+
+&lt;p&gt;The next component to look at is the system-wide registries configuration file. On my system, that file resides at &lt;em&gt;/etc/containers/registries.conf&lt;/em&gt;. And I will show a somewhat redacted version of mine as an example:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# This is a system-wide configuration file used to
+# keep track of registries for various container backends.
+# It adheres to TOML format and does not support recursive
+# lists of registries.
+
+[registries.search]
+registries = ['docker.io', 'registry.fedoraproject.org', 'registry.access.redhat.com']
+
+# If you need to access insecure registries, add the registry's fully-qualified name.
+# An insecure registry is one that does not have a valid SSL certificate or only does HTTP.
+[registries.insecure]
+registries = ['localhost:5000']
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here you can see I have three registries defined under the search header and a single registry defined as an insecure registry. The registries under the search header are registries that Podman will search when you try to find an image that is not fully-qualified.&lt;/p&gt;
+
+&lt;p&gt;I also have a development registry defined under the insecure header as &lt;em&gt;localhost:5000&lt;/em&gt;. It was not pragmatic for me to setup certificates for a registry I might delete and rerun 10 times a day so I simply access it without &lt;em&gt;tls-verify&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also quickly see what registries Podman is aware of by issuing the &lt;code&gt;podman info&lt;/code&gt; command. Both searchable and insecure registries are listed there.&lt;/p&gt;
+
+&lt;h4&gt;Applying system-wide registries to Podman pull&lt;/h4&gt;
+
+&lt;p&gt;When you run Podman, it reads and parses your system-wide registries configuration file. When it pulls an image, it will use the searchable registries to find the image in question. And when the image is actually pulled, it will see if the registry it is pulling from is listed as insecure. If the registry is listed as insecure and you did not specifically set the &lt;em&gt;tls-verify=true&lt;/em&gt; option, Podman will pull the image with &lt;em&gt;tls=verify=false&lt;/em&gt;. This is a convenience function for users so they do not have to remember the security protocols of their registries.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman pull localhost:5000/bb:latest
+Trying to pull localhost:5000/bb:latest...Getting image source signatures
+Copying blob sha256:f70adabe43c0cccffbae8785406d490e26855b8748fc982d14bc2b20c778b929
+ 706.22 KB / 706.22 KB [====================================================] 0s
+Copying config sha256:8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+ 1.46 KB / 1.46 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To review, the rules are as follows.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you pull from a registry not in the configuration file, &lt;em&gt;tls-verify&lt;/em&gt; is assumed true unless you override it.&lt;/li&gt;
+&lt;li&gt;If you pull from a registry defined as a searchable registry (only) in your configuration file, &lt;em&gt;tls-verify&lt;/em&gt; is assumed true unless you override it.&lt;/li&gt;
+&lt;li&gt;If you pull from a registry that is defined as insecure, &lt;em&gt;tls-verify&lt;/em&gt; will be false unless you specifically call out &lt;em&gt;tls-verify=true&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Insecure registries can be searchable too&lt;/h4&gt;
+
+&lt;p&gt;A follow up question I often get is if a searchable registry can be insecure as well? Yes, you can list a registry as both searchable and insecure. Notice how I pulled the previous bb:latest image by a fully-qualified name. If &lt;em&gt;localhost:5000&lt;/em&gt; is a searchable registry, I can pull it by short name — bb.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman pull bb
+Trying to pull docker.io/bb:latest...Failed
+Trying to pull registry.fedoraproject.org/bb:latest...Failed
+Trying to pull registry.access.redhat.com/bb:latest...Failed
+Trying to pull localhost:5000/bb:latest...Getting image source signatures
+Copying blob sha256:f70adabe43c0cccffbae8785406d490e26855b8748fc982d14bc2b20c778b929
+ 706.22 KB / 706.22 KB [====================================================] 0s
+Copying config sha256:8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+ 1.46 KB / 1.46 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  <entry>
+    <title>A remote API for Podman</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/podman-varlink/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/podman-varlink/</id>
+    <published>2018-05-01T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brent Baude</name>
+    </author>
+    <content type="html">&lt;h3&gt;Podman grows a remote API using Varlink&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/libpod"&gt;Podman&lt;/a&gt; up to now has been a simple CLI for managing pods and containers. But I wanted to allow other tools like Atomic CLI and Cockpit to interact with the pods/containers created by Podman and other tools.  Execing a CLI tool to do this and screen scraping the output never quite works, so we wanted to add an API.  But I did not want to add a daemon to implement a restAPI.  #nobigfatdaemons.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Someone pointed out a new technology that seemed meet most of our needs called &lt;a href="https://github.com/varlink"&gt;varlink&lt;/a&gt;.  After reviewing the project and talking with the upstream owners, I decided to build the Podman API based on varlink so users and developers can interact with Podman programmatically.&lt;/p&gt;
+
+&lt;p&gt;Varlink describes itself as an “interface description format and protocol that aims to make services accessible to both humans and machines in the simplest feasible way.” On their wiki, they document the &lt;a href="https://github.com/varlink/documentation/wiki/Ideals"&gt;ideals&lt;/a&gt; that lead to its development. The bottom line for Podman is that varlink has proved to be an effective way to create, publish, and implement a “remote” API over such technologies as REST.&lt;/p&gt;
+
+&lt;h4&gt;Installation&lt;/h4&gt;
+
+&lt;p&gt;First we need to install the Podman and varlink packages.  You will need a minimal version of podman-0.4.4-2 to work with the varlink backend.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo dnf --enablerepo=updates-testing install podman libvarlink-util libvarlink
+Last metadata expiration check: 0:00:14 ago on Tue 01 May 2018 07:08:49 PM UTC.
+Dependencies resolved.
+=============================================================================================================================================================
+ Package                                       Arch                    Version                                        Repository                        Size
+=============================================================================================================================================================
+Installing:
+ libvarlink                                    x86_64                  9-1.fc28                                       updates                           43 k
+ libvarlink-util                               x86_64                  9-1.fc28                                       updates                           46 k
+ podman                                        x86_64                  0.4.4-2.git9924956.fc28                        updates-testing                  5.7 M
+Installing dependencies:
+ atomic-registries                             x86_64                  1.22.1-2.fc28                                  updates-testing                   39 k
+ container-selinux                             noarch                  2:2.55-1.fc28                                  updates-testing                   39 k
+ containernetworking-cni                       x86_64                  0.6.0-4.fc28                                   updates-testing                  9.7 M
+
+... omitted for brevity
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Start the Podman socket&lt;/h4&gt;
+
+&lt;p&gt;Podman relies on a Systemd feature called &lt;a href="http://0pointer.de/blog/projects/socket-activation.html"&gt;socket activation&lt;/a&gt;.  Systemd allows developers to create socket unit files that tells systemd to listen on a particular socket like the unix domain socket /run/io.projectatomic.podman.  When a process connects to this socket, systemd will launch the command specified in the service file with the same name.  The launched command then handles the socket communications.&lt;/p&gt;
+
+&lt;p&gt;Podman ships a systemd socket file &lt;code&gt;io.projectatomic.podman.socket&lt;/code&gt; that will listen for requests.  It must be started for the varlink backend to work.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat /usr/lib/systemd/system/io.projectatomic.podman.socket
+[Unit]
+Description=Pod Manager Socket
+
+[Socket]
+ListenStream=/run/io.projectatomic.podman
+
+[Install]
+WantedBy=sockets.target
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Podman also ships a service file &lt;code&gt;io.projectatomic.podman.service&lt;/code&gt;, which systemd activates when connections come into the socket.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat /usr/lib/systemd/system/io.projectatomic.podman.service
+[Unit]
+Description=Pod Manager
+Requires=io.projectatomic.podman.socket
+After=io.projectatomic.podman.socket
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman --varlink=unix:/run/io.projectatomic.podman
+
+[Install]
+WantedBy=multi-user.target
+Also=io.projectatomic.podman.socket
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice the ExecStart line, this is the command that systemd executes when the connection comes in.  You enable the service with the following commands.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo systemctl enable io.projectatomic.podman.socket
+Created symlink /etc/systemd/system/multi-user.target.wants/io.projectatomic.podman.service → /usr/lib/systemd/system/io.projectatomic.podman.service.
+Created symlink /etc/systemd/system/sockets.target.wants/io.projectatomic.podman.socket → /usr/lib/systemd/system/io.projectatomic.podman.socket.
+
+$ sudo systemctl start io.projectatomic.podman.socket
+$ sudo systemctl status io.projectatomic.podman.socket
+Failed to dump process list, ignoring: No such file or directory
+● io.projectatomic.podman.socket - Pod Manager Socket
+  Loaded: loaded (/usr/lib/systemd/system/io.projectatomic.podman.socket; disabled; vendor preset: disabled)
+  Active: active (listening) since Sat 2018-04-28 16:00:34 UTC; 9s ago
+  Listen: /run/io.projectatomic.podman (Stream)
+  CGroup: /system.slice/io.projectatomic.podman.socket
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, the socket is now active and located at &lt;em&gt;/run/io.projectatomic.podman&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Is it alive?&lt;/h4&gt;
+
+&lt;p&gt;We can check if the service is alive and responding using the the varlink utility and an endpoint called Ping.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.Ping
+{
+ "ping": {
+   "message": "OK"
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The path beginning with “unix://” is considered to be a varlink URI of sorts. The “/run/io.projectatomic.podman” portion refers to the listening socket. And the latter parts refer to the path of the endpoint (or function if you prefer).&lt;/p&gt;
+
+&lt;h4&gt;Varlink info and help&lt;/h4&gt;
+
+&lt;p&gt;One unique design point of the varlink implementation is that it has the ability to help you discover its interfaces and endpoints. The &lt;em&gt;info&lt;/em&gt; subcommand will show basic information about the setup.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink info unix:/run/io.projectatomic.podman
+Vendor: Atomic
+Product: podman
+Version: 0.4.4
+URL: https://github.com/projectatomic/libpod
+Interfaces:
+ org.varlink.service
+ io.projectatomic.podman
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice the URI for that call is to the socket itself. Using the &lt;em&gt;help&lt;/em&gt; subcommand, we can discover more about the implemented API.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink help unix:/run/io.projectatomic.podman/io.projectatomic.podman
+# Podman Service Interface
+interface io.projectatomic.podman
+# Version is the structure returned by GetVersion
+type Version (
+ version: string,
+ go_version: string,
+ git_commit: string,
+ built: int,
+ os_arch: string
+)
+... omitted for brevity
+# System
+method Ping() -&amp;gt; (ping: StringResponse)
+method GetVersion() -&amp;gt; (version: Version)
+... omitted for brevity
+# Images
+method ListImages() -&amp;gt; (images: []ImageInList)
+method TagImage(name: string, tagged: string) -&amp;gt; ()
+... omitted for brevity
+error ImageNotFound (imagename: string)
+error ErrorOccurred (reason: string)
+error RuntimeError (reason: string)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we can see the interface that is implemented called “io.projectatomic.podman” following by a type definition for &lt;em&gt;Version&lt;/em&gt;. It describes the construct that &lt;em&gt;GetVersion&lt;/em&gt; will return. Following the type definitions, we can also see a series of method declarations. The syntax of the method definition is:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;method MethodName(input param:input type) -&amp;gt; (return name: return type)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;And finally, you can see the declaration of known errors that can be returned. In languages such as Python, these are handy because you can “catch” them.&lt;/p&gt;
+
+&lt;p&gt;Lets see what GetVersion returns.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.GetVersion
+{
+ "version": {
+   "built": 0,
+   "git_commit": "",
+   "go_version": "go1.10.1",
+   "os_arch": "linux/amd64",
+   "version": "0.4.4"
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Cool, I want more&lt;/h4&gt;
+
+&lt;p&gt;When working with a container runtime, one of the first things users do is see what images have been pulled locally.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.ListImages
+{
+ "images": [
+   {
+     "containers": 0,
+     "created": "2018-04-19 13:03:59 +0000 UTC",
+     "id": "388e3e5f0e20ab4cfe89431697e3b1f4ca2e08437e5a33ee1ba3f44bc2cebac7",
+     "labels": {
+       "license": "MIT",
+       "name": "fedora",
+       "vendor": "Fedora Project",
+       "version": "28"
+     },
+     "parentId": "",
+     "repoDigests": [
+       "registry.fedoraproject.org/fedora@sha256:1d2e941e1387a86d95070635f6e843f2d81a414b3e77f81ef4d78f2eb6d1e983"
+     ],
+     "repoTags": [
+       "registry.fedoraproject.org/fedora:28"
+     ],
+     "size": 0,
+     "virtualSize": 0
+   }
+ ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here you can see the Fedora 28 image is local. We also provide some basic information about the image (similar to podman ps) but nothing compared to an image inspection. Suppose we want to create a shorthand name for the Fedora image. We can use the &lt;em&gt;TagImage&lt;/em&gt; endpoint for that.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.TagImage '{"name": "388e3e5f0e20ab4cf", "tagged": "f28:latest"}'
+{}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For simplicity, we can verify the tag with podman.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman images
+REPOSITORY                          TAG      IMAGE ID       CREATED      SIZE
+registry.fedoraproject.org/fedora   28       388e3e5f0e20   9 days ago   263MB
+f28                                 latest   388e3e5f0e20   9 days ago   263MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Python bindings are coming&lt;/h4&gt;
+
+&lt;p&gt;The varlink command line utility was meant for simple varlink interactions, API debugging, and API discovery. As you saw in the TagImage example, input parameters are done with JSON and that can be tedious on the command line. We are developing python bindings for our API implementation. These bindings will simplify the consumption of our eventual API definitions.  We hope to eventually make this work with javascript and possibly other languages as well.&lt;/p&gt;
+
+&lt;h4&gt;Upcoming&lt;/h4&gt;
+
+&lt;p&gt;If you do test our the varlink setup, you will notice that we have implemented most of the image related methods. I just began to implement the container related functions recently and will likely implement most of those within the upcoming week. The Python bindings will trail these slightly.&lt;/p&gt;
+
+&lt;p&gt;We are always looking for help. Testing? Documentation? Additional Language Bindings?  Additional Interfaces.  Lots of work to be done&amp;hellip;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Looking forward to working with containerd</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/12/atomic-and-containerd/"/>
+    <id>http://www.projectatomic.io/blog/2016/12/atomic-and-containerd/</id>
+    <published>2016-12-22T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;A number of folks have asked for my thoughts on the Docker &lt;a href="https://blog.docker.com/2016/12/introducing-containerd/"&gt;containerd
+announcement&lt;/a&gt;
+last week. While containerd itself is not new, having been &lt;a href="https://blog.docker.com/2015/12/containerd-daemon-to-control-runc/"&gt;announced
+over a year
+ago&lt;/a&gt;,
+we were happy to see that Docker Inc. is now spinning this out as an
+independent project. This is aligned with Red Hat&amp;rsquo;s overall goal to
+drive open industry &lt;a href="https://www.redhat.com/en/about/blog/linux-container-standards-didn%E2%80%99t-we-talk-about-last-year"&gt;standards for Linux
+containers&lt;/a&gt;
+and the work that we&amp;rsquo;ve helped drive as a &lt;a href="http://www.infoworld.com/article/2925484/application-virtualization/look-whos-helping-build-docker-besides-docker-itself.html"&gt;leading contributor to the
+Docker
+project&lt;/a&gt;,
+a founding member of the &lt;a href="https://www.opencontainers.org/"&gt;Open Containers
+Initiative&lt;/a&gt;, and a leading contributor
+to related projects like &lt;a href="https://runc.io/"&gt;OCI runC&lt;/a&gt; and &lt;a href="https://www.redhat.com/en/about/blog/running-production-applications-containers-introducing-ocid"&gt;CRI-O
+(previously
+OCID)&lt;/a&gt;.
+Splitting containerd from Docker Engine and contributing it to a neutral
+foundation, as Docker Inc. has
+&lt;a href="https://www.docker.com/docker-news-and-press/docker-extracts-and-donates-containerd-its-core-container-runtime-accelerate"&gt;committed&lt;/a&gt;
+to do, is another positive step in that direction.&lt;/p&gt;
+
+&lt;p&gt;When we launched CRI-O as a Kubernetes incubator project and
+implementation of the Kubernetes Container Runtime Interface, we
+discussed the importance of having a comprehensive open container
+runtime standard that &amp;ldquo;follows the time-tested UNIX philosophy of
+modular programming.&amp;rdquo; This led us to create key modules for &lt;a href="https://github.com/containers/image"&gt;image
+distribution&lt;/a&gt; and
+&lt;a href="https://github.com/containers/storage"&gt;storage&lt;/a&gt;, that built on runC
+and delivered stable container runtime functionality platform builders
+could rely on. We are happy that Docker Inc. has followed the lead of
+&lt;a href="https://www.redhat.com/en/about/blog/running-production-applications-containers-introducing-ocid"&gt;CRI-O&lt;/a&gt;
+in breaking apart the upstream Docker Engine into a series of more
+modular components, starting with
+&lt;a href="https://containerd.io/"&gt;containerd&lt;/a&gt;. We hope that the containerd
+project will be able to use some of the work we&amp;rsquo;ve done and also
+continue to get broken down into sub-components. This is critical for
+delivering on the promise of &amp;ldquo;boring infrastructure&amp;rdquo; at the container
+runtime level that platform builders in the container ecosystem, whether
+they are customers or vendors, can rely on.&lt;/p&gt;
+
+&lt;p&gt;As we&amp;rsquo;ve done in the past, we would love to work together with the open
+source community on the components needed to support running containers
+locally or by orchestration tools, as customers move towards running
+containers at scale in production environments.&lt;/p&gt;
+
+&lt;p&gt;We have every intention of contributing to the containerd effort while
+continuing to engaging with the broader container ecosystem. In this
+spirit, we have offered
+&lt;a href="https://github.com/containers/storage"&gt;github.com/containers/storage&lt;/a&gt;
+and&lt;a href="https://github.com/containers/image"&gt; github.com/containers/image&lt;/a&gt;
+as sub packages to containerd, just in the past few days.
+(&lt;a href="https://github.com/docker/containerd/issues/376"&gt;issue 376&lt;/a&gt;,
+&lt;a href="https://github.com/docker/containerd/issues/379"&gt;issue 379&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;These libraries could be shared between containerd, CRI-O and other
+lower level command line tools like
+&lt;a href="https://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt; for the
+pulling/pushing and storage of images. We want to see these components
+used by many different open source projects, and to be able to evolve at
+their own pace. The goal is to build a set of tools around them so
+people can experiment with building and running Linux containers in a
+myriad of different ways.&lt;/p&gt;
+
+&lt;p&gt;Red Hat also plans to continue contributing to CRI-O, as we feel this
+can be a great way to run Kubernetes workloads in the OpenShift
+platform, in addition to the docker container runtime default.
+Meanwhile, the &lt;a href="http://blog.kubernetes.io/2016/12/container-runtime-interface-cri-in-kubernetes.html"&gt;Kubernetes Container Runtime Interface
+(CRI)&lt;/a&gt;,
+recently released in Kubernetes 1.5, allows users to plug in different
+container runtimes to suit their needs. I believe a dedicated daemon for
+serving the Kubernetes CRI protocol, not servicing all different
+orchestration tools, is the great way to go. &amp;ldquo;One daemon to service them
+all&amp;rdquo; has the potential to get bloated over time. Conflicts between
+orchestration tools may occur, which could lead to compromises that
+could affect performance of one orchestrator over another.&lt;/p&gt;
+
+&lt;p&gt;Finally, I am happy to announce we are planning to ship the first alpha
+release of CRI-O inside of Fedora Rawhide (Fedora 26), so that people
+can start to play with it. We have integrated CRI-O and Kubernetes and
+successfully run a basic pod. We are thrilled with the
+&lt;a href="https://github.com/rhatdan/cri-o/graphs/contributors"&gt;contributors&lt;/a&gt;
+who have joined us from many of the top Linux, open source and container
+companies, and are contributing to getting this first package out the
+door.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

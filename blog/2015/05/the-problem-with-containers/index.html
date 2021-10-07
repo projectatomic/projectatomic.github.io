@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+The Problem with Containers &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='John Mark Walker' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='The Problem with Containers' property='og:title'>
+<meta content='Our own Daniel Riek wrote a great blog post about CoreOS’s current efforts around the appc specification, rkt, and the significant work that remains. &#x000A;&#x000A;This is where it gets interesting:' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/05/the-problem-with-containers/' property='og:url'>
+<meta content='2015-05-08T18:23:25Z' property='article:published_time'>
+<meta content='johnmark' property='article:author:username'>
+<meta content='appc' property='article:tag'>
+<link href='/blog/tag/appc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='composite applications' property='article:tag'>
+<link href='/blog/tag/composite applications.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rkt' property='article:tag'>
+<link href='/blog/tag/rkt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='The Problem with Containers' name='twitter:title'>
+<meta content='Our own Daniel Riek wrote a great blog post about CoreOS’s current efforts around the appc specification, rkt, and the significant work that remains. &#x000A;&#x000A;This is where it gets interesting:' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_05 blog_2015_05_the-problem-with-containers blog_2015_05_the-problem-with-containers_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+The Problem with Containers
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/johnmark/">John Mark Walker</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-08T18:23:25Z'>
+Friday  8 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Our own <a href="http://rhelblog.redhat.com/author/danielriek/">Daniel Riek</a> wrote a <a href="http://rhelblog.redhat.com/2015/05/05/rkt-appc-and-docker-a-take-on-the-linux-container-upstream/">great blog post</a> about CoreOS&rsquo;s current efforts around the <a href="https://github.com/appc/">appc specification</a>, rkt, and the significant work that remains. </p>
+
+<p>This is where it gets interesting:</p>
+
+<p></p>
+
+<blockquote>
+<p>As it is today, appc only covers a very small part of what needs to be sorted out for a container-based, application-centric model. The impact of containerization in redefining the enterprise OS is still vastly underestimated by most; it is a departure from the traditional model of a single-instance, monolithic, UNIX user space in favor of a multi-instance, multi-version environment using containers and aggregate packaging. We are talking about nothing less than changing some of the core paradigms on which the software industry has been working for the last 20 – if not 40 – years.</p>
+</blockquote>
+
+<p>In other words: change is hard, and the entire computing world as we know it is turning upside down. This necessarily means re-learning how to do some things that we take for granted. Like, how to build applications that&rsquo;s not a manual construction process involving bailing wire and duct tape. Appc covers important territory around defining how containers are expected to work, but it leaves out a lot about how they&rsquo;re supposed to work in concert.</p>
+
+<blockquote>
+<p>Another important scope issue is primarily induced by the name “Application” - at this point, appc covers individual containers up to a pod. Unfortunately&hellip; there are very few applications that consist of only a single container / single pod. </p>
+</blockquote>
+
+<p>Sure, one can stand up a container, maybe a few at a time, customize some pods, install some software, throw Kubernetes in it, and voila! What do you have? You just hand-crafted a solution that Works For You &trade; but is impossible to manage, won&rsquo;t survive the next technology culling, doesn&rsquo;t integrate with your existing management tooling, and probably cannot be easily repeated. </p>
+
+<p>This is not to downplay the work that is taking place right now on appc. After all, we have to start somewhere, and walking must be perfected before running or flying. However, Daniel brings up one more point that should give us pause when considering the current container landscape:</p>
+
+<blockquote>
+<p>It’s important to note that an even bigger concern than the early stage of appc, is that rkt also introduces its own container package format in addition to supporting a compatibility interface to the docker model&hellip; At the end of the day, it will mean fragmentation of the ecosystem&hellip; </p>
+
+<p>The elephant in the room is that appc does not have the support of Docker, the company that leads in mindshare and controls the format that has quickly become the defacto standard for container packaging. They were not even represented at the panel to share their point of view.</p>
+</blockquote>
+
+<p>This means that those of us who make up the greater container community will have to work extra hard to make sure we don&rsquo;t end up with a fragmented ecosystem where individual companies protect their turf at the expense of the vast expanse of users and developers who just want things to work. The Unix wars have long been cited as <q>how not to do it,</q> so let&rsquo;s not go back to that. </p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/appc/">appc</a></li>
+<li><a href="/blog/tag/composite-applications/">composite applications</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/rkt/">rkt</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/05/the-problem-with-containers/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/05/the-problem-with-containers/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/05/the-problem-with-containers/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+John Mark Walker
+</h2>
+<div class='author-blurb'>
+<p>Open Source Ecosystems dude for Red Hat&rsquo;s Open Source and Standards team. Worked on SourceForge back in the day.</p>
+
+<div class='more-link'>
+<a href="/blog/author/johnmark/">View all posts by John Mark Walker &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Deploying a Containerized Gitlab Instance with Kubernetes &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Deploying a Containerized Gitlab Instance with Kubernetes' property='og:title'>
+<meta content='Back in November, I wrote about how to try out Kubernetes, the open source system for managing containerized applications across multiple hosts, using Atomic Hosts. In that post, I walked through a deployment of the Kubernetes project’s multicontainer Hello World application. &#x000A;&#x000A;This time, I thought I’d explore running a more real-world application on Kubernetes, while looking into a few alternate methods of spinning up a Kubernetes cluster.&#x000A;&#x000A;For the application, I picked Gitlab, an open source code collaboration platform that resembles and works like the popular Github service. I run a Gitlab instance internally here at work, and I wanted to explore moving that application from its current, virtual machine-based home, toward a shiny new containerized future.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/' property='og:url'>
+<meta content='2015-01-15T23:42:33Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='gitlab' property='article:tag'>
+<link href='/blog/tag/gitlab.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Deploying a Containerized Gitlab Instance with Kubernetes' name='twitter:title'>
+<meta content='Back in November, I wrote about how to try out Kubernetes, the open source system for managing containerized applications across multiple hosts, using Atomic Hosts. In that post, I walked through a deployment of the Kubernetes project’s multicontainer Hello World application. &#x000A;&#x000A;This time, I thought I’d explore running a more real-world application on Kubernetes, while looking into a few alternate methods of spinning up a Kubernetes cluster.&#x000A;&#x000A;For the application, I picked Gitlab, an open source code collaboration platform that resembles and works like the popular Github service. I run a Gitlab instance internally here at work, and I wanted to explore moving that application from its current, virtual machine-based home, toward a shiny new containerized future.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_01 blog_2015_01_deploying-a-containerized-gitlab-instance-with-kubernetes blog_2015_01_deploying-a-containerized-gitlab-instance-with-kubernetes_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Deploying a Containerized Gitlab Instance with Kubernetes
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-01-15T23:42:33Z'>
+Thursday 15 January 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Back in November, I wrote about how to <a href="http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/">try out Kubernetes</a>, the open source system for managing containerized applications across multiple hosts, using Atomic Hosts. In that post, I walked through a deployment of the Kubernetes project&rsquo;s multicontainer <q>Hello World</q> application. </p>
+
+<p>This time, I thought I&rsquo;d explore running a more real-world application on Kubernetes, while looking into a few alternate methods of spinning up a Kubernetes cluster.</p>
+
+<p>For the application, I picked Gitlab, an open source code collaboration platform that resembles and works like the popular Github service. I run a Gitlab instance internally here at work, and I wanted to explore moving that application from its current, virtual machine-based home, toward a shiny new containerized future.</p>
+
+<p></p>
+
+<h3>Gitlab, Dockerized</h3>
+
+<p>The Gitlab project <a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/docker">provides a Dockerfile</a> for creating a containerized <q>Omnibus</q> instance of the application that smushes together a Redis key-value store, Postgres database, and Nginx web server into a single container. However, since Docker best practices dictate that individual application elements be deployed as separate containers, I turned to a <a href="https://github.com/sameersbn/docker-gitlab">multi-container installation option</a> created by community member <a href="https://twitter.com/sameersbn">Sameer Naik</a>.</p>
+
+<p>I set out first to convert Sameer&rsquo;s implementation from Ubuntu to <a href="https://github.com/jasonbrooks/docker-gitlab">CentOS</a>, which wasn&rsquo;t too terribly complicated and mostly involved translating Debian-style package names to their RPM-world equivalents. The trickiest bits of the conversion involved editing the bash scripts used to install Gitlab from source and perform configuration chores in the Gitlab container. Looking ahead, I&rsquo;m interested in taking a look at Ansible as an alternative to these somewhat-ungainly bash scripts.</p>
+
+<p>For the Redis and Postgres containers required by Gitlab, I simply reached for a pair of off-the-shelf Dockerfiles provided by the CentOS project in its <a href="https://github.com/CentOS/CentOS-Dockerfiles">CentOS-Dockerfiles</a> repository.</p>
+
+<h3>Assembling a Kubernetes Cluster</h3>
+
+<p>Once I had a Dockerized, CentOS-based set of containers to work with, I turned to bringing up a Kubernetes cluster. The <a href="http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/">Ansible+Atomic method</a> I wrote about last time still works fine, but I wanted to explore a couple other Kubernetes deployment options.</p>
+
+<p>I looked into three new methods for turning up a Kubernetes cluster: <a href="https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/vagrant.md">Vagrant</a>, <a href="https://github.com/larsks/heat-kubernetes">OpenStack Heat</a>, and Google&rsquo;s <a href="https://cloud.google.com/container-engine/">Container Engine</a>.</p>
+
+<p>I didn&rsquo;t manage to get a cluster up and running with Vagrant, at least not with my chosen provider of libvirt. The scripts that ship with Kubernetes for Vagrant are hard-coded to the VirtualBox provider. I typically test within a KVM environment, and while nesting KVM within KVM works well, VirtualBox within KVM does not, and I wasn&rsquo;t interested in parting with a bare metal machine for this test. In any case, I stumbled across about <a href="http://blog.obnox.de/vagrant-with-lxc-and-libvirt-on-fedora/">running Vagrant with libvirt on Fedora</a> that I expect will come in handy soon.</p>
+
+<p>If you&rsquo;re a VirtualBox+Vagrant adherent, though, this looks like a pretty easy way to get up and running with a test cluster.</p>
+
+<p>Getting Kubernetes running with OpenStack Heat was pretty simple, after I ensured that I&rsquo;d outfitted my OpenStack cloud not only with Heat itself, but also the Heat CloudWatch API, on which this stack depends. Also, in order to use Atomic Host instances for my master and minions, I had to create a snapshot of a <a href="https://getfedora.org/en/cloud/download/">Fedora Atomic</a> or <a href="http://buildlogs.centos.org/monthly/7/">CentOS Atomic</a> instance on which I&rsquo;d run <code>sudo atomic upgrade</code>, as this Heat stack requires the recently-added Flannel for networking.</p>
+
+<p>From there, I needed only clone the <a href="https://github.com/larsks/heat-kubernetes">heat-kubernetes</a> repository, create a <code>local.yaml</code> file corresponding to my environment, and run <code>heat stack-create -f kubecluster.yaml -e local.yaml my-kube-cluster</code> to kick off the stack.</p>
+
+<p>If you don&rsquo;t have an OpenStack cloud handy, it&rsquo;s pretty simple to spin up a new Kubernetes cluster via Google&rsquo;s <a href="https://cloud.google.com/container-engine/">Container Engine</a>, which automates the creation of a set of VMs running Debian and hosting the necessary bits for Kubernetes&rsquo; master and minions.</p>
+
+<h3>Deploying Gitlab</h3>
+
+<p>With a Kubernetes cluster of our choice ready for action, the steps required to start up an instance of Gitlab are pretty similar to those for the Kubernetes <q>Hello World</q> guestbook application.</p>
+
+<p>First, clone my <a href="https://github.com/jasonbrooks/docker-gitlab">docker-gitlab</a> repository:</p>
+<pre class="highlight plaintext"><code>git clone https://github.com/jasonbrooks/docker-gitlab.git&#x000A;</code></pre>
+
+<p>Alongside the Dockerfile for Gitlab, and a set of scripts and files required for building that container, this repository contains a set of Kubernetes json files for defining the pods and services for gitlab, redis and postgresql.</p>
+
+<p>I&rsquo;ve pushed containers for redis, postgresql and gitlab to the Docker hub under my user name, jasonbooks, but you can follow the build instructions in the repo&rsquo;s README to build and push your own containers, if you wish. Just swap out <code>jasonbrooks</code> for your own registry location in the <q>pod</q> json files to use the containers you&rsquo;ve built. You can also edit the json files to choose a new database password.</p>
+
+<p>Kick off the commands below to get redis and postgresql running. It&rsquo;s important to start these up before starting gitlab, because pods are only aware of the environment variables of previously-started pods, and this is how gitlab will figure out where its database and key value store can be found:</p>
+<pre class="highlight plaintext"><code>kubectl --server=http://KUBE_MASTER:8080 create -f redis-pod.json &#x000A;kubectl --server=http://KUBE_MASTER:8080 create -f redis-service.json &#x000A;kubectl --server=http://KUBE_MASTER:8080 create -f postgres-pod.json &#x000A;kubectl --server=http://KUBE_MASTER:8080 create -f postgres-service.json&#x000A;</code></pre>
+
+<p>Then, monitor <code>kubectl --server=http://KUBE_MASTER:8080 get pods</code> until the redis and postgresql pods are <code>Running</code>:</p>
+<pre class="highlight plaintext"><code>NAME                IMAGE(S)               HOST                LABELS              STATUS&#x000A;redis               jasonbrooks/redis      10.0.0.4/           name=redis          Running&#x000A;postgresql          jasonbrooks/postgres   10.0.0.4/           name=postgresql     Running&#x000A;</code></pre>
+
+<p>Now, start up the Gitlab pod:</p>
+<pre class="highlight plaintext"><code>kubectl --server=http://KUBE_MASTER:8080 create -f gitlab-pod.json&#x000A;</code></pre>
+
+<p>After another run of <code>kubectl --server=http://KUBE_MASTER:8080 get pods</code> indicates that the gitlab pod is running, you can monitor the initialization of gitlab with the command <code>kubectl --server=http://KUBE_MASTER:8080 log gitlab</code>. When the logs indicate that <code>sidekiq</code>, <code>unicorn</code>, <code>cron</code>, <code>nginx</code>, and <code>sshd</code> are up and running, you should be able to access the Gitlab web interface from port 10080 on your minion, and Gitlab&rsquo;s ssh from port 10022.</p>
+
+<p>Now, minions can change, and we probably prefer to stick with the default ports 80 and 22 for web and ssh. Here&rsquo;s where the service files for Gitlab come into play. We need more than one service file for our Gitlab pod because each service can only handle a single port (for now, at least).</p>
+
+<p>You can edit the files <code>gitlab-service-http.json</code> and <code>gitlab-service-ssh.json</code> and replace <code>STATIC_IP_HERE</code> with a static IP of your choice. Then, fire off a couple of commands to create the services:</p>
+<pre class="highlight plaintext"><code>kubectl --server=http://KUBE_MASTER:8080 create -f gitlab-service-ssh.json&#x000A;kubectl --server=http://KUBE_MASTER:8080 create -f gitlab-service-http.json&#x000A;</code></pre>
+
+<p>To make this actually work, you&rsquo;ll need to figure out a mechanism for sending traffic directed toward your static IP to your minions. On GCE, which offers a built-in load balancer feature, I set a forwarding rule to send traffic for ports 22-80 to my pool of minions. I imagine I could configure OpenStack and its <a href="http://docs.openstack.org/api/openstack-network/2.0/content/lbaas_ext.html">load balancer-as-a-service</a> to perform the same task, but I haven&rsquo;t tried that out yet.</p>
+
+<h3>Next Steps</h3>
+
+<p>So, am I ready to ditch my virtual machine for a fancy new Docker/Kubernetes based Gitlab installation? Not quite yet. I have a few more areas to understand, so keep an eye out for an upcoming blog post that covers these and other issues:</p>
+
+<ul>
+<li>Data persistence w/ Kubernetes &ndash; this appears to be a matter of referencing volumes in the pod definition files</li>
+<li>Work out an application migration and update strategy</li>
+<li>Settle on load-balancing tooling and configuration</li>
+<li>Clean up my gitlab container configuration scripts, probably with Ansible</li>
+</ul>
+
+<p>If you run into trouble following this walkthrough, I’ll be happy to help you get up and running or get pointed in the right direction. Ping me at jbrooks in #atomic on freenode irc or <a href="https://twitter.com/jasonbrooks">@jasonbrooks</a> on Twitter. Also, be sure to check out the <a href="http://ask.projectatomic.io/en/questions/">Project Atomic Q&amp;A site</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/gitlab/">gitlab</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

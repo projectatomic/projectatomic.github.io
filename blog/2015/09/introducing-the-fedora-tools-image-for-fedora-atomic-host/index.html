@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Introducing the “fedora-tools” Image for Fedora Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jeremy Eder' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Introducing the “fedora-tools” Image for Fedora Atomic Host' property='og:title'>
+<meta content='Borrowing from the Red Hat Developer Blog entry, here’s an introduction the “fedora-tools” image for Fedora Atomic Host.&#x000A;&#x000A;When Red Hat’s performance team first started experimenting with Atomic, it became clear that our needs for low-level debug capabilities were at odds with the stated goal of Atomic to maintain a very small footprint.  If you consider your current production environment, most standard builds do not include full debug capabilities, so this is nothing new.  What is new, is that on Red Hat Enterprise Linux (RHEL) you could easily install any debug/tracing/analysis utility, but on Atomic:' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/' property='og:url'>
+<meta content='2015-09-04T16:07:35Z' property='article:published_time'>
+<meta content='jeder' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Debugging' property='article:tag'>
+<link href='/blog/tag/debugging.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Performance' property='article:tag'>
+<link href='/blog/tag/performance.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Introducing the “fedora-tools” Image for Fedora Atomic Host' name='twitter:title'>
+<meta content='Borrowing from the Red Hat Developer Blog entry, here’s an introduction the “fedora-tools” image for Fedora Atomic Host.&#x000A;&#x000A;When Red Hat’s performance team first started experimenting with Atomic, it became clear that our needs for low-level debug capabilities were at odds with the stated goal of Atomic to maintain a very small footprint.  If you consider your current production environment, most standard builds do not include full debug capabilities, so this is nothing new.  What is new, is that on Red Hat Enterprise Linux (RHEL) you could easily install any debug/tracing/analysis utility, but on Atomic:' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_09 blog_2015_09_introducing-the-fedora-tools-image-for-fedora-atomic-host blog_2015_09_introducing-the-fedora-tools-image-for-fedora-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Introducing the “fedora-tools” Image for Fedora Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jeder/">Jeremy Eder</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-09-04T16:07:35Z'>
+Friday  4 September 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Borrowing from the <a href="http://developerblog.redhat.com/2015/03/11/introducing-the-rhel-container-for-rhel-atomic-host/">Red Hat Developer Blog</a> entry, here&rsquo;s an introduction the “fedora-tools” image for Fedora Atomic Host.</p>
+
+<p>When Red Hat’s performance team first started experimenting with Atomic, it became clear that our needs for low-level debug capabilities were at odds with the stated goal of Atomic to maintain a very small footprint.  If you consider your current production environment, most standard builds do not include full debug capabilities, so this is nothing new.  What is new, is that on Red Hat Enterprise Linux (RHEL) you could easily install any debug/tracing/analysis utility, but on Atomic:</p>
+
+<p></p>
+
+<p><code>&#x000A;-bash-4.2# dnf&#x000A;bash: dnf: command not found</code></p>
+
+<p>Whoops!  What’s this now???  If you haven’t played with Fedora Atomic yet, keep the first rule of Atomic in mind:</p>
+
+<p>You don’t install software on Atomic.  You build containers on RHEL, CentOS, or Fedora, then run them on Atomic. Sys admin tools are no exception.</p>
+
+<p>We always knew we needed an equivalent for Fedora, and we&rsquo;re happy to announce today the availability of the <a href="https://hub.docker.com/r/fedora/tools/">fedora-tools image</a>.</p>
+
+<p></p>
+
+<h3>How Do I Use This Thing?</h3>
+
+<p>Here’s a <a href="https://youtu.be/W4D-TPge9-E">short video</a> that shows how to use the tools container to do common <q>root</q> system administrator tasks:</p>
+
+<ul>
+<li>sosreport</li>
+<li>Snooping bridge traffic</li>
+<li>System service container (sadc/sar)</li>
+<li>Using the <q>perf</q> profiling tool</li>
+</ul>
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/W4D-TPge9-E" frameborder="0" allowfullscreen></iframe>
+
+<h3>Real-World Usage in the Field</h3>
+
+<p>One capability that we love having in the tools container is the GNU Debugger (GDB).  GDB is an interactive debugger used to troubleshoot application crashes by analyzing process core dumps.</p>
+
+<p>Here&rsquo;s a quick demo of how to analyze userspace core dumps on Atomic, using the tools container.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# atomic host status&#x000A;  TIMESTAMP (UTC)         VERSION    ID             OSNAME            REFSPEC&#x000A;* 2015-09-01 22:50:33     22.102     132444ceed     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host&#x000A; 2015-08-26 17:38:55     22.98      8b40b4d962     fedora-atomic     fedora-atomic:fedora-atomic/f22/x86_64/docker-host&#x000A;</code></pre>
+
+<p>Download the Fedora and new Fedora Tools images:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# docker pull fedora&#x000A;latest: Pulling from docker.io/fedora&#x000A;...&#x000A;Status: Downloaded newer image for docker.io/fedora:latest&#x000A;&#x000A;-bash-4.3# docker pull fedora/tools&#x000A;latest: Pulling from docker.io/fedora/tools&#x000A;...&#x000A;Status: Downloaded newer image for docker.io/fedora/tools:latest&#x000A;</code></pre>
+
+<p>Launch a tools container:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# atomic run --name tools fedora/tools&#x000A;docker run -it --name tools --privileged --ipc=host --net=host --pid=host -e HOST=/host -e NAME=tools -e IMAGE=fedora/tools -v /run:/run -v /var/log:/var/log -v /etc/localtime:/etc/localtime -v /:/host fedora/tools&#x000A;[root@f22-atomic /]# exit&#x000A;exit&#x000A;</code></pre>
+
+<p>Now for the demo part. Let&rsquo;s run a daemonized container that runs the <code>sleep</code> command.  Sleep could represent any daemonized application.  We are going to crash it, and analyze the core dump with <code>gdb</code>.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# docker run -d fedora sleep infinity&#x000A;9921bdd687eea85faa3f0365bb510c4e4e5df142295a2c8775e4c4a0912376a6&#x000A;</code></pre>
+
+<p>Get the Process ID (PID) of the process we are going to crash.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# pid=$(pgrep sleep)&#x000A;</code></pre>
+
+<p>Using the <code>gcore</code> utility from the <code>gdb</code> package, crash the sleep PID within the container we created.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# docker run fedora/tools gcore -o /host/tmp/democore $!&#x000A;ptrace: No such process.&#x000A;You can't do that without a process to debug.&#x000A;The program is not being run.&#x000A;gcore: failed to create /host/tmp/democore.1822&#x000A;</code></pre>
+
+<p>Ahh, why did that fail?  It failed because of PID namespace isolation.  A normal docker run invocation gives you a dedicated PID namespace for that container, starting with PID 1.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# docker run -it fedora/tools ps aux&#x000A;USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND&#x000A;root         1  0.0  0.0  45860  2632 ?        Rs+  19:10   0:00 ps aux&#x000A;</code></pre>
+
+<p>So, the value of $pid does not exist inside this new container.  But, if you use <code>--pid=host</code>, which is what the atomic run command does for you, you skip the PID namespace creation for the container, and operate in the host&rsquo;s PID namespace, where the value of $pid is valid.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# atomic run fedora/tools pgrep sleep&#x000A;1822&#x000A;</code></pre>
+
+<p>Now let&rsquo;s use the tools container to try and take a gcore of the sleep process running in another container.</p>
+<pre class="highlight plaintext"><code>-bash-4.3# atomic run fedora/tools gcore -o /host/tmp/democore $pid&#x000A;warning: Target and debugger are in different PID namespaces; thread lists and other data are likely unreliable&#x000A;0x00007fc297ba62c0 in __nanosleep_nocancel () from /lib64/libc.so.6&#x000A;warning: target file /proc/2240/cmdline contained unexpected null characters&#x000A;warning: Memory read failed for corefile section, 8192 bytes at 0x7ffe73d4e000.&#x000A;Saved corefile /host/tmp/democore.1822&#x000A;</code></pre>
+
+<p>Okay, this time we were able to save a core at <code>/host/tmp/democore.1822</code>.  But what is <code>/host</code>?  /host is a volume mount that Red Hat has chosen to standardize on for its super-privileged containers.  This list of options is embedded in the tools image label:</p>
+<pre class="highlight plaintext"><code># docker inspect fedora/tools | grep RUN&#x000A;            "RUN": "docker run -it --name NAME --privileged --ipc=host --net=host --pid=host -e HOST=/host -e NAME=NAME -e IMAGE=IMAGE -v /run:/run -v /var/log:/var/log -v /etc/localtime:/etc/localtime -v /:/host IMAGE"&#x000A;</code></pre>
+
+<p>So, a tools image launched with the <code>atomic</code> command will be launched as above, including the <code>-v/:/host</code> volume.  This gives us a handy way to write stuff to the host from within a container, such as when using gcore and choosing where it should write out the core dump.</p>
+
+<p>Also, notice the warning about being in different PID namespaces.  This warning means that certain data within the core file will not make sense when read back in a different PID namespace in which our gdb process will run.  It gives the example of thread lists, which for our sake can be thought of as PID namespaces.</p>
+
+<p>Back on the Atomic host system, we can see the core file was in fact written to <code>/tmp</code>:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# file /tmp/democore.$pid&#x000A;/tmp/democore.2240: ELF 64-bit LSB core file x86-64, version 1 (SYSV), SVR4-style, from 'sleep'&#x000A;</code></pre>
+
+<p>We can now use the tools container to run <code>gdb</code>, and analyze the core dump:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# atomic run fedora/tools gdb /host/tmp/democore.$pid -q -ex bt -batch&#x000A;[New LWP 2240]&#x000A;Core was generated by `sleep'.&#x000A;#0  0x00007fc297ba62c0 in ?? ()&#x000A;"/host/tmp/democore.2240" is a core file.&#x000A;Please specify an executable to debug.&#x000A;#0  0x00007fc297ba62c0 in ?? ()&#x000A;#1  0x0000000000403e0f in ?? ()&#x000A;#2  0x000000000001869f in ?? ()&#x000A;#3  0x0000000000000000 in ?? ()&#x000A;-bash-4.3#&#x000A;</code></pre>
+
+<p>The magic numbers above can be resolved into human-readable function names by installing the corresponding debuginfo package:</p>
+<pre class="highlight plaintext"><code># dnf install --disablerepo=* --enablerepo=fedora-debuginfo coreutils-debuginfo&#x000A;</code></pre>
+
+<h3>Coming soon: sosreport</h3>
+
+<p>Unfortunately, the container support for <code>sosreport</code> has not yet been merged into Fedora.  We&rsquo;ve discussed this, and are working quickly to update the Fedora tools image accordingly.</p>
+
+<h3>Go Forth and Debug!</h3>
+
+<p>For more information, head over to the Red Hat Customer Portal and check out the <a href="https://access.redhat.com/articles/1336853">official rhel-tools documentation</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/debugging/">Debugging</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/performance/">Performance</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/09/introducing-the-fedora-tools-image-for-fedora-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Jeremy Eder
+</h2>
+<div class='author-blurb'>
+<p>Jeremy Eder is a Principal Software Engineer, Network and Container Performance Lead at Red Hat. Jeremy specializes in measurement and analysis of kernel-related performance metrics, and using that analysis to guide performance-tuning of real-world infrastructure.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jeder/">View all posts by Jeremy Eder &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

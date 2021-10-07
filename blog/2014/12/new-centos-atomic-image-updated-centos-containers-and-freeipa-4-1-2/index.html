@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+New CentOS Atomic image, Updated CentOS containers, and FreeIPA 4.1.2 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='New CentOS Atomic image, Updated CentOS containers, and FreeIPA 4.1.2' property='og:title'>
+<meta content='If you’re running the CentOS images released last month, you’ll notice that you can pull an update using atomic update that will pick up updates to a number of crucial packages (e.g. Docker) from base...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/12/new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2/' property='og:url'>
+<meta content='2014-12-08T21:53:00Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='New CentOS Atomic image, Updated CentOS containers, and FreeIPA 4.1.2' name='twitter:title'>
+<meta content='If you’re running the CentOS images released last month, you’ll notice that you can pull an update using atomic update that will pick up updates to a number of crucial packages (e.g. Docker) from base...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_12 blog_2014_12_new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2 blog_2014_12_new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+New CentOS Atomic image, Updated CentOS containers, and FreeIPA 4.1.2
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-12-08T21:53:00Z'>
+Monday  8 December 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>If you&rsquo;re running the <a href="http://www.projectatomic.io/blog/2014/11/centos-atomic-sig-image-ready-for-testing/">CentOS images released last month</a>, you&rsquo;ll notice that you can pull an update using <code>atomic update</code> that will pick up updates to a number of crucial packages (e.g. Docker) from base CentOS as well as additional packages carried by the Atomic SIG.</p>
+
+<p>We also have new <a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/">monthly images</a> up on CentOS.org, and a new pointer to the most recent images. </p>
+
+<p>Any time you want to grab the most recent CentOS Atomic Host image use:</p>
+
+<ul>
+<li><a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost.qcow2">http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost.qcow2</a></li>
+<li><a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost-20141129_02.qcow2.xz">http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost-20141129_02.qcow2.xz</a></li>
+</ul>
+
+<p>The xz image is compressed, the uncompressed qcow image is good for importing directly into OpenStack or another cloud platform that requires uncompressed image URLs.</p>
+
+<h3>Updated CentOS Containers</h3>
+
+<p>Worth noting that the CentOS Docker images have been updated as well on Docker Hub, so if you&rsquo;re using CentOS containers you may want to do a <code>docker pull</code> to update them or respin any images that are using CentOS as the base container. </p>
+
+<h3>New FreeIPA Container</h3>
+
+<p><a href="http://www.freeipa.org/page/Main_Page">FreeIPA</a> is an exciting project if you need an integrated security information management solution. The <a href="http://seven.centos.org/2014/12/freeipa-4-1-2-and-centos/">CentOS FreeIPA Docker container</a> is super-useful if you want to use FreeIPA with minimal hassle. </p>
+
+<p>The CentOS FreeIPA container was updated last week to 4.1.2, which brings the CentOS FreeIPA container up to date with the most recent stable FreeIPA release. See the <a href="http://seven.centos.org/2014/12/freeipa-4-1-2-and-centos/">CentOS.org post for more information</a>. </p>
+
+<p>Of course, FreeIPA isn&rsquo;t the only containerized application available via the <a href="https://registry.hub.docker.com/repos/centos/">CentOS repo on Docker Hub</a>. You&rsquo;ll also find Wildfly, Nginx, MariaDB, and the Apache Web Server.</p>
+
+<p>Have an idea for a new image for CentOS? If you have a Dockerfile you can <a href="https://github.com/CentOS/CentOS-Dockerfiles">submit a pull request to the GitHub repo</a>. Have questions about the CentOS containers? Ask for help on the centos-devel mailing list or in #centos-devel on Freenode. </p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/12/new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/12/new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/12/new-centos-atomic-image-updated-centos-containers-and-freeipa-4-1-2/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

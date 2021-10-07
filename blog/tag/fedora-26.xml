@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Fedora 26</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/fedora-26.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Changes to Kickstarts for Fedora Atomic 26</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-kickstarts/"/>
+    <id>http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-kickstarts/</id>
+    <published>2017-07-17T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;As you know, I&amp;rsquo;m all about &lt;a href="blog/2016/10/install-with-kickstart/"&gt;installing Atomic on bare metal using kickstarts&lt;/a&gt;.  And one of the things which has changed with Fedora Atomic 26 is some of the tags and locations you need for your kickstarts.  You&amp;rsquo;ll find that your old kickstarts no longer work.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;First, your &lt;code&gt;ostreesetup&lt;/code&gt; line needs to change. Here&amp;rsquo;s my new one:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ostreesetup --osname="fedora-atomic" --remote="fedora-atomic-26" --url="file:///ostree/repo" --ref="fedora/26/x86_64/atomic-host" --nogpg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Three things changed here.  First, the &lt;code&gt;remote&lt;/code&gt; is now &amp;ldquo;fedora-atomic-26&amp;rdquo; instead of just &amp;ldquo;fedora-atomic&amp;rdquo; (&lt;code&gt;osname&lt;/code&gt; can really be whatever you want). This is a temporary measure until we &lt;a href="https://fedoramagazine.org/upcoming-fedora-atomic-lifecycle-changes/"&gt;merge all of the repos for continuous upgrade&lt;/a&gt;.  Second, the &lt;code&gt;url&lt;/code&gt; to install from local media has changed to the simpler &amp;ldquo;file:///ostree/repo&amp;rdquo;.  Third, the upstream &lt;code&gt;ref&lt;/code&gt; is now &amp;ldquo;fedora/26/x86_64/atomic-host&amp;rdquo;, which both removes the reference to a specific container runtime from the edition and makes the urls consistent with other Fedora Editions.&lt;/p&gt;
+
+&lt;p&gt;We can also stop disabling cloud-init for Anaconda (bare metal) installs:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;services --enabled="systemd-timesyncd"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Previously, we&amp;rsquo;d have added &lt;code&gt;--disabled=&amp;quot;cloud-init,cloud-config,cloud-final,cloud-init-local&amp;quot;&lt;/code&gt; in that line, but Anaconda now automatically disables cloud-init since it won&amp;rsquo;t be used for a local install, so we don&amp;rsquo;t have to.  &lt;/p&gt;
+
+&lt;p&gt;In &lt;code&gt;%post&lt;/code&gt; where I add in the final configuration for ostree, I also had to change the &lt;code&gt;url&lt;/code&gt; and &lt;code&gt;remote&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ostree remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-26-primary fedora-atomic-26 https://kojipkgs.fedoraproject.org/atomic/26
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There&amp;rsquo;s also some other nice improvements there. First, gpg-signing of upgrades and rebases works consistently, so we&amp;rsquo;re adding in gpg checking.  Second, &lt;code&gt;--if-not-exists&lt;/code&gt; is a nice ostree feature which lets us add remotes idempotently, to better work with Ansible and other config management software.  It&amp;rsquo;s not actually useful here since we&amp;rsquo;re deleting the prior remote, but it&amp;rsquo;s a good idea to get into using it in general (and naming your remotes uniquely).&lt;/p&gt;
+
+&lt;p&gt;Below is a completed example kickstart, with all of the changes, which installs Fedora Atomic with OverlayFS to One Big Volume of 60GB and static networking.  Note that in Fedora Atomic 27, One Big Volume will be the default.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;install
+reboot
+lang en_US.UTF-8
+keyboard us
+timezone --utc America/Los_Angeles
+selinux --enforcing
+zerombr
+clearpart --all --initlabel
+bootloader --location=mbr --boot-drive=sda
+reqpart --add-boot
+#part /boot --size=300 --fstype="ext4" --ondisk=sda
+part pv.01 --grow --ondisk=sda
+volgroup atomicos pv.01
+logvol / --size=57000 --fstype="xfs" --name=root --vgname=atomicos
+logvol swap --fstype swap --name=lv_swap --vgname=atomicos --size=2048
+services --enabled="systemd-timesyncd"
+ostreesetup --osname="fedora-atomic" --remote="fedora-atomic-26" --url="file:///ostree/repo" --ref="fedora/26/x86_64/atomic-host" --nogpg
+
+network --device=link --bootproto=static --ip=192.168.1.101 --netmask=255.255.255.0 --hostname=node1.projectatomic.rocks --gateway=192.168.1.1 --nameserver=192.168.1.100
+
+user --name=atomic --groups=wheel --password=atomic
+
+%post --erroronfail
+rm -f /etc/ostree/remotes.d/fedora-atomic.conf
+ostree remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-26-primary fedora-atomic-26 https://kojipkgs.fedoraproject.org/atomic/26
+echo -e "\nSTORAGE_DRIVER='overlay2'\nCONTAINER_ROOT_LV_MOUNT_PATH=''\n" &amp;gt;&amp;gt; /etc/sysconfig/docker-storage-setup
+%end
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora Atomic 26 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-release/"/>
+    <id>http://www.projectatomic.io/blog/2017/07/fedora-atomic-26-release/</id>
+    <published>2017-07-11T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Fedora Atomic 26 is now generally available.  This contains updated package versions to match all of the content in Fedora Server 26, as well as updates to the container platforms.  While we release updates every 2 weeks, this release contains a collection of major improvements including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;latest rpm-ostree with improvements in package layering&lt;/li&gt;
+&lt;li&gt;default to Overlay2 filesystem for better container storage&lt;/li&gt;
+&lt;li&gt;Docker version 1.13.1&lt;/li&gt;
+&lt;li&gt;Latest versions of Cockpit and Atomic CLI&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;rsquo;re all very excited about the steps forward Atomic Host is taking with this major release.  We hope you&amp;rsquo;re just as excited to try them.  Read on for information about software, upgrading, and more.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;This is the first release for Fedora 26 Atomic Host coming only a week after the last release of Fedora 25 Atomic Host. Our next release will be in 3 weeks. Before you &lt;a href="https://fedoraproject.org/wiki/Atomic_Host_upgrade"&gt;upgrade your Fedora Atomic 25 machines&lt;/a&gt; there are some things you should know.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Please make sure your root filesystem has a few gigabytes of free space. If your root filesystem never got extended to larger than 3GiB (the default on AWS), then you should resize it before attempting an upgrade.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you use the Kubernetes software within Atomic Host then please wait until our next release of Atomic Host to upgrade. There is a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1441218"&gt;bug that is preventing the API server from starting&lt;/a&gt;. If you don&amp;rsquo;t rely on the built-in Kubernetes (e.g. you run containerized Kubernetes or OpenShift) this should not affect you. Before the next release we will publish a guide to upgrading your atomic host and making any configuration changes for the new version of kubernetes.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The storage driver now defaults to overlay2 instead of devicemapper for container storage.  This will not change existing installations. If you want to make the switch for in-place upgrades, see &lt;a href="/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/"&gt;this blog entry&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The url for the F26 ostree &amp;lsquo;remote&amp;rsquo; is &lt;a href="https://kojipkgs.fedoraproject.org/atomic/26/"&gt;https://kojipkgs.fedoraproject.org/atomic/26/&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We updated our ref for this release to shorten it some and remove the mention of a specific container runtime. In Fedora 25 we had &lt;code&gt;fedora-atomic/25/x86_64/docker-host&lt;/code&gt;. In Fedora 26 the ref we now have is&lt;code&gt;fedora/26/x86_64/atomic-host&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Because of the way the Fedora release processes work with
+regards to freezing around major release time some versions
+of software from the last release of Fedora 25 to this first
+release of Fedora 26 go backwards. The next two week release
+will not have that problem.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The &lt;a href="http://www.projectatomic.io/blog/2017/02/matching-fedora-ostree-released-content-with-each-2week-atomic-release/"&gt;generic &lt;code&gt;updates&lt;/code&gt; ref&lt;/a&gt; isn&amp;rsquo;t yet available for f26.  It will be enabled in a later biweekly release.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will write blog posts and documentation over the next few weeks
+to show you new features and guide how to upgrade your existing hosts.&lt;/p&gt;
+
+&lt;h3&gt;Updated Software&lt;/h3&gt;
+
+&lt;p&gt;This release contains the following changes since last release:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ostree diff commit old: ce555fa89da934e6eef23764fb40e8333234b8b60b6f688222247c958e5ebd5b&lt;/li&gt;
+&lt;li&gt;ostree diff commit new: 2e4fcaff52c18cf705a2ecfa47d2ca60958f7443177974f24cc9ce07494b3317&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Upgraded:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;GeoIP 1.6.11-1.fc25.x86_64 -&amp;gt; 1.6.11-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;GeoIP-GeoLite-data 2017.04-1.fc25.noarch -&amp;gt; 2017.06-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;NetworkManager 1:1.4.4-5.fc25.x86_64 -&amp;gt; 1:1.8.0-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;NetworkManager-libnm 1:1.4.4-5.fc25.x86_64 -&amp;gt; 1:1.8.0-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;NetworkManager-team 1:1.4.4-5.fc25.x86_64 -&amp;gt; 1:1.8.0-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;acl 2.2.52-13.fc25.x86_64 -&amp;gt; 2.2.52-15.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;atomic 1.18.1-2.fc25.x86_64 -&amp;gt; 1.18.1-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;atomic-devmode 0.3.6-1.fc25.noarch -&amp;gt; 0.3.7-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;attr 2.4.47-16.fc24.x86_64 -&amp;gt; 2.4.47-18.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;audit 2.7.7-1.fc25.x86_64 -&amp;gt; 2.7.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;audit-libs 2.7.7-1.fc25.x86_64 -&amp;gt; 2.7.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;audit-libs-python 2.7.7-1.fc25.x86_64 -&amp;gt; 2.7.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;audit-libs-python3 2.7.7-1.fc25.x86_64 -&amp;gt; 2.7.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;authconfig 6.2.10-14.fc25.x86_64 -&amp;gt; 7.0.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;basesystem 11-2.fc24.noarch -&amp;gt; 11-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;bash 4.3.43-4.fc25.x86_64 -&amp;gt; 4.4.12-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;bash-completion 1:2.5-1.fc25.noarch -&amp;gt; 1:2.5-2.fc26.noarch&lt;/li&gt;
+&lt;li&gt;bind99-libs 9.9.9-4.P8.fc25.x86_64 -&amp;gt; 9.9.9-5.P8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;bind99-license 9.9.9-4.P8.fc25.noarch -&amp;gt; 9.9.9-5.P8.fc26.noarch&lt;/li&gt;
+&lt;li&gt;boost-iostreams 1.60.0-10.fc25.x86_64 -&amp;gt; 1.63.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;boost-program-options 1.60.0-10.fc25.x86_64 -&amp;gt; 1.63.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;boost-random 1.60.0-10.fc25.x86_64 -&amp;gt; 1.63.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;boost-regex 1.60.0-10.fc25.x86_64 -&amp;gt; 1.63.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;boost-system 1.60.0-10.fc25.x86_64 -&amp;gt; 1.63.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;boost-thread 1.60.0-10.fc25.x86_64 -&amp;gt; 1.63.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;bridge-utils 1.5-13.fc24.x86_64 -&amp;gt; 1.5-14.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;btrfs-progs 4.6.1-1.fc25.x86_64 -&amp;gt; 4.9.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;bubblewrap 0.1.8-1.fc25.x86_64 -&amp;gt; 0.1.8-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;bzip2 1.0.6-21.fc25.x86_64 -&amp;gt; 1.0.6-22.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;bzip2-libs 1.0.6-21.fc25.x86_64 -&amp;gt; 1.0.6-22.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ca-certificates 2017.2.14-1.0.fc25.noarch -&amp;gt; 2017.2.14-1.0.fc26.noarch&lt;/li&gt;
+&lt;li&gt;ceph-common 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;checkpolicy 2.5-8.fc25.x86_64 -&amp;gt; 2.6-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;chkconfig 1.8-1.fc25.x86_64 -&amp;gt; 1.10-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;chrony 2.4.1-1.fc25.x86_64 -&amp;gt; 3.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cloud-init 0.7.9-4.fc25.noarch -&amp;gt; 0.7.9-7.fc26.noarch&lt;/li&gt;
+&lt;li&gt;cloud-utils-growpart 0.27-16.fc25.noarch -&amp;gt; 0.27-17.fc26.noarch&lt;/li&gt;
+&lt;li&gt;cockpit-bridge 137-1.fc25.x86_64 -&amp;gt; 143-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cockpit-docker 137-1.fc25.x86_64 -&amp;gt; 143-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cockpit-networkmanager 137-1.fc25.noarch -&amp;gt; 143-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;cockpit-ostree 137-1.fc25.x86_64 -&amp;gt; 143-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cockpit-system 137-1.fc25.noarch -&amp;gt; 143-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;conntrack-tools 1.4.3-1.fc25.x86_64 -&amp;gt; 1.4.4-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;container-selinux 2:2.19-1.fc25.noarch -&amp;gt; 2:2.19-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;coreutils 8.25-17.fc25.x86_64 -&amp;gt; 8.27-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;coreutils-common 8.25-17.fc25.x86_64 -&amp;gt; 8.27-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cpio 2.12-3.fc24.x86_64 -&amp;gt; 2.12-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cracklib 2.9.6-4.fc25.x86_64 -&amp;gt; 2.9.6-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cracklib-dicts 2.9.6-4.fc25.x86_64 -&amp;gt; 2.9.6-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;criu 2.12-1.fc25.x86_64 -&amp;gt; 3.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;crypto-policies 20160921-4.gitf3018dd.fc25.noarch -&amp;gt; 20170606-1.git7c32281.fc26.noarch&lt;/li&gt;
+&lt;li&gt;cryptsetup 1.7.5-1.fc25.x86_64 -&amp;gt; 1.7.5-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cryptsetup-libs 1.7.5-1.fc25.x86_64 -&amp;gt; 1.7.5-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;curl 7.51.0-7.fc25.x86_64 -&amp;gt; 7.53.1-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;cyrus-sasl-lib 2.1.26-26.2.fc24.x86_64 -&amp;gt; 2.1.26-32.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dbus-glib 0.108-1.fc25.x86_64 -&amp;gt; 0.108-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;device-mapper 1.02.136-3.fc25.x86_64 -&amp;gt; 1.02.137-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;device-mapper-event 1.02.136-3.fc25.x86_64 -&amp;gt; 1.02.137-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;device-mapper-event-libs 1.02.136-3.fc25.x86_64 -&amp;gt; 1.02.137-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;device-mapper-libs 1.02.136-3.fc25.x86_64 -&amp;gt; 1.02.137-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;device-mapper-persistent-data 0.6.3-1.fc25.x86_64 -&amp;gt; 0.6.3-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dhcp-client 12:4.3.5-2.fc25.x86_64 -&amp;gt; 12:4.3.5-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dhcp-common 12:4.3.5-2.fc25.noarch -&amp;gt; 12:4.3.5-6.fc26.noarch&lt;/li&gt;
+&lt;li&gt;dhcp-libs 12:4.3.5-2.fc25.x86_64 -&amp;gt; 12:4.3.5-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;diffutils 3.3-13.fc24.x86_64 -&amp;gt; 3.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dnsmasq 2.76-2.fc25.x86_64 -&amp;gt; 2.76-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;docker 2:1.12.6-6.gitae7d637.fc25.x86_64 -&amp;gt; 2:1.13.1-19.git27e468e.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;docker-common 2:1.12.6-6.gitae7d637.fc25.x86_64 -&amp;gt; 2:1.13.1-19.git27e468e.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dracut 044-78.fc25.x86_64 -&amp;gt; 044-183.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dracut-config-generic 044-78.fc25.x86_64 -&amp;gt; 044-183.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dracut-network 044-78.fc25.x86_64 -&amp;gt; 044-183.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;e2fsprogs 1.43.3-1.fc25.x86_64 -&amp;gt; 1.43.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;e2fsprogs-libs 1.43.3-1.fc25.x86_64 -&amp;gt; 1.43.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;efibootmgr 14-3.fc25.x86_64 -&amp;gt; 14-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;efivar-libs 30-4.fc25.x86_64 -&amp;gt; 30-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;elfutils-default-yama-scope 0.169-1.fc25.noarch -&amp;gt; 0.169-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;elfutils-libelf 0.169-1.fc25.x86_64 -&amp;gt; 0.169-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;elfutils-libs 0.169-1.fc25.x86_64 -&amp;gt; 0.169-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;emacs-filesystem 1:25.2-2.fc25.noarch -&amp;gt; 1:25.2-2.fc26.noarch&lt;/li&gt;
+&lt;li&gt;etcd 3.1.3-1.fc25.x86_64 -&amp;gt; 3.1.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;expat 2.2.0-1.fc25.x86_64 -&amp;gt; 2.2.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fcgi 2.4.0-29.fc24.x86_64 -&amp;gt; 2.4.0-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fedora-logos 22.0.0-3.fc24.x86_64 -&amp;gt; 26.0.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fedora-release 25-2.noarch -&amp;gt; 26-1.noarch&lt;/li&gt;
+&lt;li&gt;fedora-release-atomichost 25-2.noarch -&amp;gt; 26-1.noarch&lt;/li&gt;
+&lt;li&gt;fedora-repos 25-4.noarch -&amp;gt; 26-1.noarch&lt;/li&gt;
+&lt;li&gt;file 5.29-4.fc25.x86_64 -&amp;gt; 5.30-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;file-libs 5.29-4.fc25.x86_64 -&amp;gt; 5.30-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;filesystem 3.2-37.fc24.x86_64 -&amp;gt; 3.2-40.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;findutils 1:4.6.0-8.fc25.x86_64 -&amp;gt; 1:4.6.0-12.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fipscheck 1.4.1-11.fc25.x86_64 -&amp;gt; 1.5.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fipscheck-lib 1.4.1-11.fc25.x86_64 -&amp;gt; 1.5.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;flannel 0.7.0-2.fc25.x86_64 -&amp;gt; 0.7.0-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;freetype 2.6.5-9.fc25.x86_64 -&amp;gt; 2.7.1-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fuse 2.9.7-1.fc25.x86_64 -&amp;gt; 2.9.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;fuse-libs 2.9.7-1.fc25.x86_64 -&amp;gt; 2.9.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gawk 4.1.3-8.fc25.x86_64 -&amp;gt; 4.1.4-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gc 7.4.4-1.fc25.x86_64 -&amp;gt; 7.6.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gdbm 1.13-1.fc25.x86_64 -&amp;gt; 1.13-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gettext 0.19.8.1-3.fc25.x86_64 -&amp;gt; 0.19.8.1-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gettext-libs 0.19.8.1-3.fc25.x86_64 -&amp;gt; 0.19.8.1-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glib-networking 2.50.0-1.fc25.x86_64 -&amp;gt; 2.50.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glib2 2.50.3-1.fc25.x86_64 -&amp;gt; 2.52.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glibc 2.24-8.fc25.x86_64 -&amp;gt; 2.25-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glibc-all-langpacks 2.24-8.fc25.x86_64 -&amp;gt; 2.25-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glibc-common 2.24-8.fc25.x86_64 -&amp;gt; 2.25-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glusterfs 3.10.3-1.fc25.x86_64 -&amp;gt; 3.10.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glusterfs-client-xlators 3.10.3-1.fc25.x86_64 -&amp;gt; 3.10.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glusterfs-fuse 3.10.3-1.fc25.x86_64 -&amp;gt; 3.10.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;glusterfs-libs 3.10.3-1.fc25.x86_64 -&amp;gt; 3.10.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gmp 1:6.1.1-1.fc25.x86_64 -&amp;gt; 1:6.1.2-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gnupg 1.4.21-1.fc25.x86_64 -&amp;gt; 1.4.21-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gnupg2 2.1.13-2.fc25.x86_64 -&amp;gt; 2.1.21-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gnupg2-smime 2.1.13-2.fc25.x86_64 -&amp;gt; 2.1.21-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gnutls 3.5.13-1.fc25.x86_64 -&amp;gt; 3.5.13-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gobject-introspection 1.50.0-1.fc25.x86_64 -&amp;gt; 1.52.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gomtree 0.3.1-1.fc25.x86_64 -&amp;gt; 0.3.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gperftools-libs 2.5-2.fc25.x86_64 -&amp;gt; 2.5.93-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gpgme 1.8.0-10.fc25.x86_64 -&amp;gt; 1.8.0-12.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;grep 2.27-2.fc25.x86_64 -&amp;gt; 3.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;grub2 1:2.02-0.38.fc25.x86_64 -&amp;gt; 1:2.02-0.40.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;grub2-efi 1:2.02-0.38.fc25.x86_64 -&amp;gt; 1:2.02-0.40.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;grub2-tools 1:2.02-0.38.fc25.x86_64 -&amp;gt; 1:2.02-0.40.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;grubby 8.40-3.fc24.x86_64 -&amp;gt; 8.40-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gsettings-desktop-schemas 3.22.0-1.fc25.x86_64 -&amp;gt; 3.24.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gssproxy 0.7.0-9.fc25.x86_64 -&amp;gt; 0.7.0-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;guile 5:2.0.13-1.fc25.x86_64 -&amp;gt; 5:2.0.14-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;gzip 1.8-1.fc25.x86_64 -&amp;gt; 1.8-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;hardlink 1:1.1-1.fc25.x86_64 -&amp;gt; 1:1.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;hostname 3.15-8.fc25.x86_64 -&amp;gt; 3.18-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;info 6.1-4.fc25.x86_64 -&amp;gt; 6.3-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;initscripts 9.69-1.fc25.x86_64 -&amp;gt; 9.72-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ipcalc 0.1.8-1.fc25.x86_64 -&amp;gt; 0.2.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iproute 4.11.0-1.fc25.x86_64 -&amp;gt; 4.11.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iproute-tc 4.11.0-1.fc25.x86_64 -&amp;gt; 4.11.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iptables 1.6.0-3.fc25.x86_64 -&amp;gt; 1.6.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iptables-libs 1.6.0-3.fc25.x86_64 -&amp;gt; 1.6.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iptables-services 1.6.0-3.fc25.x86_64 -&amp;gt; 1.6.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iputils 20161105-1.fc25.x86_64 -&amp;gt; 20161105-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iscsi-initiator-utils 6.2.0.873-34.git4c1f2d9.fc25.x86_64 -&amp;gt; 6.2.0.874-3.git86e8892.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;iscsi-initiator-utils-iscsiuio 6.2.0.873-34.git4c1f2d9.fc25.x86_64 -&amp;gt; 6.2.0.874-3.git86e8892.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;jansson 2.10-2.fc25.x86_64 -&amp;gt; 2.10-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;json-glib 1.2.6-1.fc25.x86_64 -&amp;gt; 1.2.6-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kernel 4.11.8-200.fc25.x86_64 -&amp;gt; 4.11.8-300.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-core 4.11.8-200.fc25.x86_64 -&amp;gt; 4.11.8-300.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-modules 4.11.8-200.fc25.x86_64 -&amp;gt; 4.11.8-300.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;keyutils 1.5.9-8.fc24.x86_64 -&amp;gt; 1.5.10-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;keyutils-libs 1.5.9-8.fc24.x86_64 -&amp;gt; 1.5.10-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kmod 23-1.fc25.x86_64 -&amp;gt; 24-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kmod-libs 23-1.fc25.x86_64 -&amp;gt; 24-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kpartx 0.4.9-83.fc25.x86_64 -&amp;gt; 0.4.9-88.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;krb5-libs 1.14.4-7.fc25.x86_64 -&amp;gt; 1.15.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes 1.5.3-1.fc25.x86_64 -&amp;gt; 1.5.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-client 1.5.3-1.fc25.x86_64 -&amp;gt; 1.5.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-master 1.5.3-1.fc25.x86_64 -&amp;gt; 1.5.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-node 1.5.3-1.fc25.x86_64 -&amp;gt; 1.5.3-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;less 481-7.fc25.x86_64 -&amp;gt; 487-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libacl 2.2.52-13.fc25.x86_64 -&amp;gt; 2.2.52-15.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libaio 0.3.110-6.fc24.x86_64 -&amp;gt; 0.3.110-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libarchive 3.2.2-2.fc25.x86_64 -&amp;gt; 3.2.2-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libassuan 2.4.3-1.fc25.x86_64 -&amp;gt; 2.4.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libatomic_ops 7.4.4-1.fc25.x86_64 -&amp;gt; 7.4.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libattr 2.4.47-16.fc24.x86_64 -&amp;gt; 2.4.47-18.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libbabeltrace 1.4.0-3.fc25.x86_64 -&amp;gt; 1.5.2-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libbasicobjects 0.1.1-29.fc25.x86_64 -&amp;gt; 0.1.1-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libblkid 2.28.2-2.fc25.x86_64 -&amp;gt; 2.29.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcap 2.25-2.fc25.x86_64 -&amp;gt; 2.25-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcap-ng 0.7.8-1.fc25.x86_64 -&amp;gt; 0.7.8-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcephfs1 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcgroup 0.41-9.fc25.x86_64 -&amp;gt; 0.41-11.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcollection 0.7.0-29.fc25.x86_64 -&amp;gt; 0.7.0-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcom_err 1.43.3-1.fc25.x86_64 -&amp;gt; 1.43.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcroco 0.6.11-3.fc25.x86_64 -&amp;gt; 0.6.12-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcrypt-nss 2.24-8.fc25.x86_64 -&amp;gt; 2.25-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libcurl 7.51.0-7.fc25.x86_64 -&amp;gt; 7.53.1-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libdaemon 0.14-10.fc24.x86_64 -&amp;gt; 0.14-11.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libdb 5.3.28-21.fc25.x86_64 -&amp;gt; 5.3.28-21.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libdb-utils 5.3.28-21.fc25.x86_64 -&amp;gt; 5.3.28-21.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libedit 3.1-16.20160618cvs.fc25.x86_64 -&amp;gt; 3.1-17.20160618cvs.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libev 4.24-1.fc25.x86_64 -&amp;gt; 4.24-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libevent 2.0.22-1.fc25.x86_64 -&amp;gt; 2.0.22-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libfdisk 2.28.2-2.fc25.x86_64 -&amp;gt; 2.29.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libffi 3.1-9.fc24.x86_64 -&amp;gt; 3.1-11.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libgcc 6.3.1-1.fc25.x86_64 -&amp;gt; 7.1.1-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libgomp 6.3.1-1.fc25.x86_64 -&amp;gt; 7.1.1-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libgpg-error 1.24-1.fc25.x86_64 -&amp;gt; 1.25-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libicu 57.1-5.fc25.x86_64 -&amp;gt; 57.1-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libidn 1.33-1.fc25.x86_64 -&amp;gt; 1.33-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libidn2 2.0.2-1.fc25.x86_64 -&amp;gt; 2.0.2-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libini_config 1.3.0-29.fc25.x86_64 -&amp;gt; 1.3.0-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libksba 1.3.5-1.fc25.x86_64 -&amp;gt; 1.3.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libmetalink 0.1.3-1.fc25.x86_64 -&amp;gt; 0.1.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libmnl 1.0.4-1.fc25.x86_64 -&amp;gt; 1.0.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libmodman 2.0.1-12.fc24.x86_64 -&amp;gt; 2.0.1-13.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libmount 2.28.2-2.fc25.x86_64 -&amp;gt; 2.29.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libndp 1.6-1.fc25.x86_64 -&amp;gt; 1.6-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnet 1.1.6-11.fc24.x86_64 -&amp;gt; 1.1.6-12.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnetfilter_conntrack 1.0.6-2.fc25.x86_64 -&amp;gt; 1.0.6-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnetfilter_cthelper 1.0.0-9.fc24.x86_64 -&amp;gt; 1.0.0-10.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnetfilter_cttimeout 1.0.0-7.fc24.x86_64 -&amp;gt; 1.0.0-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnetfilter_queue 1.0.2-7.fc24.x86_64 -&amp;gt; 1.0.2-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnfnetlink 1.0.1-8.fc24.x86_64 -&amp;gt; 1.0.1-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnfsidmap 0.27-1.fc25.x86_64 -&amp;gt; 0.27-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnghttp2 1.13.0-2.fc25.x86_64 -&amp;gt; 1.21.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnl3 3.2.29-3.fc25.x86_64 -&amp;gt; 3.3.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libnl3-cli 3.2.29-3.fc25.x86_64 -&amp;gt; 3.3.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libpath_utils 0.2.1-29.fc25.x86_64 -&amp;gt; 0.2.1-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libpcap 14:1.7.4-2.fc24.x86_64 -&amp;gt; 14:1.8.1-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libpng 2:1.6.27-1.fc25.x86_64 -&amp;gt; 2:1.6.28-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libproxy 0.4.14-1.fc25.x86_64 -&amp;gt; 0.4.15-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libpsl 0.17.0-1.fc25.x86_64 -&amp;gt; 0.17.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libpwquality 1.3.0-6.fc25.x86_64 -&amp;gt; 1.3.0-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;librados2 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libradosstriper1 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;librbd1 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libref_array 0.1.5-29.fc25.x86_64 -&amp;gt; 0.1.5-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;librepo 1.7.18-3.fc25.x86_64 -&amp;gt; 1.7.20-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libreport-filesystem 2.8.0-1.fc25.x86_64 -&amp;gt; 2.9.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;librgw2 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libseccomp 2.3.2-1.fc25.x86_64 -&amp;gt; 2.3.2-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsecret 0.18.5-2.fc25.x86_64 -&amp;gt; 0.18.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libselinux 2.5-13.fc25.x86_64 -&amp;gt; 2.6-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libselinux-python 2.5-13.fc25.x86_64 -&amp;gt; 2.6-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libselinux-python3 2.5-13.fc25.x86_64 -&amp;gt; 2.6-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libselinux-utils 2.5-13.fc25.x86_64 -&amp;gt; 2.6-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsemanage 2.5-9.fc25.x86_64 -&amp;gt; 2.6-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsemanage-python 2.5-9.fc25.x86_64 -&amp;gt; 2.6-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsemanage-python3 2.5-9.fc25.x86_64 -&amp;gt; 2.6-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsepol 2.5-10.fc25.x86_64 -&amp;gt; 2.6-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsigsegv 2.10-10.fc24.x86_64 -&amp;gt; 2.11-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsmartcols 2.28.2-2.fc25.x86_64 -&amp;gt; 2.29.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsolv 0.6.27-2.fc25.x86_64 -&amp;gt; 0.6.27-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsoup 2.56.0-2.fc25.x86_64 -&amp;gt; 2.58.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libss 1.43.3-1.fc25.x86_64 -&amp;gt; 1.43.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libssh2 1.8.0-1.fc25.x86_64 -&amp;gt; 1.8.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsss_idmap 1.15.2-5.fc25.x86_64 -&amp;gt; 1.15.2-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsss_nss_idmap 1.15.2-5.fc25.x86_64 -&amp;gt; 1.15.2-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libsss_sudo 1.15.2-5.fc25.x86_64 -&amp;gt; 1.15.2-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libstdc++ 6.3.1-1.fc25.x86_64 -&amp;gt; 7.1.1-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libtasn1 4.12-1.fc25.x86_64 -&amp;gt; 4.12-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libteam 1.27-1.fc25.x86_64 -&amp;gt; 1.27-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libtirpc 1.0.1-4.rc3.fc25.x86_64 -&amp;gt; 1.0.1-4.rc3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libtomcrypt 1.17-29.fc25.x86_64 -&amp;gt; 1.17-30.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libtommath 1.0-4.fc24.x86_64 -&amp;gt; 1.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libtool-ltdl 2.4.6-13.fc25.x86_64 -&amp;gt; 2.4.6-17.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libunistring 0.9.4-3.fc24.x86_64 -&amp;gt; 0.9.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libunwind 1.2-1.fc25.x86_64 -&amp;gt; 1.2-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libusb 1:0.1.5-7.fc24.x86_64 -&amp;gt; 1:0.1.5-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libusbx 1.0.21-1.fc25.x86_64 -&amp;gt; 1.0.21-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libuser 0.62-4.fc25.x86_64 -&amp;gt; 0.62-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libutempter 1.1.6-8.fc24.x86_64 -&amp;gt; 1.1.6-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libuuid 2.28.2-2.fc25.x86_64 -&amp;gt; 2.29.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libverto 0.2.6-6.fc24.x86_64 -&amp;gt; 0.2.6-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libverto-libev 0.2.6-6.fc24.x86_64 -&amp;gt; 0.2.6-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libxkbcommon 0.7.1-1.fc25.x86_64 -&amp;gt; 0.7.1-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libxml2 2.9.4-2.fc25.x86_64 -&amp;gt; 2.9.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libyaml 0.1.6-8.fc24.x86_64 -&amp;gt; 0.1.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;linux-atm-libs 2.5.1-14.fc24.x86_64 -&amp;gt; 2.5.1-17.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;linux-firmware 20170605-74.git37857004.fc25.noarch -&amp;gt; 20170622-75.gita3a26af2.fc26.noarch&lt;/li&gt;
+&lt;li&gt;lsof 4.89-4.fc25.x86_64 -&amp;gt; 4.89-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;lttng-ust 2.8.1-2.fc25.x86_64 -&amp;gt; 2.9.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;lua-libs 5.3.4-3.fc25.x86_64 -&amp;gt; 5.3.4-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;lvm2 2.02.167-3.fc25.x86_64 -&amp;gt; 2.02.168-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;lvm2-libs 2.02.167-3.fc25.x86_64 -&amp;gt; 2.02.168-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;lzo 2.08-8.fc24.x86_64 -&amp;gt; 2.08-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;make 1:4.1-6.fc25.x86_64 -&amp;gt; 1:4.2.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;mdadm 3.4-2.fc25.x86_64 -&amp;gt; 4.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;mokutil 1:0.3.0-3.fc25.x86_64 -&amp;gt; 1:0.3.0-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;mozjs17 17.0.0-16.fc25.x86_64 -&amp;gt; 17.0.0-18.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;mpfr 3.1.5-1.fc25.x86_64 -&amp;gt; 3.1.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ncurses 6.0-6.20160709.fc25.x86_64 -&amp;gt; 6.0-8.20170212.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ncurses-base 6.0-6.20160709.fc25.noarch -&amp;gt; 6.0-8.20170212.fc26.noarch&lt;/li&gt;
+&lt;li&gt;ncurses-libs 6.0-6.20160709.fc25.x86_64 -&amp;gt; 6.0-8.20170212.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;net-tools 2.0-0.40.20160329git.fc25.x86_64 -&amp;gt; 2.0-0.42.20160912git.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nettle 3.3-1.fc25.x86_64 -&amp;gt; 3.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nfs-utils 1:2.1.1-5.rc4.fc25.x86_64 -&amp;gt; 1:2.1.1-5.rc4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nmap-ncat 2:7.40-1.fc25.x86_64 -&amp;gt; 2:7.40-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;npth 1.3-1.fc25.x86_64 -&amp;gt; 1.5-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nspr 4.14.0-2.fc25.x86_64 -&amp;gt; 4.14.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss 3.30.2-1.1.fc25.x86_64 -&amp;gt; 3.30.2-1.1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-altfiles 2.18.1-7.fc24.x86_64 -&amp;gt; 2.18.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-pem 1.0.3-3.fc25.x86_64 -&amp;gt; 1.0.3-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-softokn 3.30.2-1.0.fc25.x86_64 -&amp;gt; 3.30.2-1.0.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-softokn-freebl 3.30.2-1.0.fc25.x86_64 -&amp;gt; 3.30.2-1.0.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-sysinit 3.30.2-1.1.fc25.x86_64 -&amp;gt; 3.30.2-1.1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-tools 3.30.2-1.1.fc25.x86_64 -&amp;gt; 3.30.2-1.1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;nss-util 3.30.2-1.0.fc25.x86_64 -&amp;gt; 3.30.2-1.0.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;oci-register-machine 0-3.7.gitbb20b00.fc25.x86_64 -&amp;gt; 0-3.7.gitbb20b00.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;oci-systemd-hook 1:0.1.7-1.git1788cf2.fc25.x86_64 -&amp;gt; 1:0.1.7-1.git1788cf2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;oddjob 0.34.3-2.fc24.x86_64 -&amp;gt; 0.34.4-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;oddjob-mkhomedir 0.34.3-2.fc24.x86_64 -&amp;gt; 0.34.4-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;openldap 2.4.44-10.fc25.x86_64 -&amp;gt; 2.4.44-10.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;openssh 7.4p1-4.fc25.x86_64 -&amp;gt; 7.5p1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;openssh-clients 7.4p1-4.fc25.x86_64 -&amp;gt; 7.5p1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;openssh-server 7.4p1-4.fc25.x86_64 -&amp;gt; 7.5p1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;openssl 1:1.0.2k-1.fc25.x86_64 -&amp;gt; 1:1.1.0f-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;openssl-libs 1:1.0.2k-1.fc25.x86_64 -&amp;gt; 1:1.1.0f-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;os-prober 1.74-1.fc25.x86_64 -&amp;gt; 1.74-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ostree 2017.7-2.fc25.x86_64 -&amp;gt; 2017.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-grub2 2017.7-2.fc25.x86_64 -&amp;gt; 2017.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ostree-libs 2017.7-2.fc25.x86_64 -&amp;gt; 2017.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;p11-kit 0.23.2-4.fc25.x86_64 -&amp;gt; 0.23.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;p11-kit-trust 0.23.2-4.fc25.x86_64 -&amp;gt; 0.23.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pam 1.3.0-1.fc25.x86_64 -&amp;gt; 1.3.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;passwd 0.79-8.fc24.x86_64 -&amp;gt; 0.79-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pcre 8.40-7.fc25.x86_64 -&amp;gt; 8.40-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pigz 2.3.4-1.fc25.x86_64 -&amp;gt; 2.3.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pinentry 0.9.7-2.fc24.x86_64 -&amp;gt; 0.9.7-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;policycoreutils 2.5-20.fc25.x86_64 -&amp;gt; 2.6-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;policycoreutils-python 2.5-20.fc25.x86_64 -&amp;gt; 2.6-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;policycoreutils-python-utils 2.5-20.fc25.x86_64 -&amp;gt; 2.6-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;policycoreutils-python3 2.5-20.fc25.x86_64 -&amp;gt; 2.6-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;polkit 0.113-8.fc25.x86_64 -&amp;gt; 0.113-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;polkit-libs 0.113-8.fc25.x86_64 -&amp;gt; 0.113-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;polkit-pkla-compat 0.1-7.fc24.x86_64 -&amp;gt; 0.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;popt 1.16-7.fc24.x86_64 -&amp;gt; 1.16-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;procps-ng 3.3.10-11.fc24.x86_64 -&amp;gt; 3.3.10-13.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;protobuf-c 1.2.1-1.fc25.x86_64 -&amp;gt; 1.2.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;psmisc 22.21-8.fc24.x86_64 -&amp;gt; 22.21-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;publicsuffix-list-dafsa 20170424-1.fc25.noarch -&amp;gt; 20170424-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-IPy 0.81-16.fc25.noarch -&amp;gt; 0.81-18.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-IPy-python3 0.81-16.fc25.noarch -&amp;gt; 0.81-18.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-backports 1.0-8.fc25.x86_64 -&amp;gt; 1.0-9.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python-backports-ssl_match_hostname 3.5.0.1-3.fc25.noarch -&amp;gt; 3.5.0.1-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-cephfs 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python-chardet 2.3.0-1.fc25.noarch -&amp;gt; 2.3.0-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-docker-py 1.10.6-1.fc25.noarch -&amp;gt; 1:1.10.6-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-ipaddress 1.0.16-3.fc25.noarch -&amp;gt; 1.0.16-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-rados 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python-rbd 1:10.2.4-2.fc25.x86_64 -&amp;gt; 1:10.2.7-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python-websocket-client 0.37.0-2.fc25.noarch -&amp;gt; 0.40.0-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-docker-pycreds 0.2.1-2.fc25.noarch -&amp;gt; 0.2.1-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-pysocks 1.5.6-5.fc25.noarch -&amp;gt; 1.5.7-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-requests 2.10.0-4.fc25.noarch -&amp;gt; 2.13.0-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-setuptools 25.1.1-1.fc25.noarch -&amp;gt; 36.0.1-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-urllib3 1.15.1-3.fc25.noarch -&amp;gt; 1.20-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3 3.5.3-6.fc25.x86_64 -&amp;gt; 3.6.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-PyYAML 3.11-13.fc25.x86_64 -&amp;gt; 3.12-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-chardet 2.3.0-1.fc25.noarch -&amp;gt; 2.3.0-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-configobj 5.0.6-5.fc25.noarch -&amp;gt; 5.0.6-8.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-crypto 2.6.1-13.fc25.x86_64 -&amp;gt; 2.6.1-14.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-dateutil 1:2.6.0-1.fc25.noarch -&amp;gt; 1:2.6.0-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-dbus 1.2.4-2.fc25.x86_64 -&amp;gt; 1.2.4-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-decorator 4.0.11-1.fc25.noarch -&amp;gt; 4.0.11-2.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-docker-pycreds 0.2.1-2.fc25.noarch -&amp;gt; 0.2.1-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-gobject-base 3.22.0-1.fc25.x86_64 -&amp;gt; 3.24.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-jinja2 2.8.1-1.fc25.noarch -&amp;gt; 2.9.6-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-jsonpatch 1.2-9.fc25.noarch -&amp;gt; 1.14-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-jsonpointer 1.10-3.fc25.noarch -&amp;gt; 1.10-6.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-libs 3.5.3-6.fc25.x86_64 -&amp;gt; 3.6.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-libxml2 2.9.4-2.fc25.x86_64 -&amp;gt; 2.9.4-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-markupsafe 0.23-10.fc25.x86_64 -&amp;gt; 0.23-13.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-oauthlib 1.0.3-3.fc25.noarch -&amp;gt; 1.0.3-5.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-pip 8.1.2-2.fc25.noarch -&amp;gt; 9.0.1-9.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-prettytable 0.7.2-8.fc25.noarch -&amp;gt; 0.7.2-10.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-pyserial 3.1.1-1.fc25.noarch -&amp;gt; 3.1.1-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-pysocks 1.5.6-5.fc25.noarch -&amp;gt; 1.5.7-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-requests 2.10.0-4.fc25.noarch -&amp;gt; 2.13.0-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-rpm 4.13.0.1-1.fc25.x86_64 -&amp;gt; 4.13.0.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-setuptools 25.1.1-1.fc25.noarch -&amp;gt; 36.0.1-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-six 1.10.0-3.fc25.noarch -&amp;gt; 1.10.0-8.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-slip 0.6.4-4.fc25.noarch -&amp;gt; 0.6.4-6.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-slip-dbus 0.6.4-4.fc25.noarch -&amp;gt; 0.6.4-6.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-sssdconfig 1.15.2-5.fc25.noarch -&amp;gt; 1.15.2-5.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-urllib3 1.15.1-3.fc25.noarch -&amp;gt; 1.20-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-websocket-client 0.37.0-2.fc25.noarch -&amp;gt; 0.40.0-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;qrencode-libs 3.4.4-1.fc25.x86_64 -&amp;gt; 3.4.4-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;quota 1:4.03-7.fc25.x86_64 -&amp;gt; 1:4.03-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;quota-nls 1:4.03-7.fc25.noarch -&amp;gt; 1:4.03-8.fc26.noarch&lt;/li&gt;
+&lt;li&gt;readline 6.3-8.fc24.x86_64 -&amp;gt; 7.0-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rootfiles 8.1-19.fc24.noarch -&amp;gt; 8.1-20.fc26.noarch&lt;/li&gt;
+&lt;li&gt;rpcbind 0.2.4-6.rc2.fc25.x86_64 -&amp;gt; 0.2.4-7.rc2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rpm 4.13.0.1-1.fc25.x86_64 -&amp;gt; 4.13.0.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-build-libs 4.13.0.1-1.fc25.x86_64 -&amp;gt; 4.13.0.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-libs 4.13.0.1-1.fc25.x86_64 -&amp;gt; 4.13.0.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-ostree 2017.6-3.fc25.x86_64 -&amp;gt; 2017.6-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-plugin-selinux 4.13.0.1-1.fc25.x86_64 -&amp;gt; 4.13.0.1-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;rsync 3.1.2-4.fc25.x86_64 -&amp;gt; 3.1.2-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;runc 1:1.0.0-6.git75f8da7.fc25.1.x86_64 -&amp;gt; 1:1.0.0-9.git6394544.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;screen 4.5.1-2.fc25.x86_64 -&amp;gt; 4.5.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;sed 4.2.2-15.fc24.x86_64 -&amp;gt; 4.4-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;selinux-policy 3.13.1-225.18.fc25.noarch -&amp;gt; 3.13.1-259.fc26.noarch&lt;/li&gt;
+&lt;li&gt;selinux-policy-targeted 3.13.1-225.18.fc25.noarch -&amp;gt; 3.13.1-259.fc26.noarch&lt;/li&gt;
+&lt;li&gt;setools-console 3.3.8-12.fc25.x86_64 -&amp;gt; 4.1.0-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;setup 2.10.4-1.fc25.noarch -&amp;gt; 2.10.5-2.fc26.noarch&lt;/li&gt;
+&lt;li&gt;shadow-utils 2:4.2.1-11.fc25.x86_64 -&amp;gt; 2:4.3.1-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;shared-mime-info 1.8-1.fc25.x86_64 -&amp;gt; 1.8-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;socat 1.7.3.2-1.fc25.x86_64 -&amp;gt; 1.7.3.2-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;sos 3.4-1.fc25.noarch -&amp;gt; 3.4-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;sqlite-libs 3.14.2-1.fc25.x86_64 -&amp;gt; 3.19.1-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;sssd-client 1.15.2-5.fc25.x86_64 -&amp;gt; 1.15.2-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;strace 4.17-1.fc25.x86_64 -&amp;gt; 4.17-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;sudo 1.8.20p2-1.fc25.x86_64 -&amp;gt; 1.8.20p2-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;system-python 3.5.3-6.fc25.x86_64 -&amp;gt; 3.6.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;system-python-libs 3.5.3-6.fc25.x86_64 -&amp;gt; 3.6.1-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;systemd 231-17.fc25.x86_64 -&amp;gt; 233-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;systemd-bootchart 231-2.fc25.x86_64 -&amp;gt; 231-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;systemd-container 231-17.fc25.x86_64 -&amp;gt; 233-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;systemd-libs 231-17.fc25.x86_64 -&amp;gt; 233-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;systemd-pam 231-17.fc25.x86_64 -&amp;gt; 233-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;systemd-udev 231-17.fc25.x86_64 -&amp;gt; 233-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;tar 2:1.29-3.fc25.x86_64 -&amp;gt; 2:1.29-4.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;tcp_wrappers 7.6-83.fc25.x86_64 -&amp;gt; 7.6-85.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;tcp_wrappers-libs 7.6-83.fc25.x86_64 -&amp;gt; 7.6-85.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;tcpdump 14:4.9.0-1.fc25.x86_64 -&amp;gt; 14:4.9.0-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;teamd 1.27-1.fc25.x86_64 -&amp;gt; 1.27-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;timedatex 0.4-2.fc24.x86_64 -&amp;gt; 0.4-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;tmux 2.2-3.fc25.x86_64 -&amp;gt; 2.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;trousers 0.3.13-6.fc24.x86_64 -&amp;gt; 0.3.13-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;trousers-lib 0.3.13-6.fc24.x86_64 -&amp;gt; 0.3.13-7.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;tzdata 2017b-1.fc25.noarch -&amp;gt; 2017b-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;userspace-rcu 0.9.2-2.fc25.x86_64 -&amp;gt; 0.9.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;ustr 1.0.4-21.fc24.x86_64 -&amp;gt; 1.0.4-22.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;util-linux 2.28.2-2.fc25.x86_64 -&amp;gt; 2.29.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;which 2.21-1.fc25.x86_64 -&amp;gt; 2.21-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;xfsprogs 4.9.0-1.fc25.x86_64 -&amp;gt; 4.10.0-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;xkeyboard-config 2.20-2.fc25.noarch -&amp;gt; 2.21-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;xz 5.2.2-2.fc24.x86_64 -&amp;gt; 5.2.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;xz-libs 5.2.2-2.fc24.x86_64 -&amp;gt; 5.2.3-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;yajl 2.1.0-5.fc24.x86_64 -&amp;gt; 2.1.0-6.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;zlib 1.2.8-10.fc24.x86_64 -&amp;gt; 1.2.11-2.fc26.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Downgraded:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;dbus 1:1.11.14-1.fc25.x86_64 -&amp;gt; 1:1.11.12-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;dbus-libs 1:1.11.14-1.fc25.x86_64 -&amp;gt; 1:1.11.12-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libgcrypt 1.7.8-1.fc25.x86_64 -&amp;gt; 1.7.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;skopeo 0.1.22-1.git5d24b67.fc25.x86_64 -&amp;gt; 0.1.19-1.dev.git0224d8c.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;skopeo-containers 0.1.22-1.git5d24b67.fc25.x86_64 -&amp;gt; 0.1.19-1.dev.git0224d8c.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;vim-minimal 2:8.0.679-1.fc25.x86_64 -&amp;gt; 2:8.0.662-1.fc26.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Removed:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;libgudev-230-3.fc24.x86_64&lt;/li&gt;
+&lt;li&gt;newt-0.52.19-2.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;newt-python3-0.52.19-2.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;plymouth-0.9.3-0.6.20160620git0e65b86c.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;plymouth-core-libs-0.9.3-0.6.20160620git0e65b86c.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;plymouth-scripts-0.9.3-0.6.20160620git0e65b86c.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;ppp-2.4.7-9.fc24.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Obsolesced due to name changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;lz4-1.7.5-1.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;pkgconfig-1:0.29.1-1.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;python-2.7.13-2.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;python-libs-2.7.13-2.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;python-pip-8.1.2-2.fc25.noarch&lt;/li&gt;
+&lt;li&gt;python-six-1.10.0-3.fc25.noarch&lt;/li&gt;
+&lt;li&gt;python3-docker-py-1.10.6-1.fc25.noarch&lt;/li&gt;
+&lt;li&gt;setools-libs-3.3.8-12.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;slang-2.3.0-7.fc25.x86_64&lt;/li&gt;
+&lt;li&gt;sqlite-3.14.2-1.fc25.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Added:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;atomic-registries-1.18.1-5.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;container-storage-setup-0.5.0-1.git9b77bcb.fc26.noarch&lt;/li&gt;
+&lt;li&gt;docker-rhel-push-plugin-2:1.13.1-19.git27e468e.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;libpkgconf-1.3.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;lz4-libs-1.7.5-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;oci-umount-2:1.13.1-19.git27e468e.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;parted-3.2-24.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pcre2-10.23-8.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pkgconf-1.3.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;pkgconf-m4-1.3.7-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;pkgconf-pkg-config-1.3.7-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python-enum34-1.1.6-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python-rhsm-certificates-1.19.4-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python2-2.7.13-10.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python2-cffi-1.9.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python2-cryptography-1.7.2-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python2-idna-2.5-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-libs-2.7.13-10.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python2-pip-9.0.1-9.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-ply-3.9-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-pyOpenSSL-16.2.0-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-pyasn1-0.2.3-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-pycparser-2.14-10.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python2-six-1.10.0-8.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-cffi-1.9.1-2.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-cryptography-1.7.2-1.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;python3-docker-2.3.0-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-idna-2.5-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-ply-3.9-3.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-pyOpenSSL-16.2.0-4.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-pyasn1-0.2.3-1.fc26.noarch&lt;/li&gt;
+&lt;li&gt;python3-pycparser-2.14-10.fc26.noarch&lt;/li&gt;
+&lt;li&gt;setools-python-4.1.0-3.fc26.x86_64&lt;/li&gt;
+&lt;li&gt;setools-python3-4.1.0-3.fc26.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Download Information&lt;/h3&gt;
+
+&lt;p&gt;Existing systems can be upgraded &lt;a href="https://fedoraproject.org/wiki/Atomic_Host_upgrade"&gt;using rebase&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Corresponding image media for new installations can be &lt;a href="https://getfedora.org/en/atomic/download/"&gt;downloaded from GetFedora.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Respective signed CHECKSUM files can be found here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-26-20170707.1/CloudImages/x86_64/images/Fedora-CloudImages-26-20170707.1-x86_64-CHECKSUM"&gt;Cloud image checksum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-26-20170707.1/Atomic/x86_64/iso/Fedora-Atomic-26-20170707.1-x86_64-CHECKSUM"&gt;ISO Checksum&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For direct download, the &amp;ldquo;latest&amp;rdquo; targets are always available at the following URLs:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_iso_latest"&gt;Latest ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_qcow2_latest"&gt;Latest QCOW&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_raw_latest"&gt;Latest raw image&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_libvirt_latest"&gt;Latest LibVirt VM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_virtualbox_latest"&gt;Latest VirtualBox VM&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Filename fetching URLs for downloading to remote systems are available by querying the following links:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_iso_latest_filename"&gt;ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_qcow2_latest_filename"&gt;QCOW&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_raw_latest_filename"&gt;raw&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename"&gt;LibVirt&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename"&gt;VirtualBox&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more information about the latest targets, please reference &lt;a href="https://fedoraproject.org/wiki/Cloud#Quick_Links"&gt;the Fedora
+Cloud Wiki space&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Vagrant Cloud Page with Atomic Host has moved, it&amp;rsquo;s &lt;a href="https://app.vagrantup.com/fedora/boxes/26-atomic-host"&gt;now in app.vagrantup.com&lt;/a&gt;.  This can require some extra steps to upgrade your Vagrant images.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

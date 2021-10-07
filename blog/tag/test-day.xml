@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Test Day</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/test-day.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Join Us for a Fedora 25 Test Day Next Week (October 24, 2016)</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/join-us-for-a-fedora-25-test-day-next-week-october-24-2016/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/join-us-for-a-fedora-25-test-day-next-week-october-24-2016/</id>
+    <published>2016-10-19T15:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Want to help make Fedora Atomic Host even better? &lt;a href="https://fedoraproject.org/w/index.php?title=Test_Day:2016_10_24_Cloud"&gt;Join us next week for the Fedora Cloud Test Day&lt;/a&gt;, where we&amp;rsquo;ll be banging on the Atomic Host image for Fedora. As always, we&amp;rsquo;re looking for many hands to help put the release through its paces.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;To participate, you&amp;rsquo;ll need a system with Vagrant, libvirt/KVM, or access to OpenStack or another IaaS that can consume the qcow or raw images for Atomic.  Alternately, if you have an Amazon Web Services account, there will be AMIs you can test; check the wiki page for links on the test day.&lt;/p&gt;
+
+&lt;p&gt;Grab the image from the &lt;a href="http://fedoraproject.org/wiki/Test_Day:2016_10_24_Cloud"&gt;wiki&lt;/a&gt;, and then check out the &lt;a href="http://testdays.fedorainfracloud.org/events/11"&gt;test results page&lt;/a&gt; to see the tests you should run and report the results.&lt;/p&gt;
+
+&lt;p&gt;We also encourage &lt;q&gt;freestyle&lt;/q&gt; testing as well, so if you have use cases that go beyond the described tests please do put the image through those tests as well.  For example, you could test setting up a Kubernetes cluster or even OpenShift.&lt;/p&gt;
+
+&lt;p&gt;Found bugs? Be sure to &lt;a href="https://bugzilla.redhat.com/"&gt;report them on Bugzilla&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Always Be Testing&lt;/h3&gt;
+
+&lt;p&gt;If you can&amp;rsquo;t make it for the scheduled test day, no sweat. You can play along at home any time. You can find updated nightly images for Fedora Atomic and Fedora Cloud Base, alongside the results of automated tests, at the &lt;a href="https://apps.fedoraproject.org/autocloud/jobs/"&gt;Autocloud site&lt;/a&gt;. You can find an image type and version you&amp;rsquo;re interested in testing, click the &lt;q&gt;Output&lt;/q&gt; button next to the test results, and download the image using the &lt;q&gt;Download Image&lt;/q&gt; on the output page.&lt;/p&gt;
+
+&lt;h3&gt;Communicating During and After Test Days&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ll have folks watching #fedora-test-day on Freenode, and (as always) folks in #fedora-cloud and #atomic. If you have questions, or think you can help others, please join in!&lt;/p&gt;
+
+&lt;p&gt;Also, there&amp;rsquo;s always the &lt;a href="https://lists.fedoraproject.org/admin/lists/cloud.lists.fedoraproject.org/"&gt;cloud@lists.fedoraproject.org&lt;/a&gt; mailing list for additional conversations around the Fedora Atomic Host images. Please sign up, and feel free to chime in any time with questions, comments, suggestions, or to raise a hand to help out. See you on Test Day!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora 24 Test Day Tomorrow (May 10, 2016)</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/05/fedora-24-test-day-tomorrow-may-10-2016/"/>
+    <id>http://www.projectatomic.io/blog/2016/05/fedora-24-test-day-tomorrow-may-10-2016/</id>
+    <published>2016-05-09T17:29:41+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Want to help make Fedora Atomic Host even better? &lt;a href="https://fedoraproject.org/w/index.php?title=Test_Day:2016_05_10_Cloud"&gt;Join us tomorrow for the Fedora Cloud Test Day&lt;/a&gt;, where we&amp;rsquo;ll be banging on the Atomic Host image for Fedora. As always, we&amp;rsquo;re looking for many hands to help put the image through its paces.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;To participate tomorrow, you&amp;rsquo;ll need a system with Vagrant, libvirt/KVM, or access to OpenStack or another IaaS that can consume the qcow or raw images for Atomic.&lt;/p&gt;
+
+&lt;p&gt;Grab the image from the &lt;a href="http://fedoraproject.org/wiki/Test_Day:2016_05_10_Cloud"&gt;wiki&lt;/a&gt;, and then check out the &lt;a href="http://testdays.fedorainfracloud.org/events/7"&gt;test results page&lt;/a&gt; to see the tests you should run and report the results. &amp;ldquo;&lt;/p&gt;
+
+&lt;p&gt;We also encourage &lt;q&gt;freestyle&lt;/q&gt; testing as well, so if you have use cases that go beyond the described tests please do put the image through those tests as well.&lt;/p&gt;
+
+&lt;p&gt;Found bugs? Be sure to &lt;a href="https://bugzilla.redhat.com/"&gt;report them on Bugzilla&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Everyday is Like Test Day&lt;/h3&gt;
+
+&lt;p&gt;To (badly) &lt;a href="https://www.youtube.com/watch?v=bf6Xwb03jTE"&gt;paraphrase Morrissey&lt;/a&gt;, &lt;q&gt;every day is like test day.&lt;/q&gt; If you can&amp;rsquo;t make it tomorrow, no sweat. You can play along at home any time.&lt;/p&gt;
+
+&lt;p&gt;Fedora nightlies are listed &lt;a href="https://www.happyassassin.net/nightlies.html"&gt;on Adam Williamson&amp;rsquo;s site&lt;/a&gt;. Grab the most recent images and have fun!&lt;/p&gt;
+
+&lt;h3&gt;Communicating During and After Test Days&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ll have folks watching #fedora-test-day on Freenode, and (as always) folks in #fedora-cloud and #atomic. If you have questions, or think you can help others, please join in!&lt;/p&gt;
+
+&lt;p&gt;Also, there&amp;rsquo;s always the &lt;a href="https://lists.fedoraproject.org/admin/lists/cloud.lists.fedoraproject.org/"&gt;cloud@lists.fedoraproject.org&lt;/a&gt; mailing list for additional conversations around the Fedora Atomic Host images. Please sign up, and feel free to chime in any time with questions, comments, suggestions, or to raise a hand to help out. See you on Test Day!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

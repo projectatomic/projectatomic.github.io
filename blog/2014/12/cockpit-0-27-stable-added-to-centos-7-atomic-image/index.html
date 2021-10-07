@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Docker 1.4, Cockpit 0.27 (stable) added to CentOS 7 Atomic &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Docker 1.4, Cockpit 0.27 (stable) added to CentOS 7 Atomic' property='og:title'>
+<meta content='If you’re running the CentOS Atomic Host images, you’ll want to do an atomic upgrade right about now. The update includes a bump for Docker to 1.4, and brings Cockpit to 0.27, and pulls in a few additional...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/12/cockpit-0-27-stable-added-to-centos-7-atomic-image/' property='og:url'>
+<meta content='2014-12-18T22:08:00Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='Cockpit' property='article:tag'>
+<link href='/blog/tag/cockpit.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Docker 1.4, Cockpit 0.27 (stable) added to CentOS 7 Atomic' name='twitter:title'>
+<meta content='If you’re running the CentOS Atomic Host images, you’ll want to do an atomic upgrade right about now. The update includes a bump for Docker to 1.4, and brings Cockpit to 0.27, and pulls in a few additional...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_12 blog_2014_12_cockpit-0-27-stable-added-to-centos-7-atomic-image blog_2014_12_cockpit-0-27-stable-added-to-centos-7-atomic-image_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Docker 1.4, Cockpit 0.27 (stable) added to CentOS 7 Atomic
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-12-18T22:08:00Z'>
+Thursday 18 December 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>If you&rsquo;re running the <a href="http://buildlogs.centos.org/monthly/7/">CentOS Atomic Host</a> images, you&rsquo;ll want to do an <code>atomic upgrade</code> right about now. The update includes a bump for Docker to 1.4, and brings Cockpit to 0.27, and pulls in a few additional package updates. </p>
+
+<p>As you&rsquo;ve probably read, Docker 1.4 <a href="http://docs.docker.com/release-notes/">includes a few bug fixes</a>, security fixes, and several new features. </p>
+
+<p>Cockpit 0.27 is the most recent <em>stable</em> release from the Cockpit Project. This release of the <a href="http://cockpit-project.org/">Cockpit server manager</a> is the same used for Fedora 21 Atomic Host, and includes a lot of stability and feature improvements since 0.24.</p>
+
+<h3>What&rsquo;s in that update?!</h3>
+
+<p>You can see all the packages updated by using <code>atomic db diff commit1 commit2</code>. (And you can see the commit hashes for the two trees with <code>atomic status</code>.) </p>
+
+<h3>Cockpit Hackfest ahead of DevConf.cz</h3>
+
+<p>Going to <a href="http://www.devconf.cz/">DevConf.cz</a>? Or just happen to be close to the Czech Republic and have a strong interest in Cockpit? You can learn how to hack on Cockpit, build plugins or prototypes, and much more! </p>
+
+<p>The Hackfest will be held in Room A113, Brno University of Technology, on <a href="http://community.redhat.com/events/#devconfcz">Friday 6 February from 2:10 to 5:10 CET</a>. Of course, you should check out DevConf.cz too, it&rsquo;s free to attend and you&rsquo;ll have dozens of fantastic presentations to choose from related to free software. Also, keep an eye on <a href="http://community.redhat.com/events/">Red Hat&rsquo;s Community Calendar</a> for other free and open source related events that may be of interest.</p>
+
+<p>Hope to see you there! </p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">Cockpit</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/12/cockpit-0-27-stable-added-to-centos-7-atomic-image/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/12/cockpit-0-27-stable-added-to-centos-7-atomic-image/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/12/cockpit-0-27-stable-added-to-centos-7-atomic-image/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

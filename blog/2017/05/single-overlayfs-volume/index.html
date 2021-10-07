@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing One Big Volume with Overlay2 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Installing One Big Volume with Overlay2' property='og:title'>
+<meta content='One of the major benefits of the overlay2 filesystem for Docker is that you no longer need to have a separate storage volume for your Docker containers, images and volumes.  This means that you don’t need to try to decide how much free space you need in the root FS as opposed to how much you need for containers; you can just create one big volume to fill up the disk.&#x000A;&#x000A;Since overlay2 is fairly new, though, we’ve chosen to install a separate Docker volume by default on Fedora 26 Atomic Host.  This lets users switch back to devicemapper if they run into some kind of issue with overlay2.  However, if you’re installing a new dev system, you might want the ease-of-management of having one big volume.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/05/single-overlayfs-volume/' property='og:url'>
+<meta content='2017-05-15T16:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='overlayfs' property='article:tag'>
+<link href='/blog/tag/overlayfs.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Installing One Big Volume with Overlay2' name='twitter:title'>
+<meta content='One of the major benefits of the overlay2 filesystem for Docker is that you no longer need to have a separate storage volume for your Docker containers, images and volumes.  This means that you don’t need to try to decide how much free space you need in the root FS as opposed to how much you need for containers; you can just create one big volume to fill up the disk.&#x000A;&#x000A;Since overlay2 is fairly new, though, we’ve chosen to install a separate Docker volume by default on Fedora 26 Atomic Host.  This lets users switch back to devicemapper if they run into some kind of issue with overlay2.  However, if you’re installing a new dev system, you might want the ease-of-management of having one big volume.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_05 blog_2017_05_single-overlayfs-volume blog_2017_05_single-overlayfs-volume_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Installing One Big Volume with Overlay2
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-05-15T16:00:00Z'>
+Monday 15 May 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>One of the major benefits of the overlay2 filesystem for Docker is that you no longer need to have a separate storage volume for your Docker containers, images and volumes.  This means that you don&rsquo;t need to try to decide how much free space you need in the root FS as opposed to how much you need for containers; you can just create one big volume to fill up the disk.</p>
+
+<p>Since overlay2 is fairly new, though, we&rsquo;ve chosen to install a separate Docker volume by default on Fedora 26 Atomic Host.  This lets users switch back to devicemapper if they run into some kind of issue with overlay2.  However, if you&rsquo;re installing a new dev system, you might want the ease-of-management of having one big volume.</p>
+
+<p></p>
+
+<p>The best way to do this is via your kickstart or cloud-init files, so that you can have the one big volume.  I&rsquo;m going to give examples for a kickstart file because that&rsquo;s what I have for my microcluster.  First, modify the storage setup in your kickstart file so that the root volume takes up all the disk space not needed for the boot partition or swap.</p>
+<pre class="highlight plaintext"><code>part pv.01 --grow --ondisk=sda&#x000A;volgroup atomicos pv.01&#x000A;logvol / --size=57000 --fstype="xfs" --name=root --vgname=atomicos&#x000A;logvol swap --fstype swap --name=lv_swap --vgname=atomicos --size=2048&#x000A;</code></pre>
+
+<p>Second, add a script to your kickstarter file which changes the configuration for docker-storage-setup:</p>
+<pre class="highlight plaintext"><code>%post --erroronfail&#x000A;rm -f /etc/ostree/remotes.d/fedora-atomic.conf&#x000A;ostree remote add --set=gpg-verify=false fedora-atomic 'http://dl.fedoraproject.org/pub/fedora/linux/atomic/25/'&#x000A;echo -e "\nSTORAGE_DRIVER='overlay2'\nCONTAINER_ROOT_LV_MOUNT_PATH=''\n" &gt;&gt; /etc/sysconfig/docker-storage-setup&#x000A;%end&#x000A;</code></pre>
+
+<p>It&rsquo;s the last line of the script which is doing the work.  Specifically, you need to change the defaults for <code>docker-storage-setup</code>.   <code>STORAGE_DRIVER</code> needs to be set to <code>overlay2</code> and <code>CONTAINER_ROOT_LV_MOUNT_PATH</code> needs to be set to an empty string.  This tells <code>docker-storage-setup</code> to use overlay2, but not to create a separate volume for it (which would fail anyway, since we&rsquo;ve left it no space).</p>
+
+<p>The result is what you&rsquo;d expect: one big volume for files and containers:</p>
+<pre class="highlight plaintext"><code> -bash-4.3# lsblk&#x000A;NAME                 MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT&#x000A;sdb                    8:16   1   7.2G  0 disk&#x000A;├─sdb2                 8:18   1   5.2M  0 part&#x000A;└─sdb1                 8:17   1     1G  0 part&#x000A;sda                    8:0    0  59.2G  0 disk&#x000A;├─sda2                 8:2    0     1G  0 part /boot&#x000A;├─sda3                 8:3    0  56.2G  0 part&#x000A;│ ├─atomicos-lv_swap 253:1    0     2G  0 lvm  [SWAP]&#x000A;│ └─atomicos-root    253:0    0  55.7G  0 lvm  /sysroot&#x000A;└─sda1                 8:1    0   200M  0 part /boot/efi&#x000A;</code></pre>
+
+<p>At some point in the future, we may switch to this behavior by default.  Or not; tell us what you think through the Atomic community if you have an opinion.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/overlayfs/">overlayfs</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/05/single-overlayfs-volume/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/05/single-overlayfs-volume/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/05/single-overlayfs-volume/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

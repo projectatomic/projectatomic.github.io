@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CentOS Atomic SIG Image Ready for Testing &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='CentOS Atomic SIG Image Ready for Testing' property='og:title'>
+<meta content='The CentOS Atomic SIG is pleased to announce that we have a CentOS Atomic Host image ready for testing. The image is currently being built in CentOS infrastructure, but not yet fully integrated into CentOS build systems.&#x000A;&#x000A;The image should be considered alpha quality, ready for testing, patches, and feedback. It’s more or less package-complete but we still have a ways to go before calling the CentOS Atomic Host ready for any production workloads:' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/11/centos-atomic-sig-image-ready-for-testing/' property='og:url'>
+<meta content='2014-11-06T00:00:00Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='alpha' property='article:tag'>
+<link href='/blog/tag/alpha.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Cockpit' property='article:tag'>
+<link href='/blog/tag/cockpit.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Release' property='article:tag'>
+<link href='/blog/tag/release.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='CentOS Atomic SIG Image Ready for Testing' name='twitter:title'>
+<meta content='The CentOS Atomic SIG is pleased to announce that we have a CentOS Atomic Host image ready for testing. The image is currently being built in CentOS infrastructure, but not yet fully integrated into CentOS build systems.&#x000A;&#x000A;The image should be considered alpha quality, ready for testing, patches, and feedback. It’s more or less package-complete but we still have a ways to go before calling the CentOS Atomic Host ready for any production workloads:' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_11 blog_2014_11_centos-atomic-sig-image-ready-for-testing blog_2014_11_centos-atomic-sig-image-ready-for-testing_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+CentOS Atomic SIG Image Ready for Testing
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-11-06T00:00:00Z'>
+Thursday  6 November 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The CentOS Atomic SIG is pleased to announce that <a href="http://buildlogs.centos.org/rolling/7/">we have a CentOS Atomic Host image ready for testing</a>. The image is currently being built in CentOS infrastructure, but not yet fully integrated into CentOS build systems.</p>
+
+<p>The image should be considered <strong>alpha</strong> quality, ready for testing, patches, and feedback. It&rsquo;s more or less package-complete but we still have a ways to go before calling the CentOS Atomic Host ready for any production workloads:</p>
+
+<p></p>
+
+<ul>
+<li>Image signing.</li>
+<li>Final package set (may remove non-essential packages to reduce image size, add packages that make Atomic easier to use, etc.). </li>
+<li>Other ways we can slim down the image to the bare essentials.</li>
+<li>Much more testing of the images and a regular release cadence for stable updates.</li>
+<li>Bare metal installer. </li>
+<li>Additional image formats.</li>
+<li>Documentation.</li>
+<li>Slice, dice, and make Julienne fries.</li>
+</ul>
+
+<p>You get the idea. We want to get a lot of hands-on testing and feedback from folks who are putting containers into production. For ideas about what to test/try out, see the Project Atomic <a href="http://www.projectatomic.io/download/">download</a> and <a href="http://www.projectatomic.io/docs/quickstart/">quick start</a> pages.</p>
+
+<p>We actually have two downloads: the <a href="http://buildlogs.centos.org/rolling/7/CentOS-7-x86_64-AtomicHost-20141029_02.qcow2">qcow2</a> with no compression (for direct import into OpenStack, <em>etc.</em>) and the <a href="http://buildlogs.centos.org/rolling/7/CentOS-7-x86_64-AtomicHost-20141029_02.qcow2.gz">gzipped image</a> for faster downloads if you don&rsquo;t need to import the image directly. The <a href="http://buildlogs.centos.org/rolling/7/">directory also has sha256 sums</a> so you can verify the images.</p>
+
+<p>The image comes pre-configured with an atomic update repository, but if you&rsquo;re interested in building your own updates for the image, check out <a href="http://www.projectatomic.io/blog/2014/11/build-your-own-atomic-updates/">this howto</a> on the Project Atomic blog.</p>
+
+<h3>Updates</h3>
+
+<p>The goal right now is to produce new images on a monthly basis, and update tress on a daily basis. This means you should be getting the SIG&rsquo;s latest work very quickly if you&rsquo;re using this SIG image and using <code>rpm-ostree upgrade</code>. If you hit a snag, of course, it&rsquo;s dead easy to revert to the previous known-good image.</p>
+
+<p>Ultimately, we plan to have multiple trees that you can follow for updates depending on your needs. That means an alpha or experimental tree for folks who are doing work on CentOS Atomic itself, a beta tree for updates that are about to land in the stable tree, and a stable tree.</p>
+
+<h3>What&rsquo;s in this release</h3>
+
+<p>This release is based on packages from CentOS 7, plus an updated Docker 1.3., Cockpit, and Kubernetes with additional dependencies that may not be in CentOS 7, and (of course) rpm-ostree.
+You&rsquo;ll need to use <a href="http://cloudinit.readthedocs.org/en/latest/">cloud-init</a> to log in to the image. If you&rsquo;re testing with a service or tool that does not provide cloud-init, you can directions for creating a local cloud-init provider in this <a href="https://www.technovelty.org/linux/running-cloud-images-locally.html">blog entry</a>.</p>
+
+<h3>Working with the CentOS Atomic SIG</h3>
+
+<p>We&rsquo;ve still got a ways to go, and would love more input from the larger community on what the final CentOS Atomic Host should be. See the <a href="https://gist.github.com/jzb/0f336c6f23a0ba145b0a">Atomic Host Definition</a> for an outline of the base definition of the Atomic Host, and <a href="http://wiki.centos.org/SpecialInterestGroup/Atomic">the SIG Workgroup charter</a>. </p>
+
+<p>Questions about this release? Speak up on the centos-devel mailing list! We look forward to hearing your thoughts and working with the CentOS community to make Atomic the best way to deploy Docker containers.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/alpha/">alpha</a></li>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/cockpit/">Cockpit</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/release/">Release</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/11/centos-atomic-sig-image-ready-for-testing/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/11/centos-atomic-sig-image-ready-for-testing/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/11/centos-atomic-sig-image-ready-for-testing/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

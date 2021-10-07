@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Skopeo</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/skopeo.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>The Many Ways to Build an OCI Image without Docker</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/"/>
+    <id>http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/</id>
+    <published>2018-03-06T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Micah Abbott</name>
+    </author>
+    <content type="html">&lt;p&gt;When containers initially made their big splash into the industry via Docker,
+users were almost required to use the &lt;code&gt;docker&lt;/code&gt; CLI and daemon to create and
+manage their container images.  But a lot has happened since then and now it
+is easier than ever to create a container image without using &lt;code&gt;docker&lt;/code&gt; at all,
+since the Docker image format has been standardized as the
+&lt;a href="https://github.com/opencontainers/image-spec"&gt;OCI Image format&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this post, we&amp;rsquo;ll review some of the ways you can create and manage your
+container images without ever having to start the &lt;code&gt;docker&lt;/code&gt; daemon.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll explore these alternative ways to build container images using a
+privileged user, but most of the approaches also have a way to build images
+using a non-privileged user.  We&amp;rsquo;ll cover using a non-privileged user in a
+future blog post.&lt;/p&gt;
+
+&lt;h3&gt;orca-build&lt;/h3&gt;
+
+&lt;p&gt;The project that was probably first to build container images without &lt;code&gt;docker&lt;/code&gt;
+is the &lt;a href="https://github.com/cyphar/orca-build"&gt;orca-build&lt;/a&gt; project from
+&lt;a href="https://twitter.com/lordcyphar"&gt;Aleksa Sarai&lt;/a&gt; of SUSE.  He&amp;rsquo;s created a simple
+Python3 script which leverages &lt;a href="https://github.com/opencontainers/runc"&gt;runC&lt;/a&gt;,
+&lt;a href="http://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt;, and the
+&lt;a href="https://github.com/openSUSE/umoci"&gt;umoci&lt;/a&gt; library to build container images.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see how it works with this simple Dockerfile that I&amp;rsquo;ve created to build
+an &lt;code&gt;httpd&lt;/code&gt; container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat fedora27-httpd/Dockerfile
+FROM registry.fedoraproject.org/fedora:27
+LABEL maintainer='Micah Abbott &amp;lt;miabbott@redhat.com&amp;gt;' \
+      version='1.0'
+
+ENV container=docker
+
+COPY Dockerfile /root/
+
+RUN dnf -y install httpd &amp;amp;&amp;amp; \
+    dnf clean all &amp;amp;&amp;amp; \
+    echo "SUCCESS fedora27_httpd" &amp;gt; /var/www/html/index.html
+
+EXPOSE 80
+
+ENTRYPOINT [ "/usr/sbin/httpd" ]
+CMD [ "-D", "FOREGROUND" ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using a Fedora 27 system, I&amp;rsquo;ll install the dependencies for using &lt;code&gt;orca-build&lt;/code&gt;
+and then build the container image from the Dockerfile.  (But obviously, I
+won&amp;rsquo;t be installing &lt;code&gt;docker&lt;/code&gt;).&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# rpm -q docker
+package docker is not installed
+# systemctl status docker
+Unit docker.service could not be found.
+
+# dnf -y install git golang runc skopeo
+# export GOPATH=$HOME/go
+# export PATH=$PATH:$GOPATH/bin
+# go get -d github.com/openSUSE/umoci
+# cd $GOPATH/src/github.com/openSUSE/umoci/
+# make
+# cp $GOPATH/src/github.com/openSUSE/umoci/umoci $GOPATH/bin/
+# cd $HOME
+# git clone https://github.com/cyphar/orca-build.git
+# cd orca-build
+# python3 orca-build -t fedora27-httpd:orca $HOME/fedora27-httpd/
+orca-build[INFO] Created new image for build: /tmp/orca-build.y3n_2i0m
+orca-build[INFO] BUILD[1 of 8]: from ['registry.fedoraproject.org/fedora:27'] [json=False]
+  ---&amp;gt; [skopeo]
+Getting image source signatures
+Copying blob sha256:d445b8c354cc48e75ed621cb6783a80c29ac24135cdd98fd02ae70e1f18345bc
+ 80.81 MB / 80.81 MB [=====================================================] 10s
+Copying config sha256:400ec4f003634cb31d8b37d68ac56c41c6bbd8eb02eb7d7151b0ade59e513594
+ 424 B / 424 B [============================================================] 0s
+Writing manifest to image destination
+Storing signatures
+  &amp;lt;--- [skopeo]
+orca-build[INFO] BUILD[2 of 8]: label ['maintainer=Micah Abbott &amp;lt;miabbott@redhat.com&amp;gt;', 'version=1.0'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+orca-build[INFO] BUILD[3 of 8]: env ['container=docker'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+orca-build[INFO] BUILD[4 of 8]: copy ['Dockerfile', '/root/'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+orca-build[INFO] BUILD[5 of 8]: run ['dnf', '-y', 'install', 'httpd', '&amp;amp;&amp;amp;', 'dnf', 'clean', 'all', '&amp;amp;&amp;amp;', 'echo', 'SUCCESS fedora27_httpd', '&amp;gt;', '/var/www/html/index.html'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [runc]
+Error: Failed to synchronize cache for repo 'updates'
+  &amp;lt;--- [runc]
+orca-build[CRITICAL] Error executing subprocess: runc --root=/tmp/orca-runcroot.un2g__rz run --bundle=/tmp/orca-bundle.dw5x64x0 orca-build-6bE2dWZlNxyZELMtkmHjObCb9fAkvMbq failed with error code 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hmmm&amp;hellip;I believe &lt;code&gt;runc&lt;/code&gt; doesn&amp;rsquo;t have network access to allow &lt;code&gt;dnf&lt;/code&gt; to install
+packages.  That is disappointing.  But I don&amp;rsquo;t want to spend too much time on
+any one way of building an image, so let&amp;rsquo;s move on to another method.&lt;/p&gt;
+
+&lt;h3&gt;jessfraz/img&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/jessfraz"&gt;Jessie Frazelle&lt;/a&gt; recently announced her own
+project called &lt;a href="https://github.com/jessfraz/img"&gt;img&lt;/a&gt; that handles building
+OCI images without &lt;code&gt;docker&lt;/code&gt;. Her approach uses a Go binary that leverages
+&lt;a href="https://github.com/moby/buildkit"&gt;buildkit&lt;/a&gt; from the Moby project to build
+images.&lt;/p&gt;
+
+&lt;p&gt;Using the same Dockerfile and Fedora 27 system, let&amp;rsquo;s try to build the image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# go get github.com/jessfraz/img
+# img build -t fedora27-httpd:img $HOME/fedora27-httpd/
+Building fedora27-httpd:img
+Setting up the rootfs... this may take a bit.
+INFO[0001] resolving docker.io/tonistiigi/copy@sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e
+INFO[0001] resolving registry.fedoraproject.org/fedora:27@sha256:3a75aec3625da0c80dcedda6a0321f997f812e24336a1c06d8b402afffc55450
+INFO[0010] unpacking registry.fedoraproject.org/fedora:27@sha256:3a75aec3625da0c80dcedda6a0321f997f812e24336a1c06d8b402afffc55450
+RUN [copy /src-0/Dockerfile /dest/root/]
+---&amp;gt;
+&amp;lt;--- e70rtudliv77emdm70tc5m027 0 &amp;lt;nil&amp;gt;
+RUN [/bin/sh -c dnf -y install httpd &amp;amp;&amp;amp;     dnf clean all &amp;amp;&amp;amp;     echo "SUCCESS fedora27_httpd" &amp;gt; /var/www/html/index.html]
+---&amp;gt;
+Fedora 27 - x86_64 - Updates                    8.8 MB/s |  20 MB     00:02
+Fedora 27 - x86_64                              6.1 MB/s |  58 MB     00:09
+Last metadata expiration check: 0:00:05 ago on Sat Mar  3 21:06:25 2018.
+Dependencies resolved.
+================================================================================
+ Package                  Arch         Version              Repository     Size
+================================================================================
+Installing:
+ httpd                    x86_64       2.4.29-1.fc27        updates       1.3 M
+Installing dependencies:
+ apr                      x86_64       1.6.3-1.fc27         updates       121 k
+ apr-util                 x86_64       1.6.1-2.fc27         updates       102 k
+ fedora-logos-httpd       noarch       28.0.2-1.fc27        updates        33 k
+ httpd-filesystem         noarch       2.4.29-1.fc27        updates        25 k
+ httpd-tools              x86_64       2.4.29-1.fc27        updates        89 k
+ mailcap                  noarch       2.1.48-2.fc27        fedora         37 k
+ mod_http2                x86_64       1.10.13-1.fc27       updates       151 k
+
+Transaction Summary
+================================================================================
+Install  8 Packages
+
+Total download size: 1.9 M
+Installed size: 5.0 M
+Downloading Packages:
+(1/8): httpd-filesystem-2.4.29-1.fc27.noarch.rp  66 kB/s |  25 kB     00:00
+(2/8): mailcap-2.1.48-2.fc27.noarch.rpm         431 kB/s |  37 kB     00:00
+(3/8): httpd-tools-2.4.29-1.fc27.x86_64.rpm     136 kB/s |  89 kB     00:00
+(4/8): apr-1.6.3-1.fc27.x86_64.rpm              319 kB/s | 121 kB     00:00
+(5/8): apr-util-1.6.1-2.fc27.x86_64.rpm         338 kB/s | 102 kB     00:00
+(6/8): mod_http2-1.10.13-1.fc27.x86_64.rpm      728 kB/s | 151 kB     00:00
+(7/8): fedora-logos-httpd-28.0.2-1.fc27.noarch. 332 kB/s |  33 kB     00:00
+(8/8): httpd-2.4.29-1.fc27.x86_64.rpm           984 kB/s | 1.3 MB     00:01
+--------------------------------------------------------------------------------
+Total                                           857 kB/s | 1.9 MB     00:02
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1
+  Installing       : apr-1.6.3-1.fc27.x86_64                                1/8
+  Running scriptlet: apr-1.6.3-1.fc27.x86_64                                1/8
+  Installing       : apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Running scriptlet: apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Installing       : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Installing       : fedora-logos-httpd-28.0.2-1.fc27.noarch                4/8
+  Installing       : mailcap-2.1.48-2.fc27.noarch                           5/8
+  Running scriptlet: httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Installing       : httpd-2.4.29-1.fc27.x86_64                             8/8
+  Running scriptlet: httpd-2.4.29-1.fc27.x86_64                             8/8Failed to connect to bus: No such file or directory
+
+  Verifying        : httpd-2.4.29-1.fc27.x86_64                             1/8
+  Verifying        : httpd-filesystem-2.4.29-1.fc27.noarch                  2/8
+  Verifying        : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Verifying        : mailcap-2.1.48-2.fc27.noarch                           4/8
+  Verifying        : apr-1.6.3-1.fc27.x86_64                                5/8
+  Verifying        : apr-util-1.6.1-2.fc27.x86_64                           6/8
+  Verifying        : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Verifying        : fedora-logos-httpd-28.0.2-1.fc27.noarch                8/8
+
+Installed:
+  httpd.x86_64 2.4.29-1.fc27            apr.x86_64 1.6.3-1.fc27
+  apr-util.x86_64 1.6.1-2.fc27          fedora-logos-httpd.noarch 28.0.2-1.fc27
+  httpd-filesystem.noarch 2.4.29-1.fc27 httpd-tools.x86_64 2.4.29-1.fc27
+  mailcap.noarch 2.1.48-2.fc27          mod_http2.x86_64 1.10.13-1.fc27
+
+Complete!
+18 files removed
+&amp;lt;--- rx3j12yy3t0ea0shbimrgxtdx 0 &amp;lt;nil&amp;gt;
+INFO[0063] exporting layers
+INFO[0066] exporting manifest sha256:1fd9c488a4f116e3d02c5ea0d9277994bc8145ea7bb5021442b348b257b7b6e6
+INFO[0066] exporting config sha256:ae05d003b8ec6d046eb73ca8d3333a9d6e10bac332af7591a101f6f118f2bf7c
+INFO[0066] naming to fedora27-httpd:img
+Successfully built fedora27-httpd:img
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can also use &lt;code&gt;img&lt;/code&gt; to list the container image that was just built.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# img ls
+NAME                                        SIZE        CREATED AT  UPDATED AT  DIGEST
+docker.io/tonistiigi/copy@sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e   1.333KiB    7 days ago  7 days ago  sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e
+fedora27-httpd:img                              754B        7 days ago  43 hours ago    sha256:1fd9c488a4f116e3d02c5ea0d9277994bc8145ea7bb5021442b348b257b7b6e6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That was pretty easy and successful!  There are more things that &lt;code&gt;img&lt;/code&gt; can
+do, but let&amp;rsquo;s continue to expore other ways to build container images.&lt;/p&gt;
+
+&lt;h3&gt;DIY Docker using Skopeo+OStree+Runc&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/muayyadalsadi"&gt;Muayyad Alsadi&lt;/a&gt; recently shared his blog
+post called &lt;a href="https://bcksp.blogspot.com/2018/02/diy-docker-using-skopeoostreerunc.html"&gt;DIY Docker using Skopeo+OStree+Runc&lt;/a&gt;
+to the &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-February/msg00087.html"&gt;atomic-devel&lt;/a&gt;
+mailing list.  In his post, he describes using &lt;code&gt;skopeo&lt;/code&gt; and &lt;code&gt;ostree&lt;/code&gt; to pull
+down existing Docker images and building out a rootfs that can be used by
+&lt;code&gt;runc&lt;/code&gt;.  It is not exactly the same operation as building a container image
+from a Dockerfile, but it is a useful exercise to show off some of the gory
+details of working with OCI images.&lt;/p&gt;
+
+&lt;p&gt;But what if you don&amp;rsquo;t want to have to run multiple &lt;code&gt;skopeo&lt;/code&gt; and &lt;code&gt;ostree&lt;/code&gt;
+commands to pull down content and prep a container image?  Or maybe you don&amp;rsquo;t
+really care about the details of OCI images and you just want to pull a
+container image without &lt;code&gt;docker&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;All of those operations are neatly wrapped up in the &lt;a href="http://github.com/projectatomic/atomic"&gt;atomic CLI&lt;/a&gt;
+and can be reduced to a single command!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt; # atomic pull --storage=ostree docker.io/redis:alpine
+Getting image source signatures
+Copying blob sha256:ff3a5c916c92643ff77519ffa742d3ec61b7f591b6b7504599d95a4a41134e28
+ 1.97 MB / 1.97 MB [========================================================] 0s
+Copying blob sha256:aae70a2e60279ffae89150a59b81fe10d1d81f341ef6f31b9714ea6cc3418577
+ 1.22 KB / 1.22 KB [========================================================] 0s
+Copying blob sha256:87c655da471c9a7d8f946ec7b04a6a72a98ae8c1734bddf4b950861b5638fe20
+ 8.35 KB / 8.35 KB [========================================================] 0s
+Copying blob sha256:a0bd51ac7350a7048a0bd85a83d87181a0b851952e94f70e18c1ddb6ff96e66e
+ 7.73 MB / 7.73 MB [========================================================] 0s
+Copying blob sha256:755565c3ea2b1335705a21024b1bdb607f85492b284e8dec37eb759c0d601f57
+ 99 B / 99 B [==============================================================] 0s
+Copying blob sha256:8bf100ea488d16d4401a9af72879db0c1ab56045b42670ebf64fe1f8d90568fc
+ 397 B / 397 B [============================================================] 0s
+Copying config sha256:d3117424aaee14ab2b0edb68d3e3dcc1785b2e243b06bd6322f299284c640465
+ 4.68 KB / 4.68 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And soon, you&amp;rsquo;ll be able to use the very same &lt;code&gt;atomic&lt;/code&gt; command to run the
+container image via &lt;code&gt;runc&lt;/code&gt;.  Keep your eyes open for new versions of &lt;code&gt;atomic&lt;/code&gt;
+that will include this &lt;a href="https://github.com/projectatomic/atomic/pull/1196"&gt;pull request&lt;/a&gt;
+from &lt;a href="https://twitter.com/gscrivano"&gt;Giuseppe Scrivano&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s one more way to build container images that we&amp;rsquo;ll cover before
+wrapping up this post.&lt;/p&gt;
+
+&lt;h3&gt;Use This One Weird Command to Build OCI Images!&lt;/h3&gt;
+
+&lt;p&gt;Maybe you are thinking, &lt;q&gt;Gee, it&amp;rsquo;s great that we have all these ways to build
+container images without Docker, but I&amp;rsquo;d really like a tool that highlights my
+Boston accent.&lt;/q&gt;&lt;/p&gt;
+
+&lt;p&gt;Enter &lt;a href="https://github.com/projectatomic/buildah"&gt;buildah&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;ve probably already seen this tool mentioned on this blog a few times,
+but it&amp;rsquo;s worth showing off another time just how easy it is to install and use.
+We&amp;rsquo;ll continue to use the same Dockerfile and Fedora 27 system to build our
+image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install buildah
+# buildah bud -t fedora27_httpd:buildah $HOME/fedora27-httpd/
+STEP 1: FROM registry.fedoraproject.org/fedora:27
+Getting image source signatures
+Copying blob sha256:d445b8c354cc48e75ed621cb6783a80c29ac24135cdd98fd02ae70e1f18345bc
+ 80.81 MiB / 80.81 MiB [===================================================] 32s
+Copying config sha256:99b71991af6eef73e85e3a657641cf2447929f37fff1f9570d525a6ef485a4a8
+ 1.27 KiB / 1.27 KiB [======================================================] 0s
+Writing manifest to image destination
+Storing signatures
+STEP 2: LABEL maintainer='Micah Abbott &amp;lt;miabbott@redhat.com&amp;gt;'       version='1.0'
+STEP 3: ENV container=docker
+STEP 4: COPY Dockerfile /root/
+STEP 5: RUN dnf -y install httpd &amp;amp;&amp;amp;     dnf clean all &amp;amp;&amp;amp;     echo "SUCCESS fedora27_httpd" &amp;gt; /var/www/html/index.html
+Fedora 27 - x86_64 - Updates                    3.0 MB/s |  20 MB     00:06
+Fedora 27 - x86_64                              1.6 MB/s |  58 MB     00:35
+Last metadata expiration check: 0:00:08 ago on Mon Mar  5 16:02:41 2018.
+Dependencies resolved.
+================================================================================
+ Package                  Arch         Version              Repository     Size
+================================================================================
+Installing:
+ httpd                    x86_64       2.4.29-1.fc27        updates       1.3 M
+Installing dependencies:
+ apr                      x86_64       1.6.3-1.fc27         updates       121 k
+ apr-util                 x86_64       1.6.1-2.fc27         updates       102 k
+ fedora-logos-httpd       noarch       28.0.2-1.fc27        updates        33 k
+ httpd-filesystem         noarch       2.4.29-1.fc27        updates        25 k
+ httpd-tools              x86_64       2.4.29-1.fc27        updates        89 k
+ mailcap                  noarch       2.1.48-2.fc27        fedora         37 k
+ mod_http2                x86_64       1.10.13-1.fc27       updates       151 k
+
+Transaction Summary
+================================================================================
+Install  8 Packages
+
+Total download size: 1.9 M
+Installed size: 5.0 M
+Downloading Packages:
+(1/8): httpd-filesystem-2.4.29-1.fc27.noarch.rp 107 kB/s |  25 kB     00:00
+(2/8): httpd-tools-2.4.29-1.fc27.x86_64.rpm     208 kB/s |  89 kB     00:00
+(3/8): mailcap-2.1.48-2.fc27.noarch.rpm         127 kB/s |  37 kB     00:00
+(4/8): apr-util-1.6.1-2.fc27.x86_64.rpm         452 kB/s | 102 kB     00:00
+(5/8): apr-1.6.3-1.fc27.x86_64.rpm              305 kB/s | 121 kB     00:00
+(6/8): fedora-logos-httpd-28.0.2-1.fc27.noarch. 355 kB/s |  33 kB     00:00
+(7/8): mod_http2-1.10.13-1.fc27.x86_64.rpm      699 kB/s | 151 kB     00:00
+(8/8): httpd-2.4.29-1.fc27.x86_64.rpm           1.1 MB/s | 1.3 MB     00:01
+--------------------------------------------------------------------------------
+Total                                           933 kB/s | 1.9 MB     00:02
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1
+  Installing       : apr-1.6.3-1.fc27.x86_64                                1/8
+  Running scriptlet: apr-1.6.3-1.fc27.x86_64                                1/8
+  Installing       : apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Running scriptlet: apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Installing       : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Installing       : fedora-logos-httpd-28.0.2-1.fc27.noarch                4/8
+  Installing       : mailcap-2.1.48-2.fc27.noarch                           5/8
+  Running scriptlet: httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Installing       : httpd-2.4.29-1.fc27.x86_64                             8/8
+  Running scriptlet: httpd-2.4.29-1.fc27.x86_64                             8/8
+Failed to connect to bus: No such file or directory
+  Verifying        : httpd-2.4.29-1.fc27.x86_64                             1/8
+  Verifying        : httpd-filesystem-2.4.29-1.fc27.noarch                  2/8
+  Verifying        : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Verifying        : mailcap-2.1.48-2.fc27.noarch                           4/8
+  Verifying        : apr-1.6.3-1.fc27.x86_64                                5/8
+  Verifying        : apr-util-1.6.1-2.fc27.x86_64                           6/8
+  Verifying        : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Verifying        : fedora-logos-httpd-28.0.2-1.fc27.noarch                8/8
+
+Installed:
+  httpd.x86_64 2.4.29-1.fc27            apr.x86_64 1.6.3-1.fc27
+  apr-util.x86_64 1.6.1-2.fc27          fedora-logos-httpd.noarch 28.0.2-1.fc27
+  httpd-filesystem.noarch 2.4.29-1.fc27 httpd-tools.x86_64 2.4.29-1.fc27
+  mailcap.noarch 2.1.48-2.fc27          mod_http2.x86_64 1.10.13-1.fc27
+
+Complete!
+18 files removed
+STEP 6: EXPOSE 80
+STEP 7: ENTRYPOINT [ "/usr/sbin/httpd" ]
+STEP 8: CMD [ "-D", "FOREGROUND" ]
+STEP 9: COMMIT containers-storage:[overlay@/var/lib/containers/storage+/var/run/containers/storage:overlay.override_kernel_check=true]docker.io/library/fedora27_httpd:buildah
+[root@fedora27cloud-dev ~]# buildah images
+IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE
+99b71991af6e         registry.fedoraproject.org/fedora:27                     Mar 1, 2018 07:48      234.9 MB
+c3fddc394f81         docker.io/library/fedora27_httpd:buildah                 Mar 5, 2018 16:03      252 MB
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On my Fedora 27 host, I just needed two commands to install &lt;code&gt;buildah&lt;/code&gt; and
+build the container image!  When you pair &lt;code&gt;buildah&lt;/code&gt; with &lt;code&gt;atomic&lt;/code&gt;, you have
+a powerful combination of tools that will allow you to build, manage, and run
+your container images without ever having to run the Docker daemon.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>How does Atomic run system containers without Docker Daemon?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/"/>
+    <id>http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/</id>
+    <published>2018-03-05T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>alsadi</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;In 2016, we started to &lt;a href="https://www.projectatomic.io/blog/2016/09/running-kubernetes-in-containers-on-atomic/"&gt;Containerize the Kubernetes stack&lt;/a&gt;,
+that is to ship all the components as containers as you can see &lt;a href="https://registry.fedoraproject.org/"&gt;here&lt;/a&gt;.
+But some of those containers like &lt;a href="https://coreos.com/etcd/"&gt;etcd&lt;/a&gt; and &lt;a href="https://coreos.com/flannel/docs/latest/"&gt;flanneld&lt;/a&gt;
+must be started before Docker daemon because &lt;code&gt;etcd&lt;/code&gt; is the cluster state store,
+and &lt;code&gt;flanneld&lt;/code&gt; is the cluster network overlay (SDN).&lt;/p&gt;
+
+&lt;p&gt;In this blog post we are going to demonstrate how to use the same components used by
+&lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt;
+in the so called &lt;a href="https://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;system containers&lt;/a&gt;
+that is to run the containers without a Docker daemon, namely:
+&lt;a href="https://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt;,
+&lt;a href="https://github.com/ostreedev/ostree"&gt;ostree&lt;/a&gt;, and an OCI runtime like
+&lt;a href="https://github.com/opencontainers/runc"&gt;runc&lt;/a&gt;
+or &lt;a href="https://github.com/projectatomic/bubblewrap"&gt;bubble wraps&lt;/a&gt; and its &lt;a href="https://github.com/projectatomic/bwrap-oci"&gt;OCI wrapper&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Background&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Atomic Host&lt;/code&gt; is an immutable stateless operating system,
+that is designed to consume applications via containers.
+You can do carefree updates or even switch from &lt;code&gt;CentOS&lt;/code&gt; to &lt;code&gt;Fedora&lt;/code&gt; and vice versa
+because of the image-like nature of &lt;code&gt;ostree&lt;/code&gt; and it&amp;rsquo;s carefree because your workloads are in the containers.
+It has many use cases like running &lt;code&gt;Kubernetes&lt;/code&gt; clusters,
+and there is an ongoing effort to extend it to desktop
+(using &lt;a href="https://flatpak.org/"&gt;Flatpak&lt;/a&gt; as the containers for the desktop, which also uses ostree). This desktop variant is called &lt;a href="https://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/"&gt;Atomic Workstation&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In the containerized Kubernetes stack, there seems to be &lt;q&gt;the chicken or the egg&lt;/q&gt; dilemma,
+We need a running &lt;code&gt;flanneld&lt;/code&gt; or &lt;code&gt;etcd&lt;/code&gt; to start Docker Daemon,
+and you need a running docker daemon to start flanneld or etcd if they are shipped as containers.&lt;/p&gt;
+
+&lt;p&gt;In this blog post, we are going to demonstrate how to pull docker container images
+and run them the same way as the &lt;a href="https://github.com/projectatomic/atomic"&gt;Atomic tool&lt;/a&gt; does.&lt;/p&gt;
+
+&lt;p&gt;If you inspected the &lt;code&gt;flannel&lt;/code&gt; container image (either using &lt;code&gt;docker inspect&lt;/code&gt; or remotely with &lt;code&gt;skopeo inspect&lt;/code&gt;)
+you would see that it has a label called &lt;code&gt;atomic.type&lt;/code&gt; indicating it is a system container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo inspect docker://registry.fedoraproject.org/f27/flannel
+{
+    "Name": "registry.fedoraproject.org/f27/flannel",
+    "Labels": {
+        "atomic.type": "system",
+// ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Either that or by passing &lt;code&gt;--system&lt;/code&gt; after &lt;code&gt;atomic install&lt;/code&gt;,
+those are special containers that are executed without Docker daemon,
+those containers have &lt;a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;a special directory structure&lt;/a&gt;
+like their &lt;code&gt;systemd&lt;/code&gt; service template as you can see in the source of &lt;a href="https://src.fedoraproject.org/container/flannel/blob/master/f/Dockerfile#_23"&gt;Fedora&amp;rsquo;s flannel container source&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The steps in this article are inspired by &lt;a href="https://github.com/projectatomic/atomic/blob/v1.22/Atomic/syscontainers.py"&gt;how atomic tool work under the hood&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can follow those steps on atomic host or in your regular OS (I&amp;rsquo;ve tested them on regular Fedora Workstation),
+and you don&amp;rsquo;t need to be root.&lt;/p&gt;
+
+&lt;h3&gt;OSTree - a space-efficient way to store images locally&lt;/h3&gt;
+
+&lt;p&gt;OSTree is the same technology used by Atomic host to store its own host OS images.
+It&amp;rsquo;s a content-addressable object storage to store files,
+which means a file is stored once even if it&amp;rsquo;s in multiple images,
+this is even more efficient than layer-based Docker&amp;rsquo;s storage backends, because it&amp;rsquo;s not on layer level, but on file level.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start by creating a directory and initializing it to contain bare OSTree repo,
+but because we are running as non-root we need to pass &lt;code&gt;--mode=bare-user&lt;/code&gt; instead of &lt;code&gt;--mode=bare&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir ostree
+$ cd ostree
+$ ostree init --mode=bare-user --repo=$PWD
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Skopeo - for dealing with container Images and Image registries&lt;/h3&gt;
+
+&lt;p&gt;Skopeo can inspect remote container images from various registries and formats,
+pull them, and store them in many kinds of ways. 
+We are going to demonstrate how to pull small images and run them,
+so for this purpose let&amp;rsquo;s choose some small few megabytes images like &lt;code&gt;docker://redis:alpine&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo copy docker://redis:alpine ostree:redis@$PWD
+$ skopeo copy docker://nginx:alpine ostree:nginx@$PWD
+$ skopeo copy docker://busybox:alpine ostree:busybox@$PWD
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can list images in OSTree using:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ostree refs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The interesting part of the output looks like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ociimage/redis_3Alatest
+ociimage/nginx_3Alatest
+ociimage/busybox_3Alatest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The Atomic command like tool is written in python, and it uses &lt;code&gt;libostree&lt;/code&gt; via &lt;code&gt;gobject-introspection&lt;/code&gt;, it looks like &lt;a href="https://github.com/projectatomic/atomic/blob/v1.22/Atomic/syscontainers.py#L26"&gt;this&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;import gi
+gi.require_version('OSTree', '1.0')
+from gi.repository import OSTree
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For our article we are going to use &lt;code&gt;ostree&lt;/code&gt; command line interface:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ostree ls ociimage/redis_3Alatest 
+d00755 1000 1000      0 /
+-00644 1000 1000   1568 /manifest.json
+$ ostree cat ociimage/redis_3Alatest /manifest.json
+{
+// ...
+   "config": {
+      "mediaType": "application/vnd.docker.container.image.v1+json",
+      "size": 4791,
+      "digest": "sha256:d3117424aaee14ab2b0edb68d3e3dcc1785b2e243b06bd6322f299284c640465"
+   },
+// ...
+   "layers": [
+      {
+         "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+         "size": 2065537,
+         "digest": "sha256:ff3a5c916c92643ff77519ffa742d3ec61b7f591b6b7504599d95a4a41134e28"
+      },
+      //  ..
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are going to use &lt;code&gt;jq&lt;/code&gt; tool to get the specific parts from this JSON like getting the config digest:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ config_hash=`ostree cat ociimage/redis_3Alatest /manifest.json | jq -r .config.digest | cut -d ':' -f 2`
+$ ostree cat ociimage/$config_hash /content | jq 
+{
+// ...
+}
+$ ostree cat ociimage/$config_hash /content | jq .config.Entrypoint
+["docker-entrypoint.sh"]
+$ ostree cat ociimage/$config_hash /content | jq .config.Cmd
+["redis-server"]
+$ ostree cat ociimage/$config_hash /content | jq .config.ExposedPorts
+{"6379/tcp": {}}
+$ ostree cat ociimage/$config_hash /content | jq .config.Volumes
+{"/data": {}}
+$ ostree cat ociimage/$config_hash /content | jq .config.WorkingDir
+"/data"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s create a directory for our container and apply layers one by one inside that directory,
+using &lt;code&gt;ostree checkout&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir -p cont1/rootfs
+$ ostree checkout --union ociimage/redis_3Alatest cont1
+$ cat cont1/manifest.json | jq -r '.layers[]|.digest' | cut -d ':' -f 2 |
+  while read a
+  do
+    ostree checkout --union ociimage/$a cont1/rootfs;
+  done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can reverse the order of layers (using &lt;code&gt;tac&lt;/code&gt;) and use &lt;code&gt;--union-add&lt;/code&gt; instead of &lt;code&gt;--union&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Running the container using OCI runtimes&lt;/h3&gt;
+
+&lt;h4&gt;Runc&lt;/h4&gt;
+
+&lt;p&gt;Now we have checked out the redis root filesystem in &lt;code&gt;cont1/rootfs&lt;/code&gt;,
+and that does not take space because they are merely &lt;a href="https://en.wikipedia.org/wiki/Hard_link"&gt;hard links&lt;/a&gt;
+to those in our ostree repo. Before we run it, let&amp;rsquo;s generate &lt;a href="https://github.com/opencontainers/runtime-spec/blob/master/config.md"&gt;OCI &lt;code&gt;config.json&lt;/code&gt;&lt;/a&gt; using &lt;code&gt;runc spec&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cd cont1
+$ mkdir data
+$ runc spec --rootless
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have added &lt;code&gt;--rootless&lt;/code&gt; because we are not running as root, by default it&amp;rsquo;s configured to run &lt;code&gt;/bin/sh&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="s2"&gt;"process"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"terminal"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"args"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"sh"&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can edit the file &lt;code&gt;config.json&lt;/code&gt;, for example you can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;adjust &lt;code&gt;args&lt;/code&gt;: to be the command to be executed, for example &lt;code&gt;&amp;quot;args&amp;quot;: [ &amp;quot;redis-server&amp;quot; ]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;env&lt;/code&gt;: to pass custom environment variables&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;cwd&lt;/code&gt;: to set current working directory (in our example,  it could be &lt;code&gt;/data&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;mounts&lt;/code&gt;: to add tmpfs on &lt;q&gt;/tmp&lt;/q&gt; and &lt;q&gt;/var/run&lt;/q&gt; or even &lt;q&gt;/var&lt;/q&gt;, or even bind mount data volumes&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;namespaces&lt;/code&gt;: to add &lt;code&gt;{&amp;quot;type&amp;quot;: &amp;quot;network&amp;quot;}&lt;/code&gt; to make a separated network stack otherwise it would use host networking&lt;/li&gt;
+&lt;li&gt;you can adjust mapping between users &lt;code&gt;&amp;quot;linux&amp;quot;: { &amp;quot;uidMappings&amp;quot;: [ ... ] }&lt;/code&gt; typically containers root is the current user&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Atomic system containers can ship a template for config.json as in &lt;a href="https://src.fedoraproject.org/container/flannel/blob/master/f/config.json.template"&gt;flannel&amp;rsquo;s config.json.template&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is how you can attach a writable directory for &lt;code&gt;/data&lt;/code&gt; (which is &lt;code&gt;cont1/data&lt;/code&gt; we have created before):&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"mounts"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"destination"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/data"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"type"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"bind"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"source"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"data"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"options"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"rbind"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;"rw"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To run the container type &lt;code&gt;runc run&lt;/code&gt; followed by any name like &lt;code&gt;redis&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ runc run redis 
+1:C 03 Mar 16:13:06.463 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+1:C 03 Mar 16:13:06.474 # Redis version=4.0.8, bits=64, commit=00000000, modified=0, pid=1, just started
+...                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.8 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In another terminal you can have a shell inside the container using &lt;code&gt;runc exec redis /bin/sh&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ runc exec redis /bin/sh
+/data # ps -a
+PID   USER     TIME   COMMAND
+    1 root       0:00 redis-server
+   18 root       0:00 /bin/sh
+   24 root       0:00 ps -a
+/data # 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Bubble Wraps OCI&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;bwrap-oci&lt;/code&gt; is another OCI runtime that is designed for userspace containers (non-root)
+You can use the same &lt;code&gt;config.json&lt;/code&gt; we made in previous section.
+There was &lt;a href="https://github.com/projectatomic/bwrap-oci/pull/17"&gt;a bug&lt;/a&gt; in &lt;code&gt;bwrap-oci&lt;/code&gt;,
+that&amp;rsquo;s why you need to build it from source.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci run redis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can list running Bubble wrapped containers using &lt;code&gt;bwrap-oci list&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci list
+NAME                          PID       STATUS    BUNDLE
+redis                         23369     running   /home/alsadi/ostree/cont1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately there is no &lt;code&gt;bwrap-oci exec&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Atomic Options&lt;/h3&gt;
+
+&lt;p&gt;Atomic Install has corresponding options to the choices we have demonstrated in this article like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--storage=ostree|docker&lt;/code&gt; whether to use &lt;code&gt;docker&lt;/code&gt; or &lt;code&gt;ostree&lt;/code&gt; to store the image&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--runtime=/bin/bwrap-oci&lt;/code&gt; for user containers or when &lt;code&gt;--user&lt;/code&gt; is passed&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--runtime=/bin/runc&lt;/code&gt; for system containers or when &lt;code&gt;--system&lt;/code&gt; is passed&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details type &lt;code&gt;man atomic install&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>How container registries prevent information leakage</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/</id>
+    <published>2016-10-25T13:41:13+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Antonio Murdaca</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently people have been reporting unexpected errors when doing a &lt;code&gt;skopeo copy&lt;/code&gt; versus a &lt;code&gt;docker pull&lt;/code&gt;:  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1347805"&gt;1347805&lt;/a&gt;, &lt;a href="https://github.com/projectatomic/skopeo/issues/235"&gt;235&lt;/a&gt;, and &lt;a href="https://github.com/docker/docker/issues/27281"&gt;27281&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/skopeo"&gt;Skopeo&lt;/a&gt; is a command-line tool that that does various operations with container images and container image registries, including pulling the images to the host.  It is also used under the covers by the &lt;a href="https://github.com/projectatomic/atomic"&gt;atomic&lt;/a&gt; command-line tool.&lt;/p&gt;
+
+&lt;p&gt;This post explains why those weird errors can come up when pulling images.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what happens when a user tries to pull an image from the docker hub and the image doesn&amp;rsquo;t exist:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull thisimagedoesntexist
+Using default tag: latest
+Trying to pull repository docker.io/library/thisimagedoesntexist ...
+Pulling repository docker.io/library/thisimagedoesntexist
+Error: image library/thisimagedoesntexist:latest not found
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We get an &amp;lsquo;image not found&amp;rsquo;, as expected, right?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try the same with skopeo copy:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://thisimagedoesntexist oci:what
+FATA[0002] Error initializing image from source docker://thisimagedoesntexist:latest: unauthorized: authentication required
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What?&lt;/p&gt;
+
+&lt;p&gt;Why are we getting an &lt;code&gt;unauthorized error&lt;/code&gt; message?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what&amp;rsquo;s really happening under the hood:&lt;/p&gt;
+
+&lt;p&gt;The docker daemon:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Attempts to contact a V2 registry&lt;/li&gt;
+&lt;li&gt;V2 registry returns &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Daemon falls back and try to pull the same image from a V1 registry&lt;/li&gt;
+&lt;li&gt;Attempt to contact a V1 registry&lt;/li&gt;
+&lt;li&gt;V1 registry isn&amp;rsquo;t deployed, we get a 404&lt;/li&gt;
+&lt;li&gt;The docker command line interprets the 404 as an image not found&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Skopeo:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Attempts to contact a V2 registry&lt;/li&gt;
+&lt;li&gt;V2 registry returns &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Skopeo errors out and shows the  &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Why is docker trying to contact a V1 registry?&lt;/h3&gt;
+
+&lt;p&gt;Docker still  supports the old V1 registry API (remember &lt;a href="https://github.com/docker/docker-registry"&gt;docker-registry&lt;/a&gt;?).
+Some registry deployments use both V1 and V2 registries.  When the docker engine fails to get a V2 Image, it falls back and tries to contact a V1 registry that may have the image.&lt;/p&gt;
+
+&lt;p&gt;Yes, but:&lt;/p&gt;
+
+&lt;h3&gt;Why does skopeo return &amp;#39;unauthorized&amp;rsquo;?&lt;/h3&gt;
+
+&lt;p&gt;The V2 registry API is designed to prevent information leaks about private repositories (GitHub does the same, if you’re wondering).&lt;/p&gt;
+
+&lt;p&gt;From the first example above, &lt;em&gt;library/imagedoesntexist&lt;/em&gt; could be a private repository/image (or not!).  The registry can&amp;rsquo;t tell you that the repository/image doesn&amp;rsquo;t exist; it can only tell you that you&amp;rsquo;re not authorized to access it.&lt;/p&gt;
+
+&lt;p&gt;In fact, if you have a private repository/image on the docker hub and try to pull it with skopeo, you still get &amp;#39;unauthorized&amp;rsquo; (unless you&amp;rsquo;re logged in of course).
+Skopeo only supports V2 registries. Since V1 registries are being purged, we decided to not add support for V1 to Skopeo.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see some examples with a private image named &lt;em&gt;runcom/what&lt;/em&gt;:&lt;/p&gt;
+
+&lt;p&gt;If &lt;em&gt;runcom/what&lt;/em&gt; is a private image and I&amp;rsquo;m &lt;em&gt;not&lt;/em&gt; logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://runcom/what oci:what
+FATA[0001] Error initializing image from source docker://runcom/what:latest: unauthorized: authentication required
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see it&amp;rsquo;s not telling me whether the image exists or not on the registry. It just tells me that I&amp;rsquo;m not authorized to pull the image.&lt;/p&gt;
+
+&lt;p&gt;Now, if &lt;em&gt;runcom/what&lt;/em&gt; is a private image and I&amp;rsquo;m logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://runcom/what oci:what
+FATA[0002] Error initializing image from source docker://runcom/what:latest: manifest unknown: manifest unknown
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above error is indeed an &amp;#39;image not found&amp;rsquo; (e.g., a 404 from the V2 registry). Since I’m logged in,  I have the rights to understand if the image is on the registry.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what happens with docker instead when I&amp;rsquo;m not logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull runcom/what                                                     
+Using default tag: latest
+Trying to pull repository docker.io/runcom/what ...
+Pulling repository docker.io/runcom/what
+Error: image runcom/what:latest not found
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well, remember the docker engine falls back to V1? Let’s have a look at the docker engine logs to really understand why it felt back to V1. We see the following error message:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Oct 24 16:51:19 localhost.localdomain docker[1408]: time='2016-10-24T16:51:19.548329131+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'
+Oct 24 16:51:20 localhost.localdomain docker[1408]: time='2016-10-24T16:51:20.113460151+02:00' level=error msg='Attempting next endpoint for pull after error: unauthorized: authentication required'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great. Exactly like skopeo, before falling back to V1, it’s correctly telling us that I’m unauthorized to pull the image (note, it’s not telling me anything about the existence of that image on the docker hub!)&lt;/p&gt;
+
+&lt;p&gt;If I try to pull the same image but this time logged in, I&amp;rsquo;ll get the same image not found error, but this time I can spot the following in the logs:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Oct 24 16:54:11 localhost.localdomain docker[1408]: time='2016-10-24T16:54:11.706002616+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'
+Oct 24 16:54:12 localhost.localdomain docker[1408]: time='2016-10-24T16:54:12.283006158+02:00' level=error msg='Attempting next endpoint for pull after error: manifest unknown: manifest unknown'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The errors in the logs are exactly the same as the ones we get with skopeo. Just that docker falls back and tries a V1 registry while skopeo doesn’t fall back.&lt;/p&gt;
+
+&lt;p&gt;That means that skopeo is indeed providing the correct error message from the V2 registry while docker is reporting &amp;#39;image not found&amp;rsquo; because it hides the real/correct unauthorized error from the V2 registry and only shows the V1 error.  Docker command line might actually be giving you bogus information, when the container image is actually stored in V2, but reports the image does not exist when you are not logged in.  When upstream docker eventually drops backward support for V1, it will report the same error that skopeo does.&lt;/p&gt;
+
+&lt;p&gt;I hope this post will shed some light about why these errors differ between docker and skopeo.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Introduction to System Containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"/>
+    <id>http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/</id>
+    <published>2016-09-12T13:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Giuseppe Scrivano</name>
+    </author>
+    <content type="html">&lt;p&gt;As part of our effort to reduce the number of packages that are
+shipped with the Atomic Host image, we faced the problem of how to
+containerize services that are needed before Docker itself is running.
+The result: &lt;q&gt;system containers,&lt;/q&gt; a way to run containers in
+production using read only images.&lt;/p&gt;
+
+&lt;p&gt;System containers use different technologies such as OSTree for the
+storage, Skopeo to pull images from a registry, runC to run the
+containers and systemd to manage their life cycle.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;To use system containers you must have &lt;a href="https://github.com/projectatomic/atomic"&gt;Atomic CLI&lt;/a&gt; version 1.12 or later
+and the &lt;a href="https://github.com/ostreedev/ostree"&gt;ostree utility&lt;/a&gt; installed.  Currently, this means you must be running the
+&lt;a href="/blog/2016/07/new-centos-atomic-host-releases-available-for-download/"&gt;CentOS Continuous Atomic&lt;/a&gt;,
+but updates for Fedora Atomic should be coming soon.&lt;/p&gt;
+
+&lt;h3&gt;Pull an image&lt;/h3&gt;
+
+&lt;p&gt;An image must be present in the OSTree system repository before we can
+use it as a system container.  By using skopeo, the atomic tool can pull an image from
+different locations, a registry, the local Docker engine or a tarball,
+according to how the image is prefixed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic pull --storage=ostree gscrivano/etcd
+Image gscrivano/etcd is being pulled to ostree ...
+Pulling layer e4410b03d7db030dba502fef7bfd1dae56a6c48faae63a80fd82450322def2c5
+Pulling layer 2176ad01d5670713218844201dc4edb36d2692fcc79ad7008003227a5f80097b
+Pulling layer 9086967f25375e976260ad004a6ac3cc75ba020669042cb431904d2914ac1735
+Pulling layer c0ee5e1cf412f1fd511aa1c7427c6fd825dfe4969d9ed7462ff8f989aceded7a
+Pulling layer 024037bdea19132da059961b3ec58e2aff329fb2fe8ffd8030a65a27d7e7db5f
+
+# atomic pull --storage=ostree dockertar:/tmp/etcd.tar
+# atomic pull --storage=ostree docker:etcd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Each layer in the image is stored as a separate OSTree branch, this
+takes advantage of the layered model used by Docker images, since
+&lt;code&gt;atomic pull&lt;/code&gt; will download only the layers that are not already
+available.  All the images are stored into the OSTree system
+repository.&lt;/p&gt;
+
+&lt;p&gt;Using OSTree as storage has the advantage that if the same file is
+present in more layers, it will be stored only once, just like for container
+image layers.  A container is installed through hardlinks, the storage is
+shared with the OSTree repository &lt;q&gt;hardlink farm&lt;/q&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;atomic images list&lt;/code&gt; shows the list of the available images:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic images list
+   REPOSITORY    TAG          IMAGE ID       CREATED            VIRTUAL SIZE   TYPE
+gscrivano/etcd   latest       d7c1702506ff   2016-09-08 16:39                  system
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;atomic images delete&lt;/code&gt; deletes one tag and &lt;code&gt;atomic images prune&lt;/code&gt;
+removes the unused layers:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic images delete -f gscrivano/etcd
+# atomic images prune
+Deleting ociimage/9086967f25375e976260ad004a6ac3cc75ba020669042cb431904d2914ac1735
+Deleting ociimage/2176ad01d5670713218844201dc4edb36d2692fcc79ad7008003227a5f80097b
+Deleting ociimage/e4410b03d7db030dba502fef7bfd1dae56a6c48faae63a80fd82450322def2c5
+Deleting ociimage/c0ee5e1cf412f1fd511aa1c7427c6fd825dfe4969d9ed7462ff8f989aceded7a
+Deleting ociimage/024037bdea19132da059961b3ec58e2aff329fb2fe8ffd8030a65a27d7e7db5f
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Installation&lt;/h3&gt;
+
+&lt;p&gt;System images are installed with &lt;code&gt;atomic install --system&lt;/code&gt; as:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic install --system gscrivano/etcd
+Extracting to /var/lib/containers/atomic/etcd.0
+systemctl daemon-reload
+systemd-tmpfiles --create /etc/tmpfiles.d/etcd.conf
+systemctl enable etcd
+
+# atomic install --system gscrivano/flannel
+Extracting to /var/lib/containers/atomic/flannel.0
+systemctl daemon-reload
+systemd-tmpfiles --create /etc/tmpfiles.d/flannel.conf
+systemctl enable flannel
+
+# systemctl start etcd
+# runc exec etcd etcdctl set /atomic.io/network/config '{"Network":"10.40.0.0/16"}'
+# systemctl start flannel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The template mechanism allows us to configure settings for images.
+For example, we could use the following command to
+configure Flannel to use another Etcd endpoint instead of the default
+&lt;code&gt;http://127.0.0.1:2379&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic install --system --set ETCD_ENDPOINTS=http://192.168.122.2:2379 gscrivano/flannel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;atomic containers&lt;/code&gt; verb is used to see containers:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic containers list -a
+   CONTAINER ID IMAGE                COMMAND              CREATED          STATUS    RUNTIME
+   etcd         gscrivano/etcd       /usr/bin/etcd-env.sh 2016-09-08 14:19 running   runc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Uninstallation&lt;/h3&gt;
+
+&lt;p&gt;Similarly to &lt;code&gt;atomic install&lt;/code&gt;, &lt;code&gt;atomic uninstall&lt;/code&gt; is used to uninstall
+an installed system container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic uninstall etcd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Structure of a System Image&lt;/h3&gt;
+
+&lt;p&gt;System images are Docker images with a few extra files that are
+exported as part of the image itself, under the directory &amp;rsquo;/exports&amp;rsquo;.
+In other words, an existing &lt;code&gt;Dockerfile&lt;/code&gt; can be converted adding the
+configuration files needed to run it as a system container (which
+translate to an additional &lt;code&gt;ADD [files] /exports&lt;/code&gt; directive in the
+&lt;code&gt;Dockerfile&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;These files are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;config.json.template - template for the OCI configuration file that
+will be used to launch the runC container.&lt;/li&gt;
+&lt;li&gt;manifest.json - used to define default values for configuration
+variables.&lt;/li&gt;
+&lt;li&gt;service.template - template unit file for systemD.&lt;/li&gt;
+&lt;li&gt;tmpfiles.template - template configuration file for systemd-tmpfiles.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Not all of them are necessary for every image.&lt;/p&gt;
+
+&lt;p&gt;All the files with a &lt;code&gt;.template&lt;/code&gt; suffix are preprocessed and every
+variable in the form &lt;code&gt;$VARIABLE&lt;/code&gt; or &lt;code&gt;${VARIABLE}&lt;/code&gt; is replaced with
+its value.  This allows to define variables that are set at
+installation time (through the &lt;code&gt;--set&lt;/code&gt; option) as we saw with the
+Flannel example.  It is possible to set a default value for these
+settings using the &lt;code&gt;manifest.json&lt;/code&gt; file of the system container image.&lt;/p&gt;
+
+&lt;p&gt;If any of these files are missing, atomic will provide a default one.
+For instance, if &lt;code&gt;config.json.template&lt;/code&gt; is not included in the image,
+the default configuration will launch the &lt;code&gt;run.sh&lt;/code&gt; script without any
+tty.&lt;/p&gt;
+
+&lt;p&gt;There are some variables that are always defined by the atomic tool,
+without the need for an user to specify them via &lt;code&gt;--set&lt;/code&gt;.  Of those,
+only &lt;code&gt;RUN_DIRECTORY&lt;/code&gt; and &lt;code&gt;STATE_DIRECTORY&lt;/code&gt; can be overriden with
+&lt;code&gt;--set&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DESTDIR&lt;/code&gt; - path where the container is installed on the system&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NAME&lt;/code&gt; - name of the container&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EXEC_START&lt;/code&gt; - Start directive for the systemD unit file.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EXEC_STOP&lt;/code&gt; - Stop directive for the systemD unit file.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HOST_UID&lt;/code&gt; - uid of the user installing the container.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HOST_GID&lt;/code&gt; - gid of the user installing the container.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RUN_DIRECTORY&lt;/code&gt; - run directory.  &lt;code&gt;/run&lt;/code&gt; for system containers.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;STATE_DIRECTORY&lt;/code&gt; - path to the storage directory. &lt;code&gt;/var/lib/&lt;/code&gt; for
+system containers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;rsquo;re excited about the ability of system containers to greatly improve administration
+and infrastructure service delivery for Atomic clusters.  Please give them a try
+and tell us what you think.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Working with Containers' Images Made Easy Part 1: skopeo</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/working-with-containers-image-made-easy/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/working-with-containers-image-made-easy/</id>
+    <published>2016-07-25T08:58:20+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Antonio Murdaca</name>
+    </author>
+    <content type="html">&lt;p&gt;This is the first part of a series of posts about containers&amp;rsquo; images. In this first part we&amp;rsquo;re going to focus on &lt;code&gt;skopeo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Back in March, I published a &lt;a href="http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/"&gt;post&lt;/a&gt; about &lt;a href="https://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt;, a new tiny binary to help people interact with Docker registries. Its job has been limited to &lt;em&gt;inspect&lt;/em&gt; (&lt;em&gt;skopeo&lt;/em&gt; is greek for &lt;em&gt;looking for&lt;/em&gt;, &lt;em&gt;observe&lt;/em&gt;) images on remote registries as opposed to &lt;code&gt;docker inspect&lt;/code&gt;, which is working for locally pulled images.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;The Tool&lt;/h3&gt;
+
+&lt;p&gt;Since then, we&amp;rsquo;ve been adding more features to &lt;code&gt;skopeo&lt;/code&gt;, such as downloading image layers (via &lt;code&gt;skopeo layers&lt;/code&gt;), and eventually we came up with a nice abstraction to the problem of &lt;em&gt;downloading&lt;/em&gt;, &lt;em&gt;inspecting&lt;/em&gt;, and &lt;em&gt;uploading&lt;/em&gt; images (without even the need to have Docker installed on the system). We called this new abstraction &lt;code&gt;copy&lt;/code&gt; and here is a straightforward example about how to use it:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# skopeo copy &amp;lt;source&amp;gt; &amp;lt;destination&amp;gt;&lt;/span&gt;
+
+&lt;span class="gp"&gt;$ &lt;/span&gt;id -u
+1000
+
+ &lt;span class="c"&gt;# let's say we want to download the Fedora 24 docker image from the Docker Hub and store it on a local directory&lt;/span&gt;
+&lt;span class="gp"&gt;$ &lt;/span&gt;mkdir fedora-24
+&lt;span class="gp"&gt;$ &lt;/span&gt;skopeo copy docker://fedora:24 dir:fedora-24
+&lt;span class="gp"&gt;$ &lt;/span&gt;tree fedora-24
+fedora-24
+├── 7c91a140e7a1025c3bc3aace4c80c0d9933ac4ee24b8630a6b0b5d8b9ce6b9d4.tar
+├── f9873d530588316311ac1d3d15e95487b947f5d8b560e72bdd6eb73a7831b2c4.tar
+└── manifest.json
+
+0 directories, 3 files
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see from the output  above that &lt;code&gt;skopeo copy&lt;/code&gt; successfully downloaded the Fedora 24 image&amp;mdash;as in, it downloaded all its layers plus the image manifest.&lt;/p&gt;
+
+&lt;p&gt;You can also notice the whole operation has been done with an unprivileged user&amp;mdash;while Docker needs you to be &lt;code&gt;root&lt;/code&gt; to even do a &lt;code&gt;docker pull&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;What can you do with that &lt;code&gt;fedora-24&lt;/code&gt; directory now? There comes the fun. A nice new addition to the &lt;a href="https://github.com/projectatomic/atomic"&gt;atomic&lt;/a&gt; tool has been the so-called &lt;em&gt;system containers&lt;/em&gt;&amp;mdash;they are containers meant to be working before the Docker daemon comes up and they&amp;rsquo;re powered by the community project &lt;a href="https://github.com/opencontainers/runc"&gt;runc&lt;/a&gt; which is part of the &lt;a href="https://www.opencontainers.org/"&gt;Open Container Initiative&lt;/a&gt;. Basically, those containers are set up with these steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Download the image layers and manifest with &lt;code&gt;skopeo&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Setup a new &lt;a href="https://wiki.gnome.org/action/show/Projects/OSTree?action=show&amp;amp;redirect=OSTree"&gt;ostree&lt;/a&gt; repository which will be the root filesystem of our system container&lt;/li&gt;
+&lt;li&gt;Import downloaded layers in the order they come in the image manifest&lt;/li&gt;
+&lt;li&gt;Create a systemd unit file to run &lt;code&gt;runc&lt;/code&gt; with said filesystem&lt;/li&gt;
+&lt;li&gt;Spawn the service&lt;/li&gt;
+&lt;li&gt;Enjoy&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If the above sounds rather complex, the &lt;code&gt;atomic&lt;/code&gt; tool already provides a &lt;code&gt;--system&lt;/code&gt; flag which can be used to create a system container:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;sudo atomic install --system --name system-container gscrivano/spc-helloworld
+Missing layer b037963d9b4419ffe09694c450bd33a06d24945416109aeb2937c7a8595252d9
+Missing layer a1b129b466881845cdf628321bf7ed597b3d0cad0b8dd01564f78a4417c750fe
+Missing layer a8a1c0600345270e055477e8f282d1318f0cef0debaed032cd1ba1e20eb2a35e
+Missing layer 236608c7b546e2f4e7223526c74fc71470ba06d46ec82aeb402e704bfdee02a2
+Extracting to /var/lib/containers/atomic/spc.0
+systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;spc
+Created symlink from /etc/systemd/system/multi-user.target.wants/spc.service to /etc/systemd/system/spc.service.
+systemctl start spc
+
+&lt;span class="c"&gt;# verify the service is running smoothly&lt;/span&gt;
+&lt;span class="gp"&gt;$ &lt;/span&gt;sudo systemctl status spc  
+● spc.service - Hello World System Container
+   Loaded: loaded &lt;span class="o"&gt;(&lt;/span&gt;/etc/systemd/system/spc.service; enabled; vendor preset: disabled&lt;span class="o"&gt;)&lt;/span&gt;
+   Active: active &lt;span class="o"&gt;(&lt;/span&gt;running&lt;span class="o"&gt;)&lt;/span&gt; since Fri 2016-07-22 09:27:47 CEST; 5s ago
+ Main PID: 10405 &lt;span class="o"&gt;(&lt;/span&gt;runc&lt;span class="o"&gt;)&lt;/span&gt;
+    Tasks: 10 &lt;span class="o"&gt;(&lt;/span&gt;limit: 512&lt;span class="o"&gt;)&lt;/span&gt;
+   CGroup: /system.slice/spc.service
+           ├─10405 /bin/runc start spc
+           └─spc
+             ├─10416 /bin/sh /usr/bin/run.sh
+             └─10435 nc -k -l 8081 --sh-exec /usr/bin/greet.sh
+
+Jul 22 09:27:47 localhost.localdomain systemd[1]: Started Hello World System Container.
+
+&lt;span class="c"&gt;# we know our system container is listening on port 8081 so let's test it out!&lt;/span&gt;
+&lt;span class="gp"&gt;$ &lt;/span&gt;nc localhost 8081                 
+HTTP/1.1 200 OK
+Connection: Close
+
+Hi World
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The new &lt;code&gt;skopeo copy&lt;/code&gt; command isn&amp;rsquo;t just limited to download to local directories. Instead, it can do almost all sort of download/upload between:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;docker registries -&amp;gt; local diretories&lt;/li&gt;
+&lt;li&gt;docker registries -&amp;gt; docker registries (&lt;code&gt;skopeo copy docker://myimage docker://anotherrepo/myimage&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;docker registries -&amp;gt; &lt;a href="https://github.com/opencontainers/image-spec/blob/master/image-layout.md"&gt;OCI image-layout&lt;/a&gt; directories (&lt;code&gt;oci:&lt;/code&gt; prefix)&lt;/li&gt;
+&lt;li&gt;and viceversa in any combination!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Possibilities seems endless, being able to pull as an unprivileged user also open the doors to work with unprivileged &lt;em&gt;sanboxes&lt;/em&gt; like &lt;a href="http://flatpak.org/"&gt;Flatpak&lt;/a&gt;, &lt;a href="https://github.com/projectatomic/bubblewrap"&gt;bubblewrap&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;As part of this unprileged capability, we&amp;rsquo;re working on &lt;a href="https://github.com/projectatomic/atomic/pull/483"&gt;a new feature in the Atomic tool&lt;/a&gt;, which will be able to pull images to the calling user home directory  and later run any containers from those images (by also remapping files ownership to the one of the calling user).&lt;/p&gt;
+
+&lt;p&gt;Supporting the &lt;a href="https://www.opencontainers.org/"&gt;Open Container Initiative&lt;/a&gt; by early implementing the &lt;a href="https://github.com/opencontainers/image-spec"&gt;image specification&lt;/a&gt; had also great advantages as we eventually helped the specification itself where things weren&amp;rsquo;t totally clear and defined. We&amp;rsquo;re continuosly adding wider support as the specification moves along also in areas like images signing and layers federation.&lt;/p&gt;
+
+&lt;p&gt;The next post will take care of explaining how we extracted some core components from &lt;code&gt;skopeo&lt;/code&gt; and moved them to a set of reusable libraries.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

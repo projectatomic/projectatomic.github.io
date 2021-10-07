@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+rpm-ostree v2017.6 released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='rpm-ostree v2017.6 released' property='og:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version&#x000A;v2017.6, including&#x000A;“livefs” support for adding package layers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/06/rpm-ostree-v2017.6-released/' property='og:url'>
+<meta content='2017-06-05T14:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm' property='article:tag'>
+<link href='/blog/tag/rpm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='rpm-ostree v2017.6 released' name='twitter:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version&#x000A;v2017.6, including&#x000A;“livefs” support for adding package layers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_06 blog_2017_06_rpm-ostree-v2017 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+rpm-ostree v2017.6 released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-06-05T14:00:00Z'>
+Monday  5 June 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://rpm-ostree.readthedocs.org/">rpm-ostree</a> is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host. Here are some highlights from
+version
+<a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2017.6">v2017.6</a>, including
+&ldquo;livefs&rdquo; support for adding package layers.</p>
+
+<p></p>
+
+<p>The highlight of this release is experimental support for
+live system updates. You can test it out by
+<a href="https://fedoraproject.org/wiki/QA:Updates_Testing#Using_it_with_Atomic_Host_.28Fedora_24_and_later.29">rebasing your Fedora Atomic Host</a>
+onto the testing branch. Feel free to also leave karma in
+the pending Bodhi updates:</p>
+
+<ul>
+<li><a href="https://bodhi.fedoraproject.org/updates/FEDORA-2017-85014ae3f6">Fedora 25 update</a></li>
+<li><a href="https://bodhi.fedoraproject.org/updates/FEDORA-2017-f86a299577">Fedora 26 update</a></li>
+</ul>
+
+<h3>Live updates</h3>
+
+<p>rpm-ostree now has experimental support for applying some
+updates live without the need to reboot using the
+<code>rpm-ostree ex livefs</code> command (the <code>ex</code> command groups new
+features that are not ready to be declared stable; details
+of how these commands work may change in the future).</p>
+
+<p>For now, the <code>livefs</code> command only works in situations where
+the only difference between the pending deployment and the
+current deployment is added packages. You can see it in
+action below:</p>
+<pre class="highlight plaintext"><code># rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* vmcheck&#x000A;              Timestamp: 2017-06-02 19:45:32&#x000A;                 Commit: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab&#x000A;# ltrace&#x000A;bash: ltrace: command not found&#x000A;# rpm -q ltrace&#x000A;package ltrace is not installed&#x000A;</code></pre>
+
+<p>We don&rsquo;t have ltrace installed. Let&rsquo;s overlay it:</p>
+<pre class="highlight plaintext"><code># rpm-ostree install ltrace&#x000A;Checking out tree 3f5650a... done&#x000A;Enabled rpm-md repositories: fedora-cisco-openh264 updates fedora jlebon&#x000A;rpm-md repo 'fedora-cisco-openh264' (cached); generated: 2017-03-24 17:58:10&#x000A;rpm-md repo 'updates' (cached); generated: 2017-06-02 01:51:29&#x000A;rpm-md repo 'fedora' (cached); generated: 2016-11-15 19:49:18&#x000A;rpm-md repo 'jlebon' (cached); generated: 2017-05-08 16:24:16&#x000A;&#x000A;Importing metadata [========================================================100%&#x000A;Resolving dependencies... done&#x000A;Will download: 1 package (159.2 kB)&#x000A;&#x000A;  Downloading from fedora: [================================================100%&#x000A;&#x000A;Importing: [================================================================100%&#x000A;Overlaying... done&#x000A;Writing rpmdb... done&#x000A;Writing OSTree commit... done&#x000A;Copying /etc changes: 26 modified, 0 removed, 103 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1&#x000A;Added:&#x000A;  ltrace-0.7.91-20.fc25.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;# rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;  vmcheck&#x000A;              Timestamp: 2017-06-02 19:45:32&#x000A;             BaseCommit: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab&#x000A;        LayeredPackages: ltrace&#x000A;&#x000A;* vmcheck&#x000A;              Timestamp: 2017-06-02 19:45:32&#x000A;                 Commit: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab&#x000A;</code></pre>
+
+<p>Normally, at this point, we&rsquo;d have to reboot. However, since
+we just added a package, we can use the <code>livefs</code> command
+instead to get the changes immediately applied:</p>
+<pre class="highlight plaintext"><code># rpm-ostree ex livefs&#x000A;notice: "livefs" is an experimental command and subject to change.&#x000A;Diff Analysis: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab =&gt; f71fedccd227b5112b461b466106e069bf2c1c2de21f1554abda72297594e8a0&#x000A;Files:&#x000A; modified: 0&#x000A; removed: 0&#x000A; added: 15&#x000A;Packages:&#x000A; modified: 0&#x000A; removed: 0&#x000A; added: 1&#x000A;Preparing new rollback matching currently booted deployment&#x000A;Copying /etc changes: 26 modified, 0 removed, 103 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 1&#x000A;Overlaying /usr... done&#x000A;# ltrace&#x000A;ltrace: too few arguments&#x000A;Try `ltrace --help' for more information.&#x000A;# rpm -q ltrace&#x000A;ltrace-0.7.91-20.fc25.x86_64&#x000A;</code></pre>
+
+<p>The <code>livefs</code> command helpfully created a rollback deployment
+of the original commit we booted into because it modifies
+the deployment itself permanently. You can see this
+modification reflected in the output of the <code>status</code>
+command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;  vmcheck&#x000A;              Timestamp: 2017-06-02 19:45:32&#x000A;             BaseCommit: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab&#x000A;                 Commit: f71fedccd227b5112b461b466106e069bf2c1c2de21f1554abda72297594e8a0&#x000A;        LayeredPackages: ltrace&#x000A;&#x000A;* vmcheck&#x000A;              Timestamp: 2017-06-02 19:45:32&#x000A;           BootedCommit: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab&#x000A;             LiveCommit: f71fedccd227b5112b461b466106e069bf2c1c2de21f1554abda72297594e8a0&#x000A;&#x000A;  vmcheck&#x000A;              Timestamp: 2017-06-02 19:45:32&#x000A;                 Commit: 3f5650aeffe16474584b57c6ec0654e6fd96c3c60d998a04b1e550e61556d8ab&#x000A;</code></pre>
+
+<p>The <code>BootedCommit</code> is the commit we original started with,
+whereas the <code>LiveCommit</code> is the commit that was applied to
+the live deployment.</p>
+
+<p>As mentioned earlier, this feature is still in experimental
+mode, and thus is subject to change. Discussions are still
+ongoing upstream as to the finer details of the command and
+expected use cases.</p>
+
+<h3>Repodata caching</h3>
+
+<p>You might have noticed this bit in the output above:</p>
+<pre class="highlight plaintext"><code>Enabled rpm-md repositories: fedora-cisco-openh264 updates fedora jlebon&#x000A;rpm-md repo 'fedora-cisco-openh264' (cached); generated: 2017-03-24 17:58:10&#x000A;rpm-md repo 'updates' (cached); generated: 2017-06-02 01:51:29&#x000A;rpm-md repo 'fedora' (cached); generated: 2016-11-15 19:49:18&#x000A;rpm-md repo 'jlebon' (cached); generated: 2017-05-08 16:24:16&#x000A;</code></pre>
+
+<p>rpm-ostree now caches repo metadata for up to a day, and
+prints this information during layering operations. One can
+do <code>cleanup -m</code> in order to purge the metadata and force a
+refresh.</p>
+
+<h3>Journal logging</h3>
+
+<p>The rpm-ostree daemon now logs more and more information to
+the journal to help sysadmins understand system state and to
+diagnose issues. Here are some sample journal outputs from
+the operations above:</p>
+<pre class="highlight plaintext"><code>rpm-ostree[1276]: Preparing pkg txn; enabled repos: ['updates', 'fedora', 'jlebon'] solvables: 71435&#x000A;rpm-ostree[1276]: Imported 1 pkg&#x000A;...&#x000A;rpm-ostree[1276]: Starting livefs for commit f71fedccd227b5112b461b466106e069bf2c1c2de21f1554abda72297594e8a0 addition; 1 pkgs, 15 files&#x000A;rpm-ostree[1276]: Completed livefs for commit f71fedccd227b5112b461b466106e069bf2c1c2de21f1554abda72297594e8a0&#x000A;</code></pre>
+
+<p>Many of these journal entries actually use the structured
+output feature of journald. For example, there is a
+dedicated
+<a href="https://www.freedesktop.org/software/systemd/man/systemd.journal-fields.html">MESSAGE_ID</a>
+for reporting repo information during package transactions:</p>
+<pre class="highlight plaintext"><code># journalctl -b 0 MESSAGE_ID=0eea679bbfa34d43802dec99b274ebe7 -o json-pretty&#x000A;{&#x000A;        ...&#x000A;        "MESSAGE_ID" : "0eea679bbfa34d43802dec99b274ebe7",&#x000A;        "MESSAGE" : "Preparing pkg txn; enabled repos: ['updates', 'fedora', 'jlebon'] solvables: 71435",&#x000A;        "SACK_N_SOLVABLES" : "71881",&#x000A;        "ENABLED_REPOS" : "['updates', 'fedora', 'jlebon']",&#x000A;        "ENABLED_REPOS_SOLVABLES" : "[19748, 51669, 18]",&#x000A;        "ENABLED_REPOS_TIMESTAMPS" : "[1496368289, 1479239358, 1494260656]",&#x000A;        ...&#x000A;}&#x000A;</code></pre>
+
+<h3>Other minor fixes and improvements</h3>
+
+<p>There are many other small improvements, here are a few:</p>
+
+<ul>
+<li><p>rpm-ostree is now more diligent about checking whether
+RPMs from repos are the same as locally cached RPMs.
+Previously, two different RPMs with the same name and
+version would be considered equivalent. We now store the
+actual package checksum and do a comparison to verify
+this.</p></li>
+<li><p>on the compose side, rpm-ostree now supports a new
+<code>tmp-is-dir</code> field, which allows for example, systemd to
+mount a tmpfs on startup, rather than using a central
+permanent <code>/tmp</code> directory.</p></li>
+<li><p>rpm-ostree is now capable of rebasing to a local branch
+using the <code>rebase :local-branch</code> syntax. This was
+previously not possible if the current refspec was from a
+remote.</p></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm/">rpm</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/06/rpm-ostree-v2017.6-released/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/06/rpm-ostree-v2017.6-released/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/06/rpm-ostree-v2017.6-released/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

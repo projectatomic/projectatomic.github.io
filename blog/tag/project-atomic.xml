@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Project Atomic</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/project-atomic.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Friends Don't Let Friends Run Docker on Loopback in Production</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/</id>
+    <published>2015-06-29T16:53:15+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;I&amp;rsquo;ve heard negative things about the Fedora|CentOS Docker storage configuration in the past, and while manning the Red Hat booth in San Francisco at &lt;a href="http://www.dockercon.com/"&gt;DockerCon&lt;/a&gt; last week, I spoke to a number of people who&amp;rsquo;ve experienced these storage issues themselves.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/codinghorror/status/604096348682485760"&gt;&lt;img src="/images/banned-dm.png" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Much of the trouble, I think, boils down to how Docker in Fedora and CentOS have shipped with a storage configuration that optimizes for a convenient getting started experience that can lead to inconvenience down the road. &lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ll cover how to reconfigure your Docker installation w/ better-performing storage, but first, a bit of background:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NOTE: Starting with &lt;code&gt;docker-1.6.2-14.el7.centos.x86_64.rpm&lt;/code&gt; (released just a few days ago), CentOS 7 installs default to the better-performing device mapper storage configuration I describe below (yay!), and even appear to automatically handle the conversion from loopback to direct, so I&amp;rsquo;ll focus on Fedora 22 below.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As my colleague &lt;a href="https://twitter.com/jeremyeder"&gt;Jeremy Eder&lt;/a&gt; discussed in &lt;a href="http://developerblog.redhat.com/2014/09/30/overview-storage-scalability-docker/"&gt;this blog post&lt;/a&gt; from October 2014, the AUFS backend that started out as Docker&amp;rsquo;s default &lt;a href="http://jpetazzo.github.io/assets/2015-03-03-not-so-deep-dive-into-docker-storage-drivers.html"&gt;storage option&lt;/a&gt;, but never made its way into the mainlain Linux kernel, posed a problem for Red Hat and our upstream first, no out-of-tree bits ways.&lt;/p&gt;
+
+&lt;p&gt;The settled-upon solution was &lt;a href="https://github.com/docker/docker/blob/master/daemon/graphdriver/devmapper/README.md"&gt;device mapper thin provisioning&lt;/a&gt;, which takes a block storage device to create a pool of space that can be used to create other block devices for Docker containers and images. The device mapper backend can be configured to use direct LVM volumes or you can let Docker create a pair of loopback mounted sparse files to serve as the block devices. &lt;/p&gt;
+
+&lt;p&gt;The former option has required pre-planning – if you&amp;rsquo;re working from a typical single-drive laptop machine, you need to set aside some space for Docker at install-time, or you need to mess with partition-resizing. The latter option delivers, um, crap performance, and may or may not be to blame for various problems that Docker-using Fedorans or CentOSians have been encountering. The bug report referenced in the tweet above, for instance, involves this loopback file storage configuration, and that often seems to be the case with similar reports.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Fedora 22 Default Docker Storage Driver Setup&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/docker-info-loop.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;A lot of the Docker testing and poking I&amp;rsquo;ve done has occurred with an Atomic Host, and these hosts come preconfigured with the direct LVM configuration, and offer a handy utility, &lt;code&gt;docker-storage-setup&lt;/code&gt;, that &lt;a href="http://www.projectatomic.io/docs/docker-storage-recommendation/"&gt;makes it easy&lt;/a&gt; to expand your storage as needed.&lt;/p&gt;
+
+&lt;p&gt;So, how do we take an existing Fedora system using the &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2015-April/msg00033.html"&gt;default-yet-not-recommended&lt;/a&gt; loopback file configuration, and switch, either to a direct LVM configuration or to something else that performs well without repartitioning our hard drive?&lt;/p&gt;
+
+&lt;p&gt;Both solutions involve &lt;code&gt;rm -rf /var/lib/docker&lt;/code&gt;, which will blow away all the containers and images on your host, so keep your Dockerfiles handy or look into &lt;a href="https://docs.docker.com/reference/commandline/export/"&gt;backing up&lt;/a&gt; and &lt;a href="https://docs.docker.com/reference/commandline/import/"&gt;restoring&lt;/a&gt; your local images and &lt;a href="https://docs.docker.com/userguide/dockervolumes/#backup-restore-or-migrate-data-volumes"&gt;volumes&lt;/a&gt; before proceeding.&lt;/p&gt;
+
+&lt;h3&gt;Direct LVM&lt;/h3&gt;
+
+&lt;p&gt;If you&amp;rsquo;re able to add another disk to your machine, it&amp;rsquo;s pretty easy to configure your Docker install for direct LVM volumes. I&amp;rsquo;m testing with a virtual machine, and my second disk is called &lt;code&gt;/dev/vdb&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Start by installing the &lt;code&gt;docker-storage-setup&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install -y docker-storage-setup.noarch
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, edit (create if needed) the file &lt;code&gt;/etc/sysconfig/docker-storage-setup&lt;/code&gt; to point to your new disk device. In my case, I needed to add the line below:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;DEVS="/dev/vdb"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, we need to stop the Docker service, delete &lt;code&gt;/var/lib/docker&lt;/code&gt; (remember, this will blow away your containers and images), run the storage setup utility, and then start up the Docker service again:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# systemctl stop docker
+# rm -rf /var/lib/docker
+# docker-storage-setup
+# systemctl start docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running &lt;code&gt;docker info&lt;/code&gt; should display your new, loopback file-free backend storage configuration:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Fedora 22 Atomic Default Docker Storage Driver Setup&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/docker-info-direct.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;OverlayFS&lt;/h3&gt;
+
+&lt;p&gt;If you can&amp;rsquo;t easily add another disk to your Docker host &amp;ndash; for instance, if you&amp;rsquo;re running Docker on your laptop &amp;ndash; there&amp;rsquo;s another storage backend option available on Fedora and CentOS: OverlayFS. &lt;/p&gt;
+
+&lt;p&gt;Jeremy Eder discussed OverlayFS in his &lt;a href="http://developerblog.redhat.com/2014/09/30/overview-storage-scalability-docker/"&gt;blog post&lt;/a&gt; from October, but at that time, this backend required a special &lt;q&gt;Frankenkernel&lt;/q&gt; and an experimental build of Docker. Now, however, OverlayFS support ships with the regular Fedora and CentOS kernels and Docker packages, and it&amp;rsquo;s super easy to set up.&lt;/p&gt;
+
+&lt;p&gt;While we&amp;rsquo;re past the Frankenkernels stage with OverlayFS, it&amp;rsquo;s considered a &lt;a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/7.1_Release_Notes/chap-Red_Hat_Enterprise_Linux-7.1_Release_Notes-File_Systems.html"&gt;&lt;q&gt;technology preview&lt;/q&gt; in RHEL 7.1&lt;/a&gt;. One significant downside of OverlayFS, for now at least, is that it doesn&amp;rsquo;t play nice with SELinux, so we have to disable SELinux support within our containers &amp;ndash; we can leave it enabled for the host itself. Additionally, there&amp;rsquo;s a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1213602"&gt;reported issue&lt;/a&gt; (with workaround) involving OverlayFS and use of yum within containers.  &lt;/p&gt;
+
+&lt;p&gt;First, we&amp;rsquo;ll stop the Docker service, and delete &lt;code&gt;/var/lib/docker&lt;/code&gt; (again, this will blow away your containers and images).&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# systemctl stop docker
+# rm -rf /var/lib/docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, we need to edit the file &lt;code&gt;/etc/sysconfig/docker&lt;/code&gt;, and change the line &lt;code&gt;OPTIONS=&amp;#39;--selinux-enabled&amp;#39;&lt;/code&gt; to &lt;code&gt;OPTIONS=&amp;#39;--selinux-enabled=false&amp;#39;&lt;/code&gt;, to disable SELinux within our containers.&lt;/p&gt;
+
+&lt;p&gt;After that, edit the file &lt;code&gt;/etc/sysconfig/docker-storage&lt;/code&gt; to include the line:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;DOCKER_STORAGE_OPTIONS= -s overlay
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If there are any other lines that begin with &lt;code&gt;DOCKER_STORAGE_OPTIONS&lt;/code&gt;, comment those out.&lt;/p&gt;
+
+&lt;p&gt;Finally, start up the Docker service again and run &lt;code&gt;docker info&lt;/code&gt; to see your new storage backend in place:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# systemctl start docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Fedora 22 Atomic Default Docker Storage Driver Setup&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/docker-info-overlay.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Till Next Time&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;ve tested these storage backend modifications in Fedora 22 and an CentOS 7, both with all updates applied. If you&amp;rsquo;re running older Fedora or CentOS installs, your mileage will vary, and I suggest you upgrade.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re interested in helping improve the messaging around the loopback file default, or in helping smooth out the experience, check out &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2015-April/msg00033.html"&gt;this thread&lt;/a&gt; on the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt; mailing list (from which I borrowed the headline for this post).&lt;/p&gt;
+
+&lt;p&gt;If you have questions or suggestions regarding this post, I’d love to hear them. Ping me at jbrooks in #atomic on freenode irc or &lt;a href="https://twitter.com/jasonbrooks"&gt;@jasonbrooks&lt;/a&gt; on Twitter, or send a message to the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;Project Atomic mailing list&lt;/a&gt;. Also, be sure to check out the &lt;a href="http://ask.projectatomic.io/en/questions/"&gt;Project Atomic Q&amp;amp;A site&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

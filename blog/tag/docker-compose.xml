@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Docker Compose</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/docker-compose.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>How I Wrote exec Support for docker-compose</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/</id>
+    <published>2016-03-29T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tomáš Tomeček</name>
+    </author>
+    <content type="html">&lt;p&gt;If you are a &lt;code&gt;docker-compose&lt;/code&gt; user, as I am, you may be missing one feature:
+&lt;code&gt;exec&lt;/code&gt;&amp;mdash;spawning arbitrary commands in already running containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead of doing this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker exec -ti $container bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;you should be able do the same with &lt;code&gt;docker-compose&lt;/code&gt; itself:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker-compose exec web bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Usually when you wanted to do such thing, you had to:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Type &lt;code&gt;docker exec -ti&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Now, the container name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;^c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker ps&lt;/code&gt;, I forgot to name my container again!&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ba3f7099b709&lt;/code&gt;, ugh&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker exec -ti&lt;/code&gt;, once again, copy-paste that ID, write &lt;code&gt;bash&lt;/code&gt; and 30 seconds later:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@ba3f7099b709 /] # █
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That workflow isn&amp;rsquo;t very ideal. So I realized I wanted to implement the feature (especially when there already was &lt;a href="https://github.com/docker/compose/issues/593"&gt;an
+issue open&lt;/a&gt;, with tons of &lt;code&gt;+1&lt;/code&gt; and not even a single promise of someone working on it).&lt;/p&gt;
+
+&lt;h3&gt;Easy Start&lt;/h3&gt;
+
+&lt;p&gt;In September, I cloned &lt;code&gt;compose&lt;/code&gt; and started working on the code. I managed to have a working prototype very soon:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker-compose exec web ls
+bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Time to Go Interactive&lt;/h3&gt;
+
+&lt;p&gt;That&amp;rsquo;s when all the fun started.&lt;/p&gt;
+
+&lt;p&gt;Running simple, non-interactive commands is pretty trivial. Just &lt;a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-create"&gt;create an exec
+object&lt;/a&gt; via engine&amp;rsquo;s API,
+&lt;a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-start"&gt;start&lt;/a&gt; it, and collect results. Easy.&lt;/p&gt;
+
+&lt;p&gt;When you want an interactive session, it&amp;rsquo;s getting a bit more complex than a simple request/response over HTTP. That&amp;rsquo;s when
+&lt;a href="https://github.com/d11wtq/dockerpty"&gt;dockerpty&lt;/a&gt; comes into the play. It is able to &lt;em&gt;attach&lt;/em&gt; to the process via engine&amp;rsquo;s
+API, send input, receive output and display it. Brief code-browsing revealed there&amp;rsquo;s tons of work ahead:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I had to &lt;a href="https://github.com/d11wtq/dockerpty/pull/48/commits/df6ac1a49b99803c95233e51d0cd9b8f6aba9240"&gt;rewrite&lt;/a&gt; big part of existing codebase.&lt;/li&gt;
+&lt;li&gt;I had to change existing API and add a new one.&lt;/li&gt;
+&lt;li&gt;Cherry on top: the tests didn&amp;rsquo;t work and I had to &lt;a href="https://github.com/d11wtq/dockerpty/pull/53/commits/555b525f49026271c9a291f014c3b7025b183d4a"&gt;fix&lt;/a&gt; those.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Even &lt;code&gt;dockerpty&lt;/code&gt; didn&amp;rsquo;t have all the bits to write proper &lt;code&gt;exec&lt;/code&gt; support for interactive commands. I had to go deeper:
+improve python&amp;rsquo;s API client&amp;mdash;&lt;code&gt;docker-py&lt;/code&gt;. Luckily that &lt;a href="https://github.com/docker/docker-py/pull/858"&gt;patch&lt;/a&gt; was pretty
+easy: just return socket directly, not a generator.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/d11wtq/dockerpty/pull/48"&gt;The patch&lt;/a&gt; for &lt;code&gt;dockerpty&lt;/code&gt; turned out to be super-complex. In the end, it took me more than 5 months to get the former &lt;code&gt;compose&lt;/code&gt; patch merged.&lt;/p&gt;
+
+&lt;p&gt;Enjoy &lt;code&gt;docker-compose exec&lt;/code&gt; once 1.7 is out! Happy &lt;code&gt;exec&lt;/code&gt;ing!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

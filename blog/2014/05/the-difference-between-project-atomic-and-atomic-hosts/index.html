@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+The Difference Between Project Atomic and Atomic Hosts &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier, Lars Herrmann' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='The Difference Between Project Atomic and Atomic Hosts' property='og:title'>
+<meta content='Project Atomic has been getting a great deal of attention since it was announced at Red Hat Summit this April. We saw a lot of enthusiasm at Summit for the concept of Atomic Hosts that are focused on...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/' property='og:url'>
+<meta content='2014-05-15T20:18:00Z' property='article:published_time'>
+<meta content='jzb-lars' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Enterprise' property='article:tag'>
+<link href='/blog/tag/enterprise.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='RHEL' property='article:tag'>
+<link href='/blog/tag/rhel.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='The Difference Between Project Atomic and Atomic Hosts' name='twitter:title'>
+<meta content='Project Atomic has been getting a great deal of attention since it was announced at Red Hat Summit this April. We saw a lot of enthusiasm at Summit for the concept of Atomic Hosts that are focused on...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_05 blog_2014_05_the-difference-between-project-atomic-and-atomic-hosts blog_2014_05_the-difference-between-project-atomic-and-atomic-hosts_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+The Difference Between Project Atomic and Atomic Hosts
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb-lars/">Joe Brockmeier, Lars Herrmann</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-05-15T20:18:00Z'>
+Thursday 15 May 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic has been getting a great deal of attention since it was announced at Red Hat Summit this April. We saw a lot of enthusiasm at Summit for the concept of Atomic Hosts that are focused on running Docker containers, but still built from a well-known, well-tested distribution. </p>
+
+<p>One thing we&rsquo;ve seen, though, is a little confusion about the separation between Project Atomic and <strong>Atomic Hosts</strong>. Project Atomic, itself, does not produce Linux OS releases. Instead, those will come from CentOS, Fedora, Red Hat, and potentially others.</p>
+
+<h3>The Value of Upstream First</h3>
+
+<p>Red Hat&rsquo;s philosophy on driving technology innovation in upstream communities that then gets into the hand of customers in the form of robust products can be summarized as <q>upstream first.</q> </p>
+
+<p>Over the last decade this philosophy has spurred rapid technology innovation, fueled by user needs, that is ultimately delivered in supportable enterprise-grade products. This ensures that the best-suited technical solution is generated in the open source development community. </p>
+
+<p>Project Atomic is designed around this philosophy. Not only does it strive to be a community for the technology behind optimized container hosts, it is also designed to feed requirements back into the respective upstream communities. By leaving the downstream release of Atomic Hosts to the Fedora community, CentOS community and Red Hat, it can focus on driving technology innovation.</p>
+
+<h3>The Atomic Family</h3>
+
+<p>This is important to understand, because each of the offerings will differ in important ways, though they&rsquo;ll also be very similar.</p>
+
+<p>First, the release cycle will vary depending on where you&rsquo;re getting your host. Release cycles are defined as a balance between the desire to deliver new features and enhancements and the ability of the target users to consume new releases. The release cycle for Red Hat Enterprise Linux Atomic Host (RHEL Atomic Host) will not match up with the release cycle for the Atomic offering from the Fedora Project. The RHEL Atomic Host release cycle will be suited for enterprise deployments, while the Fedora cycle will be more attuned to those doing leading edge development and testing newer technologies.</p>
+
+<p>It also goes without saying that the actual content of the releases will also differ. Fedora&rsquo;s offering will likely move faster, include newer and consequently less proven and robust technologies. These technologies may then work their way into future productized versions of RHEL Atomic Host, in the same way that Fedora feeds into future versions of Red Hat Enterprise Linux. </p>
+
+<p>How Fedora and CentOS Atomic offerings evolve is also up to the respective communities. The <a href="https://fedoraproject.org/wiki/Cloud_SI">Fedora Cloud Special Interest Group</a> (SIG) is still discussing exactly what packages will be included, how frequently releases will be generated, what type of images should be produced, and more. There&rsquo;s plenty of room for the larger community to be involved in those projects, and we welcome participation. (See the <a href="https://fedoraproject.org/wiki/Cloud_SIG">Fedora wiki</a> for more info, or join us on IRC (#fedora-cloud) on Freenode, or join the mailing list.)</p>
+
+<p>Similar community discussion is happening in the <a href="http://wiki.centos.org/GettingHelp/ListInfo">CentOS community</a> to land the optimal balance for their users. </p>
+
+<h3>The Role of Project Atomic</h3>
+
+<p>Project Atomic gives the larger community a place and tools to collaborate on related technologies that are vital to Atomic Hosts, such as SELinux (<a href="http://www.projectatomic.io/docs/docker-and-selinux/">http://www.projectatomic.io/docs/docker-and-selinux/</a>) to secure your containers, GearD (<a href="http://www.projectatomic.io/docs/geard/">http://www.projectatomic.io/docs/geard/</a>) for container wiring and systemd integration and Cockpit (<a href="http://www.projectatomic.io/docs/cockpit/">http://www.projectatomic.io/docs/cockpit/</a>) to help manage containers. It also gives users of the various releases a forum to solve problems on using the technologies, keep tabs on important developments, and to participate in developing the technologies. </p>
+
+<p>The project will also serve to disseminate news about Atomic Host distributions and important changes in the upstreams like Docker, rpm-ostree, SELinux, and others. So be sure to keep an eye on this site and <a href="http://twitter.com/projectatomic">@projectatomic</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/enterprise/">Enterprise</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/05/the-difference-between-project-atomic-and-atomic-hosts/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

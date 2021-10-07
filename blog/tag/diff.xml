@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Diff</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/diff.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing atomic diff</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/01/atomic-diff/"/>
+    <id>http://www.projectatomic.io/blog/2016/01/atomic-diff/</id>
+    <published>2016-01-14T15:23:42+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brent Baude</name>
+    </author>
+    <content type="html">&lt;p&gt;The original mission of the &lt;a href="https://github.com/projectatomic/atomic"&gt;atomic application&lt;/a&gt; to install, manage, and run container images using container labels has slowly been growing.  We have been concentrating on ease-of-use and value-add functions for containers and images, and to accomplish this have recently added the &lt;code&gt;atomic diff&lt;/code&gt; command.  This command allows you to differentiate between two container images, which is critically important if you are like me and you have hundreds of container images on your system. I also use it when I pull an updated image from a repository and want to see what has changed.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; While docker itself has a subcommand called &lt;code&gt;diff&lt;/code&gt;, it is only useful when trying to determine the difference between a container and its image.  It does not compare two different docker objects looking for differences amongst them.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;code&gt;atomic diff&lt;/code&gt; command is fairly simple to run.  By default it will provide a file-level diff between the two docker-based objects grouped by:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Files only found in docker object A&lt;/li&gt;
+&lt;li&gt;Files only found in docker object B&lt;/li&gt;
+&lt;li&gt;Files found in both docker objects but differ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It can optionally also evaluate the differences between those same objects if they are RPM-based.  Looking at a real-world example will probably illuminate its usefulness more readily.&lt;/p&gt;
+
+&lt;p&gt;For this example, I have created two simple images that use the CentOS base image as a seed image. In one image, I have added the package wget and in the other I have added the package less.  The two Dockerfiles are, respectively:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM docker.io/centos:latest
+RUN yum -y install less &amp;amp;&amp;amp; yum clean all
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM docker.io/centos:latest
+RUN yum -y install wget &amp;amp;&amp;amp; yum clean all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And my docker images look like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;REPOSITORY          TAG                 IMAGE ID            CREATED              VIRTUAL SIZE
+centos_with_less    latest              29ef3785d2d7        About a minute ago   217.2 MB
+centos_with_wget    latest              3b32e38b6eb0        18 minutes ago       214.3 MB
+docker.io/centos    latest              c8a648134623        2 weeks ago          196.6 MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To perform an atomic diff of these two images, we simply issue the &lt;code&gt;atomic diff&lt;/code&gt; command followed by the two image IDs or names.  Because we are not passing any additional switches to the atomic command, the output will look like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo atomic diff centos_with_less centos_with_wget
+Files only in centos_with_less:
+     /bin/gtroff
+     /bin/troff
+     /bin/lessecho
+     /bin/lesspipe.sh
+     /bin/lesskey
+     /bin/gtbl
+     /bin/zsoelim
+     /bin/gnroff
+     # content omitted for space
+
+Files only in centos_with_wget:
+     /bin/wget
+     /run/secrets
+     /etc/wgetrc
+     /usr/bin/wget
+     /usr/share/locale/en_GB/LC_MESSAGES/wget.mo
+     # content omitted for space
+
+Common files that are different:
+     /var/lib/yum/history/history-2015-12-23.sqlite
+     /var/lib/yum/history/history-2015-12-23.sqlite-journal
+     /var/lib/rpm/Packages
+     /var/lib/rpm/Group
+     /var/lib/rpm/Name
+     /var/lib/rpm/Sha1header
+     # content omitted for space
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In these results, we can observe all three potential groups or categories.  In the output of &lt;code&gt;Files only in centos_with_less&lt;/code&gt;, we can see evidence of the less RPM by the groff-related RPM dependency.  In the &lt;code&gt;Files only in centos_with_wget&lt;/code&gt; output, we see the wget binary itself.  And in the &lt;code&gt;Common files that are different&lt;/code&gt; category, we can see that both docker objects have a file called &lt;code&gt;/var/lib/Packages&lt;/code&gt; but they differ, which makes good sense since that file is altered by yum/rpm when a package is added or removed.&lt;/p&gt;
+
+&lt;p&gt;I also mentioned earlier that atomic diff can differentiate between two RPM-based docker objects.  This can be done by adding the &lt;code&gt;-r&lt;/code&gt; or &lt;code&gt;--rpms&lt;/code&gt; switch to the &lt;code&gt;atomic diff&lt;/code&gt; command.  In the next example, I will perform an atomic diff passing &lt;code&gt;-r&lt;/code&gt; to evaluate the RPMs and &lt;code&gt;-n&lt;/code&gt;, which tells atomic diff to not evaluate the files (as we did above).&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo atomic diff -r -n centos_with_less centos_with_wget
+
+centos_with_less                  | centos_with_wget
+--------------------------------- | ---------------------------------
+CentOS Linux release 7.2.1511 (   | CentOS Linux release 7.2.1511 (  
+Core)                             | Core)
+--------------------------------- | ---------------------------------
+groff-base-0-1.22.2               |
+less-0-458                        |
+                                  | wget-0-1.14
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default, we only show the RPMs that differ.  If you pass the &lt;code&gt;-v&lt;/code&gt; (verbose) flag, it will show all the common RPMs as well.&lt;/p&gt;
+
+&lt;p&gt;One useful switch is the &lt;code&gt;--json&lt;/code&gt; switch, which outputs the results in json format.  This can be handy if you have a tool that perhaps analyzes the results, because you can pipe the output into your own tooling.  An example of the JSON-based output is as follows:&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"centos_with_less"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"release"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"CentOS Linux release 7.2.1511 (Core) \n"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"all_rpms"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"acl-0-2.2.51"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"audit-libs-0-2.4.1"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"basesystem-0-10.0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;content&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;omitted&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;space&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"exclusive_rpms"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"groff-base-0-1.22.2"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"less-0-458"&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"common_rpms"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"acl-0-2.2.51"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"audit-libs-0-2.4.1"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"basesystem-0-10.0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;content&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;omitted&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;space&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"centos_with_wget"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"release"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"CentOS Linux release 7.2.1511 (Core) \n"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"all_rpms"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"acl-0-2.2.51"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"audit-libs-0-2.4.1"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"basesystem-0-10.0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;content&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;omitted&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;space&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"exclusive_rpms"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"wget-0-1.14"&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="s2"&gt;"common_rpms"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"acl-0-2.2.51"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"audit-libs-0-2.4.1"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"basesystem-0-10.0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;content&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;omitted&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;space&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next time you need to perform some analysis between two docker objects, remember that &lt;code&gt;atomic diff&lt;/code&gt; exists and can do some of the heavy lifting for you.  It works on comparing images to images, images to containers, and containers to containers.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Multi Arch</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/multi-arch.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Composing custom OSTree update for Fedora 27 Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/12/compose-custom-ostree/"/>
+    <id>http://www.projectatomic.io/blog/2017/12/compose-custom-ostree/</id>
+    <published>2017-12-19T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Sinny Kumari</name>
+    </author>
+    <content type="html">&lt;p&gt;With Fedora 27, we ship &lt;a href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/"&gt;Atomic Host on multiple architectures&lt;/a&gt; which includes aarch64, ppc64le, and x86_64. We also provide Atomic Host updates for these arches every two weeks so that we can provide a tested, stable, and up-to-date OS. Fedora Atomic Host is built using traditional RPM packages available in the Fedora repository. For example, Fedora 27 Atomic Host is formed using  packages from the Fedora 27 repository which are further composed into &lt;a href="https://ostree.readthedocs.io/en/latest/manual/introduction/"&gt;OSTree repository&lt;/a&gt; using rpm-ostree. It is possible to compose and host your own custom-built OSTree repository containing additional features. This article will further guide you on how to compose your own custom OSTree repository and update system from your own hosted OSTree repo.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Composing and hosting custom Atomic OSTree&lt;/h3&gt;
+
+&lt;p&gt;We will be composing a custom Fedora 27 OSTree repository on x86_64. For ease of use, we will compose and host OSTree repo in a Docker container. You can also compose it on a Virtual Machine or bare metal.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;Note:&lt;/code&gt; If you are trying this on aarch64 or ppc64le, replace any mention of x86_64 with the right architecture value wherever used in commands.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4&gt;Requirement&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A virtual machine or bare metal system with Fedora installed, preferably Fedora 27 which is the latest stable release.&lt;/li&gt;
+&lt;li&gt;Docker installed and service running on the machine.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Install Docker and run its service on the system where you are planning to run the container:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo dnf install docker
+$ sudo systemctl start docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Dockerfile&lt;/h4&gt;
+
+&lt;p&gt;Create a Dockerfile with the following content which we will use to build a Docker container using Fedora27 as its base and on top of it some additional setup is being done.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat Dockerfile
+FROM fedora:27
+
+# Update, install specified packages and clean cached information
+RUN dnf update -y &amp;amp;&amp;amp; dnf install -y git python rpm-ostree; \
+dnf clean all
+
+# Create specified directories
+RUN mkdir -p /srv /srv/repo /srv/cache
+
+# Set /srv as working directory and clone fedora-atomic repository into it
+WORKDIR /srv
+RUN git clone https://pagure.io/fedora-atomic.git
+
+# Initialize a new empty repository in /srv/repo/ directory in archive mode
+RUN ostree --repo=repo init --mode=archive-z2
+
+# Expose default SimpleHTTPServer port and start SimpleHTTPServer
+EXPOSE 8000
+CMD python -m SimpleHTTPServer
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;Note:&lt;/code&gt; If you are trying to compose OSTree on aarch64 or ppc64le then modify the first line of your Dockerfile from &lt;code&gt;FROM fedora:27&lt;/code&gt; to &lt;code&gt;FROM docker.io/fedora:27&lt;/code&gt;. This is needed because Docker first tries to pull in the Fedora 27 image from registry.fedoraproject.org which only contains x86_64 images for now.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4&gt;Build Docker image and run container&lt;/h4&gt;
+
+&lt;p&gt;Now, we will build a Docker image from the Dockerfile we just created. In this example, our Dockerfile is available in the current directory.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker build --rm -t $USER/atomicrepo .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The Docker image has been created in the system which can be accessed with name $USER/atomicrepo. To view available images, run:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker images
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Launch a container in the background from image $USER/atomicrepo we just created which listens on port 8000.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker run --privileged -d -p 8000:8000 --name atomicrepo $USER/atomicrepo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We now have a running container with SimpleHTTPServer running inside it. Let&amp;rsquo;s get shell access to this container to work further:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker exec -it atomicrepo bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are now inside a running container with current working directory set to /srv.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# pwd
+/srv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Composing OSTree repository&lt;/h4&gt;
+
+&lt;p&gt;While building the image, we cloned fedora-atomic repository into &lt;code&gt;/srv/&lt;/code&gt; directory. We will use content from the fedora-atomic repository as reference to build custom OSTree. Let&amp;rsquo;s checkout f27 branch of the fedora-atomic repo:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cd fedora-atomic
+# git checkout f27
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;File &lt;code&gt;fedora-atomic-host-base.json&lt;/code&gt; in the &lt;code&gt;fedora-atomic&lt;/code&gt; repo is the &lt;a href="https://rpm-ostree.readthedocs.io/en/latest/manual/treefile/"&gt;treefile&lt;/a&gt; containing details about the target system. It has a list of packages which will be composed into our new OSTree. Add or remove package names as required in your custom OSTree repo. In this example, I have added &lt;code&gt;elfutils&lt;/code&gt; in the &lt;code&gt;packages&lt;/code&gt; list.&lt;/p&gt;
+
+&lt;p&gt;Also, feel free to give your own ref name if desired by editing the content of the &lt;code&gt;ref&lt;/code&gt; section. rpm-ostree will automatically replace &lt;code&gt;${basearch}&lt;/code&gt; by architecture name (x86_64, ppc64le or aarch64) on which you are composing your OSTree.
+In this example, I have changed &lt;code&gt;ref&lt;/code&gt; to &lt;code&gt;fedora/27/${basearch}/atomic-host-custom&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s compose ostree using rpm-ostree:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# rpm-ostree compose tree  --cachedir=/srv/cache  --repo=/srv/repo fedora-atomic-host-base.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On successful compose, you will see this at the end:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Committing: [=======================================================================================================================================] 100%
+Metadata Total: 7915
+Metadata Written: 3585
+Content Total: 32682
+Content Written: 25647
+Content Bytes Written: 1083483773
+fedora/27/x86_64/atomic-host-custom =&amp;gt; 93b1d9f8b929916762260bfd31e1b5b9568c0da83110df9425f41e4b44115fc4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The last line contains the OSTree ref name followed by a commit number.&lt;/p&gt;
+
+&lt;p&gt;To view available commits, run:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ostree log --repo=/srv/repo/ fedora/27/x86_64/atomic-host-custom
+commit 93b1d9f8b929916762260bfd31e1b5b9568c0da83110df9425f41e4b44115fc4
+Date:  2017-12-10 13:11:50 +0000
+Version: 27
+(no subject)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the commit log,  the &lt;code&gt;Version&lt;/code&gt; value gets updated with additional commits made in ref fedora/27/x86_64/atomic-host-custom. Values are in incremental fashion, i.e. 27.1, 27.2, 27.3, and so on.&lt;/p&gt;
+
+&lt;h3&gt;Updating Atomic Host system with custom OSTree&lt;/h3&gt;
+
+&lt;p&gt;Now, if you have a host machine or virtual machine with Atomic Host already running, let&amp;rsquo;s try to update the system with the custom update repository we just created.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo ostree remote add fedora-atomic-custom http://YOUR_IP:8000/repo --no-gpg-verify
+$ cat /etc/ostree/remotes.d/fedora-atomic-custom.conf
+[remote "fedora-atomic-custom"]
+url=http://YOUR_IP:8000/repo
+gpg-verify=false
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, YOUR_IP is the IP address of the system on which your &lt;code&gt;atomicrepo&lt;/code&gt; container is running. Make sure that the IP address is reachable from the target system where the update process will take place.&lt;/p&gt;
+
+&lt;p&gt;Now, update the Atomic Host system with our locally hosted ostree repo using &lt;code&gt;rpm-ostree rebase&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo rpm-ostree rebase fedora-atomic-custom:fedora/27/x86_64/atomic-host-custom
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In our example, fedora-atomic-custom is the remote name which we previously added. Reboot your system to apply changes.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo systemctl reboot
+$ sudo rpm-ostree status
+State: idle
+Deployments:
+● fedora-atomic-custom:fedora/27/x86_64/atomic-host-custom
+                   Version: 27 (2017-12-10 13:11:50)
+                BaseCommit: 93b1d9f8b929916762260bfd31e1b5b9568c0da83110df9425f41e4b44115fc4
+           LayeredPackages: libabigail
+
+  fedora-atomic:fedora/27/x86_64/atomic-host
+                   Version: 27.16 (2017-11-28 23:08:35)
+                BaseCommit: 86727cdbc928b7f7dd0e32f62d3b973a8395d61e0ff751cfea7cc0bc5222142f
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: libabigail
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Rollback to previous tree&lt;/h4&gt;
+
+&lt;p&gt;In case you didn&amp;rsquo;t like updating to your custom OSTree, no worries. It&amp;rsquo;s very easy to switch back to a previous commit using the Atomic rollback feature:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo rpm-ostree rollback
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Reboot your system and it will be back to what you had earlier.&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Now you know how easy it is to create your own custom OSTree repository and serve it as update to all Atomic Host systems you want to keep in sync. All you have to do is keep updating the treefile and re-run the &lt;code&gt;rpm-ostree compose&lt;/code&gt; process on the server side, then run &lt;code&gt;rpm-ostree upgrade&lt;/code&gt; on client side once you have rebased the client system to the right ref. If something goes wrong, use the &lt;code&gt;rpm-ostree rollback&lt;/code&gt; feature and it will take you to the previous working Atomic Host system.&lt;/p&gt;
+
+&lt;p&gt;So, give it a try and let us know how it worked for you in the #atomic IRC channel.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora 27 Atomic Host Availability on Multiple Architectures</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/"/>
+    <id>http://www.projectatomic.io/blog/2017/11/fedora-atomic-27-on-multiarch/</id>
+    <published>2017-11-16T11:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Sinny Kumari</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;img alt="Picture of OverDrive1000 ARM64 system, loaned to Project Atomic by the ARM coalition" width="1024" height="347" src="/images/overdrive1000.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We are proud to announce that multiple architectures are now supported with Fedora 27 Atomic Host release! Now, along with x86_64 architecture, Atomic Host is also available on 64 bit ARM (AArch64) and PowerPC Little Endian (ppc64le). Both aarch64 and ppc64le architectures will receive Atomic OSTree updates in the same way x86_64 does.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Photo: Overdrive1000 aarch64 system provided by ARM Coalition for testing&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;Download&lt;/h3&gt;
+
+&lt;p&gt;Fedora Atomic Host for aarch64 and ppc64le are available as both ISOs and cloudImages:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;aarch64&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/aarch64/iso/Fedora-Atomic-ostree-aarch64-27-20171110.1.iso"&gt;ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-Atomic-27-20171110.1.aarch64.qcow2"&gt;QCOW&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/aarch64/images/Fedora-Atomic-27-20171110.1.aarch64.raw.xz"&gt;Raw image&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;ppc64le&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/Atomic/ppc64le/iso/Fedora-Atomic-ostree-ppc64le-27-20171110.1.iso"&gt;ISO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20171110.1.ppc64le.qcow2"&gt;QCOW&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://download.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171110.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20171110.1.ppc64le.raw.xz"&gt;Raw image&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Installation&lt;/h3&gt;
+
+&lt;p&gt;Atomic Host can be installed everywhere regular OSes can: on bare metal, virtual machine, or public or private cloud. If you have some aarch64 or ppc64le hardware, we&amp;rsquo;d love for you to take Atomic Host for a spin. If you don&amp;rsquo;t want to reformat the machine, one quick way is to run &lt;code&gt;virt-install&lt;/code&gt; on your box.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;virt-install&lt;/code&gt; is a command line tool which will create a virtual machine based on QEMU emulator with KVM hardware acceleration managed by libvirt on top. Install the appropriate virtualizaton packages for your system, to create and access guest VMs using virt-install in both graphical and console mode.  For example, on Fedora do:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo dnf install @virtualization
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above command will install a group of packages: virt-install, qemu-kvm, libvirt-daemon-config-network, libvirt-daemon-kvm, virt-manager and virt-viewer, along with their dependencies. Then, start the libvirtd service if not already running:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo systemctl start libvirtd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can now use the &lt;code&gt;virt-install&lt;/code&gt; command to run Atomic Host image&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo virt-install --name fedora-27-atomic --ram 2048 --vcpus 2 \
+  --disk path=/var/lib/libvirt/images/Fedora-Atomic-27.&amp;lt;arch&amp;gt;.qcow2 \
+  --os-type linux --os-variant fedora26 --network bridge=virbr0 \
+  --graphics vnc,listen=127.0.0.1,port=5901 \
+  --cdrom /var/lib/libvirt/images/init.iso --noautoconsole
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here, we have assumed that Fedora Atomic qcow2 image and init.iso file are available in &lt;code&gt;/var/lib/libvirt/images/&lt;/code&gt; directory.&lt;/p&gt;
+
+&lt;p&gt;The file &lt;code&gt;init.iso&lt;/code&gt; is a metadata ISO to provide critical data when Atomic Host boots. Check out &lt;a href="http://www.projectatomic.io/docs/quickstart/"&gt;Prep the cloud-init source ISO&lt;/a&gt; to easily create it.
+You might need to make other adjustments to the &lt;code&gt;virt-install&lt;/code&gt; command line above depending upon your requirement.&lt;/p&gt;
+
+&lt;h4&gt;Limitations with aarch64&lt;/h4&gt;
+
+&lt;p&gt;64-bit ARM are available on variations of hardware and installation should work as expected on a server class hardware. However, thre are two major limitations:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Atomic Host ISOs can be installed only in UEFI mode&lt;/li&gt;
+&lt;li&gt;Single board computers (e.g. RPi3, Pine64) are not supported yet&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Features&lt;/h4&gt;
+
+&lt;p&gt;Atomic Host provides various features, some of them are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Immutable Host&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Package Layering&lt;/code&gt; - Additional package(s) can be installed on top of base Atomic Host using package layering.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo rpm-ostree install elfutils
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Running containers&lt;/code&gt; - One can easily run a container image available locally or from a registry. For example, running hello-world container image from docker.io registry on ppc64le machine:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker run --rm docker.io/ppc64le/hello-world
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Atomic Update and Rollback&lt;/code&gt; - Atomic Host receives update in the form of a new Atomic OSTree.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo rpm-ostree upgrade
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since each operation is atomic, it is also possible to undo changes by using rollback feature.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo rpm-ostree rollback
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Reaching out for help&lt;/h4&gt;
+
+&lt;p&gt;Go ahead and try it out! If you run into issues, you can reach us via:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Mailing List - &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel@projectatomic.io&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;IRC channel - #atomic on Freenode&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

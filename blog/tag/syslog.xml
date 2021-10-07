@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Syslog</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/syslog.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Running Syslog Within a Docker Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/"/>
+    <id>http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/</id>
+    <published>2014-09-11T20:06:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently I received a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1139734"&gt;bug report&lt;/a&gt; on Docker complaining about using rsyslogd within a container.  &lt;/p&gt;
+
+&lt;p&gt;The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message, and nothing happened.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -it --rm rhel /bin/bash
+# yum -y install rsyslog
+# /usr/sbin/rsyslogd
+# logger "this is a test"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;No message showed up in &lt;code&gt;/var/log/messages&lt;/code&gt; within the container, or on the host machine for that matter.&lt;/p&gt;
+
+&lt;p&gt;The user then looked and noticed that &lt;code&gt;/dev/log&lt;/code&gt; did not exist and this was where logger was writing the message. The user thought this was a bug.&lt;/p&gt;
+
+&lt;p&gt;The problem was that in RHEL7 and Fedora we now use journald, which listens on &lt;code&gt;/dev/log&lt;/code&gt; for incoming messages. In RHEL7 and Fedora, rsyslog actually reads messages from the journal via its API by default.&lt;/p&gt;
+
+&lt;p&gt;But not all docker containers run systemd and journald. (Most don&amp;rsquo;t). In order to get the rsyslogd to work the way the user wanted, he would have to modify the configuration file, &lt;code&gt;/etc/rsyslogd.conf&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In &lt;code&gt;/etc/rsyslog.conf&lt;/code&gt; remove &lt;code&gt;$ModLoad imjournal&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Set &lt;code&gt;$OmitLocalLogging&lt;/code&gt; to &lt;code&gt;off&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Make sure &lt;code&gt;$ModLoad imuxsock&lt;/code&gt; is present.&lt;/li&gt;
+&lt;li&gt;Also comment out: &lt;code&gt;$IMJournalStateFile imjournal.state&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After making these changes rsyslogd will start listening on &lt;code&gt;/dev/log&lt;/code&gt; within the container and the logger messages will get accepted by rsyslogd and written to &lt;code&gt;/var/log/messages&lt;/code&gt; within the container.&lt;/p&gt;
+
+&lt;p&gt;If you wanted to logging messages to go to the host logger, you could &lt;q&gt;volume&lt;/q&gt; mount &lt;code&gt;/dev/log&lt;/code&gt; into the container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -v /dev/log:/dev/log -it --rm rhel /bin/bash
+# logger "this is a test"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The message should show up in the host&amp;rsquo;s journalct log, and if you are running rsyslog on the host, the message should end up in &lt;code&gt;/var/log/messages&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

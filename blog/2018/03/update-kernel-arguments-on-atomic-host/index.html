@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Update Kernel arguments on Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Ruixin Bao' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Update Kernel arguments on Atomic Host' property='og:title'>
+<meta content='Users or adminstrators may want to change kernel arguments of Atomic Host for various reasons.&#x000A;Previously, it was hard for the users due to many of the steps involved,&#x000A;and the harmful consequences that can occur if users accidentally make a mistake&#x000A;in the changing process.&#x000A;&#x000A;In this post, I want to introduce a command (rpm-ostree ex kargs) that&#x000A;allows users to change kernel arguments on Atomic Host. This command simplifies&#x000A;the process of changing kernel arguments. This command also lies&#x000A;beneath rpm-ostree,&#x000A;and because of that, it benefits from many of the cool features from rpm-ostree.&#x000A;One of them is rpm-ostree rollback, which can allow users to undo their old changes&#x000A;they do not want.&#x000A;&#x000A;Note: This command is still experimental, so if you have seen any&#x000A;unexpected behavior happening, please report an issue to&#x000A;rpm-ostree. This&#x000A;post also requires some knowledge of Atomic Host and rpm-ostree, please&#x000A;bear that in mind when reading this.&#x000A;&#x000A;Let’s demonstrate some of the options that can be done with this command!' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/03/update-kernel-arguments-on-atomic-host/' property='og:url'>
+<meta content='2018-03-08T00:00:00Z' property='article:published_time'>
+<meta content='rubao' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Update Kernel arguments on Atomic Host' name='twitter:title'>
+<meta content='Users or adminstrators may want to change kernel arguments of Atomic Host for various reasons.&#x000A;Previously, it was hard for the users due to many of the steps involved,&#x000A;and the harmful consequences that can occur if users accidentally make a mistake&#x000A;in the changing process.&#x000A;&#x000A;In this post, I want to introduce a command (rpm-ostree ex kargs) that&#x000A;allows users to change kernel arguments on Atomic Host. This command simplifies&#x000A;the process of changing kernel arguments. This command also lies&#x000A;beneath rpm-ostree,&#x000A;and because of that, it benefits from many of the cool features from rpm-ostree.&#x000A;One of them is rpm-ostree rollback, which can allow users to undo their old changes&#x000A;they do not want.&#x000A;&#x000A;Note: This command is still experimental, so if you have seen any&#x000A;unexpected behavior happening, please report an issue to&#x000A;rpm-ostree. This&#x000A;post also requires some knowledge of Atomic Host and rpm-ostree, please&#x000A;bear that in mind when reading this.&#x000A;&#x000A;Let’s demonstrate some of the options that can be done with this command!' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_03 blog_2018_03_update-kernel-arguments-on-atomic-host blog_2018_03_update-kernel-arguments-on-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Update Kernel arguments on Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/rubao/">Ruixin Bao</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-08T00:00:00Z'>
+Thursday  8 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Users or adminstrators may want to change <a href="https://www.kernel.org/doc/html/v4.14/admin-guide/kernel-parameters.html">kernel arguments</a> of Atomic Host for various reasons.
+Previously, it was hard for the users due to many of the steps involved,
+and the harmful consequences that can occur if users accidentally make a mistake
+in the changing process.</p>
+
+<p>In this post, I want to introduce a command (<code>rpm-ostree ex kargs</code>) that
+allows users to change kernel arguments on Atomic Host. This command simplifies
+the process of changing kernel arguments. This command also lies
+beneath <a href="https://github.com/projectatomic/rpm-ostree">rpm-ostree</a>,
+and because of that, it benefits from many of the cool features from rpm-ostree.
+One of them is <code>rpm-ostree rollback</code>, which can allow users to undo their old changes
+they do not want.</p>
+
+<p>Note: This command is still experimental, so if you have seen any
+unexpected behavior happening, please report an issue to
+<a href="https://github.com/projectatomic/rpm-ostree/issues/new">rpm-ostree</a>. This
+post also requires some knowledge of Atomic Host and rpm-ostree, please
+bear that in mind when reading this.</p>
+
+<p>Let&rsquo;s demonstrate some of the options that can be done with this command!</p>
+
+<p></p>
+
+<h3>Display the current kernel arguments</h3>
+
+<p>The <code>rpm-ostree ex kargs</code> command can allow users to see the kernel arguments
+from different locations, including the current kernel arguments, arguments
+from <code>/proc/cmdline</code> as well as kernel arguments from a specific deployment.</p>
+
+<p>The command following shows the kernel arguments from first bootable entry
+in your grub.cfg:</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs&#x000A;The kernel arguments are:&#x000A;no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.0/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<p>This command shows you the kernel arguments from the first deployment:</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs --deploy-index=0&#x000A;The kernel arguments are:&#x000A;no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.0/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<p>This shows you the current kernel arguments being used in <code>/proc/cmdline</code>:</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs  --import-proc-cmdline&#x000A;The kernel arguments are:&#x000A;no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.0/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<h3>Changing the kernel arguments</h3>
+
+<p>Similarly, you can fetch kernel arguments from three different locations mentioned above,
+but for readability and simplicity, we are only demoing with the first one (first
+bootable entry) here.</p>
+
+<p>You have four different options of changing kernel arguments in the command. All of those
+creates a deployment, and can be reverted through <code>rpm-ostree rollback</code>. A more
+detailed description of the commands can be shown by <code>rpm-ostree ex kargs --help</code></p>
+
+<h4>1: Add one or multiple kernel arguments to the list</h4>
+
+<p>The user can append the argument using append option, and the format for the value
+pair is in terms of key=value. The changes can be rolled back as mentioned earlier.</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs --append=test_add=test&#x000A;Copying /etc changes: 21 modified, 0 removed, 87 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Kernel arguments updated.&#x000A;Run "systemctl reboot" to start a reboot&#x000A;</code></pre>
+
+<p>Now we want to verify if the changes got added to the grub.cfg, because
+that is what is going to be used when user boots into the system.</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# cat /boot/grub2/grub.cfg | grep test_add=test&#x000A;linux16 /ostree/fedora-atomic-9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/vmlinuz-4.14.13-300.fc27.x86_64 no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.1/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0 test_add=test&#x000A;linux16 /ostree/fedora-atomic-9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/vmlinuz-4.14.13-300.fc27.x86_64 no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.1/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0 test_add=test ds=nocloud\;h=localhost\;i=devmode\;s=/usr/share/atomic-devmode/cloud-init.&#x000A;</code></pre>
+
+<p>Now we want to show that changes can be rolled back:</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# systemctl reboot&#x000A;Connection to 192.168.121.188 closed by remote host.&#x000A;Connection to 192.168.121.188 closed.&#x000A;&#x000A;[root@localhost ~]# rpm-ostree rollback&#x000A;Moving '772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9.0' to be first deployment&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Run "systemctl reboot" to start a reboot&#x000A;[root@localhost ~]# rpm-ostree ex kargs&#x000A;The kernel arguments are:&#x000A;no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.0/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<h4>2: Replace one or multiple arguments</h4>
+
+<p>To replace the value, the input is in the form of key=oldvalue=newvalue, or when there
+is only one single key value pair, you can replace it by key=newvalue. Note, to avoid duplication,
+we skip showing the modified grub.cfg here.</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs --replace no_timer_check=""=test_val --replace net.ifnames=0=new_val&#x000A;Copying /etc changes: 21 modified, 0 removed, 92 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Kernel arguments updated.&#x000A;Run "systemctl reboot" to start a reboot&#x000A;[root@localhost ~]# rpm-ostree ex kargs&#x000A;The kernel arguments are:&#x000A;no_timer_check=test_val console=tty1 console=ttyS0,115200n8 net.ifnames=new_val biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.1/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;&#x000A;[root@localhost ~]# rpm-ostree ex kargs --replace no_timer_check="" --replace net.ifnames=0&#x000A;Copying /etc changes: 21 modified, 0 removed, 92 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Kernel arguments updated.&#x000A;Run "systemctl reboot" to start a reboot&#x000A;[root@localhost ~]# rpm-ostree ex kargs&#x000A;The kernel arguments are:&#x000A;no_timer_check console=tty1 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.0/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<h4>3: Delete one or multiple arguments</h4>
+
+<p>To delete one or more kernel arguments, the input is in the form of key=value format. Similarly, when
+there is only one single key=value pair, we allow users to delete argument by key name.</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs --delete no_timer_check --delete console=tty1&#x000A;Copying /etc changes: 21 modified, 0 removed, 92 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Kernel arguments updated.&#x000A;Run "systemctl reboot" to start a reboot&#x000A;[root@localhost ~]# rpm-ostree ex kargs&#x000A;The kernel arguments are:&#x000A;console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.1/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<h4>4: Allow user to do all above actions using an editor</h4>
+
+<p>Note: the kernel arguments were from the previous section, and the example below will show
+you the already changed ones because it is hard to demo from a separate editor side.</p>
+<pre class="highlight plaintext"><code>[root@localhost ~]# rpm-ostree ex kargs --editor&#x000A;&#x000A;======================================EDITOR SCREEN=================================================&#x000A;# Please enter the kernel arguments. Each kernel argument# should be in the form of key=value.&#x000A;# Lines starting with '#' will be ignored. Each key=value pair should be&#x000A;# separated by spaces, and multiple value associated with one key is allowed.&#x000A;# Also, please note that any changes to the ostree argument will not be&#x000A;# effective as they are usually regenerated when bootconfig changes.&#x000A;test=test console=ttyS0,115200n8 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root&#x000A;=====================================END OF EDITOR SCREEN===========================================&#x000A;Copying /etc changes: 21 modified, 0 removed, 92 added&#x000A;Transaction complete; bootconfig swap: yes deployment count change: 0&#x000A;Kernel arguments updated.&#x000A;Run "systemctl reboot" to start a reboot&#x000A;&#x000A;[root@localhost ~]# rpm-ostree ex kargs&#x000A;The kernel arguments are:&#x000A;test=test console=ttyS0,115200n8 biosdevname=0 rd.lvm.lv=atomicos/root root=/dev/mapper/atomicos-root ostree=/ostree/boot.0/fedora-atomic/9a9b350be75846811cbb0b1fd7b3d42a49908ed1265bc59e292bb4a34674332c/0&#x000A;</code></pre>
+
+<h3>Conclusion:</h3>
+
+<p>This covers all the major functionalities for <code>rpm-ostree ex kargs</code>. Feel free to try this out, feedback is always welcome!
+To post feedback about this command, you can post an issue on <a href="https://github.com/projectatomic/rpm-ostree/issues">rpm-ostree repo</a>,
+or join #atomic on freenode to ask questions. Thanks for reading!</p>
+
+<h3>More information:</h3>
+
+<ul>
+<li><a href="https://github.com/projectatomic/rpm-ostree/pull/1013">Upstream pull request</a></li>
+<li><a href="https://github.com/projectatomic/rpm-ostree/issues/594">Original proposal</a></li>
+<li><a href="https://github.com/projectatomic/rpm-ostree/">rpm-ostree repo</a></li>
+<li><a href="https://rpm-ostree.readthedocs.io/en/latest/">rpm-ostree doc</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/03/update-kernel-arguments-on-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/03/update-kernel-arguments-on-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/03/update-kernel-arguments-on-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

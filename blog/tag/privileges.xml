@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Privileges</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/privileges.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>How to Run a More Secure Non-Root User Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/"/>
+    <id>http://www.projectatomic.io/blog/2016/01/how-to-run-a-more-secure-non-root-user-container/</id>
+    <published>2016-01-07T17:40:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I was asked a question about running users inside of a docker container: could they still get privileges?  &lt;/p&gt;
+
+&lt;p&gt;Before we begin, here is &lt;a href="http://linux.die.net/man/7/capabilities"&gt;more background on Linux capabilities&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll start with a simple container where the primary process is running as root.  One can look at the capabilities of the current process via &lt;code&gt;grep Cap /proc/self/status&lt;/code&gt;.  There is also a &lt;code&gt;capsh&lt;/code&gt; utility.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run --rm -ti fedora grep Cap /proc/self/status
+CapInh: 00000000a80425fb
+CapPrm: 00000000a80425fb
+CapEff: 00000000a80425fb
+CapBnd: 00000000a80425fb
+CapAmb: 0000000000000000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice that the Effective Capabilities (&lt;code&gt;CapEff&lt;/code&gt;) is a non-zero value, which means that the process has capabilities.&lt;/p&gt;
+
+&lt;p&gt;Using the &lt;code&gt;pscap&lt;/code&gt; tool, I see that the process has these capabilities:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;chown, dac_override, fowner, fsetid, kill, setgid, setuid, setpcap, net_bind_service, net_raw, sys_chroot,&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;mknod, audit_write, setfcap&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s run a container as non-root using the &lt;code&gt;-u&lt;/code&gt; option.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -u 3267 fedora grep Cap /proc/self/status
+CapInh: 00000000a80425fb
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: 00000000a80425fb
+CapAmb: 0000000000000000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice that the &lt;code&gt;CapEff&lt;/code&gt; is all zero, but the bounding set of capabilities (&lt;code&gt;CapBnd&lt;/code&gt;) is not.  This means if there is a setuid binary included in the image, it would be possible to gain these capabilities. Notice also, not surprisingly, this number matches the previous container&amp;rsquo;s.&lt;/p&gt;
+
+&lt;p&gt;So, even though this process is running as non-root inside the container, it could potentially run with the same capabilities as above if the image builder included a setuid binary.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;chown, dac_override, fowner, fsetid, kill, setgid, setuid, setpcap, net_bind_service, net_raw, sys_chroot, mknod,&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;audit_write, setfcap&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Docker has a nice feature where you can drop all capabilities via &lt;code&gt;--cap-drop=all&lt;/code&gt;.  Now, if we execute the same container with a non-privileged user and drop all capabilities:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run --rm -ti --cap-drop=all -u 3267 fedora grep Cap /proc/self/status
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: 0000000000000000
+CapAmb: 0000000000000000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now this user cannot gain any capabilities on the system.  I would advise almost all users of Docker who run their containers with non-privileged users to use this feature. It adds a lot of security to the system.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

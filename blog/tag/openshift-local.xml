@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Openshift Local</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/openshift-local.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing Minishift - Run OpenShift locally</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/05/minishift-intro/"/>
+    <id>http://www.projectatomic.io/blog/2017/05/minishift-intro/</id>
+    <published>2017-05-04T20:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Budh Ram Gurung</name>
+    </author>
+    <content type="html">&lt;p&gt;We are happy to introduce you to &lt;a href="https://github.com/minishift/minishift"&gt;Minishift&lt;/a&gt;, providing a better user experience than our original &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;Atomic Developer Bundle (ADB)&lt;/a&gt;. We have shifted our development effort from ADB to Minishift, both to improve user experience, and to address the issues caused by depending on Vagrant. We&amp;rsquo;ll explain this more in a later blog post.&lt;/p&gt;
+
+&lt;p&gt;Minishift is a CLI tool that helps you run OpenShift locally by running a single-node cluster inside a VM. You can try out OpenShift or develop with it, day-to-day, on your local host.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;We have implemented Minishift as single binary that uses &lt;a href="https://github.com/docker/machine/tree/master/libmachine"&gt;libmachine&lt;/a&gt; to provision a VM with a local, single node, &lt;a href="https://github.com/openshift/origin"&gt;OpenShift Origin&lt;/a&gt; cluster. It uses &lt;a href="https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md"&gt;OpenShift local cluster management&lt;/a&gt; underneath to bring up this single node cluster.&lt;/p&gt;
+
+&lt;p&gt;Minishift supports multiple OSes and hypervisors, including KVM for Linux, Xhyve for Mac OS, HyperV for Windows and VirtualBox in all OS platforms. Detailed instructions on setting up prerequisites for installation can be found in the &lt;a href="https://github.com/Minishift/minishift#prerequisites"&gt;Minishift documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Installing Minishift&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Install your preferred VM platform on your workstation.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: You need to install the additional docker-machine driver for &amp;lsquo;kvm&amp;rsquo; or &amp;#39;xhyve&amp;rsquo;. See the &lt;a href="https://docs.openshift.org/latest/minishift/getting-started/docker-machine-drivers.html"&gt;Docker Machine drivers&lt;/a&gt; guide.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Download the compressed file for your OS from the Minishift &lt;a href="https://github.com/minishift/minishift/releases/tag/v1.0.0"&gt;releases page&lt;/a&gt; and unpack it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Copy the contents of the directory to your preferred location.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add the minishift binary to your &lt;em&gt;PATH&lt;/em&gt; environment variable.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;For OS-specific tips, refer to the &lt;a href="https://docs.openshift.org/latest/minishift/getting-started/installing.html"&gt;minishift installation guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Quickstart with Minishift&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Get started as follows:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ minishift start
+ Starting local OpenShift cluster using 'kvm' hypervisor...
+ ...
+    OpenShift server started.
+    The server is accessible via web console at:
+        https://192.168.99.128:8443
+
+    You are logged in as:
+        User:     developer
+        Password: developer
+
+    To login as administrator:
+        oc login -u system:admin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Download the latest &lt;a href="https://github.com/Minishift/minishift-b2d-iso"&gt;&lt;em&gt;minishift-b2d-iso&lt;/em&gt;&lt;/a&gt; (~40 MB)&lt;/li&gt;
+&lt;li&gt;Start a VM using libmachine&lt;/li&gt;
+&lt;li&gt;Download OpenShift client binary (&lt;code&gt;oc&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Cache both &lt;code&gt;oc&lt;/code&gt; and ISO into your &lt;code&gt;$HOME/.minishift/cache&lt;/code&gt; folder&lt;/li&gt;
+&lt;li&gt;Finally provisions OpenShift single node cluster in your workstation&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; This step also logs you in as &lt;code&gt;developer&lt;/code&gt; in the &lt;code&gt;myproject&lt;/code&gt; default project.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use &lt;code&gt;minishift oc-env&lt;/code&gt; to display the command you need to type into your shell in order to add the oc binary to your &lt;em&gt;PATH&lt;/em&gt;.
+The output of &lt;code&gt;oc-env&lt;/code&gt; will differ depending on OS and shell type.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ minishift oc-env
+export PATH="/Users/john/.minishift/cache/oc/v1.5.0:$PATH"
+# Run this command to configure your shell:
+# eval $(minishift oc-env)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run &lt;code&gt;eval $(minishift oc-env)&lt;/code&gt; as per above instructions to setup your shell (this my differ depending on OS and shell).&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ eval $(minishift oc-env)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create a Nodejs example application:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc new-app https://github.com/openshift/nodejs-ex -l name=myapp
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Track the build log until the app is built and deployed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc logs -f bc/nodejs-ex
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Expose a route to the service:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc expose svc/nodejs-ex
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Open the application in a browser:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ minishift openshift service nodejs-ex -n myproject
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;When done with building the application for the day, stop the cluster as follows:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt; $ minishift stop
+ Stopping local OpenShift cluster...
+ Stopping "minishift"...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you want to access the same cluster again, use &lt;code&gt;minishift start&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;At anytime if you want to delete the cluster, use the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ minishift delete
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Refer to the &lt;a href="https://docs.openshift.org/latest/minishift/index.html"&gt;Minishift documentation&lt;/a&gt; to get more detailed description of getting started with a single node OpenShift cluster.&lt;/p&gt;
+
+&lt;h3&gt;Feedback&lt;/h3&gt;
+
+&lt;p&gt;Try Minishift!&lt;/p&gt;
+
+&lt;p&gt;We would love to get your feedback. If you hit a problem, please raise an issue in &lt;a href="https://github.com/minishift/minishift/issues"&gt;minishift issue tracker&lt;/a&gt; but please search through the listed issues before creating it. It&amp;rsquo;s possible that a similar issue is already open.&lt;/p&gt;
+
+&lt;h3&gt;Community&lt;/h3&gt;
+
+&lt;p&gt;The Minishift community hangs out on the IRC channel &lt;code&gt;#minishift&lt;/code&gt; on Freenode (&lt;a href="https://freenode.net"&gt;https://freenode.net&lt;/a&gt;). You are welcome to join, participate in the discussions, and contribute.&lt;/p&gt;
+
+&lt;h3&gt;Resources&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/minishift/minishift"&gt;Github Repo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/minishift/minishift/issues"&gt;Issue tracker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.openshift.org/latest/minishift/index.html"&gt;Minishift Home Page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: System Containers</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/system-containers.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introduction to System Containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"/>
+    <id>http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/</id>
+    <published>2016-09-12T13:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Giuseppe Scrivano</name>
+    </author>
+    <content type="html">&lt;p&gt;As part of our effort to reduce the number of packages that are
+shipped with the Atomic Host image, we faced the problem of how to
+containerize services that are needed before Docker itself is running.
+The result: &lt;q&gt;system containers,&lt;/q&gt; a way to run containers in
+production using read only images.&lt;/p&gt;
+
+&lt;p&gt;System containers use different technologies such as OSTree for the
+storage, Skopeo to pull images from a registry, runC to run the
+containers and systemd to manage their life cycle.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;To use system containers you must have &lt;a href="https://github.com/projectatomic/atomic"&gt;Atomic CLI&lt;/a&gt; version 1.12 or later
+and the &lt;a href="https://github.com/ostreedev/ostree"&gt;ostree utility&lt;/a&gt; installed.  Currently, this means you must be running the
+&lt;a href="/blog/2016/07/new-centos-atomic-host-releases-available-for-download/"&gt;CentOS Continuous Atomic&lt;/a&gt;,
+but updates for Fedora Atomic should be coming soon.&lt;/p&gt;
+
+&lt;h3&gt;Pull an image&lt;/h3&gt;
+
+&lt;p&gt;An image must be present in the OSTree system repository before we can
+use it as a system container.  By using skopeo, the atomic tool can pull an image from
+different locations, a registry, the local Docker engine or a tarball,
+according to how the image is prefixed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic pull --storage=ostree gscrivano/etcd
+Image gscrivano/etcd is being pulled to ostree ...
+Pulling layer e4410b03d7db030dba502fef7bfd1dae56a6c48faae63a80fd82450322def2c5
+Pulling layer 2176ad01d5670713218844201dc4edb36d2692fcc79ad7008003227a5f80097b
+Pulling layer 9086967f25375e976260ad004a6ac3cc75ba020669042cb431904d2914ac1735
+Pulling layer c0ee5e1cf412f1fd511aa1c7427c6fd825dfe4969d9ed7462ff8f989aceded7a
+Pulling layer 024037bdea19132da059961b3ec58e2aff329fb2fe8ffd8030a65a27d7e7db5f
+
+# atomic pull --storage=ostree dockertar:/tmp/etcd.tar
+# atomic pull --storage=ostree docker:etcd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Each layer in the image is stored as a separate OSTree branch, this
+takes advantage of the layered model used by Docker images, since
+&lt;code&gt;atomic pull&lt;/code&gt; will download only the layers that are not already
+available.  All the images are stored into the OSTree system
+repository.&lt;/p&gt;
+
+&lt;p&gt;Using OSTree as storage has the advantage that if the same file is
+present in more layers, it will be stored only once, just like for container
+image layers.  A container is installed through hardlinks, the storage is
+shared with the OSTree repository &lt;q&gt;hardlink farm&lt;/q&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;atomic images list&lt;/code&gt; shows the list of the available images:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic images list
+   REPOSITORY    TAG          IMAGE ID       CREATED            VIRTUAL SIZE   TYPE
+gscrivano/etcd   latest       d7c1702506ff   2016-09-08 16:39                  system
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;atomic images delete&lt;/code&gt; deletes one tag and &lt;code&gt;atomic images prune&lt;/code&gt;
+removes the unused layers:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic images delete -f gscrivano/etcd
+# atomic images prune
+Deleting ociimage/9086967f25375e976260ad004a6ac3cc75ba020669042cb431904d2914ac1735
+Deleting ociimage/2176ad01d5670713218844201dc4edb36d2692fcc79ad7008003227a5f80097b
+Deleting ociimage/e4410b03d7db030dba502fef7bfd1dae56a6c48faae63a80fd82450322def2c5
+Deleting ociimage/c0ee5e1cf412f1fd511aa1c7427c6fd825dfe4969d9ed7462ff8f989aceded7a
+Deleting ociimage/024037bdea19132da059961b3ec58e2aff329fb2fe8ffd8030a65a27d7e7db5f
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Installation&lt;/h3&gt;
+
+&lt;p&gt;System images are installed with &lt;code&gt;atomic install --system&lt;/code&gt; as:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic install --system gscrivano/etcd
+Extracting to /var/lib/containers/atomic/etcd.0
+systemctl daemon-reload
+systemd-tmpfiles --create /etc/tmpfiles.d/etcd.conf
+systemctl enable etcd
+
+# atomic install --system gscrivano/flannel
+Extracting to /var/lib/containers/atomic/flannel.0
+systemctl daemon-reload
+systemd-tmpfiles --create /etc/tmpfiles.d/flannel.conf
+systemctl enable flannel
+
+# systemctl start etcd
+# runc exec etcd etcdctl set /atomic.io/network/config '{"Network":"10.40.0.0/16"}'
+# systemctl start flannel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The template mechanism allows us to configure settings for images.
+For example, we could use the following command to
+configure Flannel to use another Etcd endpoint instead of the default
+&lt;code&gt;http://127.0.0.1:2379&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic install --system --set ETCD_ENDPOINTS=http://192.168.122.2:2379 gscrivano/flannel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;atomic containers&lt;/code&gt; verb is used to see containers:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic containers list -a
+   CONTAINER ID IMAGE                COMMAND              CREATED          STATUS    RUNTIME
+   etcd         gscrivano/etcd       /usr/bin/etcd-env.sh 2016-09-08 14:19 running   runc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Uninstallation&lt;/h3&gt;
+
+&lt;p&gt;Similarly to &lt;code&gt;atomic install&lt;/code&gt;, &lt;code&gt;atomic uninstall&lt;/code&gt; is used to uninstall
+an installed system container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# atomic uninstall etcd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Structure of a System Image&lt;/h3&gt;
+
+&lt;p&gt;System images are Docker images with a few extra files that are
+exported as part of the image itself, under the directory &amp;rsquo;/exports&amp;rsquo;.
+In other words, an existing &lt;code&gt;Dockerfile&lt;/code&gt; can be converted adding the
+configuration files needed to run it as a system container (which
+translate to an additional &lt;code&gt;ADD [files] /exports&lt;/code&gt; directive in the
+&lt;code&gt;Dockerfile&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;These files are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;config.json.template - template for the OCI configuration file that
+will be used to launch the runC container.&lt;/li&gt;
+&lt;li&gt;manifest.json - used to define default values for configuration
+variables.&lt;/li&gt;
+&lt;li&gt;service.template - template unit file for systemD.&lt;/li&gt;
+&lt;li&gt;tmpfiles.template - template configuration file for systemd-tmpfiles.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Not all of them are necessary for every image.&lt;/p&gt;
+
+&lt;p&gt;All the files with a &lt;code&gt;.template&lt;/code&gt; suffix are preprocessed and every
+variable in the form &lt;code&gt;$VARIABLE&lt;/code&gt; or &lt;code&gt;${VARIABLE}&lt;/code&gt; is replaced with
+its value.  This allows to define variables that are set at
+installation time (through the &lt;code&gt;--set&lt;/code&gt; option) as we saw with the
+Flannel example.  It is possible to set a default value for these
+settings using the &lt;code&gt;manifest.json&lt;/code&gt; file of the system container image.&lt;/p&gt;
+
+&lt;p&gt;If any of these files are missing, atomic will provide a default one.
+For instance, if &lt;code&gt;config.json.template&lt;/code&gt; is not included in the image,
+the default configuration will launch the &lt;code&gt;run.sh&lt;/code&gt; script without any
+tty.&lt;/p&gt;
+
+&lt;p&gt;There are some variables that are always defined by the atomic tool,
+without the need for an user to specify them via &lt;code&gt;--set&lt;/code&gt;.  Of those,
+only &lt;code&gt;RUN_DIRECTORY&lt;/code&gt; and &lt;code&gt;STATE_DIRECTORY&lt;/code&gt; can be overriden with
+&lt;code&gt;--set&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;DESTDIR&lt;/code&gt; - path where the container is installed on the system&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NAME&lt;/code&gt; - name of the container&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EXEC_START&lt;/code&gt; - Start directive for the systemD unit file.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EXEC_STOP&lt;/code&gt; - Stop directive for the systemD unit file.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HOST_UID&lt;/code&gt; - uid of the user installing the container.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HOST_GID&lt;/code&gt; - gid of the user installing the container.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RUN_DIRECTORY&lt;/code&gt; - run directory.  &lt;code&gt;/run&lt;/code&gt; for system containers.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;STATE_DIRECTORY&lt;/code&gt; - path to the storage directory. &lt;code&gt;/var/lib/&lt;/code&gt; for
+system containers.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We&amp;rsquo;re excited about the ability of system containers to greatly improve administration
+and infrastructure service delivery for Atomic clusters.  Please give them a try
+and tell us what you think.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

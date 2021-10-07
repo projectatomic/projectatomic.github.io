@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Atomic</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/atomic.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Fedora Atomic Host Nearing End Of Life</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2019/11/fedora-atomic-host-nearing-eol/"/>
+    <id>http://www.projectatomic.io/blog/2019/11/fedora-atomic-host-nearing-eol/</id>
+    <published>2019-11-21T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt; &lt;em&gt;Fedora 29 will be End Of Life &lt;a href="https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/VUK3CJ5LO4ROUH3JTCDVHYAVVYAOCU62/"&gt;soon&lt;/a&gt;.&lt;/em&gt;
+          &lt;em&gt;With it Fedora Atomic Host will have its last incremental release (based on&lt;/em&gt;
+          &lt;em&gt;the Fedora 29 stream). Please move to the Fedora CoreOS preview if you can.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Last year we &lt;a href="https://fedoramagazine.org/announcing-fedora-coreos/"&gt;introduced the plans for Fedora CoreOS&lt;/a&gt;
+including that Fedora CoreOS would be the successor to Fedora Atomic Host 
+and Container Linux (from CoreOS Inc.). As part of that succession
+plan we decided that Fedora 29 Atomic Host would be the last stream of
+Fedora Atomic Host to be released.&lt;/p&gt;
+
+&lt;p&gt;Fedora 29 Atomic Host has served us well, but with Fedora 29 End of
+Life &lt;a href="https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/message/VUK3CJ5LO4ROUH3JTCDVHYAVVYAOCU62/"&gt;coming soon&lt;/a&gt;
+, so will the last release of Fedora 29 Atomic Host.
+The next release of Fedora 29 Atomic Host (in the next few weeks) will be
+the last two-week release. It will contain all of the latest content
+from Fedora 29. After that release, Fedora 29, and Fedora 29 Atomic
+Host will no longer receive any updates.&lt;/p&gt;
+
+&lt;p&gt;Please try out the Fedora CoreOS preview to help us get it towards
+stable. Documentation and download links can be found at
+&lt;a href="https://getfedora.org/coreos/"&gt;https://getfedora.org/coreos/&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora 28-&gt;29 Atomic Host Upgrade Guide</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/"/>
+    <id>http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/</id>
+    <published>2018-10-31T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;This week we put out the &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-October/msg00006.html"&gt;first&lt;/a&gt;
+release of Fedora 29 Atomic Host. This will be the last major release
+of Fedora Atomic Host as we prepare for &lt;a href="https://coreos.fedoraproject.org/"&gt;Fedora CoreOS&lt;/a&gt;
+which will be released in Fedora 30.&lt;/p&gt;
+
+&lt;p&gt;In this post we&amp;rsquo;ll quickly list some known issues and then talk about updating 
+an existing Fedora 28 Atomic Host system to Fedora 29. We&amp;rsquo;ll cover preparing
+the system for upgrade and performing the upgrade.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; If you really don&amp;rsquo;t want to upgrade to Fedora 29 see the
+          later section: &lt;em&gt;Appendix B: Fedora 28 Atomic Host Life Support&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Known Issues&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Device timeout when installing from ISO with swap space. &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We found &lt;a href="https://pagure.io/atomic-wg/issue/513"&gt;an issue&lt;/a&gt;
+where instances installed via the ISO image via anaconda were
+having long boot times because of device timeouts. We traced
+this down to &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1641268"&gt;a bug in dracut&lt;/a&gt;
+and this will be fixed in the next release.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Incompatibilities with OpenShift Origin &amp;gt;= 3.11 and Kubernetes &amp;gt;= 1.10.4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In newer versions of &lt;code&gt;systemd&lt;/code&gt; an API was removed that was needed by
+older versions of OpenShift/Kubernetes. It is recommended that you
+upgrade to Origin 3.11 or Kubernetes &amp;gt; 1.10.4 before moving to Fedora
+29 Atomic Host. If you must use an older version of OpenShift/Kubernetes
+with Fedora 29 Atomic Host please see the later section: 
+&lt;em&gt;Appendix A: Using older versions of Kubernetes/OpenShift on Fedora 29 Atomic Host&lt;/em&gt;.
+Discussion of this issue can be found in the &lt;a href="https://pagure.io/atomic-wg/issue/512"&gt;pagure ticket&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Preparing for Upgrade&lt;/h3&gt;
+
+&lt;p&gt;Before we update to Fedora 29 Atomic Host we should check to
+see that we have at least a few GiB of free space in our root
+filesystem. The update to Fedora 29 can cause your system to
+retrieve more than 1 GiB of new content (not shared with Fedora
+28) and thus we&amp;rsquo;ll need to make sure we have plenty of free space.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Luckily if you skip this step OSTree will perform
+          &lt;a href="https://github.com/ostreedev/ostree/pull/987"&gt;filesystem checks&lt;/a&gt;
+          to make sure that upgrade will error gracefully before filling
+          up the filesystem.&lt;/p&gt;
+
+&lt;h3&gt;Upgrading&lt;/h3&gt;
+
+&lt;p&gt;Now we should be ready for the upgrade. If you are hosting any services
+on your instance you may want to prepare for them to have some downtime.&lt;/p&gt;
+
+&lt;p&gt;Currently we are on Fedora 28 Atomic Host using the
+&lt;code&gt;fedora/28/x86_64/atomic-host&lt;/code&gt; ref.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[vagrant@host ~]$ rpm-ostree status
+State: idle
+AutomaticUpdates: disabled
+Deployments:
+● ostree://fedora-atomic:fedora/28/x86_64/atomic-host
+                   Version: 28.20181007.0 (2018-10-07 20:43:44)
+                    Commit: 8df48fa2e70ad1952153ae00edbba08ed18b53c3d4095a22985d1085f5203ac6
+              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to do the upgrade we need to add the location of
+the Fedora 29 repository as a new remote (similar to a
+git remote) for &lt;code&gt;ostree&lt;/code&gt; to know about:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[vagrant@host ~]$ sudo ostree remote add --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary fedora-atomic-29 https://dl.fedoraproject.org/atomic/repo/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see from the command that we are adding a new remote known as
+&lt;code&gt;fedora-atomic-29&lt;/code&gt; with a remote url of &lt;code&gt;https://dl.fedoraproject.org/atomic/repo/&lt;/code&gt;
+We are also setting the &lt;code&gt;gpgkeypath&lt;/code&gt; variable in the configuration for
+the remote. This tells OSTree that we want commit signatures to be
+verified when we download from a remote.&lt;/p&gt;
+
+&lt;p&gt;Now that we have our &lt;code&gt;fedora-atomic-29&lt;/code&gt; remote we can do the upgrade!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[vagrant@host ~]$ sudo rpm-ostree rebase fedora-atomic-29:fedora/29/x86_64/atomic-host
+26 delta parts, 9 loose fetched; 264197 KiB transferred in 44 seconds        
+Upgraded:                                      
+  NetworkManager 1:1.10.12-1.fc28 -&amp;gt; 1:1.12.4-1.fc29        
+  NetworkManager-libnm 1:1.10.12-1.fc28 -&amp;gt; 1:1.12.4-1.fc29
+  NetworkManager-team 1:1.10.12-1.fc28 -&amp;gt; 1:1.12.4-1.fc29
+  acl 2.2.53-1.fc28 -&amp;gt; 2.2.53-2.fc29                
+  atomic 1.22.1-2.fc28 -&amp;gt; 1.22.1-27.gitb507039.fc29       
+  atomic-devmode 0.3.7-4.fc28 -&amp;gt; 0.3.7-6.fc29        
+  atomic-registries 1.22.1-2.fc28 -&amp;gt; 1.22.1-27.gitb507039.fc29
+  attr 2.4.48-3.fc28 -&amp;gt; 2.4.48-3.fc29              
+...
+  python-unversioned-command-2.7.15-10.fc29.noarch
+  python3-pyyaml-4.2-0.1.b4.fc29.x86_64
+Run "systemctl reboot" to start a reboot
+[vagrant@host ~]$ sudo systemctl reboot
+[vagrant@host ~]$ Connection to 192.168.121.95 closed by remote host.
+Connection to 192.168.121.95 closed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After reboot we can log in and see the status:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant ssh 
+Last login: Wed Oct 31 21:14:44 2018 from 192.168.121.1
+[vagrant@host ~]$ rpm-ostree status
+State: idle
+AutomaticUpdates: disabled
+Deployments:
+● ostree://fedora-atomic-29:fedora/29/x86_64/atomic-host
+                   Version: 29.20181025.1 (2018-10-25 14:46:54)
+                    Commit: 4a999b4b303b47468ff1464051a14fd075d2e7b8bb647584b7cc80fed48cf27b
+              GPGSignature: Valid signature by 5A03B4DD8254ECA02FDA1637A20AA56B429476B4
+
+  ostree://fedora-atomic:fedora/28/x86_64/atomic-host
+                   Version: 28.20181007.0 (2018-10-07 20:43:44)
+                    Commit: 8df48fa2e70ad1952153ae00edbba08ed18b53c3d4095a22985d1085f5203ac6
+              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1
+[vagrant@host ~]$
+[vagrant@host ~]$ cat /etc/os-release | head -n 2
+NAME=Fedora
+VERSION="29.20181025.1 (Atomic Host)"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are now on Fedora 29 Atomic Host. Now is a good time to check your
+services (most likely running in containers) to see if they are still
+working. If not, then you always have the rollback command: &lt;code&gt;sudo
+rpm-ostree rollback&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; Over time you can see updated commands for upgrading Atomic
+          Host between releases by visiting &lt;a href="https://fedoraproject.org/wiki/Atomic_Host_upgrade"&gt;this&lt;/a&gt;
+          wiki page.&lt;/p&gt;
+
+&lt;h3&gt;Appendix A: Using older versions of Kubernetes/OpenShift on Fedora 29 Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;Due to &lt;a href="https://pagure.io/atomic-wg/issue/512"&gt;an issue&lt;/a&gt; that arises from the
+combination of the version of systemd that ships with Fedora 29 Atomic Host,
+and the version of runc that&amp;rsquo;s bundled with Kubernetes and with OpenShift
+Origin, users of certain Kubernetes and OpenShift Origin releases must take
+steps to keep their Kubernetes or Origin clusters running following an upgrade to 29.&lt;/p&gt;
+
+&lt;p&gt;Users running Kubernetes releases older than v1.10.4 or OpenShift Origin
+releases older than v3.11 would do best to upgrade their Kubernetes or
+Origin clusters to a more recent version before undertaking an upgrade
+to Fedora 29 Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;For users who prefer to upgrade to 29 without changing their cluster
+version, it&amp;rsquo;s possible to work around the issue by changing the
+&lt;code&gt;cgroupdriver&lt;/code&gt; for both docker and for either the kubelet or the
+orgin-node component from its default value of &lt;code&gt;systemd&lt;/code&gt; to &lt;code&gt;cgroupfs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4&gt;For docker (applies to both Kubernetes and OpenShift Origin clusters):&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# cp /usr/lib/systemd/system/docker.service /etc/systemd/system/
+# sed -i 's/cgroupdriver=systemd/cgroupdriver=cgroupfs/' /etc/systemd/system/docker.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;For kubelet (applies to Kubeadm-based Kubernetes clusters):&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/' /etc/systemd/system/kubelet.service.d/kubeadm.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;For origin-node (applies to OpenShift Origin clusters):&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# vi /etc/origin/node/node-config.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add the following element to the &lt;code&gt;kubeletArguments:&lt;/code&gt; section:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cgroup-driver:
+  - "cgroupfs"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After making these changes, rebase to 29 as directed above. After reboot
+the nodes should return in &lt;code&gt;Ready&lt;/code&gt; state as expected.&lt;/p&gt;
+
+&lt;h3&gt;Appendix B: Fedora 28 Atomic Host Life Support&lt;/h3&gt;
+
+&lt;p&gt;As with Fedora 27 we will keep updating the Fedora 28 Atomic Host tree
+but we won&amp;rsquo;t be performing regular testing on that tree and there will
+be no more formal releases for Fedora 28. Please move to Fedora 29 to
+take advantage of regular testing and formal releases every two weeks.&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;As in the past, the transition to Fedora 29 Atomic Host should be an
+easy process. If you have issues please join us in IRC (#atomic on
+&lt;a href="https://freenode.net/"&gt;freenode&lt;/a&gt;) or on the
+&lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt;
+mailing list.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Announcing the Fedora CoreOS community!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/welcome-to-fedora-coreos/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/welcome-to-fedora-coreos/</id>
+    <published>2018-06-20T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Welcome to Fedora CoreOS&lt;/h3&gt;
+
+&lt;p&gt;Earlier this year Red Hat acquired &lt;a href="https://www.redhat.com/en/about/press-releases/red-hat-acquire-coreos-expanding-its-kubernetes-and-containers-leadership"&gt;CoreOS, Inc.&lt;/a&gt;.
+In the past few
+months we have been working hard to evaluate the different technologies 
+in the CoreOS Container Linux and Project Atomic spaces. Since Container 
+Linux and Atomic Host overlap in functionality quite a bit we have decided
+to merge future development of the two projects so that we can combine
+our efforts and bring two great communities of people together to solve
+future challenges in the transactional update and container operating
+system landscape.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;What does this mean for Atomic Host?&lt;/h3&gt;
+
+&lt;p&gt;The last major release of Fedora Atomic Host will most likely be Fedora
+29 Atomic Host. After Fedora 29 we&amp;rsquo;ll recommend you use Fedora CoreOS for
+any deployments. The use cases for Fedora CoreOS should overlap with the
+existing use cases for Atomic Host, but there may be some use cases that
+are left behind as we narrow our focus. Hopefully disruptions will be minimal.&lt;/p&gt;
+
+&lt;h3&gt;What will happen to the Project Atomic community channels?&lt;/h3&gt;
+
+&lt;p&gt;The mailing lists, IRC channels, and GitHub organization will mostly
+be retired once the last releases are End Of Life. Please join us on the
+new community spaces (more details below)!&lt;/p&gt;
+
+&lt;h3&gt;Where can I learn more about Fedora CoreOS and get involved?&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;There is a new website and FAQ at &lt;a href="https://coreos.fedoraproject.org"&gt;https://coreos.fedoraproject.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;There is a mailing list at &lt;a href="mailto:coreos@lists.fedoraproject.org"&gt;coreos@lists.fedoraproject.org&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;There is an IRC channel #fedora-coreos on freenode.&lt;/li&gt;
+&lt;li&gt;There is a new Discourse board at &lt;a href="https://discussion.fedoraproject.org/c/coreos"&gt;https://discussion.fedoraproject.org/c/coreos&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For future blog posts around containers, please refer to the new website
+that is currently under active development.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re excited to have the existing Container Linux and Atomic Host
+communities working together and we hope you&amp;rsquo;ll join us in making
+Fedora CoreOS a success.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Building Kernel Modules with Podman</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/</id>
+    <published>2018-06-06T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Doss</name>
+    </author>
+    <content type="html">&lt;h3&gt;Building Kernel Modules on Atomic with Podman&lt;/h3&gt;
+
+&lt;p&gt;The goal of this post is to explain how to build and load a kernel module inside a container using Podman.&lt;/p&gt;
+
+&lt;p&gt;Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.&lt;/p&gt;
+
+&lt;p&gt;Using &lt;a href="https://github.com/dell/dkms"&gt;DKMS&lt;/a&gt; on Atomic does not work as &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/1091"&gt;expected&lt;/a&gt;. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;Fedora Atomic and Kernel Modules&lt;/h4&gt;
+
+&lt;p&gt;There are a few technical reasons on why building a kernel module inside of a container is a quick path for getting a third party kernel module built and loaded on Fedora Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;The first is all kernel modules must be built to match the version of the current running kernel,  meaning we have to ensure that the kernel module is built consistently for every new kernel for it to work correctly.&lt;/p&gt;
+
+&lt;p&gt;The second is the fact that most of the file system on Atomic is read only.  Most third party kernel modules have their source stored in &lt;code&gt;/usr/src&lt;/code&gt; and once they are built, they are stored in &lt;code&gt;/usr/lib/modules&lt;/code&gt;. Since both paths are immutable, this makes using a container ideal to build and store the kernel module.&lt;/p&gt;
+
+&lt;p&gt;The last surrounds how packages are created in the bi-weekly Fedora Atomic Host composes. The &lt;code&gt;kernel-devel&lt;/code&gt; packages sometimes do not match up with the kernel that is being shipped in these bi-weekly updates. This means consistently getting the correct &lt;code&gt;kernel-devel&lt;/code&gt; packages can be challenging. If we build the kernel module inside a container, we can pull in the correct &lt;code&gt;kernel-devel&lt;/code&gt; packages from &lt;a href="https://koji.fedoraproject.org/koji/packageinfo?packageID=8"&gt;Koji&lt;/a&gt; for the booted kernel to build the module.&lt;/p&gt;
+
+&lt;h4&gt;Building a Kernel Module with Podman&lt;/h4&gt;
+
+&lt;p&gt;In this example we are building the &lt;a href="https://www.wireguard.com"&gt;WireGuard&lt;/a&gt; kernel module, which is an extremely simple yet fast and modern VPN. For non-Atomic Fedora/CentOS/RHEL based installs, you can use the &lt;code&gt;wireguard-dkms&lt;/code&gt; &lt;a href="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/"&gt;RPM&lt;/a&gt;. It uses DKMS to build and load the kernel module on boot. This doesn&amp;rsquo;t help us get WireGuard running on Atomic as it will only result in failure. This leads us to building the kernel module inside of a container.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s check out the Dockerfile below:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora as builder
+MAINTAINER "Joe Doss" &amp;lt;joe@solidadmin.com&amp;gt;
+
+ARG WIREGUARD_VERSION
+ARG WIREGUARD_KERNEL_VERSION
+ARG WIREGUARD_SHA256
+
+WORKDIR /tmp
+
+RUN dnf update -y &amp;amp;&amp;amp; dnf install \
+        libmnl-devel elfutils-libelf-devel findutils binutils boost-atomic boost-chrono \
+        boost-date-time boost-system boost-thread cpp dyninst efivar-libs gc \
+        gcc glibc-devel glibc-headers guile koji isl libatomic_ops libdwarf libmpc \
+        libpkgconf libtool-ltdl libxcrypt-devel make mokutil pkgconf pkgconf-m4 \
+        pkgconf-pkg-config unzip zip /usr/bin/pkg-config xz -y &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-devel-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        dnf install kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;amp;&amp;amp; \
+        dnf clean all &amp;amp;&amp;amp; \
+        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
+        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat &amp;gt;| "$t"; sha256sum --quiet -c &amp;lt;&amp;lt;&amp;lt;"${WIREGUARD_SHA256} $t" \
+        || exit 1; cat "$t"; } | tar xJf -
+
+WORKDIR /tmp/WireGuard-${WIREGUARD_VERSION}/src
+
+RUN KERNELDIR=/usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/build make -j$(nproc) &amp;amp;&amp;amp; make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Stepping through the above, we are going to point out the key aspects. At the very start, we pass in three &lt;code&gt;ARG&lt;/code&gt; directives. These are &lt;code&gt;WIREGUARD_VERSION&lt;/code&gt;, &lt;code&gt;WIREGUARD_KERNEL_VERSION&lt;/code&gt; and &lt;code&gt;WIREGUARD_SHA256&lt;/code&gt;. We use these to pass in three variables: the booted kernel version of the Fedora 28 Atomic Host node, the version of WireGuard to build, and the SHA265 sum of the WireGuard source tarball.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;RUN&lt;/code&gt; directive installs all of the packages required to build the WireGuard kernel module. It also uses &lt;code&gt;koji&lt;/code&gt; to download the correct package versions of &lt;code&gt;kernel-core&lt;/code&gt;, &lt;code&gt;kernel-devel&lt;/code&gt;, and &lt;code&gt;kernel-modules&lt;/code&gt; and it then installs them so it matches the current booted kernel of the Fedora Atomic Host node. From there it checks the SHA256 on the WireGuard source archive and extracts the it to &lt;code&gt;/usr/src&lt;/code&gt;. Finally, it builds and installs the kernel module inside the container.&lt;/p&gt;
+
+&lt;p&gt;Since Podman supports multi-stage Dockerfiles, we use a second stage without all of the extra installed packages that were required to build the kernel module and we copy over the &lt;code&gt;wireguard.ko&lt;/code&gt; file and the &lt;code&gt;wg&lt;/code&gt; binary to be used in the final container image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora
+MAINTAINER "Joe Doss" &amp;lt;joe@solidadmin.com&amp;gt;
+
+ARG WIREGUARD_KERNEL_VERSION
+
+WORKDIR /tmp
+
+RUN dnf update -y &amp;amp;&amp;amp; dnf install kmod koji -y &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        dnf install /tmp/kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;amp;&amp;amp; \
+        dnf clean all &amp;amp;&amp;amp; rm -f /tmp/*.rpm
+
+COPY --from=builder /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko \
+                    /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko
+
+COPY --from=builder /usr/bin/wg /usr/bin/wg
+
+CMD /usr/bin/wg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using &lt;code&gt;podman build&lt;/code&gt; we can pass in the required variables using &lt;code&gt;--build-arg&lt;/code&gt; to build the container and tag it with the &lt;code&gt;WIREGUARD_VERSION&lt;/code&gt;. To save time, we are using the &lt;code&gt;podman build&lt;/code&gt; feature to pull the Dockerfile from a &lt;a href="https://github.com/projectatomic/libpod/blob/master/docs/podman-build.1.md#building-an-image-using-a-git-repository"&gt;git repository&lt;/a&gt;. This will checkout the git repo to a temporary location and use the Dockerfile in the project root for the build context.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+export WIREGUARD_SHA256=ff653095cc0e4c491ab6cd095ddf5d1db207f48f947fb92873a73220363f423c
+
+sudo podman build --build-arg WIREGUARD_VERSION=${WIREGUARD_VERSION} \
+    --build-arg WIREGUARD_SHA256=${WIREGUARD_SHA256} \
+    --build-arg WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION} \
+    -t wireguard:${WIREGUARD_VERSION} git://github.com/jdoss/atomic-wireguard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the kernel module is done building you can view the container using &lt;code&gt;podman images&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman images
+REPOSITORY                 TAG            IMAGE ID       CREATED              SIZE
+docker.io/library/fedora   latest         cc510acfcd70   4 weeks ago          263MB
+localhost/wireguard        0.0.20180531   c035e1bd76da   About a minute ago   741MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can now load the kernel module on Fedora Atomic Host using the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} modprobe udp_tunnel
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} modprobe ip6_udp_tunnel
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} \
+     insmod /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and then we can verify that it is loaded:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ lsmod |grep wireguard
+wireguard             229376  0
+ip6_udp_tunnel         16384  1 wireguard
+udp_tunnel             16384  1 wireguard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From there you can use the built container to call the WireGuard &lt;code&gt;wg&lt;/code&gt; binary to setup your WireGuard VPN on Fedora Atomic Host.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+-e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+wireguard:${WIREGUARD_VERSION} /usr/bin/wg --help
+Usage: /usr/bin/wg &amp;lt;cmd&amp;gt; [&amp;lt;args&amp;gt;]
+
+Available subcommands:
+  show: Shows the current configuration and device information
+  showconf: Shows the current configuration of a given WireGuard interface, for use with `setconf'
+  set: Change the current configuration, add peers, remove peers, or change peers
+  setconf: Applies a configuration file to a WireGuard interface
+  addconf: Appends a configuration file to a WireGuard interface
+  genkey: Generates a new private key and writes it to stdout
+  genpsk: Generates a new preshared key and writes it to stdout
+  pubkey: Reads a private key from stdin and writes a public key to stdout
+You may pass `--help' to any of these subcommands to view usage.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of the above is an example of a manual process for building a kernel module on Atomic. In order to provide an automated DKMS-like experience you can check out the &lt;a href="https://github.com/jdoss/atomic-wireguard"&gt;atomic-wireguard&lt;/a&gt; project on GitHub and &lt;a href="https://https//copr.fedorainfracloud.org/coprs/jdoss/atomic-wireguard/"&gt;Copr&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The goal of the &lt;code&gt;atomic-wireguard&lt;/code&gt; project is to automate the process of building the WireGuard kernel module with Podman on boot by using a build script called via systemd unit. It hopefully can be used as a stopgap to help support third party kernel modules on Atomic until official kernel module support is figured out. If you have any questions, please feel free to reach out to me (&lt;code&gt;jdoss&lt;/code&gt;) on Freenode in either the &lt;code&gt;#atomic&lt;/code&gt; or &lt;code&gt;#wireguard&lt;/code&gt; channels or on Twitter &lt;a href="https://twitter.com/jdoss"&gt;@jdoss&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Special thanks to the Project Atomic and libpod teams. Especially Dan Walsh, Dusty Mabe, Tom Sweeney, Matthew Heon, and Colin Walters for their patient help and guidance on this endeavor.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Pinning Deployments in OSTree Based Systems</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/pinning-deployments-ostree-based-systems/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/pinning-deployments-ostree-based-systems/</id>
+    <published>2018-05-23T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dusty Mabe</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;RPM-OSTree/OSTree conveniently allows you to rollback if you upgrade and don&amp;rsquo;t like the upgraded software. This is done by keeping around the old &lt;strong&gt;deployment&lt;/strong&gt;; the old software you booted in to. After a single upgrade you&amp;rsquo;ll have a booted deployement and the rollback deployment. On the next upgrade the current rollback deployment will be discarded and the current booted deployment will become the new rollback deployment.&lt;/p&gt;
+
+&lt;p&gt;Typically these two deployments are all that is kept around. However, recently a new &lt;a href="https://github.com/ostreedev/ostree/issues/1460"&gt;pinning&lt;/a&gt; feature was added that allows the user to &lt;q&gt;pin&lt;/q&gt; a deployment to make sure it doesn&amp;rsquo;t get garbage collected.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Here is the current state of my system:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[dustymabe@dhcp137-98 ~]$ rpm-ostree status
+State: idle; auto updates disabled
+Deployments:
+● ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.122 (2018-04-18 23:34:24)
+                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+
+  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.81 (2018-02-12 17:50:48)
+                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I have the current booted deployment (&lt;code&gt;27.122&lt;/code&gt;) and the rollback deployment
+(&lt;code&gt;27.81&lt;/code&gt;) from before the last time I upgraded. I am about to do a rebase
+from Fedora 27 to Fedora 28 so I&amp;rsquo;d like have a little more control and not lose
+either of the two deployments I already have on the system. I&amp;rsquo;ll pin them both:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[dustymabe@dhcp137-98 ~]$ sudo ostree admin pin 0
+Deployment is now pinned
+[dustymabe@dhcp137-98 ~]$ sudo ostree admin pin 1
+Deployment is now pinned
+[dustymabe@dhcp137-98 ~]$ rpm-ostree status
+State: idle; auto updates disabled
+Deployments:
+● ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.122 (2018-04-18 23:34:24)
+                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+
+  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.81 (2018-02-12 17:50:48)
+                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see in the output that the deployments now show up as &lt;code&gt;Pinned&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now I can rebase to Fedora 28:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[dustymabe@dhcp137-98 ~]$ sudo ostree remote add --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-28-primary unifiedrepo https://kojipkgs.fedoraproject.org/atomic/repo/
+[dustymabe@dhcp137-98 ~]$ sudo rpm-ostree rebase unifiedrepo:fedora/28/x86_64/atomic-host
+
+25 delta parts, 9 loose fetched; 273519 KiB transferred in 115 seconds
+Checking out tree a29367c... done
+...
+Run "systemctl reboot" to start a reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After the rebase we can see that we have three (not two) deployments:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[dustymabe@dhcp137-98 ~]$ rpm-ostree status
+State: idle; auto updates disabled
+Deployments:
+  ostree://unifiedrepo:fedora/28/x86_64/atomic-host
+                   Version: 28.20180515.1 (2018-05-15 16:32:35)
+                BaseCommit: a29367c58417c28e2bd8306c1f438b934df79eba13706e078fe8564d9e0eb32b
+              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+
+● ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.122 (2018-04-18 23:34:24)
+                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+
+  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.81 (2018-02-12 17:50:48)
+                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And after reboot they are all still there:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[dustymabe@dhcp137-98 ~]$ rpm-ostree status
+State: idle; auto updates disabled
+Deployments:
+● ostree://unifiedrepo:fedora/28/x86_64/atomic-host
+                   Version: 28.20180515.1 (2018-05-15 16:32:35)
+                BaseCommit: a29367c58417c28e2bd8306c1f438b934df79eba13706e078fe8564d9e0eb32b
+              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+
+  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.122 (2018-04-18 23:34:24)
+                BaseCommit: 931ebb3941fc49af706ac5a90ad3b5a493be4ae35e85721dabbfd966b1ecbf99
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+
+  ostree://fedora-atomic-27:fedora/27/x86_64/atomic-host
+                   Version: 27.81 (2018-02-12 17:50:48)
+                BaseCommit: b25bde0109441817f912ece57ca1fc39efc60e6cef4a7a23ad9de51b1f36b742
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+           LayeredPackages: aria2 git git-annex mosh pciutils tig vim weechat
+                    Pinned: yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And we can unpin any of them we like. In this case I&amp;rsquo;ll unpin the oldest one:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[dustymabe@dhcp137-98 ~]$ sudo ostree admin pin --unpin 2
+Deployment is now unpinned
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Cheers!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

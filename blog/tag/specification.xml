@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Specification</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/specification.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Follow us, the Nulecule has moved!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/07/follow-us-the-nulecule-has-moved/"/>
+    <id>http://www.projectatomic.io/blog/2015/07/follow-us-the-nulecule-has-moved/</id>
+    <published>2015-07-16T21:23:08+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Christoph Görn</name>
+    </author>
+    <content type="html">&lt;p&gt;The past weeks have been packed with preparations for Red Hat Summit 2015 and getting &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomic App&lt;/a&gt; and the &lt;a href="https://github.com/projectatomic/nulecule/"&gt;Nulecule Specification&lt;/a&gt; into good shape. Now that we have finished that, we put at new release process in place and found a new home for the normative Nulecule Specification documents.&lt;/p&gt;
+
+&lt;p&gt;Additionally, the first extension of the Nulecule Specification has been started!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Starting with Nulecule Specification 0.0.2 we will host the human readable normative document at &lt;a href="www.projectatomic.io/nulecule/0.0.2/"&gt;projectatomic.io&lt;/a&gt;, and a machine readable version (aka the JSON schema) will live on &lt;a href="https://github.com/projectatomic/nulecule/blob/v0.0.2/spec/0.0.2/schema.json"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;GitHub will be the place where we will continue working on the specification, the &lt;a href="https://github.com/projectatomic/nulecule/"&gt;master branch&lt;/a&gt; will always carry the most up to date working draft. And we encorage you to participate in the development by submitting feature requests or pull requests.&lt;/p&gt;
+
+&lt;p&gt;One of our collaborators has started extending the Nulecule Specification by adding &amp;rsquo;&lt;a href="https://github.com/bkabrda/nulecule-images"&gt;Nulecule Image Specification&lt;/a&gt;&amp;rsquo;. We see this as an extension to the core features of Nulecule, and we have designed the Nulecule Specification with exactly this approach in our minds: Nulecule Specification is small and simple (configure and deploy applications) and Extension Specifications enrich the feature set (how to build the application and all its dependencies).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/bkabrda"&gt;Slavek Kabrda&lt;/a&gt; is one of the main contributors to DevAssistant and has drafted a first version of the &amp;rsquo;&lt;a href="https://github.com/bkabrda/nulecule-images"&gt;Nulecule Image Specification&lt;/a&gt;&amp;rsquo;, please take a critical look at it and join the development by  commenting and experimenting with it!&lt;/p&gt;
+
+&lt;p&gt;PS: at least at &lt;a href="http://devconf.cz/"&gt;devconf.cz&lt;/a&gt; last year Slavek was pretty open to offer beer-rewards for contributions&amp;hellip;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

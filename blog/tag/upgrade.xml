@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Upgrade</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/upgrade.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>First atomic upgrade for Fedora 21 Atomic</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/"/>
+    <id>http://www.projectatomic.io/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/</id>
+    <published>2014-12-20T23:07:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Colin Walters</name>
+    </author>
+    <content type="html">&lt;p&gt;There was an update earlier that was broken due to &lt;a href="https://github.com/projectatomic/rpm-ostree/commit/3e84cb249acbaa1b664aeb30e6534a3ebc6bb23e"&gt;a bug in rpm-ostree&lt;/a&gt;. This is fixed by &lt;a href="https://admin.fedoraproject.org/updates/rpm-ostree-2014.114-2.fc21?_csrf_token=9c9be2b07813e17db050fbbec3533d5abf005ebb"&gt;a new release of rpm-ostree&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You should now be able to &lt;q&gt;atomic upgrade.&lt;/q&gt;  The delta you should see as of today from gold follows.  Things to call out specifically:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Lots of CVE fixes, notably to docker&lt;/li&gt;
+&lt;li&gt;Major new version of kubernetes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Note that this update &lt;em&gt;adds&lt;/em&gt; flannel.  This is a key aspect of the &lt;q&gt;image-like&lt;/q&gt; feel of rpm-ostree.  With &lt;a href="https://git.fedorahosted.org/cgit/fedora-atomic.git/commit/?h=f21&amp;amp;id=9e4082f9ce8506cd8b2138e986358b5e533767b5"&gt;this commit&lt;/a&gt; it was added to the tree. (And conversely, if a package is removed there, it&amp;rsquo;s removed when you upgrade.)  &lt;/p&gt;
+
+&lt;p&gt;For the new Kubernetes, I recommend looking at &lt;a href="http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/"&gt;this blog entry&lt;/a&gt;. &lt;a href="https://github.com/eparis/kubernetes-ansible"&gt;This repository has Ansible scripts&lt;/a&gt; that are a useful reference for Flannel set up as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Upgraded:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;NetworkManager-1:0.9.10.0-14.git20140704.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;NetworkManager-glib-1:0.9.10.0-14.git20140704.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;PackageKit-glib-1.0.3-4.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;avahi-autoipd-0.6.31-30.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;avahi-libs-0.6.31-30.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;cpio-2.11-33.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;curl-7.37.0-11.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;dbus-1:1.8.12-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;dbus-libs-1:1.8.12-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;docker-io-1.4.0-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;dracut-038-31.git20141204.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;dracut-config-generic-038-31.git20141204.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;filesystem-3.2-28.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;grep-2.21-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;hawkey-0.5.2-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;hwdata-0.272-1.fc21.noarch&lt;/li&gt;
+&lt;li&gt;initscripts-9.56.1-5.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-3.17.6-300.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-core-3.17.6-300.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;kernel-modules-3.17.6-300.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;kmod-19-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;kmod-libs-19-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;kubernetes-0.6-4.0.git993ef88.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libblkid-2.25.2-2.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libcurl-7.37.0-11.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libdrm-2.4.58-3.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libmount-2.25.2-2.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libreport-filesystem-2.3.0-5.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libsmartcols-2.25.2-2.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libuuid-2.25.2-2.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;libyaml-0.1.6-6.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;net-tools-2.0-0.31.20141124git.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;nss-3.17.3-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;nss-softokn-3.17.3-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;nss-softokn-freebl-3.17.3-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;nss-sysinit-3.17.3-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;nss-tools-3.17.3-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;nss-util-3.17.3-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;openssh-6.6.1p1-9.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;openssh-clients-6.6.1p1-9.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;openssh-server-6.6.1p1-9.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;pcre-8.35-8.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;ppp-2.4.7-5.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpcbind-0.2.2-0.0.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-4.12.0.1-4.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-build-libs-4.12.0.1-4.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-libs-4.12.0.1-4.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-ostree-2014.114-2.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-plugin-selinux-4.12.0.1-4.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;rpm-python-4.12.0.1-4.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;selinux-policy-3.13.1-103.fc21.noarch&lt;/li&gt;
+&lt;li&gt;selinux-policy-targeted-3.13.1-103.fc21.noarch&lt;/li&gt;
+&lt;li&gt;sqlite-3.8.7.2-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;sudo-1.8.11p2-1.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;tcpdump-14:4.6.2-2.fc21.x86_64&lt;/li&gt;
+&lt;li&gt;tzdata-2014j-1.fc21.noarch&lt;/li&gt;
+&lt;li&gt;util-linux-2.25.2-2.fc21.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Added:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;flannel-0.1.0-8.gita7b435a.fc21.x86_64&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Operations</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/operations.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Making Docker images read-only in production</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/"/>
+    <id>http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/</id>
+    <published>2015-12-16T22:06:42+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new &lt;code&gt;--tmpfs&lt;/code&gt; you can run a container as read only, but still use writeable directories for things like &lt;code&gt;/etc&lt;/code&gt;, &lt;code&gt;/tmp&lt;/code&gt; or &lt;code&gt;/run&lt;/code&gt; but discard changes when a container is stopped.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Developer Mode vs Production Mode&lt;/h3&gt;
+
+&lt;p&gt;One of the reasons Docker has taken off is because it made it easier for developers to ship and update their software. Docker has streamlined the development process and allowed developers to choose the runtime environments that their applications are going to run.  The runtime/userspace that the developer (or developers) chooses can be tested by the QE Team and the exact same runtime can be deployed in production.&lt;/p&gt;
+
+&lt;p&gt;Part of the development process is usually built around updating the application and the userspace. The developer team does things like &lt;code&gt;yum install&lt;/code&gt; or &lt;code&gt;dnf install&lt;/code&gt;, and then copies in code that is particular to the application. But, once developers hand off to the quality engineers (QE) or operations, they expect content to be treated as read-only. &lt;/p&gt;
+
+&lt;p&gt;I believe that the image of a container should be put into production in a read only mode, which would prevent the application or processes within the container from writing to the container, it would only allow these processes to write to volumes mounted into the container.  &lt;/p&gt;
+
+&lt;h4&gt;Security&lt;/h4&gt;
+
+&lt;p&gt;From a security point of view, this would be great.  Imagine you are running an application that gets hacked.  The first thing the hacker wants to do is to write the exploit into the application, so that the next time the application starts up, it starts up with the exploit in place.  If the image was read-only the hacker would be prevented from leaving a back door in place and be forced to start the cycle from the beginning. &lt;/p&gt;
+
+&lt;p&gt;Docker added a feature to handle this via &lt;code&gt;docker run -d --read-only image ...&lt;/code&gt;  a while ago. But it is difficult to use, since a lot of applications need to write to temporary directories like &lt;code&gt;/run&lt;/code&gt; or &lt;code&gt;/tmp&lt;/code&gt; When these are read-only the apps fail. You could set up temporary locations on your host to volume mount into the container, but this ends up exposing temporary data to the host.  &lt;/p&gt;
+
+&lt;p&gt;What I wanted to be able to do is mount a tmpfs into the container. I have been working on a fix for this since last May, and it was finally merged in on December 2, from &lt;a href="https://github.com/docker/docker/pull/13587"&gt;this pull request&lt;/a&gt;. It will show up in docker-1.10.&lt;/p&gt;
+
+&lt;p&gt;With this patch you can set up tmpfs as &lt;code&gt;/run&lt;/code&gt; and &lt;code&gt;/tmp&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -d --read-only --tmpfs /run --tmpfs /tmp IMAGE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I would actually recommend all applications in production run with this mode.  You might want to continue to mount in volumes from the host for permanent data.&lt;/p&gt;
+
+&lt;h3&gt;Other cool stuff.&lt;/h3&gt;
+
+&lt;p&gt;One cool thing about this patch is that it &lt;code&gt;tar&lt;/code&gt;s up the contents of the underlying directory in the image on top of the tmpfs. So if you have &lt;code&gt;/run/httpd&lt;/code&gt; directory in the container image, you will have &lt;code&gt;/run/httpd&lt;/code&gt; in the container&amp;rsquo;s tmpfs.&lt;/p&gt;
+
+&lt;p&gt;You can also do some other stuff with this patch like setting up a temporary &lt;code&gt;/var&lt;/code&gt; or &lt;code&gt;/etc&lt;/code&gt; inside of your container.&lt;/p&gt;
+
+&lt;p&gt;If you execute &lt;code&gt;docker run -ti --tmpfs /etc fedora /bin/sh&lt;/code&gt; then docker will mount a tmpfs on &lt;code&gt;/etc&lt;/code&gt;, and tar up the content of the underlying &lt;code&gt;/etc&lt;/code&gt; onto the new &lt;code&gt;/etc&lt;/code&gt; tmpfs.  This means you could make changes to the &lt;code&gt;/etc&lt;/code&gt; but it will not survive a container stop.  The container will be fresh every time you start and stop the container.&lt;/p&gt;
+
+&lt;p&gt;You can also pass tmpfs mount options on the command line, like so:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -ti --tmpfs /etc:rw,noexec,nosuid,size=2g container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Docker will pass down these mount options.&lt;/p&gt;
+
+&lt;h3&gt;Call to action&lt;/h3&gt;
+
+&lt;p&gt;It would be nice in the future if developers told QE and operations to run in production with the &lt;code&gt;--read-only&lt;/code&gt; docker run/create flags. Or better yet set up &lt;a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command/"&gt;atomic labels&lt;/a&gt; to do this by default. Then we can separate the way a container application runs in development from the way it runs in production.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

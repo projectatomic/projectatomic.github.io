@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-38 blog_page-38_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/daemon_option_basedevicesize/">Increasing the Base Device Size on Docker Daemon Restart</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/shishir/">Shishir Mahajan</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-30T15:45:00Z'>
+Wednesday 30 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Sometime back I wrote <a href="https://github.com/docker/docker/pull/19123">a feature for docker to allow expanding Base device size on daemon restart</a>.  This feature has been included in Docker 1.10, so you can try it out now.</p>
+
+<p>Before we jump further into this article, I would like to point out that this feature is only available for devicemapper storage and does not apply to other storage drivers like overlay, btrfs, aufs, etc.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/daemon_option_basedevicesize/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/docker-storage/">docker-storage</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/how-i-wrote-compose-exec/">How I Wrote exec Support for docker-compose</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/ttomecek/">Tomáš Tomeček</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-29T00:00:00Z'>
+Tuesday 29 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>If you are a <code>docker-compose</code> user, as I am, you may be missing one feature:
+<code>exec</code>&mdash;spawning arbitrary commands in already running containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/how-i-wrote-compose-exec/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/docker-compose/">docker-compose</a></li>
+<li><a href="/blog/tag/orchestration/">orchestration</a></li>
+<li><a href="/blog/tag/patches/">patches</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/cockpit-099/">Cockpit 0.99 Released</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/stef/">Stef Walter</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-28T18:00:00Z'>
+Monday 28 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Cockpit is the <a href="http://cockpit-project.org/">modern Linux admin interface</a>. There&rsquo;s a new release every week. Here are the highlights from 0.96 through 0.99.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/cockpit-099/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/no-new-privs-docker/">Added no-new-privileges Security Flag to Docker</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/mrunalp/">Mrunal Patel</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-17T12:40:00Z'>
+Thursday 17 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I have contributed support for a <code>no-new-privileges</code> option to <a href="https://github.com/docker/docker/pull/20727">docker</a>.
+This flag has already been included in <a href="https://github.com/opencontainers/runc/pull/557">runc</a> and the Open Container Initiative <a href="https://github.com/opencontainers/specs/pull/290">spec</a>.</p>
+
+<p>The new flag supports, in Docker, a security feature that was added to the Linux kernel back in 2012 under the name <code>no_new_privs</code>.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/no-new-privs-docker/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/patches/">patches</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">SELinux</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2016/03/atomic-app-044-release/">Atomic App 0.4.4 Released</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-16T17:30:00Z'>
+Wednesday 16 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Atomic App version 0.4.4 has been released. This release includes a major update to our documentation as well as the user experience when deploying an Atomic App.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2016/03/atomic-app-044-release/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=37/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=34/">34</a>
+</li>
+<li>
+<a href="/blog/page=35/">35</a>
+</li>
+<li>
+<a href="/blog/page=36/">36</a>
+</li>
+<li>
+<a href="/blog/page=37/">37</a>
+</li>
+<li class='active'>
+<span>38</span>
+</li>
+<li>
+<a href="/blog/page=39/">39</a>
+</li>
+<li>
+<a href="/blog/page=40/">40</a>
+</li>
+<li>
+<a href="/blog/page=41/">41</a>
+</li>
+<li>
+<a href="/blog/page=42/">42</a>
+</li>
+<li>
+<a href="/blog/page=39/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

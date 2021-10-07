@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Hacking</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/hacking.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Hacking and extending Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/hacking-and-extending-atomic-host/</id>
+    <published>2016-07-13T13:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jonathan Lebon</name>
+    </author>
+    <content type="html">&lt;p&gt;Many of the features that make Atomic Host great are due to the immutability of
+&lt;code&gt;/usr&lt;/code&gt;. Things like atomic upgrades and rollbacks and efficient storage of files
+in an object store all require immutability. However, this immutability is also
+what can irritate people the most when they first start using Atomic Host.
+There is no &lt;code&gt;yum&lt;/code&gt; or &lt;code&gt;dnf&lt;/code&gt; to install programs.  We are at the mercy of the
+content provider.&lt;/p&gt;
+
+&lt;p&gt;The answer of course is to use containers. Keep a &lt;q&gt;pet&lt;/q&gt; SPC container around
+that will allow you to do all the configuration and hacking you need, all in the
+comfort of your favourite editor.&lt;/p&gt;
+
+&lt;p&gt;But if you&amp;rsquo;re hacking on the Atomic Host &lt;strong&gt;itself&lt;/strong&gt;, containers can only take
+you so far. What if you want to change the version of docker on the host? Or
+install a new package? Or modify an installed Python script for debugging?&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The latest releases of &lt;a href="http://ostree.readthedocs.org/"&gt;OSTree&lt;/a&gt; and
+&lt;a href="http://rpm-ostree.readthedocs.org/"&gt;rpm-ostree&lt;/a&gt; have acquired some new features
+that makes hacking and extending Atomic Host much easier. These features are
+OSTree system unlocking and rpm-ostree package layering. They both answer this
+need for easier Atomic Host mutation, but in a completely different way.&lt;/p&gt;
+
+&lt;h3&gt;OSTree system unlocking&lt;/h3&gt;
+
+&lt;p&gt;This feature was actually introduced in
+&lt;a href="https://github.com/ostreedev/ostree/releases/tag/v2016.4"&gt;v2016.4&lt;/a&gt; on March 23,
+2016. It is already in both Fedora and CentOS Atomic Host. In a nutshell, system
+unlocking allows you to make temporary changes to the &lt;code&gt;/usr&lt;/code&gt; mount. To do this,
+you simply use the &lt;code&gt;ostree admin unlock&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# ostree admin unlock
+Development mode enabled.  A writable overlayfs is now mounted on /usr.
+All changes there will be discarded on reboot.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can now do things like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# touch /usr/woohoo &amp;amp;&amp;amp; echo "success"
+success
+-bash-4.2# rpm --install strace-4.8-11.el7.x86_64.rpm
+-bash-4.2# strace -V
+strace -- version 4.8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;ostree admin status&lt;/code&gt; will also have an updated status output:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# ostree admin status
+* centos-atomic-host 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091.1
+    Version: 2016.0.169
+    Unlocked: development
+    origin refspec: centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As mentioned in the command output, changes are actually written to an
+overlayfs:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# ls /var/tmp/ostree-unlock-ovl.45GXKY/upper/
+bin  share  woohoo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;These changes are all erased at reboot, though they can be made permanent by
+using the &lt;code&gt;--hotfix&lt;/code&gt; flag. This will make OSTree push back the current
+deployment as the rollback (so that you can go back to the immutable deployment
+from which you started) and unlock the current deployment:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# ostree admin unlock --hotfix
+Copying /etc changes: 34 modified, 8 removed, 44650 added
+Transaction complete; bootconfig swap: yes deployment count change: 0
+Hotfix mode enabled.  A writable overlayfs is now mounted on /usr
+for this booted deployment.  A non-hotfixed clone has been created
+as the non-default rollback target.
+-bash-4.2# ostree admin status
+* centos-atomic-host 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091.0
+    Version: 2016.0.169
+    Unlocked: hotfix
+    origin refspec: centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
+  centos-atomic-host 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091.1
+    Version: 2016.0.169
+    origin refspec: centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note however, that there can be issues from unlocking due to its use of
+overlayfs. Most notably, Docker does not currently work with SELinux and
+OverlayFS (see the related Trello card
+&lt;a href="https://trello.com/c/wLlFD9HN/134-8-add-selinux-labeling-support-to-overlayfs"&gt;here&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;The other caveat is that a hotfix is only as permanent as its associated
+deployment. Thus, as soon as you create a new deployment (e.g. through
+&lt;code&gt;rpm-ostree upgrade/rebase/deploy&lt;/code&gt;), the overlayed hotfixed &lt;strong&gt;are not&lt;/strong&gt; carried
+over, but simply lost.&lt;/p&gt;
+
+&lt;h3&gt;Package layering in rpm-ostree&lt;/h3&gt;
+
+&lt;p&gt;This is a relatively much newer feature than system unlocking. It&amp;rsquo;s part of
+&lt;a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2016.4"&gt;v2016.4&lt;/a&gt;,
+released 4 days ago. There are &lt;a href="https://bodhi.fedoraproject.org/updates/FEDORA-2016-bfecf6abed"&gt;updates
+pending&lt;/a&gt; in
+Fedora&amp;rsquo;s Bodhi system awaiting your karma. The feature itself has been in the
+works for a while now, with development starting more than a year ago.&lt;/p&gt;
+
+&lt;p&gt;Package layering does exactly what it says; it allows you to extend the base
+distribution of RPM packages you receive from your content provider with your
+own packages of choice. In contrast to system unlocking, these additional
+&lt;q&gt;layered&lt;/q&gt; packages &lt;strong&gt;are&lt;/strong&gt; carried over during upgrades, making it great for
+when your particular system requires an additional package to work correctly.&lt;/p&gt;
+
+&lt;p&gt;To use package layering, you can invoke the new &lt;code&gt;pkg-add&lt;/code&gt; command of
+&lt;code&gt;rpm-ostree&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# rpm-ostree pkg-add strace
+notice: pkg-add is a preview command and subject to change.
+Need to overlay 1 package onto tree 675583e:
+  strace
+
+Downloading metadata: [===================================================] 100%
+Resolving dependencies... done
+Transaction: 1 packages
+  strace-4.8-11.el7.x86_64 (base)
+Will download: 1 package (271.5 kB)
+
+  Downloading from base: [================================================] 100%
+
+Importing: [==============================================================] 100%
+Checking out tree 675583e... done
+Overlaying... done
+Writing rpmdb... done
+Writing OSTree commit... done
+Copying /etc changes: 34 modified, 8 removed, 44651 added
+Transaction complete; bootconfig swap: no deployment count change: 0
+Freed objects: 26.0 MB
+Added:
+  strace-4.8-11.el7.x86_64
+Run "systemctl reboot" to start a reboot
+-bash-4.2# reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once we&amp;rsquo;re rebooted, we can make use of the new package:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# strace -V
+strace -- version 4.8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The status output of &lt;code&gt;rpm-ostree&lt;/code&gt; will now also reflect this layering (which by
+the way received a face lift in this release):&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-bash-4.2# rpm-ostree status
+State: idle
+Deployments:
+* centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
+       Version: 2016.0.169 (2016-07-12 16:26:00)
+    BaseCommit: 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091
+        Commit: e0291b49619645d4df95c0924a48932f217b0ed4680656ebd47c1b17640a62ee
+        OSName: centos-atomic-host
+  GPGSignature: (unsigned)
+      Packages: strace
+
+  centos-atomic-continuous:centos-atomic-host/7/x86_64/devel/continuous
+       Version: 2016.0.169 (2016-07-11 21:51:17)
+        Commit: 675583e7db81b59a08e0bbfb3735bddde9d768f9f4500b845799c7e97ab71091
+        OSName: centos-atomic-host
+  GPGSignature: (unsigned)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not surprisingly, packages that were layered using &lt;code&gt;pkg-add&lt;/code&gt; can also be later
+removed by invoking the &lt;code&gt;pkg-remove&lt;/code&gt; command, left here as an exercise to the
+reader.&lt;/p&gt;
+
+&lt;p&gt;Under the hood, &lt;code&gt;rpm-ostree&lt;/code&gt; takes care of many subtleties, including safely
+running RPM &lt;code&gt;%post&lt;/code&gt; scripts using
+&lt;a href="https://github.com/projectatomic/bubblewrap"&gt;bubblewrap&lt;/a&gt; to ensure that the
+OSTree system repo remains uncorrupted, and obeying expected RPM rules (e.g.
+layering a package that conflicts with an existing package will error out).&lt;/p&gt;
+
+&lt;p&gt;To summarize, the power that package layering gives you is the ability to
+customize the package set on particular hosts &lt;em&gt;without having to ship it to all
+hosts&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, note that package layering is currently in preview mode, which means
+that it is subject to change, though we will do our best to retain backwards
+compatibility with layered deployments created with the v2016.4 release.&lt;/p&gt;
+
+&lt;h3&gt;Bonus section: CentOS Atomic Host Continuous (CAHC)&lt;/h3&gt;
+
+&lt;p&gt;You might have been wondering what this &lt;code&gt;centos-atomic-continuous&lt;/code&gt; remote was
+about in the command outputs above. The &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS Atomic
+SIG&lt;/a&gt; has set up an
+automated job that continuously composes ostree repos using the latest code from
+the git master of various Project Atomic components, such as &lt;code&gt;atomic&lt;/code&gt;, &lt;code&gt;ostree&lt;/code&gt;,
+and &lt;code&gt;rpm-ostree&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This means that within the hour, you can experience the latest and greatest
+Atomic Host has to offer. For example, if you&amp;rsquo;d like to try out package layering
+right away, you can simply rebase onto CAHC and reboot. For more information and
+instructions, see the &lt;a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel"&gt;devel wiki
+page&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

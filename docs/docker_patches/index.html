@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Docker Patches &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_docker_patches docs_docker_patches_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>List of patches to Docker</h1>
+
+<p>Project Atomic includes the development and maintenance of a number of patches to the docker daemon and related tools.</p>
+
+<p>All of the patches that we ship are described in the README.md file on the appropriate branch of <a href="https://github.com/projectatomic/docker">our docker  repository</a>.  If you want to look at the patches for docker-1.12 you would look at <a href="https://github.com/projectatomic/docker/tree/docker-1.12">the docker-1.12 branch</a>.</p>
+
+<p>Each time docker creates a new version, we create a new branch in projectatomic with the version name to match.  The current master is working on docker-1.13.  You can see the current patchset on <a href="https://github.com/projectatomic/docker/tree/docker-1.13">the 1.13 branch</a>.</p>
+
+<p>Patch types are:</p>
+
+<ul>
+<li>Red Hat: support compatibility with Red Hat Enterprise Linux and related tools.</li>
+<li>Upstream: Patches which were, or will be, submitted to mainstream docker.  Some have been rejected and are being maintained by the Atomic team.</li>
+<li>Backports: Patches which backport fixes from later versions of docker to earlier ones.<br></li>
+</ul>
+
+<h2>Table of Patches</h2>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>PRs</th>
+<th>Status</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Add-RHEL-super-secrets-patch</td>
+<td>Red Hat</td>
+<td><a href="https://github.com/docker/docker/pull/6075">6075</a></td>
+<td>Maintaining</td>
+</tr>
+<tr>
+<td>Add-add-registry-and-block-registry-options-to-docker</td>
+<td>Upstream</td>
+<td><a href="https://github.com/docker/docker/pull/11991">11991</a>, <a href="https://github.com/docker/docker/pull/10411">10411</a></td>
+<td>Rejected, Maintaining</td>
+</tr>
+<tr>
+<td>Improved-searching-experience</td>
+<td>Upstream</td>
+<td></td>
+<td>Rejected, Maintaining</td>
+</tr>
+<tr>
+<td>Add-dockerhooks-exec-custom-hooks-for-prestart/poststop-containers</td>
+<td>Upstream</td>
+<td><a href="https://github.com/docker/docker/pull/17021">17021</a></td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>Return-rpm-version-of-packages-in-docker-version</td>
+<td>Red Hat</td>
+<td><a href="https://github.com/docker/docker/pull/14591">14591</a></td>
+<td>Maintaining</td>
+</tr>
+<tr>
+<td>rebase-distribution-specific-build</td>
+<td>Upstream</td>
+<td><a href="https://github.com/docker/docker/pull/15364">15364</a></td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>System-logging-for-docker-daemon-API-calls</td>
+<td>Upstream</td>
+<td><a href="https://github.com/docker/docker/pull/14446">14446</a></td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>Audit-logging-support-for-daemon-API-calls</td>
+<td>Upstream</td>
+<td><a href="https://github.com/rhatdan/docker/pull/109">109</a></td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>Add-volume-support-to-docker-build</td>
+<td>Upstream</td>
+<td>See Below</td>
+<td>See Below</td>
+</tr>
+</tbody></table>
+
+<p>Patches which have been accepted by upstream docker are not represented in this chart.</p>
+
+<p>A list of backport patches will be added to this page later.</p>
+
+<h2>Longer Patch Descriptions</h2>
+
+<p>Project Atomic is carrying a series of patches that we feel are required for our users or for our support engineering.</p>
+
+<h3>Add-RHEL-super-secrets-patch.patch</h3>
+
+<p>This patch allows us to provide subscription management information from the host into containers for both <code>docker run</code> and <code>docker build</code>.  In order to get access to RHEL7 and RHEL6 content inside of a container via yum you need to use a subscription.  This patch allows the subscriptions to work inside the container.  The docker upstream thought this was too RHEL specific so told us to carry a patch.</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/pull/6075">6075</a></li>
+</ul>
+
+<p>Note: This is our oldest patch.  Other distributions, like <a href="https://github.com/SUSE/docker.mirror/commit/76a4eb2f2e79d1abec07dfe33cd99c3d7a4568c3">SuSe</a>,  are carrying similar patches to allow the hosts subscriptions to be used inside the container to update distribution specific content.</p>
+
+<h3>Add-add-registry-and-block-registry-options-to-docker.patch</h3>
+
+<p>Users have been asking for us to provide a mechanism to allow additional registries to be specified in addition to docker.io.  We also want to have Red Hat Content available from our Registry by default. This patch allows users to customize the default registries available.  We believe this closely aligns with the way yum and apt currently work.  This patch also allows users to block images from registries.  Some users do not want software
+to be accidentally pulled and run on a machine.  Some users also have no access to the internet and want to setup private registries to handle their content.</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/pull/11991">11991</a></li>
+<li><a href="https://github.com/docker/docker/pull/10411">10411</a></li>
+</ul>
+
+<p><strong>Status</strong>: Upstream docker does not like this patch set, because they want the <strong>docker</strong> experience to be the same everywhere.  If I do a <code>docker pull fedora</code>, I always get it from docker.io.  We and our customers do not agree, so we continue to carry this patch.  We prefer the yum/apt method for specifying registries.</p>
+
+<h3>Improved-searching-experience.patch</h3>
+
+<p>Red Hat wants to allow users to search multiple registries as described above. This patch improves the search experience.</p>
+
+<p><strong>Status</strong>:  This patch actually works with the Add-add-registry-and-block-registry-options-to-docke.patch so we need to carry it also.</p>
+
+<h3>Add-dockerhooks-exec-custom-hooks-for-prestart/poststop-containers.patch</h3>
+
+<p>With the addition of runc/hooks support we want to add a feature to allow third parties to run helper programs before a docker container gets started and just after the container finishes.</p>
+
+<p>For example we want to add a RegisterMachine hook.</p>
+
+<p>For systems that support systemd/RegisterMachine, this hook would register a machine to the machinectl.  machinectl could then list docker containers along with other virtualization environments like kvm, and systemd-nspawn containers. Over time we would want to implement other machinectl features to get docker containers better integrated into the system.
+Another example of a hook  is a log agent that records when a container starts and stops and then sends a message to a monitoring station.</p>
+
+<p>Dockerhooks reads the <code>/usr/libexec/oci/hooks.d</code> directory to search for hooks, if the directory exists docker will execute the executables in this directory via runc/libcontainer is using PreStart and PostStop.  It will also send the config.json file as the second parameter.</p>
+
+<p><strong>Status</strong>: We hope that the upstream docker will expose this feature just like it makes use of these hooks for setting up networking in containers.  So far they haven’t given users the option  to take advantage of these hooks.</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/pull/17021">17021</a></li>
+</ul>
+
+<h3>Return-rpm-version-of-packages-in-docker-version.patch</h3>
+
+<p>Red Hat Support wants to know the version of the rpm package that docker is running.  This patch allows the distribution to show the rpm version of the client and server using the <code>docker version</code> command.  The docker upstream was not interested in this patch. This patch only affects the <code>docker info</code> command.</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/pull/14591">14591</a></li>
+</ul>
+
+<p><strong>Status</strong>:   Since this is distribution specific, docker has rejected the patch. But it is required for our support people to easily identify the client and server RPM of the patches in use, so we plan on carrying it.  This patch is also easy to maintain.</p>
+
+<h3>rebase-distribution-specific-build.patch</h3>
+
+<p>Current upstream docker tests run totally on Debian.  We want to be able to make sure all tests run on platforms and containers we support.  This patch allows us to run distribution specific tests. This means that <code>make test</code> on RHEL7 will use RHEL7-based images for the test, and <code>make test</code> on Fedora will use Fedora-based images for the test.  The docker upstream was not crazy about the substitutions done in this patch, and the changes never show up in the version of the docker client/daemon that we ship.</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/pull/15364">15364</a></li>
+</ul>
+
+<p><strong>Status</strong>: Up til now upstream docker does not like the way this works, not sure if there is a good way forward.   This patch set is really only for QA and does not change the way that docker works.</p>
+
+<h3>System-logging-for-docker-daemon-API-calls.patch</h3>
+
+<p>Red Hat wants to log all access to the docker daemon.  This patch records all access to the docker daemon in syslog/journald.  Currently docker logs access in its event logs but these logs are not stored permanently and do not record critical information like loginuid to record which user created/started/stopped containers.  We will continue to work with the docker upstream to get this patch merged. The docker upstream indicates that they want to wait until the authentication patches get merged.</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/pull/14446">14446</a></li>
+</ul>
+
+<p><strong>Status</strong>:  This patch is currently blocked because the docker CLI does not have anyway of authenticating the user doing the activity.  All docker currently logs when an activity happens is something like <strong>root</strong> started a container.  With this patch, we can actually log that <strong>dwalsh</strong> started a container, but this only works for local domain socket clients.  We are working with upstream on an <a href="https://github.com/docker/docker/pull/20883">authentication patch</a> that can identify the user on the client initiating the action.  When/If that patch gets merged we will resubmit and attempt to get this patch merged.</p>
+
+<h3>Audit-logging-support-for-daemon-API-calls.patch</h3>
+
+<p>This is a follow on patch to the previous syslog patch, to record all auditable events to the audit log.  We want to get <code>docker daemon</code> to some level of common criteria.  In order to do this administrator activity must be audited.</p>
+
+<ul>
+<li><a href="https://github.com/rhatdan/docker/pull/109">109</a></li>
+</ul>
+
+<p><strong>Status</strong>: Similar to the System Logging patch, we need to wait for authentication patch gets merged before working this into docker upstream.</p>
+
+<h3>Add-volume-support-to-docker-build.patch</h3>
+
+<p>This patch adds the ability to add bind mounts at build-time. This will be helpful in supporting builds with host files and secrets. The <code>--volume|-v flag</code> is added for this purpose. Trying to define a volume (ala docker run) errors out. Each bind mounts&rsquo; mode will be read-only and it will preserve any SELinux label which was defined via the cli (<code>:[z,Z]</code>). Defining a read-write mode (<code>:rw</code>) will just print a warning in the build output and the actual mode will be
+changed to read-only.</p>
+
+<p><strong>Status</strong>: Upstream docker has continuously blocked all efforts to support volumes in <code>docker build</code>.</p>
+
+<p>These 2 below are open but no progress so far in years:</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/issues/18603">18603</a></li>
+<li><a href="https://github.com/docker/docker/issues/14080">14080</a></li>
+</ul>
+
+<p>Closed proposals:</p>
+
+<ul>
+<li><a href="https://github.com/docker/docker/issues/3949">3949</a></li>
+<li><a href="https://github.com/docker/docker/issues/3156">3156</a></li>
+<li><a href="https://github.com/docker/docker/issues/14251">14251</a></li>
+</ul>
+
+<p>Up until now no satisfactory alternatives have arrived, but there are several projects working to build container images outside of docker, including <a href="http://docs.ansible.com/ansible/docker_image_module.html">Ansible</a> and potentially <a href="https://github.com/jlhawn/dockramp">dockerramp</a>.</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/docker_patches.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

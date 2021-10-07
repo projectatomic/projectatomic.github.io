@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Testing Kubernetes with an Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Testing Kubernetes with an Atomic Host' property='og:title'>
+<meta content='Atomic hosts include Kubernetes for orchestration and management of containerized application deployments, across a cluster of container hosts. If you’re interested in taking Kubernetes for a spin on an Atomic host, read on!&#x000A;&#x000A;Kubernetes+Atomic Hello World&#x000A;&#x000A;First, boot into CentOS Atomic host. You ought to be able to use Fedora Atomic as well, but currently, Atomic Fedora comes with an earlier version of kubernetes, so for each of the kubectl commands in this howto, there’s a different kubecfg command, for now.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/' property='og:url'>
+<meta content='2014-11-25T14:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Testing Kubernetes with an Atomic Host' name='twitter:title'>
+<meta content='Atomic hosts include Kubernetes for orchestration and management of containerized application deployments, across a cluster of container hosts. If you’re interested in taking Kubernetes for a spin on an Atomic host, read on!&#x000A;&#x000A;Kubernetes+Atomic Hello World&#x000A;&#x000A;First, boot into CentOS Atomic host. You ought to be able to use Fedora Atomic as well, but currently, Atomic Fedora comes with an earlier version of kubernetes, so for each of the kubectl commands in this howto, there’s a different kubecfg command, for now.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_11 blog_2014_11_testing-kubernetes-with-an-atomic-host blog_2014_11_testing-kubernetes-with-an-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Testing Kubernetes with an Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-11-25T14:00:00Z'>
+Tuesday 25 November 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Atomic hosts include <a href="http://kubernetes.io/">Kubernetes</a> for orchestration and management of containerized application deployments, across a cluster of container hosts. If you&rsquo;re interested in taking Kubernetes for a spin on an Atomic host, read on!</p>
+
+<h3>Kubernetes+Atomic Hello World</h3>
+
+<p>First, boot into <a href="http://buildlogs.centos.org/rolling/7/">CentOS Atomic</a> host. You ought to be able to use <a href="http://fedoraproject.org/get-prerelease#cloud">Fedora Atomic</a> as well, but currently, Atomic Fedora comes with an earlier version of kubernetes, so for each of the <code>kubectl</code> commands in this howto, there&rsquo;s a different <code>kubecfg</code> command, for now.</p>
+
+<p></p>
+
+<p>Due to <a href="https://bugs.centos.org/view.php?id=7917">a bug</a> in CentOS Atomic (not necessary in Fedora Atomic), you must:</p>
+<pre class="highlight plaintext"><code>cp /usr/lib/systemd/system/kubelet.service /etc/systemd/system/&#x000A;&#x000A;vi /etc/systemd/system/kubelet.service &#x000A;</code></pre>
+
+<p>Then, change both instances of <code>docker.socket</code> to <code>docker.service</code> and:</p>
+<pre class="highlight plaintext"><code>systemctl daemon-reload&#x000A;</code></pre>
+
+<p>Next, start and enable kubernetes services:</p>
+<pre class="highlight plaintext"><code>for SERVICES in etcd kube-apiserver kube-controller-manager  kube-scheduler docker kube-proxy.service  kubelet.service; do &#x000A;        systemctl restart $SERVICES&#x000A;        systemctl enable $SERVICES&#x000A;        systemctl status $SERVICES&#x000A;    done&#x000A;</code></pre>
+
+<p>You should now have one minion to do your bidding:</p>
+<pre class="highlight plaintext"><code>kubectl get minions&#x000A;</code></pre>
+
+<p>Now, set up a test pod:</p>
+<pre class="highlight plaintext"><code>vi apache.json&#x000A;</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">&#x000A;  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fedoraapache"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pod"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"apiVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1beta1"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"desiredState"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"manifest"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1beta1"</span><span class="p">,</span><span class="w">&#x000A;      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fedoraapache"</span><span class="p">,</span><span class="w">&#x000A;      </span><span class="s2">"containers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">&#x000A;        </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fedoraapache"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fedora/apache"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"ports"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">&#x000A;          </span><span class="s2">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w">&#x000A;          </span><span class="s2">"hostPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="w">&#x000A;        </span><span class="p">}]</span><span class="w">&#x000A;      </span><span class="p">}]</span><span class="w">&#x000A;    </span><span class="p">}</span><span class="w">&#x000A;  </span><span class="p">},</span><span class="w">&#x000A;  </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fedoraapache"</span><span class="w">&#x000A;  </span><span class="p">}</span><span class="w">&#x000A;</span><span class="p">}</span><span class="w">&#x000A;</span></code></pre>
+
+<p>Followed by:</p>
+<pre class="highlight plaintext"><code>kubectl create -f apache.json&#x000A;</code></pre>
+
+<p>Monitor status with:</p>
+<pre class="highlight plaintext"><code>kubectl get pod fedoraapache&#x000A;</code></pre>
+
+<p>You can monitor progress using journalctl. </p>
+
+<p>For the master role:</p>
+<pre class="highlight plaintext"><code>journalctl -f -l -xn -u kube-apiserver -u etcd -u kube-scheduler&#x000A;</code></pre>
+
+<p>For the minion role:</p>
+
+<p>journalctl -f -l -xn -u kubelet -u kube-proxy -u docker</p>
+
+<p>Once <code>kubectl</code> reports your pod&rsquo;s status as <q>Running,</q> you should get a result from:</p>
+<pre class="highlight plaintext"><code>curl http://localhost&#x000A;</code></pre>
+
+<p>When you&rsquo;re finished basking in the glory of that application, you can get rid of its pod with:</p>
+<pre class="highlight plaintext"><code>kubectl delete pod fedoraapache&#x000A;</code></pre>
+
+<p>Now, you have a single host, single minion kubernetes setup, but since orchestration across multiple container hosts is the point of kubernetes, we need to take our setup to&hellip;</p>
+
+<h3>Multi-Minion Country</h3>
+
+<p>The best way I&rsquo;ve found to accomplish this, across N Atomic hosts, is to use Ansible, as described in <a href="https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/fedora/fedora_ansible_config.md">this tutorial</a> in the kubernetes repo.</p>
+
+<p>Ansible isn&rsquo;t in the Atomic host image, so install Ansible (on Fedora, <code>yum -y install ansible</code> or <a href="http://docs.ansible.com/intro_installation.html">check here</a> for other platforms) on your client machine. Next, grab one or more additional Atomic hosts, and take note of their IP addresses. To speed the configuration process for our tests, set the root passwords on your Atomic hosts to the same value, like <code>password</code>.</p>
+
+<p>Also, make sure to apply the <code>kubelet.service</code> tweak from the top of this post to your additional Atomic hosts.</p>
+
+<p>Get the IP addresses from the master and minions. Add those to the <code>inventory</code> file at the root of the repo on the host running Ansible. You can make one of your Atomic hosts do double duty as a master and a minion, if you wish. Ignore the kube_ip_addr= option for a moment.</p>
+<pre class="highlight plaintext"><code>[masters]&#x000A;192.168.121.205&#x000A;&#x000A;[etcd]&#x000A;192.168.121.205&#x000A;&#x000A;[minions]&#x000A;192.168.121.84  kube_ip_addr=[ignored]&#x000A;192.168.121.116 kube_ip_addr=[ignored]&#x000A;</code></pre>
+
+<p>Tell ansible which user has ssh access (and sudo access to root)</p>
+
+<p>edit: <code>group_vars/all.yml</code></p>
+<pre class="highlight plaintext"><code>ansible_ssh_user: root&#x000A;</code></pre>
+
+<p>Now, to get the public key created during the container build onto each of your Atomic hosts, created a password file that contain the root password for every machine in the cluster:</p>
+<pre class="highlight plaintext"><code>echo "password" &gt; ~/rootpassword&#x000A;</code></pre>
+
+<p>Run the following commands to add set up access between your Ansible machine and your Atomic hosts:</p>
+<pre class="highlight plaintext"><code>ansible-playbook -i inventory ping.yml # This will look like it fails, that's ok&#x000A;ansible-playbook -i inventory keys.yml&#x000A;</code></pre>
+
+<p>Then, configure the ip addresses which should be used to run pods on each machine. The IP address pool used to assign addresses to pods for each minion is the kube_ip_addr= option. Choose a /24 to use for each minion and add that to you inventory file. I stuck with the <code>kube_ip_addr</code> values that were already in the file, and those worked fine for me.</p>
+<pre class="highlight plaintext"><code>[minions]&#x000A;192.168.121.84  kube_ip_addr=10.0.1.1&#x000A;192.168.121.116 kube_ip_addr=10.0.2.1&#x000A;</code></pre>
+
+<p>Run the network setup playbook. In most of my tests, this command errored out on the first run, but completed successfully on the second run. </p>
+<pre class="highlight plaintext"><code>ansible-playbook -i inventory hack-network.yml&#x000A;</code></pre>
+
+<p>Each kubernetes service gets its own IP address. These are not real IPs. You need only select a range of IPs which are not in use elsewhere in your environment. This must be done even if you do not use the network setup provided by the ansible scripts.</p>
+
+<p>edit: <code>group_vars/all.yml</code></p>
+<pre class="highlight plaintext"><code>kube_service_addresses: 10.254.0.0/16&#x000A;</code></pre>
+
+<p>Tell ansible to get to work:</p>
+<pre class="highlight plaintext"><code>ansible-playbook -i inventory setup.yml&#x000A;</code></pre>
+
+<p>Once this step completes, you&rsquo;ll be able to run <code>kubectl get minions</code> on your <code>master</code> host and see a list of minions ready to run containers. Test out your pack of kubernetes minions with the project&rsquo;s go-to <a href="https://github.com/GoogleCloudPlatform/kubernetes/tree/master/examples/guestbook">example guestbook application</a>, a redis+apache+php application spread out over three nodes.</p>
+
+<p>On your master host, check out the kubernetes git repository, and change into the guestbook directory:</p>
+<pre class="highlight plaintext"><code>git clone https://github.com/GoogleCloudPlatform/kubernetes.git&#x000A;&#x000A;cd kubernetes/examples/guestbook&#x000A;</code></pre>
+
+<p>First, fire up the redis master pod, and then monitor its process from <code>Waiting</code> to <code>Running</code>:</p>
+<pre class="highlight plaintext"><code>kubectl create -f redis-master.json&#x000A;&#x000A;kubectl get pod redis-master&#x000A;</code></pre>
+
+<p>Once that&rsquo;s Running, create the redis-master-service:</p>
+<pre class="highlight plaintext"><code>kubectl create -f redis-master-service.json&#x000A;&#x000A;kubectl get service redis-master-service&#x000A;</code></pre>
+
+<p>After that service is Running, create a Replication Controller for some redis slaves: </p>
+<pre class="highlight plaintext"><code>kubectl create -f redis-slave-controller.json&#x000A;&#x000A;kubectl get replicationController redis-slave-controller&#x000A;</code></pre>
+
+<p>Once that controller is Running, create a redis slave service:</p>
+<pre class="highlight plaintext"><code>kubectl create -f redis-slave-service.json&#x000A;&#x000A;kubectl get service redis-slave-service&#x000A;</code></pre>
+
+<p>Finally, create a frontend controller:</p>
+<pre class="highlight plaintext"><code>kubectl create -f frontend-controller.json&#x000A;&#x000A;kubectl get replicationController frontend-controller&#x000A;</code></pre>
+
+<p>When all of these elements are Running, you should be able to visit port 8000 on any of your hosts running the frontend service to see and interact with the guestbook application.</p>
+
+<h3>Till Next Time</h3>
+
+<p>If you run into trouble following this walkthrough, I&rsquo;ll be happy to help you get up and running or get pointed in the right direction. Ping me at jbrooks in #atomic on freenode irc or <a href="https://twitter.com/jasonbrooks">@jasonbrooks</a> on Twitter. Also, be sure to check out the <a href="http://ask.projectatomic.io/en/questions/">Project Atomic Q&amp;A site</a>.</p>
+
+</section>
+<footer class='post-meta'>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

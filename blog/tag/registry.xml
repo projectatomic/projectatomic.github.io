@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Registry</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/registry.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Using OCI Image Registries with Buildah</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/"/>
+    <id>http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/</id>
+    <published>2018-01-26T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>ipbabble</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;img alt="Buildah" src="/images/buildah-logo.png?1517062481" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Using Buildah with container registries&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Prerequisite: Buildah version 0.9 or greater.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;First some terminology. In the container image space, Docker popularized two terms: &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Container image registry&lt;/li&gt;
+&lt;li&gt;Container image repository&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The container image registry, or registry, is a shared data store for pushing and pulling container images. It has a well-known API for such requests. Docker Hub is an example of a public registry. Various vendors and developers store their images on Docker Hub. Most organizations I&amp;rsquo;ve dealt with don&amp;rsquo;t wish to pull images from a public registry for reasons such as security or network bandwidth usage. Instead they would prefer to use a local private registry.  &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The second term is a container image repository, A repository is a local storage area on a host. Images are often pulled from a registry to the host&amp;rsquo;s repository and run on the host. Sometimes they are modified, tagged and pushed back into a registry as a new image or a new version of an image. On a host that is using Buildah, and its underlying OCI-based technology, this repository is located in &lt;code&gt;/var/lib/containers/storage&lt;/code&gt;.  This is used by, but not to be confused with, the containers/storage and containers/image library projects. These projects use the &lt;code&gt;/var/lib/containers/storage&lt;/code&gt; directory by default. &lt;/p&gt;
+
+&lt;p&gt;When you develop a useful container image using Buildah you may wish to share it with others either in a local container image registry or a remote or public container image registry. The purpose of this tutorial is to demonstrate how Buildah can be used to move OCI-compliant images in and out of private or public registries.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href="http://www.projectatomic.io/blog/2017/11/getting-started-with-buildah/"&gt;first tutorial&lt;/a&gt; we built an image from scratch that we called &lt;code&gt;fedora-bashecho&lt;/code&gt; and we pushed it to a local Docker repository using the &lt;code&gt;docker-daemon&lt;/code&gt; protocol. We are going to use the same image to push to a private Docker registry. If you have not performed the first tutorial it is important that you do that now, before you proceed.&lt;/p&gt;
+
+&lt;h4&gt;Starting a local Image Registry&lt;/h4&gt;
+
+&lt;p&gt;First we must pull down a registry image. We are going to use the registry image from Docker Hub. As a shortcut we will save the container name that is returned from the &lt;code&gt;buildah from&lt;/code&gt; command, into a bash shell variable called &lt;code&gt;registry&lt;/code&gt;. This is just like we did in Tutorial 1:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# registry=$(buildah from registry)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It is worth pointing out that the &lt;code&gt;from&lt;/code&gt; command can also use other protocols beyond the default (and implicity assumed) order that first looks in local containers-storage (containers-storage:) and then looks in the Docker hub (docker:). For example, if you already had a registry container image in a local Docker registry then you could use the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# registry=$(buildah from docker-daemon:registry:latest)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we need to start the registry. You should start the registry in a separate shell and leave it running there:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah run $registry
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you would like to see more details as to what is going on inside the registry, especially if you are having problems with the registry, you can run the registry container in debug mode as follows:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah --debug run $registry
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can use &lt;code&gt;--debug&lt;/code&gt; on any Buildah command.&lt;/p&gt;
+
+&lt;p&gt;The registry is running and is waiting for requests to process. Notice that this registry is a Docker registry that we pulled from Docker hub and we are running it for this example using &lt;code&gt;buildah run&lt;/code&gt;. There is no Docker daemon running at this time.&lt;/p&gt;
+
+&lt;h4&gt;Pushing an image to a private registry&lt;/h4&gt;
+
+&lt;p&gt;Let&amp;rsquo;s push our image to the private registry. By default, Buildah is set up to expect secure connections to a registry. Therefore we will need to turn the TLS verification off using the &lt;code&gt;--tls-verify&lt;/code&gt; flag. We also need to tell Buildah that the registry is on this local host ( i.e. localhost) and listening on port 5000. Similar to  what you&amp;rsquo;d expect to do on multi-tenant Docker hub, we will explicitly specify that the registry is to store the image under the &lt;code&gt;ipbabble&lt;/code&gt; repository - so as not to clash with other users&amp;rsquo; similarly named images.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah push --tls-verify=false fedora-bashecho docker://localhost:5000/ipbabble/fedora-bashecho:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Inspecting an image with Skopeo&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/skopeo"&gt;Skopeo&lt;/a&gt; is a Project Atomic tool that was created to inspect images in registries without having to pull the image from the registry. It has grown to have many other uses. We will verify that the image has been stored by using Skopeo to inspect the image in the registry:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# skopeo inspect --tls-verify=false docker://localhost:5000/ipbabble/fedora-bashecho:latest
+{
+    "Name": "localhost:5000/ipbabble/fedora-bashecho",
+    "Digest": "sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137",
+    "RepoTags": [
+        "latest"
+    ],
+    "Created": "2017-12-05T21:38:12.311901938Z",
+    "DockerVersion": "",
+    "Labels": {
+        "name": "fedora-bashecho"
+    },
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Layers": [
+        "sha256:0cb7556c714767b8da6e0299cbeab765abaddede84769475c023785ae66d10ca"
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Testing portability&lt;/h4&gt;
+
+&lt;p&gt;We can verify that it is still portable with Docker by starting Docker again, as we did in the first tutorial. Then we can pull down the image and starting the container using Docker:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# systemctl start docker
+# docker pull localhost:5000/ipbabble/fedora-bashecho
+Using default tag: latest
+Trying to pull repository localhost:5000/ipbabble/fedora-bashecho ...
+sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137: Pulling from localhost:5000/ipbabble/fedora-bashecho
+0cb7556c7147: Pull complete
+Digest: sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137
+Status: Downloaded newer image for localhost:5000/ipbabble/fedora-bashecho:latest
+
+# docker run localhost:5000/ipbabble/fedora-bashecho
+This is a new container named ipbabble [ 0 ]
+This is a new container named ipbabble [ 1 ]
+This is a new container named ipbabble [ 2 ]
+This is a new container named ipbabble [ 3 ]
+This is a new container named ipbabble [ 4 ]
+This is a new container named ipbabble [ 5 ]
+This is a new container named ipbabble [ 6 ]
+This is a new container named ipbabble [ 7 ]
+This is a new container named ipbabble [ 8 ]
+This is a new container named ipbabble [ 9 ]
+# systemctl stop docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Pushing to and pulling from a public registry&lt;/h4&gt;
+
+&lt;p&gt;Pushing to Docker Hub is just as easy. Of course you must have an account with credentials. In this example I&amp;rsquo;m using a Docker Hub API key, which has the form &lt;q&gt;username:password&lt;/q&gt; (example password has been edited for privacy), that I created with my Docker Hub account. I use the &lt;code&gt;--creds&lt;/code&gt; flag to use my API key. I also specify my local image name &lt;code&gt;fedora-bashecho&lt;/code&gt; as my image source and I use the &lt;code&gt;docker&lt;/code&gt; protocol with no host or port so that it will look at the default Docker Hub registry:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;#  buildah push --creds ipbabble:5bbb9990-6eeb-1234-af1a-aaa80066887c fedora-bashecho docker://ipbabble/fedora-bashecho:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And let&amp;rsquo;s inspect that with Skopeo:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# skopeo inspect --creds ipbabble:5bbb9990-6eeb-1234-af1a-aaa80066887c docker://ipbabble/fedora-bashecho:latest
+{
+    "Name": "docker.io/ipbabble/fedora-bashecho",
+    "Digest": "sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137",
+    "RepoTags": [
+        "latest"
+    ],
+    "Created": "2017-12-05T21:38:12.311901938Z",
+    "DockerVersion": "",
+    "Labels": {
+        "name": "fedora-bashecho"
+    },
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Layers": [
+        "sha256:0cb7556c714767b8da6e0299cbeab765abaddede84769475c023785ae66d10ca"
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can use Buildah to pull down the image using the &lt;code&gt;buildah from&lt;/code&gt; command. But before we do that, let&amp;rsquo;s clean up our local containers-storage so that we don&amp;rsquo;t have an existing fedora-bashecho - otherwise Buildah will know it already exists and not bother pulling it down.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;#  buildah images
+IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE
+d4cd7d73ee42         docker.io/library/registry:latest                        Dec 1, 2017 22:15      31.74 MB
+e31b0f0b0a63         docker.io/library/fedora-bashecho:latest                 Dec 5, 2017 21:38      772 B
+# buildah rmi fedora-bashecho
+untagged: docker.io/library/fedora-bashecho:latest
+e31b0f0b0a63e94c5a558d438d7490fab930a282a4736364360ab9b92cb25f3a
+#  buildah images
+IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE
+d4cd7d73ee42         docker.io/library/registry:latest                        Dec 1, 2017 22:15      31.74 MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Okay, so we don&amp;rsquo;t have a fedora-bashecho anymore. Let&amp;rsquo;s pull the image from Docker Hub:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah from ipbabble/fedora-bashecho
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t want to bother doing the remove image step (&lt;code&gt;rmi&lt;/code&gt;) you can use the flag &lt;code&gt;--pull-always&lt;/code&gt; to force the image to be pulled again and overwrite any corresponding local image.&lt;/p&gt;
+
+&lt;p&gt;Now check that image is in the local containers-storage:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah images
+IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE
+d4cd7d73ee42         docker.io/library/registry:latest                        Dec 1, 2017 22:15      31.74 MB
+864871ac1c45         docker.io/ipbabble/fedora-bashecho:latest                Dec 5, 2017 21:38      315.4 MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Success!&lt;/p&gt;
+
+&lt;p&gt;If you have any suggestions or issues please post them at the &lt;a href="https://github.com/projectatomic/buildah/issues"&gt;ProjectAtomic Buildah Issues page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For more information on Buildah and how you might contribute please visit the &lt;a href="https://github.com/projectatomic/buildah"&gt;Buildah home page on Github&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Project Atomic Docker Hub Namespace Changes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/12/project-atomic-docker-hub-namespace-changes/"/>
+    <id>http://www.projectatomic.io/blog/2017/12/project-atomic-docker-hub-namespace-changes/</id>
+    <published>2017-12-20T10:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stephen Milner</name>
+    </author>
+    <content type="html">&lt;p&gt;As many people are aware the Project Atomic team has provided container images via its &lt;a href="https://hub.docker.com/u/projectatomic/"&gt;Docker Hub namespace&lt;/a&gt;. As more and more image registries come online it has become apparent that it is time to refocus how our Docker Hub namespace is used. Read on for a rundown of upcoming changes!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Pruning&lt;/h3&gt;
+
+&lt;p&gt;The first change to the namespace will be image pruning. Today there are 18 images that are available in the namespace. Images which are not being actively built and pulled will be removed from the Project Atomic namespace. By removing older and no longer used images from the registry it should be easier to follow what images are in development.&lt;/p&gt;
+
+&lt;h3&gt;Automated Building&lt;/h3&gt;
+
+&lt;p&gt;New images, as well as images which are currently active, will start to be built upon source code changes. This means that images provided in the Project Atomic namespace will represent the master branch in source control. This change will allow users to pull the latest images to test and play with without the need to rebuild locally. It also means that the images available in the Project Atomic Docker Hub namespace will be &lt;strong&gt;bleeding edge&lt;/strong&gt; and should be considered similar to rpm packages in Rawhide. If you are wanting to use a supported image you should use an official image.&lt;/p&gt;
+
+&lt;h3&gt;System Container Inclusion&lt;/h3&gt;
+
+&lt;p&gt;Bleeding edge &lt;a href="https://github.com/projectatomic/atomic-system-containers/"&gt;System Containers&lt;/a&gt; will be moved from their respective authors namespaces in to the Project Atomic namespace. As an example, Giuseppe Scrivano&amp;rsquo;s &lt;a href="https://hub.docker.com/r/gscrivano/etcd/"&gt;etcd System Container&lt;/a&gt; will be moved to &lt;a href="https://hub.docker.com/u/projectatomic/"&gt;Project Atomic&amp;rsquo;s Namespace&lt;/a&gt;. Not only does this widen the ability for other members of Project Atomic to update the image in the namespace but it also firmly cements it as an image developed by the team.&lt;/p&gt;
+
+&lt;h3&gt;Official Images&lt;/h3&gt;
+
+&lt;p&gt;Officially released images will be available in their respective registries. As an example, the &lt;code&gt;etcd&lt;/code&gt; system container built on Fedora and supported by said community will be available through the Fedora Layered Image Builds System (FLIBS).&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Hopefully these changes will make using images which are in development and fast moving easier to test, play with, and develop. As always, if there are questions drop in to the #atomic on Freenode or send an email to our mailing list!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Deploying an OpenShift Origin Stand-alone Registry on Fedora 25 Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/"/>
+    <id>http://www.projectatomic.io/blog/2017/05/oo-standalone-registry/</id>
+    <published>2017-05-25T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Micah Abbott</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;strong&gt;Update: Removed links to Atomic Registry as discontinued.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The Project Atomic site has had a section dedicated to the Atomic Registry, which has been discontinued in favor of &lt;a href="https://docs.openshift.com/enterprise/3.0/architecture/infrastructure_components/image_registry.html"&gt;OpenShift Registry&lt;/a&gt;. It was useful for getting a registry up and running as quickly as possible.  However, the software powering the quickstart installation has not always kept up with the &lt;a href="https://www.openshift.org"&gt;OpenShift Origin&lt;/a&gt; software which powers the actual registry and web UI.  This has lead to an increase in users reporting issues in the #atomic Freenode IRC channel.  And often it ends with someone pointing to the &lt;a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html"&gt;stand-alone registry documentation&lt;/a&gt; that is provided by the OpenShift Origin project.&lt;/p&gt;
+
+&lt;p&gt;It turns out that deploying the stand-alone registry on a single Fedora 25 Atomic Host system is quite straight-forward and can quickly provide a usable registry. In this blog post, we&amp;rsquo;ll deploy a proof-of-concept stand-alone registry on a single node, which will end up using self-signed certificates in the process.  In a later blog post, we&amp;rsquo;ll show you how to setup a stand-alone registry using multiple nodes and your own SSL certificates.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;A good portion of this guide was lifted and adapted from &lt;a href="https://twitter.com/dustymabe"&gt;Dusty Mabe&amp;rsquo;s&lt;/a&gt; excellent guide on &lt;a href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/"&gt;installing OpenShift Origin on Fedora 25 Atomic Host&lt;/a&gt;.  He also assisted me along the way with some questions, so most of the credit goes to him for figuring out the hard stuff!&lt;/p&gt;
+
+&lt;h3&gt;Environment&lt;/h3&gt;
+
+&lt;p&gt;For the purposes of this guide, we are going to deploy a stand-alone registry using the &amp;lsquo;all-in-one&amp;rsquo; topology, where we host all the components on a single system.  The OpenShift Origin docs have some &lt;a href="https://docs.openshift.org/latest/install_config/install/stand_alone_registry.html#registry-minimum-hardware-requirements"&gt;hardware requirements&lt;/a&gt; for this kind of install; they seem rather generous, so you might be able to get away with a less powerful system.  As with most things, your mileage may vary.&lt;/p&gt;
+
+&lt;p&gt;In addition to your dedicated system for the registry, you&amp;rsquo;ll also need to have Ansible 2.2 installed on your workstation (or wherever you choose to run the Ansible-based installer).&lt;/p&gt;
+
+&lt;p&gt;Once your Fedora 25 Atomic Host system has been provisioned, make sure it is upgraded to the latest version by using the &lt;code&gt;atomic host upgrade&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;Additionally, I decided I would configure Docker to use the &lt;code&gt;overlay2&lt;/code&gt; storage driver for my install.  This is completely optional, but if you decide to make this change you can use the &lt;a href="http://www.projectatomic.io/blog/2017/05/migrate-fedora-atomic-host-to-overlay2/"&gt;instructions in a previous blog post&lt;/a&gt; to do so.&lt;/p&gt;
+
+&lt;h3&gt;Prepping the Installer&lt;/h3&gt;
+
+&lt;p&gt;OpenShift Origin provides an excellent &lt;a href="https://www.ansible.com/"&gt;Ansible-based&lt;/a&gt; installer that we will used to deploy the registry.  So the first thing to do is checkout the installer from the &lt;a href="https://github.com/openshift/openshift-ansible"&gt;GitHub repo&lt;/a&gt;.  At the time of this writing, I used a specific version (&lt;a href="https://github.com/openshift/openshift-ansible/releases/tag/openshift-ansible-3.4.24-1"&gt;3.4.24-1&lt;/a&gt;) of the repo to ensure it would work correctly for me.  We&amp;rsquo;ll checkout the repo to that version as part of this process.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/openshift/openshift-ansible.git
+$ cd openshift-ansible
+$ git checkout openshift-ansible-3.4.24-1
+HEAD is now at 90f6a70... Automatic commit of package [openshift-ansible] release [3.6.24-1].
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The next step is to prepare the inventory file for the installer.  My dedicated system for the registry has a &amp;#39;public&amp;rsquo; IP address of &lt;code&gt;10.8.172.199&lt;/code&gt;, so we use that value throughout.  (I&amp;rsquo;m using a VM in a private OpenStack instance, so the &amp;#39;public&amp;rsquo; IP address is only visible on our corporate network and is not reachable from the Internet.)&lt;/p&gt;
+
+&lt;p&gt;Notice how I am using the &lt;a href="http://xip.io"&gt;xip.io&lt;/a&gt; service as part of my &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt; value.  It provides wildcard DNS resolution for any IP address you want to use.  This is a handy solution if the system you are using does not have a DNS resolvable hostname.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_user=cloud-user
+ansible_become=true
+
+openshift_master_default_subdomain=10.8.172.199.xip.io
+
+openshift_deployment_type=origin
+openshift_release=v1.4.1
+deployment_subtype=registry
+containerized=true
+
+# enable htpasswd auth
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1'}
+
+# host group for masters
+[masters]
+10.8.172.199
+
+# host group for worker nodes, we list master node here so that
+# openshift-sdn gets installed. We mark the master node as not
+# schedulable.
+[nodes]
+10.8.172.199 openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This inventory is very similar to the one used in Dusty&amp;rsquo;s blog post about installing OpenShift Origin, so I&amp;rsquo;m just going to highlight some of the changes I made.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dropped the specification of the &lt;code&gt;etcd&lt;/code&gt; nodes&lt;/li&gt;
+&lt;li&gt;Added the &lt;code&gt;deployment_subtype=registry&lt;/code&gt; entry&lt;/li&gt;
+&lt;li&gt;Dropped the creation of the &lt;code&gt;user&lt;/code&gt; username&lt;/li&gt;
+&lt;li&gt;Skipped the usage of the &lt;code&gt;openshift_public_hostname&lt;/code&gt; and &lt;code&gt;openshift_hostname&lt;/code&gt; variables&lt;/li&gt;
+&lt;li&gt;New values for &lt;code&gt;openshift_node_labels&lt;/code&gt; and &lt;code&gt;openshift_schedulable&lt;/code&gt; variables&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The most important changes (which are also mentioned in the OpenShift Origin documentation) are the addtion of the &lt;code&gt;deployment_subtype&lt;/code&gt; and &lt;code&gt;openshift_schedulable&lt;/code&gt; variables.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;deployment_subtype&lt;/code&gt; variable instructs the installer to just install the pieces of OpenShift Origin necessary for the stand-alone registry.  Additionally, the &lt;code&gt;openshift_schedulable&lt;/code&gt; variable allows the single node to be used to run pods.&lt;/p&gt;
+
+&lt;h3&gt;Run the Installer&lt;/h3&gt;
+
+&lt;p&gt;We are ready to feed the inventory file to &lt;code&gt;ansible-playbook&lt;/code&gt; and run the installer.  We have to use the same workaround mentioned in Dusty&amp;rsquo;s blog post to enable Ansible to use Python3 during execution.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible-playbook -i myinventory playbooks/byo/config.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+...
+...
+PLAY RECAP *********************************************************************
+10.8.172.199               : ok=567  changed=130  unreachable=0    failed=0
+localhost                  : ok=9    changed=0    unreachable=0    failed=0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running the installer will take a few minutes, but once it finished, we can get right to the registry console.&lt;/p&gt;
+
+&lt;p&gt;Assuming you have used a similar value for &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt;, you&amp;rsquo;ll be able to access your registry console at a URL similar to &lt;code&gt;https://registry-console-default.10.8.172.199.xip.io/&lt;/code&gt;.  Just append &lt;code&gt;registry-console-default.&lt;/code&gt; to the value of &lt;code&gt;openshift_master_default_subdomain&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;As mentioned earlier, we used a self-signed certificate for the registry console, so you will have to instruct your browser to accept the certificate when you access the console.&lt;/p&gt;
+
+&lt;p&gt;The inventory file we used defined an &lt;code&gt;admin&lt;/code&gt; user with the password &lt;code&gt;OriginAdmin&lt;/code&gt; and we can use that right away to login.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-logged-in.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Next Steps&lt;/h3&gt;
+
+&lt;p&gt;With the &lt;code&gt;admin&lt;/code&gt; user, I can immediately create a new project and start pushing images to the registry.  In the image below, I&amp;rsquo;ve created the &lt;code&gt;test&lt;/code&gt; project.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-test-project.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because the registry is using a self-signed certificate, I need to configure my local Docker daemon to recognize the registry as an insecure registry.  This means adding &lt;code&gt;--insecure-registry docker-registry-default.10.8.172.199.xip.io&lt;/code&gt; to the &lt;code&gt;INSECURE_REGISTRY&lt;/code&gt; field in &lt;code&gt;/etc/sysconfig/docker&lt;/code&gt; and then using &lt;code&gt;systemctl restart docker&lt;/code&gt; to restart the daemon.&lt;/p&gt;
+
+&lt;p&gt;After that, I can use the &lt;code&gt;docker login&lt;/code&gt; command supplied by the registry console to login to the Docker registry and be granted access to push images.  In the example below, I&amp;rsquo;m just pushing a Fedora base image to the registry.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker login -p dNgwgDhlunwAwF52kZ5a4vHzbAXP_aNSScAeLos2qrY -e unused -u unused docker-registry-default.10.8.172.199.xip.io
+Flag --email has been deprecated, will be removed in 1.13.
+Login Succeeded
+$ sudo docker images
+REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
+registry.fedoraproject.org/fedora   latest              917d6b21e974        6 weeks ago         230.6 MB
+$ sudo docker tag registry.fedoraproject.org/fedora:latest docker-registry-default.10.8.172.199.xip.io/test/fedora:latest
+$ sudo docker push docker-registry-default.10.8.172.199.xip.io/test/fedora:latest
+The push refers to a repository [docker-registry-default.10.8.172.199.xip.io/test/fedora]
+ae934834014c: Pushed
+latest: digest: sha256:1c28fa233b9e00f24a9b782752032648bdbf748ef1c29af24a5621691d9460ad size: 3153
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Immediately in the registry console, I can see the newly pushed image.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-pushed-fedora.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;And for grins, let&amp;rsquo;s see if we can push an image to the registry using the &lt;code&gt;atomic&lt;/code&gt; command, which utilizes &lt;a href="https://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt; for the push operation.  We&amp;rsquo;ll push the CentOS base image in this example.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo docker images
+REPOSITORY                                                TAG                 IMAGE ID            CREATED             SIZE
+registry.centos.org/centos/centos                         latest              5d7f51b6d39a        5 weeks ago         192.5 MB
+docker-registry-default.10.8.172.199.xip.io/test/fedora   latest              917d6b21e974        6 weeks ago         230.6 MB
+registry.fedoraproject.org/fedora                         latest              917d6b21e974        6 weeks ago         230.6 MB
+$ sudo docker tag registry.centos.org/centos/centos:latest docker-registry-default.10.8.172.199.xip.io/test/centos:latest
+$ sudo atomic push --type atomic docker-registry-default.10.8.172.199.xip.io/test/centos:latest
+WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand
+Copying blob sha256:36018b5e978717a047892794aebab513ba6856dbe1bdfeb478ca1219df2c7e9c
+190.83 MB / 190.83 MB [=======================================================]
+Writing manifest to image destination
+Storing signatures
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Again, we can see the image immediately show up in the registry console.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="image" src="/images/2017-05-12-oo-standalone-registry/registry-console-pushed-centos.png" /&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>How container registries prevent information leakage</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/how-the-container-registries-prevent-information-leakage/</id>
+    <published>2016-10-25T13:41:13+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Antonio Murdaca</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently people have been reporting unexpected errors when doing a &lt;code&gt;skopeo copy&lt;/code&gt; versus a &lt;code&gt;docker pull&lt;/code&gt;:  &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1347805"&gt;1347805&lt;/a&gt;, &lt;a href="https://github.com/projectatomic/skopeo/issues/235"&gt;235&lt;/a&gt;, and &lt;a href="https://github.com/docker/docker/issues/27281"&gt;27281&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/skopeo"&gt;Skopeo&lt;/a&gt; is a command-line tool that that does various operations with container images and container image registries, including pulling the images to the host.  It is also used under the covers by the &lt;a href="https://github.com/projectatomic/atomic"&gt;atomic&lt;/a&gt; command-line tool.&lt;/p&gt;
+
+&lt;p&gt;This post explains why those weird errors can come up when pulling images.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what happens when a user tries to pull an image from the docker hub and the image doesn&amp;rsquo;t exist:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull thisimagedoesntexist
+Using default tag: latest
+Trying to pull repository docker.io/library/thisimagedoesntexist ...
+Pulling repository docker.io/library/thisimagedoesntexist
+Error: image library/thisimagedoesntexist:latest not found
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We get an &amp;lsquo;image not found&amp;rsquo;, as expected, right?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try the same with skopeo copy:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://thisimagedoesntexist oci:what
+FATA[0002] Error initializing image from source docker://thisimagedoesntexist:latest: unauthorized: authentication required
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What?&lt;/p&gt;
+
+&lt;p&gt;Why are we getting an &lt;code&gt;unauthorized error&lt;/code&gt; message?&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what&amp;rsquo;s really happening under the hood:&lt;/p&gt;
+
+&lt;p&gt;The docker daemon:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Attempts to contact a V2 registry&lt;/li&gt;
+&lt;li&gt;V2 registry returns &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Daemon falls back and try to pull the same image from a V1 registry&lt;/li&gt;
+&lt;li&gt;Attempt to contact a V1 registry&lt;/li&gt;
+&lt;li&gt;V1 registry isn&amp;rsquo;t deployed, we get a 404&lt;/li&gt;
+&lt;li&gt;The docker command line interprets the 404 as an image not found&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Skopeo:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Attempts to contact a V2 registry&lt;/li&gt;
+&lt;li&gt;V2 registry returns &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;li&gt;Skopeo errors out and shows the  &amp;#39;unauthorized: authentication required&amp;rsquo;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Why is docker trying to contact a V1 registry?&lt;/h3&gt;
+
+&lt;p&gt;Docker still  supports the old V1 registry API (remember &lt;a href="https://github.com/docker/docker-registry"&gt;docker-registry&lt;/a&gt;?).
+Some registry deployments use both V1 and V2 registries.  When the docker engine fails to get a V2 Image, it falls back and tries to contact a V1 registry that may have the image.&lt;/p&gt;
+
+&lt;p&gt;Yes, but:&lt;/p&gt;
+
+&lt;h3&gt;Why does skopeo return &amp;#39;unauthorized&amp;rsquo;?&lt;/h3&gt;
+
+&lt;p&gt;The V2 registry API is designed to prevent information leaks about private repositories (GitHub does the same, if you’re wondering).&lt;/p&gt;
+
+&lt;p&gt;From the first example above, &lt;em&gt;library/imagedoesntexist&lt;/em&gt; could be a private repository/image (or not!).  The registry can&amp;rsquo;t tell you that the repository/image doesn&amp;rsquo;t exist; it can only tell you that you&amp;rsquo;re not authorized to access it.&lt;/p&gt;
+
+&lt;p&gt;In fact, if you have a private repository/image on the docker hub and try to pull it with skopeo, you still get &amp;#39;unauthorized&amp;rsquo; (unless you&amp;rsquo;re logged in of course).
+Skopeo only supports V2 registries. Since V1 registries are being purged, we decided to not add support for V1 to Skopeo.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see some examples with a private image named &lt;em&gt;runcom/what&lt;/em&gt;:&lt;/p&gt;
+
+&lt;p&gt;If &lt;em&gt;runcom/what&lt;/em&gt; is a private image and I&amp;rsquo;m &lt;em&gt;not&lt;/em&gt; logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://runcom/what oci:what
+FATA[0001] Error initializing image from source docker://runcom/what:latest: unauthorized: authentication required
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see it&amp;rsquo;s not telling me whether the image exists or not on the registry. It just tells me that I&amp;rsquo;m not authorized to pull the image.&lt;/p&gt;
+
+&lt;p&gt;Now, if &lt;em&gt;runcom/what&lt;/em&gt; is a private image and I&amp;rsquo;m logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo --tls-verify=false copy docker://runcom/what oci:what
+FATA[0002] Error initializing image from source docker://runcom/what:latest: manifest unknown: manifest unknown
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above error is indeed an &amp;#39;image not found&amp;rsquo; (e.g., a 404 from the V2 registry). Since I’m logged in,  I have the rights to understand if the image is on the registry.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see what happens with docker instead when I&amp;rsquo;m not logged in:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker pull runcom/what                                                     
+Using default tag: latest
+Trying to pull repository docker.io/runcom/what ...
+Pulling repository docker.io/runcom/what
+Error: image runcom/what:latest not found
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Well, remember the docker engine falls back to V1? Let’s have a look at the docker engine logs to really understand why it felt back to V1. We see the following error message:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Oct 24 16:51:19 localhost.localdomain docker[1408]: time='2016-10-24T16:51:19.548329131+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'
+Oct 24 16:51:20 localhost.localdomain docker[1408]: time='2016-10-24T16:51:20.113460151+02:00' level=error msg='Attempting next endpoint for pull after error: unauthorized: authentication required'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great. Exactly like skopeo, before falling back to V1, it’s correctly telling us that I’m unauthorized to pull the image (note, it’s not telling me anything about the existence of that image on the docker hub!)&lt;/p&gt;
+
+&lt;p&gt;If I try to pull the same image but this time logged in, I&amp;rsquo;ll get the same image not found error, but this time I can spot the following in the logs:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;Oct 24 16:54:11 localhost.localdomain docker[1408]: time='2016-10-24T16:54:11.706002616+02:00' level=debug msg='GET https://registry-1.docker.io/v2/runcom/what/manifests/latest'
+Oct 24 16:54:12 localhost.localdomain docker[1408]: time='2016-10-24T16:54:12.283006158+02:00' level=error msg='Attempting next endpoint for pull after error: manifest unknown: manifest unknown'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The errors in the logs are exactly the same as the ones we get with skopeo. Just that docker falls back and tries a V1 registry while skopeo doesn’t fall back.&lt;/p&gt;
+
+&lt;p&gt;That means that skopeo is indeed providing the correct error message from the V2 registry while docker is reporting &amp;#39;image not found&amp;rsquo; because it hides the real/correct unauthorized error from the V2 registry and only shows the V1 error.  Docker command line might actually be giving you bogus information, when the container image is actually stored in V2, but reports the image does not exist when you are not logged in.  When upstream docker eventually drops backward support for V1, it will report the same error that skopeo does.&lt;/p&gt;
+
+&lt;p&gt;I hope this post will shed some light about why these errors differ between docker and skopeo.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

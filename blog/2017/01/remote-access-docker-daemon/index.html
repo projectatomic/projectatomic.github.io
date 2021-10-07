@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Set Up Remote Access for Docker on Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='trishnag, jberkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Set Up Remote Access for Docker on Atomic Host' property='og:title'>
+<meta content='This post will describe how to set up remote command-line access for the Docker daemon running on an Atomic host. This will let you run docker ps, docker run and other commands from your desktop and manage a server.&#x000A;&#x000A;We are also going to secure the Docker daemon with TLS (transport layer security) since we are connecting remotely. Before you carry on with the following steps, keep in mind that any process on the client that can access the TLS certs now has full control of the Docker daemon on the server and can do anything it wants to do. So, only copy those certificates to client hosts completely under your control.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/01/remote-access-docker-daemon/' property='og:url'>
+<meta content='2017-01-09T18:00:00Z' property='article:published_time'>
+<meta content='trishnag, jberkus' property='article:author:username'>
+<meta content='ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Set Up Remote Access for Docker on Atomic Host' name='twitter:title'>
+<meta content='This post will describe how to set up remote command-line access for the Docker daemon running on an Atomic host. This will let you run docker ps, docker run and other commands from your desktop and manage a server.&#x000A;&#x000A;We are also going to secure the Docker daemon with TLS (transport layer security) since we are connecting remotely. Before you carry on with the following steps, keep in mind that any process on the client that can access the TLS certs now has full control of the Docker daemon on the server and can do anything it wants to do. So, only copy those certificates to client hosts completely under your control.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_01 blog_2017_01_remote-access-docker-daemon blog_2017_01_remote-access-docker-daemon_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Set Up Remote Access for Docker on Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/trishnag-jberkus/">trishnag, jberkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-01-09T18:00:00Z'>
+Monday  9 January 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This post will describe how to set up remote command-line access for the <a href="https://www.docker.com/">Docker</a> daemon running on an Atomic host. This will let you run <code>docker ps</code>, <code>docker run</code> and other commands from your desktop and manage a server.</p>
+
+<p>We are also going to secure the Docker daemon with TLS (transport layer security) since we are connecting remotely. Before you carry on with the following steps, keep in mind that <strong>any</strong> process on the client that can access the TLS certs now has <strong>full</strong> control of the Docker daemon on the server and can do anything it wants to do. So, only copy those certificates to client hosts completely under your control.</p>
+
+<p></p>
+
+<p>First, we will create client certificate and server certificate to secure our Docker daemon, using OpenSSL. For the rest of this post, I am using <a href="https://getfedora.org/en/atomic/">Fedora-Atomic</a> host as the remote host (Docker daemon) and <a href="https://getfedora.org/en/workstation/download/">Fedora workstation</a> as my local machine (Docker client).</p>
+
+<p><a href="https://twitter.com/CHouseknecht">Chris Houseknecht</a> wrote an <a href="https://www.ansible.com/">Ansible</a> role which creates all the certificates required automatically, so that there is no need to issue OpenSSL commands manually. Here is the Ansible role repository: <a href="https://github.com/ansible/role-secure-docker-daemon">role-secure-docker-daemon</a>. We&rsquo;ll be cloning it.</p>
+<pre class="highlight plaintext"><code>$ mkdir docker-remote-access&#x000A;$ cd docker-remote-accessi&#x000A;$ git clone https://github.com/ansible/role-secure-docker-daemon.git&#x000A;</code></pre>
+
+<p>Create an ansible config file, inventory, and playbook file to set up the Docker client and play the role.</p>
+<pre class="highlight plaintext"><code>$ touch ansible.cfg inventory remote-access.yml&#x000A;$ ls&#x000A;ansible.cfg  inventory  remote-access.yml role-secure-docker-daemon&#x000A;</code></pre>
+
+<p>Here is the Directory structure:</p>
+<pre class="highlight plaintext"><code>$ tree docker-remote-access/&#x000A;docker-remote-access/&#x000A;├── ansible.cfg&#x000A;├── inventory&#x000A;├── remote-access.yml&#x000A;└── role-secure-docker-daemon&#x000A;</code></pre>
+
+<p><strong>ansible.cfg</strong>:</p>
+<pre class="highlight plaintext"><code>$ vim ansible.cfg&#x000A;[defaults]&#x000A;inventory=inventory&#x000A;</code></pre>
+
+<p><strong>inventory</strong>:</p>
+<pre class="highlight plaintext"><code>$ vim inventory&#x000A;[daemonhost]&#x000A;'IP_OF_ATOMIC_HOST' ansible_ssh_private_key_file='PRIVATE_KEY_FILE'&#x000A;</code></pre>
+
+<p>Replace <strong>IP_OF_ATOMIC_HOST</strong> in the inventory file with the IP of your Atomic host (Docker daemon host) and <strong>PRIVATE_KEY_FILE</strong> with private key file on your local system that you use to log into that host.</p>
+
+<p>Now, we&rsquo;re ready to execute a playbook which will copy all of the files and change settings to make this work.</p>
+
+<p><strong>remote-access.yml</strong>:</p>
+<pre class="highlight plaintext"><code>$ vim remote-access.yml&#x000A;---&#x000A;- name: Docker Client Set up&#x000A;  hosts: daemonhost&#x000A;  gather_facts: no&#x000A;  tasks:&#x000A;    - name: Make ~/.docker directory for docker certs&#x000A;      local_action: file path='~/.docker' state='directory'&#x000A;&#x000A;    - name: Add Environment variables to ~/.bashrc&#x000A;      local_action: lineinfile dest='~/.bashrc' line='export DOCKER_TLS_VERIFY=1\nexport DOCKER_CERT_PATH=~/.docker/\nexport DOCKER_HOST=tcp://{{ inventory_hostname }}:2376\n' state='present'&#x000A;&#x000A;    - name: Source ~/.bashrc file&#x000A;      local_action: shell source ~/.bashrc&#x000A;&#x000A;- name: Docker Daemon Set up&#x000A;  hosts: daemonhost&#x000A;  gather_facts: no&#x000A;  remote_user: fedora&#x000A;  become: yes&#x000A;  become_method: sudo&#x000A;  become_user: root&#x000A;  roles:&#x000A;    - role: role-secure-docker-daemon&#x000A;      dds_host: "{{ inventory_hostname }}"&#x000A;      dds_server_cert_path: /etc/docker&#x000A;      dds_restart_docker: no&#x000A;  tasks:&#x000A;    - name: fetch ca.pem from daemon host&#x000A;      fetch:&#x000A;        src: /root/.docker/ca.pem&#x000A;        dest: ~/.docker/&#x000A;        fail_on_missing: yes&#x000A;        flat: yes&#x000A;    - name: fetch cert.pem from daemon host&#x000A;      fetch:&#x000A;        src: /root/.docker/cert.pem&#x000A;        dest: ~/.docker/&#x000A;        fail_on_missing: yes&#x000A;        flat: yes&#x000A;    - name: fetch key.pem from daemon host&#x000A;      fetch:&#x000A;        src: /root/.docker/key.pem&#x000A;        dest: ~/.docker/&#x000A;        fail_on_missing: yes&#x000A;        flat: yes&#x000A;    - name: Remove Environment variable OPTIONS from /etc/sysconfig/docker&#x000A;      lineinfile:&#x000A;        dest: /etc/sysconfig/docker&#x000A;        regexp: '^OPTIONS'&#x000A;        state: absent&#x000A;&#x000A;    - name: Modify Environment variable OPTIONS in /etc/sysconfig/docker&#x000A;      lineinfile:&#x000A;        dest: /etc/sysconfig/docker&#x000A;        line: "OPTIONS='--selinux-enabled --log-driver=journald --tlsverify --tlscacert=/etc/docker/ca.pem --tlscert=/etc/docker/server-cert.pem --tlskey=/etc/docker/server-key.pem -H=0.0.0.0:2376 -H=unix:///var/run/docker.sock'"&#x000A;        state: present&#x000A;&#x000A;    - name: Remove client certs from daemon host&#x000A;      file:&#x000A;        path: /root/.docker&#x000A;        state: absent&#x000A;&#x000A;    - name: Reload Docker daemon&#x000A;      command: systemctl daemon-reload&#x000A;    - name: Restart Docker daemon&#x000A;      command: systemctl restart docker.service&#x000A;</code></pre>
+
+<p>The playbook will create client and server certificates on the Atomic host, fetch the client certificates to the workstation (Docker client), and execute the secure docker setup role.</p>
+<pre class="highlight plaintext"><code>$ ansible-playbook remote-access.yml&#x000A;</code></pre>
+
+<p>Make sure tcp port 2376 is opened on the remote host (Docker daemon). If you are using Openstack, add the tcp port in your security rule, and if you are using AWS, add it to the security group.</p>
+
+<p>So now, if you try running any docker command as regular user on your workstation, it will talk to the docker daemon of the Atomic host and execute the command there. You do not need to ssh to the remote host to issue commands, allowing you to launch containerized applications remotely and easily, yet securely.</p>
+<pre class="highlight plaintext"><code># docker run -d -P training/webapp python app.py&#x000A;Unable to find image 'training/webapp:latest' locally&#x000A;Trying to pull repository docker.io/training/webapp ...&#x000A;sha256:06e9c1983bd6d5db5fba376ccd63bfa529e8d02f23d5079b8f74a616308fb11d: Pulling from docker.io/training/webapp&#x000A;e190868d63f8: Extracting [======================================&gt;            ] 50.69 MB/65.77 MB&#x000A;...&#x000A;Status: Downloaded newer image for docker.io/training/webapp:latest&#x000A;00f41fb132afbc260c99b3d984af6d64b1a2d567c625500a254970cc5172ba2d&#x000A;#&#x000A;# docker ps&#x000A;CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                     NAMES&#x000A;00f41fb132af        training/webapp     "python app.py"     31 seconds ago      Up 23 seconds       0.0.0.0:32768-&gt;5000/tcp   sleepy_leakey&#x000A;</code></pre>
+
+<p>If you get <code>Cannot connect to the Docker daemon</code>, then try running <code>source ~/.bashrc</code> manually.  If you get <code>could not read CA certificate &quot;/etc/docker/ca.pem&quot;</code>, then try logging out of your desktop session and back in.</p>
+
+<p>If you want to copy the playbook more easily, there&rsquo;s a repository <a href="https://github.com/trishnaguha/fedora-cloud-ansible/tree/master/docker-remote-access">here</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/ansible/">ansible</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/01/remote-access-docker-daemon/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/01/remote-access-docker-daemon/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/01/remote-access-docker-daemon/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

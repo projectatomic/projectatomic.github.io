@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using OCI Image Registries with Buildah &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='ipbabble' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Using OCI Image Registries with Buildah' property='og:title'>
+<meta content='Using Buildah with container registries&#x000A;&#x000A;Prerequisite: Buildah version 0.9 or greater.&#x000A;&#x000A;First some terminology. In the container image space, Docker popularized two terms: &#x000A;&#x000A;&#x000A;Container image registry&#x000A;Container image repository&#x000A;&#x000A;&#x000A;The container image registry, or registry, is a shared data store for pushing and pulling container images. It has a well-known API for such requests. Docker Hub is an example of a public registry. Various vendors and developers store their images on Docker Hub. Most organizations I’ve dealt with don’t wish to pull images from a public registry for reasons such as security or network bandwidth usage. Instead they would prefer to use a local private registry.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/' property='og:url'>
+<meta content='2018-01-26T00:00:00Z' property='article:published_time'>
+<meta content='ipbabble' property='article:author:username'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oci' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='registry' property='article:tag'>
+<link href='/blog/tag/registry.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Using OCI Image Registries with Buildah' name='twitter:title'>
+<meta content='Using Buildah with container registries&#x000A;&#x000A;Prerequisite: Buildah version 0.9 or greater.&#x000A;&#x000A;First some terminology. In the container image space, Docker popularized two terms: &#x000A;&#x000A;&#x000A;Container image registry&#x000A;Container image repository&#x000A;&#x000A;&#x000A;The container image registry, or registry, is a shared data store for pushing and pulling container images. It has a well-known API for such requests. Docker Hub is an example of a public registry. Various vendors and developers store their images on Docker Hub. Most organizations I’ve dealt with don’t wish to pull images from a public registry for reasons such as security or network bandwidth usage. Instead they would prefer to use a local private registry.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_01 blog_2018_01_using-image-registries-with-buildah blog_2018_01_using-image-registries-with-buildah_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Using OCI Image Registries with Buildah
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/ipbabble/">ipbabble</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-26T00:00:00Z'>
+Friday 26 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><img alt="Buildah" src="/images/buildah-logo.png?1517062481" /></p>
+
+<h3>Using Buildah with container registries</h3>
+
+<p><em>Prerequisite: Buildah version 0.9 or greater.</em></p>
+
+<p>First some terminology. In the container image space, Docker popularized two terms: </p>
+
+<ul>
+<li>Container image registry</li>
+<li>Container image repository</li>
+</ul>
+
+<p>The container image registry, or registry, is a shared data store for pushing and pulling container images. It has a well-known API for such requests. Docker Hub is an example of a public registry. Various vendors and developers store their images on Docker Hub. Most organizations I&rsquo;ve dealt with don&rsquo;t wish to pull images from a public registry for reasons such as security or network bandwidth usage. Instead they would prefer to use a local private registry.  </p>
+
+<p></p>
+
+<p>The second term is a container image repository, A repository is a local storage area on a host. Images are often pulled from a registry to the host&rsquo;s repository and run on the host. Sometimes they are modified, tagged and pushed back into a registry as a new image or a new version of an image. On a host that is using Buildah, and its underlying OCI-based technology, this repository is located in <code>/var/lib/containers/storage</code>.  This is used by, but not to be confused with, the containers/storage and containers/image library projects. These projects use the <code>/var/lib/containers/storage</code> directory by default. </p>
+
+<p>When you develop a useful container image using Buildah you may wish to share it with others either in a local container image registry or a remote or public container image registry. The purpose of this tutorial is to demonstrate how Buildah can be used to move OCI-compliant images in and out of private or public registries.</p>
+
+<p>In the <a href="http://www.projectatomic.io/blog/2017/11/getting-started-with-buildah/">first tutorial</a> we built an image from scratch that we called <code>fedora-bashecho</code> and we pushed it to a local Docker repository using the <code>docker-daemon</code> protocol. We are going to use the same image to push to a private Docker registry. If you have not performed the first tutorial it is important that you do that now, before you proceed.</p>
+
+<h4>Starting a local Image Registry</h4>
+
+<p>First we must pull down a registry image. We are going to use the registry image from Docker Hub. As a shortcut we will save the container name that is returned from the <code>buildah from</code> command, into a bash shell variable called <code>registry</code>. This is just like we did in Tutorial 1:</p>
+<pre class="highlight plaintext"><code># registry=$(buildah from registry)&#x000A;</code></pre>
+
+<p>It is worth pointing out that the <code>from</code> command can also use other protocols beyond the default (and implicity assumed) order that first looks in local containers-storage (containers-storage:) and then looks in the Docker hub (docker:). For example, if you already had a registry container image in a local Docker registry then you could use the following:</p>
+<pre class="highlight plaintext"><code># registry=$(buildah from docker-daemon:registry:latest)&#x000A;</code></pre>
+
+<p>Then we need to start the registry. You should start the registry in a separate shell and leave it running there:</p>
+<pre class="highlight plaintext"><code># buildah run $registry&#x000A;</code></pre>
+
+<p>If you would like to see more details as to what is going on inside the registry, especially if you are having problems with the registry, you can run the registry container in debug mode as follows:</p>
+<pre class="highlight plaintext"><code># buildah --debug run $registry&#x000A;</code></pre>
+
+<p>You can use <code>--debug</code> on any Buildah command.</p>
+
+<p>The registry is running and is waiting for requests to process. Notice that this registry is a Docker registry that we pulled from Docker hub and we are running it for this example using <code>buildah run</code>. There is no Docker daemon running at this time.</p>
+
+<h4>Pushing an image to a private registry</h4>
+
+<p>Let&rsquo;s push our image to the private registry. By default, Buildah is set up to expect secure connections to a registry. Therefore we will need to turn the TLS verification off using the <code>--tls-verify</code> flag. We also need to tell Buildah that the registry is on this local host ( i.e. localhost) and listening on port 5000. Similar to  what you&rsquo;d expect to do on multi-tenant Docker hub, we will explicitly specify that the registry is to store the image under the <code>ipbabble</code> repository - so as not to clash with other users&rsquo; similarly named images.</p>
+<pre class="highlight plaintext"><code># buildah push --tls-verify=false fedora-bashecho docker://localhost:5000/ipbabble/fedora-bashecho:latest&#x000A;</code></pre>
+
+<h4>Inspecting an image with Skopeo</h4>
+
+<p><a href="https://github.com/projectatomic/skopeo">Skopeo</a> is a Project Atomic tool that was created to inspect images in registries without having to pull the image from the registry. It has grown to have many other uses. We will verify that the image has been stored by using Skopeo to inspect the image in the registry:</p>
+<pre class="highlight plaintext"><code># skopeo inspect --tls-verify=false docker://localhost:5000/ipbabble/fedora-bashecho:latest&#x000A;{&#x000A;    "Name": "localhost:5000/ipbabble/fedora-bashecho",&#x000A;    "Digest": "sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137",&#x000A;    "RepoTags": [&#x000A;        "latest"&#x000A;    ],&#x000A;    "Created": "2017-12-05T21:38:12.311901938Z",&#x000A;    "DockerVersion": "",&#x000A;    "Labels": {&#x000A;        "name": "fedora-bashecho"&#x000A;    },&#x000A;    "Architecture": "amd64",&#x000A;    "Os": "linux",&#x000A;    "Layers": [&#x000A;        "sha256:0cb7556c714767b8da6e0299cbeab765abaddede84769475c023785ae66d10ca"&#x000A;    ]&#x000A;}&#x000A;</code></pre>
+
+<h4>Testing portability</h4>
+
+<p>We can verify that it is still portable with Docker by starting Docker again, as we did in the first tutorial. Then we can pull down the image and starting the container using Docker:</p>
+<pre class="highlight plaintext"><code># systemctl start docker&#x000A;# docker pull localhost:5000/ipbabble/fedora-bashecho&#x000A;Using default tag: latest&#x000A;Trying to pull repository localhost:5000/ipbabble/fedora-bashecho ...&#x000A;sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137: Pulling from localhost:5000/ipbabble/fedora-bashecho&#x000A;0cb7556c7147: Pull complete&#x000A;Digest: sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137&#x000A;Status: Downloaded newer image for localhost:5000/ipbabble/fedora-bashecho:latest&#x000A;&#x000A;# docker run localhost:5000/ipbabble/fedora-bashecho&#x000A;This is a new container named ipbabble [ 0 ]&#x000A;This is a new container named ipbabble [ 1 ]&#x000A;This is a new container named ipbabble [ 2 ]&#x000A;This is a new container named ipbabble [ 3 ]&#x000A;This is a new container named ipbabble [ 4 ]&#x000A;This is a new container named ipbabble [ 5 ]&#x000A;This is a new container named ipbabble [ 6 ]&#x000A;This is a new container named ipbabble [ 7 ]&#x000A;This is a new container named ipbabble [ 8 ]&#x000A;This is a new container named ipbabble [ 9 ]&#x000A;# systemctl stop docker&#x000A;</code></pre>
+
+<h4>Pushing to and pulling from a public registry</h4>
+
+<p>Pushing to Docker Hub is just as easy. Of course you must have an account with credentials. In this example I&rsquo;m using a Docker Hub API key, which has the form <q>username:password</q> (example password has been edited for privacy), that I created with my Docker Hub account. I use the <code>--creds</code> flag to use my API key. I also specify my local image name <code>fedora-bashecho</code> as my image source and I use the <code>docker</code> protocol with no host or port so that it will look at the default Docker Hub registry:</p>
+<pre class="highlight plaintext"><code>#  buildah push --creds ipbabble:5bbb9990-6eeb-1234-af1a-aaa80066887c fedora-bashecho docker://ipbabble/fedora-bashecho:latest&#x000A;</code></pre>
+
+<p>And let&rsquo;s inspect that with Skopeo:</p>
+<pre class="highlight plaintext"><code># skopeo inspect --creds ipbabble:5bbb9990-6eeb-1234-af1a-aaa80066887c docker://ipbabble/fedora-bashecho:latest&#x000A;{&#x000A;    "Name": "docker.io/ipbabble/fedora-bashecho",&#x000A;    "Digest": "sha256:6806f9385f97bc09f54b5c0ef583e58c3bc906c8c0b3e693d8782d0a0acf2137",&#x000A;    "RepoTags": [&#x000A;        "latest"&#x000A;    ],&#x000A;    "Created": "2017-12-05T21:38:12.311901938Z",&#x000A;    "DockerVersion": "",&#x000A;    "Labels": {&#x000A;        "name": "fedora-bashecho"&#x000A;    },&#x000A;    "Architecture": "amd64",&#x000A;    "Os": "linux",&#x000A;    "Layers": [&#x000A;        "sha256:0cb7556c714767b8da6e0299cbeab765abaddede84769475c023785ae66d10ca"&#x000A;    ]&#x000A;}&#x000A;</code></pre>
+
+<p>We can use Buildah to pull down the image using the <code>buildah from</code> command. But before we do that, let&rsquo;s clean up our local containers-storage so that we don&rsquo;t have an existing fedora-bashecho - otherwise Buildah will know it already exists and not bother pulling it down.</p>
+<pre class="highlight plaintext"><code>#  buildah images&#x000A;IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE&#x000A;d4cd7d73ee42         docker.io/library/registry:latest                        Dec 1, 2017 22:15      31.74 MB&#x000A;e31b0f0b0a63         docker.io/library/fedora-bashecho:latest                 Dec 5, 2017 21:38      772 B&#x000A;# buildah rmi fedora-bashecho&#x000A;untagged: docker.io/library/fedora-bashecho:latest&#x000A;e31b0f0b0a63e94c5a558d438d7490fab930a282a4736364360ab9b92cb25f3a&#x000A;#  buildah images&#x000A;IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE&#x000A;d4cd7d73ee42         docker.io/library/registry:latest                        Dec 1, 2017 22:15      31.74 MB&#x000A;</code></pre>
+
+<p>Okay, so we don&rsquo;t have a fedora-bashecho anymore. Let&rsquo;s pull the image from Docker Hub:</p>
+<pre class="highlight plaintext"><code># buildah from ipbabble/fedora-bashecho&#x000A;</code></pre>
+
+<p>If you don&rsquo;t want to bother doing the remove image step (<code>rmi</code>) you can use the flag <code>--pull-always</code> to force the image to be pulled again and overwrite any corresponding local image.</p>
+
+<p>Now check that image is in the local containers-storage:</p>
+<pre class="highlight plaintext"><code># buildah images&#x000A;IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE&#x000A;d4cd7d73ee42         docker.io/library/registry:latest                        Dec 1, 2017 22:15      31.74 MB&#x000A;864871ac1c45         docker.io/ipbabble/fedora-bashecho:latest                Dec 5, 2017 21:38      315.4 MB&#x000A;</code></pre>
+
+<p>Success!</p>
+
+<p>If you have any suggestions or issues please post them at the <a href="https://github.com/projectatomic/buildah/issues">ProjectAtomic Buildah Issues page</a>.</p>
+
+<p>For more information on Buildah and how you might contribute please visit the <a href="https://github.com/projectatomic/buildah">Buildah home page on Github</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+<li><a href="/blog/tag/registry/">registry</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

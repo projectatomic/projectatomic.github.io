@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Technical</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/technical.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 0.113 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/cockpit-0.113/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/cockpit-0.113/</id>
+    <published>2016-07-08T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. There&amp;rsquo;s a new release every week.&lt;/p&gt;
+
+&lt;p&gt;Here are the highlights from this week&amp;rsquo;s 0.111 and 0.112 releases.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Display Time Information for systemd Timer Jobs&lt;/h3&gt;
+
+&lt;p&gt;Harish Anand, a Google Summer of Code student working on Cockpit, has implemented
+systemd timers. These are similar to cron jobs and are a structured way of running
+a command or other systemd unit at a specific time. Some of his initial work got merged,
+and you can see it in action here:&lt;/p&gt;
+
+&lt;iframe width="853" height="480" src="https://www.youtube.com/embed/2mGAlpZWQUQ?rel=0"
+frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Hide Unmanaged Network Interfaces&lt;/h3&gt;
+
+&lt;p&gt;NetworkManager has the concept of marking certain network interfaces as &lt;q&gt;unmanaged&lt;/q&gt;.
+This is done with a &lt;code&gt;NM_CONTROLLED=&amp;quot;no&amp;quot;&lt;/code&gt; setting in a file placed in
+&lt;code&gt;/etc/sysconfig/network-scripts/&lt;/code&gt;. Cockpit now respects the admins wishes and
+and hides such interfaces from its Network configuration.&lt;/p&gt;
+
+&lt;p&gt;The &lt;em&gt;On/Off&lt;/em&gt; switch is also disabled appropriately for unknown interfaces.&lt;/p&gt;
+
+&lt;h3&gt;Network Bonds are Created with Active/Backup&lt;/h3&gt;
+
+&lt;p&gt;When a new network bond is created the &lt;em&gt;Active/Backup&lt;/em&gt; mode is used as
+the default. This is a more common choice for admins, and makes sense
+to point people in this direction.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Bond Active/Backup" width="816" height="473" src="/images/cockpit-active-backup.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Added Textual Fields to Container Resource Sliders&lt;/h3&gt;
+
+&lt;p&gt;Users can now type actual amounts in memory megabytes, or CPU shares
+when starting a container, in addition to being able to use a slider.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Resource Slider Text" width="813" height="502" src="/images/cockpit-resource-sliders-text.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Disable Tuned Correctly when Disabling Performance Profiles&lt;/h3&gt;
+
+&lt;p&gt;The tuned service needs to be stopped and disabled when choosing the &lt;q&gt;none&lt;/q&gt;
+performance profile. The behavior now lines up with what users expect
+using the &lt;code&gt;tuned-adm&lt;/code&gt; command line tooling.&lt;/p&gt;
+
+&lt;h3&gt;From the Future&lt;/h3&gt;
+
+&lt;p&gt;Lars &lt;a href="https://github.com/cockpit-project/cockpit/pull/4633"&gt;is working on&lt;/a&gt; making the
+terminal be resizable, so you&amp;rsquo;re not limited to a small display when working on
+the machine.&lt;/p&gt;
+
+&lt;h3&gt;Try It Out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 0.113 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/0.113"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-0.113-1.fc24"&gt;Fedora 24&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/"&gt;COPR for Fedora 23, CentOS and RHEL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit with Docker Restart Policy</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/cockpit-docker-restart-policy-0.102/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/cockpit-docker-restart-policy-0.102/</id>
+    <published>2016-04-19T15:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. There&amp;rsquo;s a new release every week. Here are the highlights from this weeks 0.102 release.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Docker Restart Policy&lt;/h3&gt;
+
+&lt;p&gt;When running a Docker container in Cockpit, you can now set the restart policy, so when the docker daemon restarts the containers will be restarted too. Justin Robertson contributed this feature. Take a look.&lt;/p&gt;
+
+&lt;iframe width="853" height="480" src="https://www.youtube.com/embed/8YYHui-FQco?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Single Dialog for Creating Logical Volumes&lt;/h3&gt;
+
+&lt;p&gt;The storage interface in Cockpit now has a single combined dialog when creating logical volumes.
+This is a first tiny step towards advanced LVM2 features such as RAID layouts and caches. The dialog will get more fields and more interesting behavior as we implement more of the features offered by LVM2, such as the various RAID levels, as indicated by the hidden options for the &lt;q&gt;Purpose&lt;/q&gt; and &lt;q&gt;Layout&lt;/q&gt; fields.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Single dialog for logical volumes" width="719" height="352" src="/images/cockpit-logical-volume-one-dialog.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Storage Interface Now Available on Debian&lt;/h3&gt;
+
+&lt;p&gt;The storage interface in Cockpit has been enabled and built on Debian. The
+&lt;a href="https://github.com/storaged-project/storaged/"&gt;storaged API&lt;/a&gt; is now available on Debian too.&lt;/p&gt;
+
+&lt;h3&gt;Don&amp;rsquo;t Distribute jshint Due to License&lt;/h3&gt;
+
+&lt;p&gt;We stopped distributing &lt;a href="http://jshint.com/"&gt;jshint&lt;/a&gt; or requiring it as a build dependency due
+to its &lt;a href="https://github.com/jshint/jshint/issues/1234"&gt;controversial license&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Try It Out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 0.102 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/0.102"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-0.102-1.fc24"&gt;Fedora 24&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/"&gt;COPR for Fedora 23, CentOS and RHEL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit Does Kubernetes Data Volumes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/cockpit-kubernetes-volumes-0.101/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/cockpit-kubernetes-volumes-0.101/</id>
+    <published>2016-04-11T15:45:32+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. There&amp;rsquo;s a new release every week. Here are the highlights from this weeks 0.101 release.&lt;/p&gt;
+
+&lt;h3&gt;Kubernetes Volumes&lt;/h3&gt;
+
+&lt;p&gt;You can now set up Kubernetes &lt;a href="http://kubernetes.io/docs/user-guide/persistent-volumes/"&gt;persistent volume claims&lt;/a&gt; through the Cockpit cluster admin interface. These volumes are used to store persistent container data and possibly share them between containers. Each container pod declares the volumes it needs, and when deploying such an application admins configure the locations to store the data in those volumes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Take a look:&lt;/p&gt;
+
+&lt;iframe width="640" height="360" src="https://www.youtube.com/embed/rlWeO_MsJOA?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Show SELinux Failure Messages Properly&lt;/h3&gt;
+
+&lt;p&gt;As a follow up from last week, several bug fixes landed in the new SELinux troubleshooting support.&lt;/p&gt;
+
+&lt;h3&gt;Try It Out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 0.101 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/0.101"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-0.101-1.fc24"&gt;Fedora 24&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/"&gt;COPR for Fedora 23, CentOS, and RHEL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

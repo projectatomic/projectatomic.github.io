@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 22 Alpha and Vagrant Boxes &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 22 Alpha and Vagrant Boxes' property='og:title'>
+<meta content='A couple of interesting Atomic releases to take a look at this week. The Fedora Project has released Fedora 22 alpha, which includes the Cloud edition Atomic Host images, as well as the Server and Workstation...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/03/fedora-22-alpha-and-vagrant-boxes/' property='og:url'>
+<meta content='2015-03-12T00:00:00Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 22 Alpha and Vagrant Boxes' name='twitter:title'>
+<meta content='A couple of interesting Atomic releases to take a look at this week. The Fedora Project has released Fedora 22 alpha, which includes the Cloud edition Atomic Host images, as well as the Server and Workstation...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_03 blog_2015_03_fedora-22-alpha-and-vagrant-boxes blog_2015_03_fedora-22-alpha-and-vagrant-boxes_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 22 Alpha and Vagrant Boxes
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-03-12T00:00:00Z'>
+Thursday 12 March 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A couple of interesting Atomic releases to take a look at this week. The <a href="http://fedoraproject.org/">Fedora Project</a> has <a href="http://fedoramagazine.org/fedora-22-alpha-released/">released Fedora 22 alpha</a>, which includes the <a href="https://getfedora.org/en/cloud/prerelease/">Cloud edition Atomic Host</a> images, as well as the Server and Workstation editions. We also have a few new test images from the CentOS Atomic SIG to check out &ndash; including Vagrant boxes.</p>
+
+<h3>Fedora Images</h3>
+
+<p>The Fedora release includes the standard <a href="http://download-i2.fedoraproject.org/pub/fedora/linux/releases/test/22_Alpha/Cloud/x86_64/Images/Fedora-Cloud-Atomic-22_Alpha-20150305.x86_64.raw.xz">raw</a> and <a href="http://download-i2.fedoraproject.org/pub/fedora/linux/releases/test/22_Alpha/Cloud/x86_64/Images/Fedora-Cloud-Atomic-22_Alpha-20150305.x86_64.qcow2">qcow2</a> images, as well as new Vagrant boxes for <a href="http://download-i2.fedoraproject.org/pub/fedora/linux/releases/test/22_Alpha/Cloud/x86_64/Images/Fedora-Cloud-Atomic-Vagrant-22_Alpha-20150305.x86_64.vsphere.ova">VirtualBox</a> and <a href="http://download-i2.fedoraproject.org/pub/fedora/linux/releases/test/22_Alpha/Cloud/x86_64/Images/Fedora-Cloud-Atomic-Vagrant-22_Alpha-20150305.x86_64.rhevm.ova">libvirt/KVM</a>. </p>
+
+<p>As an alpha release, this should give an excellent preview of the Fedora 22 release but it&rsquo;s entirely possible it will have some interesting bugs as well. Please do give it a spin and let us know if you run into any problems! If you have questions, feel free to ask on <a href="mailto:cloud@lists.fedoraproject.org">cloud@lists.fedoraproject.org</a> or <a href="http://fedoraproject.org/wiki/Bugzilla">report any bugs you might find</a>.</p>
+
+<h3>New CentOS Atomic SIG Images</h3>
+
+<p>We also have some news on the CentOS front, with new images and Vagrant boxes for libvirt and VirtualBox:</p>
+
+<ul>
+<li><a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost-20150228_01.qcow2">qcow2 image</a></li>
+<li><a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost-20150228_01.qcow2.xz">xz compressed qcow2 image</a></li>
+<li><a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost-Vagrant-VirtualBox-20150228_01.box">Vagrant VirtualBox image</a></li>
+<li><a href="http://buildlogs.centos.org/rolling/7/isos/x86_64/CentOS-7-x86_64-AtomicHost-Vagrant-LibVirt-20150228_01.box">Vagrant libvirt image</a></li>
+</ul>
+
+<p>Note that the most recent CentOS qcow2 images do not include the LVM backing storage, but that is included in the Vagrant boxes. </p>
+
+<p>Also worth noting, the CentOS SIG images are <strong>not</strong> rebuilds of <a href="http://www.redhat.com/en/resources/red-hat-enterprise-linux-atomic-host">Red Hat Enterprise Linux Atomic Host</a> which was <a href="http://www.projectatomic.io/blog/2015/03/red-hat-enterprise-linux-atomic-host-released/">released last week</a>. The CentOS SIG products are still work-in-progress, and should be treated as such. </p>
+
+<p>Questions or comments on the CentOS Atomic work? Ping us on <a href="http://lists.centos.org/mailman/listinfo/centos-devel">centos-devel</a> or <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel</a>, or ask in #atomic on Freenode.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/vagrant/">Vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/03/fedora-22-alpha-and-vagrant-boxes/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/03/fedora-22-alpha-and-vagrant-boxes/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/03/fedora-22-alpha-and-vagrant-boxes/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Gitlab</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/gitlab.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Deploying a Containerized Gitlab Instance with Kubernetes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/"/>
+    <id>http://www.projectatomic.io/blog/2015/01/deploying-a-containerized-gitlab-instance-with-kubernetes/</id>
+    <published>2015-01-15T23:42:33+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Back in November, I wrote about how to &lt;a href="http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/"&gt;try out Kubernetes&lt;/a&gt;, the open source system for managing containerized applications across multiple hosts, using Atomic Hosts. In that post, I walked through a deployment of the Kubernetes project&amp;rsquo;s multicontainer &lt;q&gt;Hello World&lt;/q&gt; application. &lt;/p&gt;
+
+&lt;p&gt;This time, I thought I&amp;rsquo;d explore running a more real-world application on Kubernetes, while looking into a few alternate methods of spinning up a Kubernetes cluster.&lt;/p&gt;
+
+&lt;p&gt;For the application, I picked Gitlab, an open source code collaboration platform that resembles and works like the popular Github service. I run a Gitlab instance internally here at work, and I wanted to explore moving that application from its current, virtual machine-based home, toward a shiny new containerized future.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Gitlab, Dockerized&lt;/h3&gt;
+
+&lt;p&gt;The Gitlab project &lt;a href="https://gitlab.com/gitlab-org/gitlab-ce/tree/master/docker"&gt;provides a Dockerfile&lt;/a&gt; for creating a containerized &lt;q&gt;Omnibus&lt;/q&gt; instance of the application that smushes together a Redis key-value store, Postgres database, and Nginx web server into a single container. However, since Docker best practices dictate that individual application elements be deployed as separate containers, I turned to a &lt;a href="https://github.com/sameersbn/docker-gitlab"&gt;multi-container installation option&lt;/a&gt; created by community member &lt;a href="https://twitter.com/sameersbn"&gt;Sameer Naik&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I set out first to convert Sameer&amp;rsquo;s implementation from Ubuntu to &lt;a href="https://github.com/jasonbrooks/docker-gitlab"&gt;CentOS&lt;/a&gt;, which wasn&amp;rsquo;t too terribly complicated and mostly involved translating Debian-style package names to their RPM-world equivalents. The trickiest bits of the conversion involved editing the bash scripts used to install Gitlab from source and perform configuration chores in the Gitlab container. Looking ahead, I&amp;rsquo;m interested in taking a look at Ansible as an alternative to these somewhat-ungainly bash scripts.&lt;/p&gt;
+
+&lt;p&gt;For the Redis and Postgres containers required by Gitlab, I simply reached for a pair of off-the-shelf Dockerfiles provided by the CentOS project in its &lt;a href="https://github.com/CentOS/CentOS-Dockerfiles"&gt;CentOS-Dockerfiles&lt;/a&gt; repository.&lt;/p&gt;
+
+&lt;h3&gt;Assembling a Kubernetes Cluster&lt;/h3&gt;
+
+&lt;p&gt;Once I had a Dockerized, CentOS-based set of containers to work with, I turned to bringing up a Kubernetes cluster. The &lt;a href="http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/"&gt;Ansible+Atomic method&lt;/a&gt; I wrote about last time still works fine, but I wanted to explore a couple other Kubernetes deployment options.&lt;/p&gt;
+
+&lt;p&gt;I looked into three new methods for turning up a Kubernetes cluster: &lt;a href="https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/vagrant.md"&gt;Vagrant&lt;/a&gt;, &lt;a href="https://github.com/larsks/heat-kubernetes"&gt;OpenStack Heat&lt;/a&gt;, and Google&amp;rsquo;s &lt;a href="https://cloud.google.com/container-engine/"&gt;Container Engine&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I didn&amp;rsquo;t manage to get a cluster up and running with Vagrant, at least not with my chosen provider of libvirt. The scripts that ship with Kubernetes for Vagrant are hard-coded to the VirtualBox provider. I typically test within a KVM environment, and while nesting KVM within KVM works well, VirtualBox within KVM does not, and I wasn&amp;rsquo;t interested in parting with a bare metal machine for this test. In any case, I stumbled across about &lt;a href="http://blog.obnox.de/vagrant-with-lxc-and-libvirt-on-fedora/"&gt;running Vagrant with libvirt on Fedora&lt;/a&gt; that I expect will come in handy soon.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re a VirtualBox+Vagrant adherent, though, this looks like a pretty easy way to get up and running with a test cluster.&lt;/p&gt;
+
+&lt;p&gt;Getting Kubernetes running with OpenStack Heat was pretty simple, after I ensured that I&amp;rsquo;d outfitted my OpenStack cloud not only with Heat itself, but also the Heat CloudWatch API, on which this stack depends. Also, in order to use Atomic Host instances for my master and minions, I had to create a snapshot of a &lt;a href="https://getfedora.org/en/cloud/download/"&gt;Fedora Atomic&lt;/a&gt; or &lt;a href="http://buildlogs.centos.org/monthly/7/"&gt;CentOS Atomic&lt;/a&gt; instance on which I&amp;rsquo;d run &lt;code&gt;sudo atomic upgrade&lt;/code&gt;, as this Heat stack requires the recently-added Flannel for networking.&lt;/p&gt;
+
+&lt;p&gt;From there, I needed only clone the &lt;a href="https://github.com/larsks/heat-kubernetes"&gt;heat-kubernetes&lt;/a&gt; repository, create a &lt;code&gt;local.yaml&lt;/code&gt; file corresponding to my environment, and run &lt;code&gt;heat stack-create -f kubecluster.yaml -e local.yaml my-kube-cluster&lt;/code&gt; to kick off the stack.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t have an OpenStack cloud handy, it&amp;rsquo;s pretty simple to spin up a new Kubernetes cluster via Google&amp;rsquo;s &lt;a href="https://cloud.google.com/container-engine/"&gt;Container Engine&lt;/a&gt;, which automates the creation of a set of VMs running Debian and hosting the necessary bits for Kubernetes&amp;rsquo; master and minions.&lt;/p&gt;
+
+&lt;h3&gt;Deploying Gitlab&lt;/h3&gt;
+
+&lt;p&gt;With a Kubernetes cluster of our choice ready for action, the steps required to start up an instance of Gitlab are pretty similar to those for the Kubernetes &lt;q&gt;Hello World&lt;/q&gt; guestbook application.&lt;/p&gt;
+
+&lt;p&gt;First, clone my &lt;a href="https://github.com/jasonbrooks/docker-gitlab"&gt;docker-gitlab&lt;/a&gt; repository:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;git clone https://github.com/jasonbrooks/docker-gitlab.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alongside the Dockerfile for Gitlab, and a set of scripts and files required for building that container, this repository contains a set of Kubernetes json files for defining the pods and services for gitlab, redis and postgresql.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve pushed containers for redis, postgresql and gitlab to the Docker hub under my user name, jasonbooks, but you can follow the build instructions in the repo&amp;rsquo;s README to build and push your own containers, if you wish. Just swap out &lt;code&gt;jasonbrooks&lt;/code&gt; for your own registry location in the &lt;q&gt;pod&lt;/q&gt; json files to use the containers you&amp;rsquo;ve built. You can also edit the json files to choose a new database password.&lt;/p&gt;
+
+&lt;p&gt;Kick off the commands below to get redis and postgresql running. It&amp;rsquo;s important to start these up before starting gitlab, because pods are only aware of the environment variables of previously-started pods, and this is how gitlab will figure out where its database and key value store can be found:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;kubectl --server=http://KUBE_MASTER:8080 create -f redis-pod.json 
+kubectl --server=http://KUBE_MASTER:8080 create -f redis-service.json 
+kubectl --server=http://KUBE_MASTER:8080 create -f postgres-pod.json 
+kubectl --server=http://KUBE_MASTER:8080 create -f postgres-service.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, monitor &lt;code&gt;kubectl --server=http://KUBE_MASTER:8080 get pods&lt;/code&gt; until the redis and postgresql pods are &lt;code&gt;Running&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;NAME                IMAGE(S)               HOST                LABELS              STATUS
+redis               jasonbrooks/redis      10.0.0.4/           name=redis          Running
+postgresql          jasonbrooks/postgres   10.0.0.4/           name=postgresql     Running
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, start up the Gitlab pod:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;kubectl --server=http://KUBE_MASTER:8080 create -f gitlab-pod.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After another run of &lt;code&gt;kubectl --server=http://KUBE_MASTER:8080 get pods&lt;/code&gt; indicates that the gitlab pod is running, you can monitor the initialization of gitlab with the command &lt;code&gt;kubectl --server=http://KUBE_MASTER:8080 log gitlab&lt;/code&gt;. When the logs indicate that &lt;code&gt;sidekiq&lt;/code&gt;, &lt;code&gt;unicorn&lt;/code&gt;, &lt;code&gt;cron&lt;/code&gt;, &lt;code&gt;nginx&lt;/code&gt;, and &lt;code&gt;sshd&lt;/code&gt; are up and running, you should be able to access the Gitlab web interface from port 10080 on your minion, and Gitlab&amp;rsquo;s ssh from port 10022.&lt;/p&gt;
+
+&lt;p&gt;Now, minions can change, and we probably prefer to stick with the default ports 80 and 22 for web and ssh. Here&amp;rsquo;s where the service files for Gitlab come into play. We need more than one service file for our Gitlab pod because each service can only handle a single port (for now, at least).&lt;/p&gt;
+
+&lt;p&gt;You can edit the files &lt;code&gt;gitlab-service-http.json&lt;/code&gt; and &lt;code&gt;gitlab-service-ssh.json&lt;/code&gt; and replace &lt;code&gt;STATIC_IP_HERE&lt;/code&gt; with a static IP of your choice. Then, fire off a couple of commands to create the services:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;kubectl --server=http://KUBE_MASTER:8080 create -f gitlab-service-ssh.json
+kubectl --server=http://KUBE_MASTER:8080 create -f gitlab-service-http.json
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To make this actually work, you&amp;rsquo;ll need to figure out a mechanism for sending traffic directed toward your static IP to your minions. On GCE, which offers a built-in load balancer feature, I set a forwarding rule to send traffic for ports 22-80 to my pool of minions. I imagine I could configure OpenStack and its &lt;a href="http://docs.openstack.org/api/openstack-network/2.0/content/lbaas_ext.html"&gt;load balancer-as-a-service&lt;/a&gt; to perform the same task, but I haven&amp;rsquo;t tried that out yet.&lt;/p&gt;
+
+&lt;h3&gt;Next Steps&lt;/h3&gt;
+
+&lt;p&gt;So, am I ready to ditch my virtual machine for a fancy new Docker/Kubernetes based Gitlab installation? Not quite yet. I have a few more areas to understand, so keep an eye out for an upcoming blog post that covers these and other issues:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Data persistence w/ Kubernetes &amp;ndash; this appears to be a matter of referencing volumes in the pod definition files&lt;/li&gt;
+&lt;li&gt;Work out an application migration and update strategy&lt;/li&gt;
+&lt;li&gt;Settle on load-balancing tooling and configuration&lt;/li&gt;
+&lt;li&gt;Clean up my gitlab container configuration scripts, probably with Ansible&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you run into trouble following this walkthrough, I’ll be happy to help you get up and running or get pointed in the right direction. Ping me at jbrooks in #atomic on freenode irc or &lt;a href="https://twitter.com/jasonbrooks"&gt;@jasonbrooks&lt;/a&gt; on Twitter. Also, be sure to check out the &lt;a href="http://ask.projectatomic.io/en/questions/"&gt;Project Atomic Q&amp;amp;A site&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

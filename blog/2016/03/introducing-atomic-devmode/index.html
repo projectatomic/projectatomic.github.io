@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Introducing Atomic Developer Mode &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Introducing Atomic Developer Mode' property='og:title'>
+<meta content='In this week’s latest release of Fedora Atomic Host, you might notice something&#x000A;different when you boot the new image. There is now a Developer Mode entry in&#x000A;the GRUB boot menu. This blog post will describe why this new feature was added&#x000A;and what it does.&#x000A;&#x000A;One of the confusing things that newcomers encounter when they want to try out&#x000A;Atomic Host is setting up&#x000A;cloud-init. Currently, it is&#x000A;impossible to use an Atomic Host image without providing cloud-init with a&#x000A;data source. In the absence of a source, cloud-init will try connecting to&#x000A;various known metadata URLs for about four minutes and then give up.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/introducing-atomic-devmode/' property='og:url'>
+<meta content='2016-03-11T17:02:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='cloud-init' property='article:tag'>
+<link href='/blog/tag/cloud-init.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='cockpit' property='article:tag'>
+<link href='/blog/tag/cockpit.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='developers' property='article:tag'>
+<link href='/blog/tag/developers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='devmode' property='article:tag'>
+<link href='/blog/tag/devmode.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Introducing Atomic Developer Mode' name='twitter:title'>
+<meta content='In this week’s latest release of Fedora Atomic Host, you might notice something&#x000A;different when you boot the new image. There is now a Developer Mode entry in&#x000A;the GRUB boot menu. This blog post will describe why this new feature was added&#x000A;and what it does.&#x000A;&#x000A;One of the confusing things that newcomers encounter when they want to try out&#x000A;Atomic Host is setting up&#x000A;cloud-init. Currently, it is&#x000A;impossible to use an Atomic Host image without providing cloud-init with a&#x000A;data source. In the absence of a source, cloud-init will try connecting to&#x000A;various known metadata URLs for about four minutes and then give up.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_introducing-atomic-devmode blog_2016_03_introducing-atomic-devmode_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Introducing Atomic Developer Mode
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-11T17:02:00Z'>
+Friday 11 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s latest release of Fedora Atomic Host, you might notice something
+different when you boot the new image. There is now a <q>Developer Mode</q> entry in
+the GRUB boot menu. This blog post will describe why this new feature was added
+and what it does.</p>
+
+<p>One of the confusing things that newcomers encounter when they want to try out
+Atomic Host is setting up
+<a href="http://cloudinit.readthedocs.org/en/latest/">cloud-init</a>. Currently, it is
+impossible to use an Atomic Host image without providing cloud-init with a
+data source. In the absence of a source, cloud-init will try connecting to
+various known metadata URLs for about four minutes and then give up.</p>
+
+<p></p>
+
+<p>For most first-timers, the easiest way to get started has been to follow
+<a href="http://www.projectatomic.io/docs/quickstart/">the Quick Start Guide</a>, which
+takes them through the process of creating the meta-data and user-data files,
+generating the cloud-init ISO, and attaching it to a virtual machine.</p>
+
+<p>This represents pure <q>overhead</q> for folks who just want to try out Atomic Host
+so they can play around with the
+<a href="https://github.com/projectatomic/atomic">atomic tool</a>,
+<a href="https://github.com/projectatomic/rpm-ostree">rpm-ostree</a>,
+<a href="https://www.docker.com/">Docker</a>, or even
+<a href="http://cockpit-project.org/">Cockpit</a>.</p>
+
+<p>The new Atomic Developer Mode addresses this by adding a new entry in the GRUB
+boot menu. Because a picture is worth a thousand words, here&rsquo;s a screenshot of
+what the menu will now look like on the first boot:</p>
+
+<p><a href="../../../../images/atomic-devmode-boot.png">
+  <img src="../../../../images/atomic-devmode-boot.png" width="60%">
+</a></p>
+
+<p><strong>A word of caution:</strong> the GRUB menu timeout has a timeout of one second. Though
+increasing it would make it easier for people to select a different boot entry,
+it would also increase the boot up time for every other regular use case. If you
+miss it the first time, simply restart and try again! If you&rsquo;re using
+virt-manager, selecting <q>Enable boot menu</q> in the machine&rsquo;s boot options will
+give you a couple of extra seconds.</p>
+
+<p>When booted in Developer Mode, cloud-init will be provided with a local
+data source that will automatically:</p>
+
+<ol>
+<li>Generate a random root password</li>
+<li>Autologin as root into a <a href="https://tmux.github.io/">tmux</a> session</li>
+<li>Pull and start a cockpit/ws container</li>
+<li>Print out all the useful info on the terminal</li>
+</ol>
+
+<p>The benefit of using tmux is its scriptability. A custom tmux configuration file
+is used to provide some easier navigation hotkeys. Here is a screenshot of the
+tmux environment once it is fully booted up:</p>
+
+<p><a href="../../../../images/atomic-devmode-env.png">
+  <img src="../../../../images/atomic-devmode-env.png" width="60%">
+</a></p>
+
+<p>One of the great strengths of Atomic Developer Mode is that its functionality is
+baked into the image. Thus, it does not assume any special setup of the host
+environment/OS, as long as it is capable of booting the image.</p>
+
+<p>If you already have an Atomic Host installation, you can still get the boot menu
+added by upgrading to the new tree and running:</p>
+<pre class="highlight plaintext"><code>bash&#x000A;/usr/libexec/atomic-devmode/bootentry add&#x000A;</code></pre>
+
+<p>You can find more information on Atomic Developer Mode on the
+<a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2015-December/msg00034.html">atomic-devel mailing list</a>, the <a href="https://lists.fedoraproject.org/archives/list/cloud@lists.fedoraproject.org/thread/M75UQFVNUPNC6ES3RZMT5PXRHIH3FMP5/">cloud mailing list</a>,
+the <a href="https://fedoraproject.org/wiki/Changes/Atomic_Developer_Mode">Fedora wiki</a>,
+and the <a href="https://github.com/jlebon/atomic-devmode">upstream project</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/cloud-init/">cloud-init</a></li>
+<li><a href="/blog/tag/cockpit/">cockpit</a></li>
+<li><a href="/blog/tag/developers/">developers</a></li>
+<li><a href="/blog/tag/devmode/">devmode</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/introducing-atomic-devmode/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/introducing-atomic-devmode/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/introducing-atomic-devmode/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

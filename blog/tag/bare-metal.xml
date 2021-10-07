@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Bare Metal</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/bare-metal.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Creating a Simple Bare Metal Atomic Host Cluster</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/</id>
+    <published>2015-06-30T18:21:45+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Waldemar Augustyn</name>
+    </author>
+    <content type="html">&lt;p&gt;Atomic host is a great technology for containerized applications. I like it especially on bare metal machines. In this post I will describe how to setup a simple Do-It-Yourself cluster consisting of three netbooted machines running docker over flannel. Flannel provides a NAT-less private network overlay. Through that network, application containers can easily reach any other containers within the cluster regardless of which machine they run on.&lt;/p&gt;
+
+&lt;p&gt;We use three machines called &lt;em&gt;a1&lt;/em&gt;, &lt;em&gt;a2&lt;/em&gt;, and &lt;em&gt;a3&lt;/em&gt;. Let&amp;rsquo;s designate static IP addresses to them.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a1: 192.168.99.51&lt;/li&gt;
+&lt;li&gt;a2: 192.168.99.52&lt;/li&gt;
+&lt;li&gt;a3: 192.168.99.53&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We install atomic host OS on these machines via netboot from another host. Let&amp;rsquo;s call that host &lt;em&gt;boothost&lt;/em&gt;. It holds all installation and configuration files. We set up an unattended installation and configuration using kickstart and cloud-init.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Kickstart&lt;/h3&gt;
+
+&lt;p&gt;Thanks to ostree and cloud-init, we can simplify &lt;code&gt;kickstart.cfg&lt;/code&gt; immensely. We need to tell it how to partition disks, where the ostree repository is, and where cloud-init files reside.  Sometimes I wonder if the entire kickstart can be reduced to nil by writing appropriate cloud-init modules but for now we go with the tradition.&lt;/p&gt;
+
+&lt;p&gt;Most items in the kickstart file are selected according to local preference. Here we list those that relate to setting up the cluster. Line continuations are used for readability only, they don&amp;rsquo;t appear in the scripts.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;text
+ostreesetup --osname="Fedora-Cloud_Atomic" \
+            --remote="Fedora-Cloud_Atomic" \
+            --url="http://boothost/f22-atomic/content/repo" \
+            --ref="fedora-atomic/f22/x86_64/docker-host" --nogpg
+services --enabled=cloud-init,cloud-config,cloud-final,cloud-init-local
+bootloader --location=mbr --append="ds=nocloud\;seedfrom=/var/cloud-init/"
+part /boot --fstype=ext4 --asprimary --size=512 --ondrive=sda
+part pv.01 --fstype=ext4 --asprimary --grow --ondrive=sda
+volgroup fedora pv.01
+logvol swap --vgname=fedora --fstype=swap --name=swap --recommended
+logvol none --vgname=fedora --thinpool --name=docker-pool --size=100000
+logvol / --vgname=fedora --fstype=ext4 --name=root --grow --percent=95
+clearpart --all --initlabel --drives=sda
+reboot
+%post
+ostree remote add --set=gpg-verify=false \
+       Fedora-Cloud_Atomic \
+       'https://dl.fedoraproject.org/pub/fedora/linux/atomic/22/'
+mkdir /var/cloud-init
+curl http://boothost/f22-atomic/meta-data.a1 &amp;gt; /var/cloud-init/meta-data
+curl http://boothost/f22-atomic/user-data &amp;gt; /var/cloud-init/user-data
+curl http://boothost/f22-atomic/bootcmd &amp;gt; /var/cloud-init/bootcmd
+chmod a+x /var/cloud-init/bootcmd
+%end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Items &lt;em&gt;text&lt;/em&gt; and &lt;em&gt;ostreesetup&lt;/em&gt; are boilerplate, nothing special about them. I prefer text because sometimes only a serial console is available. &lt;em&gt;ostreesetup&lt;/em&gt;  gives the opportunity to install some other system, such as centos atomic for example. In this exercise, we take the default fedora tree.&lt;/p&gt;
+
+&lt;p&gt;Since by default cloud-init is disabled we need to enable those services in &lt;em&gt;services&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;For bare metal installations, I prefer cloud-init datasource located directly on the local disk. This selection is made by setting &amp;lsquo;ds=nocloud&amp;rsquo; in &lt;em&gt;bootloader&lt;/em&gt;. It can also be configured to fetch from a URL using nocloud-net if that&amp;rsquo;s more suitable. Notice that semicolon must be escaped. Otherwise grub might fail because the bootline is truncated.&lt;/p&gt;
+
+&lt;p&gt;Disk partitioning is largely a local preference. Here, LVM is used only because docker with devmapper works best with dedicated thin pool partition. The rest of the disk goes to / partition for simplicity.  Note that even with a thin pool, docker volumes still go to local disk under &lt;code&gt;/var/lib/docker&lt;/code&gt;. Ideally, we&amp;rsquo;d forego LVM and allocate a single / ext4 partition. This is possible with overlayfs for example.&lt;/p&gt;
+
+&lt;p&gt;In the %post section, we point to a live ostree repository and we also install cloud-init configuration. The installation amounts to copying three files. Two of them are the standard cloud-init files: meta-data and user data. The third one is the script that sets up the cluster. Note that meta-data sets hostname. We need to supply different meta-data for each machine.&lt;/p&gt;
+
+&lt;h3&gt;cloud-init&lt;/h3&gt;
+
+&lt;p&gt;There are many ways cloud-init configuration can be structured and applied during the boot process. Here, we go with simplicity keeping DIY cluster installations in mind. We use generic options in meta-data and user-data delegating most of the work to a single script.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;meta-data&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;instance-id: iid-local01
+local-hostname: a1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We set hostname as &lt;em&gt;a1&lt;/em&gt;, &lt;em&gt;a2&lt;/em&gt;, &lt;em&gt;a3&lt;/em&gt; respectively for each machine.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;user-data&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;#cloud-config
+password: letmein
+ssh_pwauth: True
+chpasswd: { expire: False }
+
+ssh_authorized_keys:
+  - ssh-dss AAAAB3...pbLwNOo= me@diycluster
+
+users:
+  - name: fedora
+  - groups: docker
+
+bootcmd:
+  - /var/cloud-init/bootcmd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first line is not a comment, it is required for the file to be recognized as a cloud-init configuration. We set password for user &lt;em&gt;fedora&lt;/em&gt;. This user is hardcoded into the image. We also setup an ssh key for a more secure access.  Sometimes things don&amp;rsquo;t go as planned so a password comes in handy if all we get is a serial console. We add user &lt;em&gt;fedora&lt;/em&gt; to group &lt;em&gt;docker&lt;/em&gt; to gain direct access to docker.&lt;/p&gt;
+
+&lt;p&gt;The last item, &lt;em&gt;bootcmd&lt;/em&gt;, instructs cloud-init to run a script on the earliest opportunity. The script runs before docker starts and before network is configured. This gives us a perfect opportunity to configure the cluster before any defaults interfere with the intentions.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;bootcmd&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class="c"&gt;# Run on boot once&lt;/span&gt;
+
+&lt;span class="nb"&gt;set&lt;/span&gt; -eux
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -f /etc/systemd/system/etcd.service.d/restart.conf &lt;span class="o"&gt;]&lt;/span&gt;; &lt;span class="k"&gt;then
+    &lt;/span&gt;&lt;span class="nb"&gt;exit &lt;/span&gt;0
+&lt;span class="k"&gt;fi
+
+&lt;/span&gt;groupadd -r docker
+
+&lt;span class="c"&gt;# Setup etcd&lt;/span&gt;
+
+&lt;span class="nv"&gt;cluster&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;a1&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://192.168.99.51:2380,&lt;span class="se"&gt;\&lt;/span&gt;
+        &lt;span class="nv"&gt;a2&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://192.168.99.52:2380,&lt;span class="se"&gt;\&lt;/span&gt;
+        &lt;span class="nv"&gt;a3&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;http://192.168.99.53:2380
+
+&lt;span class="nv"&gt;host&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;grep &lt;span class="nb"&gt;local&lt;/span&gt;-hostname /var/cloud-init/meta-data | cut -d: -f2 | tr -d &lt;span class="o"&gt;[&lt;/span&gt;:space:]&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;host&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;host&lt;/span&gt;&lt;span class="p"&gt;%%.*&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+
+&lt;span class="nv"&gt;ip&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;cluster&lt;/span&gt;&lt;span class="p"&gt;#*&lt;/span&gt;&lt;span class="nv"&gt;$host&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+&lt;span class="nv"&gt;ip&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;ip&lt;/span&gt;&lt;span class="p"&gt;%%&lt;/span&gt;:2380&lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+&lt;span class="nv"&gt;ip&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;ip&lt;/span&gt;&lt;span class="p"&gt;#*//&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+
+mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.save
+cat &lt;span class="sh"&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/etcd/etcd.conf
+# [member]
+ETCD_NAME=$host
+ETCD_DATA_DIR="/var/lib/etcd/$host.etcd"
+ETCD_LISTEN_PEER_URLS="http://$ip:2380"
+ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://$ip:2379"
+#[cluster]
+ETCD_INITIAL_ADVERTISE_PEER_URLS="http://$ip:2380"
+ETCD_INITIAL_CLUSTER="$cluster"
+ETCD_INITIAL_CLUSTER_STATE="new"
+ETCD_INITIAL_CLUSTER_TOKEN="diy-cluster"
+ETCD_ADVERTISE_CLIENT_URLS="http://$ip:2379"
+EOF
+
+&lt;/span&gt;mkdir /etc/systemd/system/etcd.service.d
+cat &lt;span class="sh"&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/systemd/system/etcd.service.d/restart.conf
+[Service]
+Restart=on-failure
+RestartSec=1
+EOF
+
+&lt;/span&gt;&lt;span class="c"&gt;# Setup flannel&lt;/span&gt;
+
+mv /etc/sysconfig/flanneld /etc/sysconfig/flanneld.save
+cat &lt;span class="sh"&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/sysconfig/flanneld
+FLANNEL_ETCD=http://127.0.0.1:2379
+FLANNEL_ETCD_KEY=/admin/flannel
+EOF
+
+&lt;/span&gt;mkdir /etc/systemd/system/flanneld.service.d
+cat &lt;span class="sh"&gt;&amp;lt;&amp;lt;EOF &amp;gt;/etc/systemd/system/flanneld.service.d/init.conf
+[Service]
+ExecStartPre=/usr/bin/etcdctl set /admin/flannel/config \
+            {\"Network\":\"172.18.0.0/16\"}
+Restart=on-failure
+RestartSec=1
+EOF
+
+&lt;/span&gt;&lt;span class="c"&gt;# Restart&lt;/span&gt;
+
+systemctl daemon-reload
+systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;etcd.service
+systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;flanneld.service
+systemctl reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;em&gt;if&lt;/em&gt; statement makes sure the script runs only once after installation. We add group &lt;code&gt;docker&lt;/code&gt; to give user &lt;code&gt;fedora&lt;/code&gt; access to docker.&lt;/p&gt;
+
+&lt;p&gt;The etcd setup uses bash string processing to deduce the host&amp;rsquo;s name and its assigned ip address. The name of the host is set in the meta-data file. Cluster configuration is set in the &lt;em&gt;cluster&lt;/em&gt; variable. This setting relies on dhcp always allocating listed IP addresses to the named hosts. Once &lt;em&gt;host&lt;/em&gt; and &lt;em&gt;ip&lt;/em&gt; are computed we setup standard etcd bootstrap.  We setup a restart in case of failures using a systemd unit drop-in. It is not necessary but etcd is sometimes confused during boot which causes it to give up. A simple restart brings it back to operation.&lt;/p&gt;
+
+&lt;p&gt;Flannel needs to know what network to use as an overlay. We convey that information in an etcd key which is set before flannel starts. The setting of the key will block until the cluster comes up.  This may take several minutes depending on the initial boot sequence.  In case of flannel, we add a restart as well. As with etcd, it is not necessary but sometimes allows flannel to recover from weird etcd states.&lt;/p&gt;
+
+&lt;p&gt;Finally, we enable etcd and flannel services before rebooting. I prefer to go through a reboot, rather than continue, because this gives me a better idea what will happen on any subsequent restart whether due to maintenance, power down, or any other reason.&lt;/p&gt;
+
+&lt;h3&gt;Start the Cluster&lt;/h3&gt;
+
+&lt;p&gt;With this configuration, we can now netboot the three machines and they will come up forming an operational atomic host cluster.  We login and run hostname command for a simple check if everything is alright.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;fedora@a1 ~ $ hostname -I
+192.168.99.51 172.18.66.0 172.18.66.1 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can see the IP addresses from the flannel range which is an indication that docker started over flannel network thus implying that all components performed as intended: netboot, kickstart, cloud-init, etcd, flannel, and docker.&lt;/p&gt;
+
+&lt;p&gt;To be doubly sure, we run a container and see if we can ping the other hosts.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;fedora@a1 ~ $ etcdctl ls admin/flannel/subnets
+/admin/flannel/subnets/172.18.18.0-24
+/admin/flannel/subnets/172.18.66.0-24
+/admin/flannel/subnets/172.18.13.0-24
+
+fedora@a1 ~ $ docker run -it --rm centos:7 /bin/bash
+[root@080a4f9e60a2 /]# ping 172.18.18.1
+PING 172.18.18.1 (172.18.18.1) 56(84) bytes of data.
+64 bytes from 172.18.18.1: icmp_seq=1 ttl=61 time=0.955 ms
+64 bytes from 172.18.18.1: icmp_seq=2 ttl=61 time=2.23 ms
+64 bytes from 172.18.18.1: icmp_seq=3 ttl=61 time=1.01 ms
+^C
+--- 172.18.18.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 0.955/1.400/2.230/0.587 ms
+[root@080a4f9e60a2 /]# exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First we find out which flannel subnets have been allocated, then we start a container and run a ping targeting flannel end points on the other machines.&lt;/p&gt;
+
+&lt;p&gt;Assuming everything has gone according to plan, it works! Now you should have a simple bare metal Atomic Host cluster to work with. &lt;/p&gt;
+</content>
+  </entry>
+</feed>

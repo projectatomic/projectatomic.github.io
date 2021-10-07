@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Ocitools</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/ocitools.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Creating OCI configurations with the ocitools generate library</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/08/ocitools-libgen/"/>
+    <id>http://www.projectatomic.io/blog/2016/08/ocitools-libgen/</id>
+    <published>2016-08-09T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Haiyan Meng</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://github.com/opencontainers/runc"&gt;OCI runc&lt;/a&gt; is a cool new tool for running containers on Linux machines. It follows the OCI container runtime specification. As of docker-1.11 it is the main mechanism that docker uses for launching containers.&lt;/p&gt;
+
+&lt;p&gt;The really cool thing is that you can use runc without even using docker. First you create a rootfs on your disk: a directory that includes all of your software and usually follows the basic layout of &lt;code&gt;/&lt;/code&gt;. There are several tools that can create a rootfs, including dnf or the &lt;code&gt;atomic&lt;/code&gt; command. Once you have a rootfs, you need to create a &lt;code&gt;config.json&lt;/code&gt; file which runc will read. &lt;code&gt;config.json&lt;/code&gt; has all of the specifications for running a container, things like which namespaces to use, which capabilities to use in your container, and what is the pid 1 of your container. It is somewhat similar to the output of &lt;code&gt;docker inspect&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Creating and editing the config.json is not for the faint of heart, so we developed a command line tool called &lt;code&gt;ocitools generate&lt;/code&gt; that can do the hard work of creating the config.json file.&lt;/p&gt;
+
+&lt;h3&gt;Creating OCI Configurations&lt;/h3&gt;
+
+&lt;p&gt;This post will guide you through the steps of creating &lt;a href="https://github.com/opencontainers/runtime-spec/"&gt;OCI&lt;/a&gt; configurations
+using the &lt;a href="https://github.com/opencontainers/ocitools/tree/master/generate"&gt;ocitools generate library&lt;/a&gt;
+for the go programming language.&lt;/p&gt;
+
+&lt;p&gt;There are four steps to create an OCI configuration using the ocitools generate library:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Import the ocitools generate library into your project;&lt;/li&gt;
+&lt;li&gt;Create an OCI specification generator;&lt;/li&gt;
+&lt;li&gt;Modify the specification by calling different methods of the specification generator;&lt;/li&gt;
+&lt;li&gt;Save the specification.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;The ocitools generate library defines a struct type, &lt;em&gt;Generator&lt;/em&gt;, to enclose a
+pointer to an &lt;a href="https://github.com/opencontainers/runtime-spec/blob/master/specs-go/config.go"&gt;OCI
+Spec&lt;/a&gt;.
+Different methods are defined on the &lt;em&gt;Generator&lt;/em&gt; type to allow the user to
+customize the specification pointed by the Generator.  Once a Generator object
+is created, different fields of the specification can be modified by calling
+the corresponding methods of Generator.  After finishing modifying the
+specification, &lt;em&gt;Generator.Save&lt;/em&gt; can be called to save the specification into a
+local file.&lt;/p&gt;
+
+&lt;h3&gt;Create an OCI configurations using the ocitools generate library&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1: import the ocitools generate library in your go project:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;import "github.com/opencontainers/ocitools/generate"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 2: create a specification Generator:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;specgen := generate.New()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;generate.New&lt;/em&gt; creates a spec Generator with the default spec.
+You can also create a spec Generator with the spec from a local file using &lt;em&gt;generate.NewFromFile&lt;/em&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;specgen := generate.NewFromFile("/data/myspec.json")
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 3: modify the specification:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;specgen.SetRootPath("rootfs")
+specgen.SetProcessGID(1000)
+specgen.SetProcessTerminal(true)
+specgen.SetLinuxResourcesCPUShares(512)
+specgen.SetupPrivileged(false)
+
+specgen.ClearAnnotations()
+specgen.AddAnnotation("owner", "hmeng")
+specgen.RemoveAnnotation("createdat")
+
+specgen.AddLinuxUIDMapping(0, 1000, 50)
+specgen.AddPreStartHook("/tmp/install.sh", []string{"--mode", "silent"})
+specgen.AddTmpfsMount("/tmp", "ro")
+specgen.AddCgroupsMount("rw")
+specgen.AddBindMount("/home/test/file1", "/file2", "rw")
+specgen.DropProcessCapability("audit_read")
+
+specgen.AddOrReplaceLinuxNamespace("pid", "/proc/28341/ns/pid")
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For the fields of the OCI spec which have basic types, such as numbers, strings, and booleans, the methods modifying them are
+named in the format of &lt;em&gt;SetFieldName&lt;/em&gt;.
+A good example is &lt;em&gt;SetRootPath&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;For the fields whose types are slices and maps, the library provides the following three categories of methods:
+&lt;em&gt;ClearFieldName&lt;/em&gt; clears the fields,
+&lt;em&gt;AddFieldName&lt;/em&gt; adds a new data object into the field,
+and &lt;em&gt;RemoveFieldName&lt;/em&gt; removes an existing data object from the field.
+A good example is &lt;em&gt;ClearAnnotations&lt;/em&gt;, &lt;em&gt;AddAnnotation&lt;/em&gt;, and &lt;em&gt;RemoveAnnotation&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are exceptions. For example, &lt;em&gt;Spec.Process.Args&lt;/em&gt; is a slice of string, however, the library only provides a single method &lt;em&gt;SetProcessArgs&lt;/em&gt;
+to set the process args, because it makes more sense to set the process args in a bundle than adding each argument incrementally.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 4: save the specification:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;specgen.SaveToFile("/data/runc/busybox/config.json")
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And you&amp;rsquo;re done!  You now have a generator for creating spec files for your runc containers.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

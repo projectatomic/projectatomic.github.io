@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 27 Atomic Host February 2nd Release &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 27 Atomic Host February 2nd Release' property='og:title'>
+<meta content='In this week’s release of Fedora Atomic Host we have a new kernel,&#x000A;ostree/rpm-ostree, glibc, and cloud-utils-growpart (fixes for aarch64&#x000A;partition resize issues).&#x000A;&#x000A;The new Fedora Atomic Host update is available via an OSTree update:&#x000A;&#x000A;Version: 27.72&#x000A;&#x000A;&#x000A;Commit(x86_64): 39848372585a65dc63fb3052f997139b8b30d6b55ce378337db3664177489d28&#x000A;Commit(aarch64): 8048d384f231f90a7479cf94bfe94053970fb9a0f196ba4485d779696db81fa1&#x000A;Commit(ppc64le): 3fce2908406e41e2ffe533908e840f44311576befe7e49396d1894407341aef9&#x000A;&#x000A;&#x000A;We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.&#x000A;&#x000A;Existing systems can be upgraded in place via e.g. atomic host upgrade or atomic host deploy.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/02/fedora-atomic-2-feb-18/' property='og:url'>
+<meta content='2018-02-02T00:00:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 27 Atomic Host February 2nd Release' name='twitter:title'>
+<meta content='In this week’s release of Fedora Atomic Host we have a new kernel,&#x000A;ostree/rpm-ostree, glibc, and cloud-utils-growpart (fixes for aarch64&#x000A;partition resize issues).&#x000A;&#x000A;The new Fedora Atomic Host update is available via an OSTree update:&#x000A;&#x000A;Version: 27.72&#x000A;&#x000A;&#x000A;Commit(x86_64): 39848372585a65dc63fb3052f997139b8b30d6b55ce378337db3664177489d28&#x000A;Commit(aarch64): 8048d384f231f90a7479cf94bfe94053970fb9a0f196ba4485d779696db81fa1&#x000A;Commit(ppc64le): 3fce2908406e41e2ffe533908e840f44311576befe7e49396d1894407341aef9&#x000A;&#x000A;&#x000A;We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.&#x000A;&#x000A;Existing systems can be upgraded in place via e.g. atomic host upgrade or atomic host deploy.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_02 blog_2018_02_fedora-atomic-2-feb-18 blog_2018_02_fedora-atomic-2-feb-18_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 27 Atomic Host February 2nd Release
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-02-02T00:00:00Z'>
+Friday  2 February 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Fedora Atomic Host we have a new kernel,
+ostree/rpm-ostree, glibc, and cloud-utils-growpart (fixes for aarch64
+<a href="https://pagure.io/atomic-wg/issue/382">partition resize issues</a>).</p>
+
+<p>The new Fedora Atomic Host update is available via an OSTree update:</p>
+
+<p><strong>Version: 27.72</strong></p>
+
+<ul>
+<li>Commit(x86_64): 39848372585a65dc63fb3052f997139b8b30d6b55ce378337db3664177489d28</li>
+<li>Commit(aarch64): 8048d384f231f90a7479cf94bfe94053970fb9a0f196ba4485d779696db81fa1</li>
+<li>Commit(ppc64le): 3fce2908406e41e2ffe533908e840f44311576befe7e49396d1894407341aef9</li>
+</ul>
+
+<p>We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or <code>atomic host deploy</code>.</p>
+
+<p></p>
+
+<p>An example of the diff between this and the previous released version (for x86_64) is:</p>
+
+<ul>
+<li>ostree diff commit old: 772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9</li>
+<li>ostree diff commit new: 39848372585a65dc63fb3052f997139b8b30d6b55ce378337db3664177489d28</li>
+</ul>
+
+<p>Upgraded:</p>
+
+<ul>
+<li>NetworkManager 1:1.8.4-7.fc27.x86_64 -&gt; 1:1.8.6-1.fc27.x86_64</li>
+<li>NetworkManager-libnm 1:1.8.4-7.fc27.x86_64 -&gt; 1:1.8.6-1.fc27.x86_64</li>
+<li>NetworkManager-team 1:1.8.4-7.fc27.x86_64 -&gt; 1:1.8.6-1.fc27.x86_64</li>
+<li>cloud-utils-growpart 0.27-18.fc27.noarch -&gt; 0.30-1.fc27.noarch</li>
+<li>cockpit-bridge 159-1.fc27.x86_64 -&gt; 160-1.fc27.x86_64</li>
+<li>cockpit-docker 159-1.fc27.x86_64 -&gt; 160-1.fc27.x86_64</li>
+<li>cockpit-networkmanager 159-1.fc27.noarch -&gt; 160-1.fc27.noarch</li>
+<li>cockpit-ostree 159-1.fc27.x86_64 -&gt; 160-1.fc27.x86_64</li>
+<li>cockpit-system 159-1.fc27.noarch -&gt; 160-1.fc27.noarch</li>
+<li>container-selinux 2:2.38-1.fc27.noarch -&gt; 2:2.42-1.fc27.noarch</li>
+<li>coreutils 8.27-17.fc27.x86_64 -&gt; 8.27-19.fc27.x86_64</li>
+<li>coreutils-common 8.27-17.fc27.x86_64 -&gt; 8.27-19.fc27.x86_64</li>
+<li>curl 7.55.1-8.fc27.x86_64 -&gt; 7.55.1-9.fc27.x86_64</li>
+<li>dnsmasq 2.78-1.fc27.x86_64 -&gt; 2.78-2.fc27.x86_64</li>
+<li>gdbm 1.14-1.fc27.x86_64 -&gt; 1:1.13-6.fc27.x86_64</li>
+<li>glib2 2.54.2-1.fc27.x86_64 -&gt; 2.54.3-2.fc27.x86_64</li>
+<li>glibc 2.26-21.fc27.x86_64 -&gt; 2.26-24.fc27.x86_64</li>
+<li>glibc-all-langpacks 2.26-21.fc27.x86_64 -&gt; 2.26-24.fc27.x86_64</li>
+<li>glibc-common 2.26-21.fc27.x86_64 -&gt; 2.26-24.fc27.x86_64</li>
+<li>gnutls 3.5.16-4.fc27.x86_64 -&gt; 3.5.17-1.fc27.x86_64</li>
+<li>kernel 4.14.13-300.fc27.x86_64 -&gt; 4.14.14-300.fc27.x86_64</li>
+<li>kernel-core 4.14.13-300.fc27.x86_64 -&gt; 4.14.14-300.fc27.x86_64</li>
+<li>kernel-modules 4.14.13-300.fc27.x86_64 -&gt; 4.14.14-300.fc27.x86_64</li>
+<li>libassuan 2.4.3-6.fc27.x86_64 -&gt; 2.5.1-1.fc27.x86_64</li>
+<li>libcrypt-nss 2.26-21.fc27.x86_64 -&gt; 2.26-24.fc27.x86_64</li>
+<li>libcurl 7.55.1-8.fc27.x86_64 -&gt; 7.55.1-9.fc27.x86_64</li>
+<li>libgcrypt 1.8.1-3.fc27.x86_64 -&gt; 1.8.2-1.fc27.x86_64</li>
+<li>libnfsidmap 1:2.2.1-3.rc2.fc27.x86_64 -&gt; 1:2.2.1-4.rc2.fc27.x86_64</li>
+<li>libtasn1 4.12-3.fc27.x86_64 -&gt; 4.13-1.fc27.x86_64</li>
+<li>libxml2 2.9.5-2.fc27.x86_64 -&gt; 2.9.7-1.fc27.x86_64</li>
+<li>nfs-utils 1:2.2.1-3.rc2.fc27.x86_64 -&gt; 1:2.2.1-4.rc2.fc27.x86_64</li>
+<li>ostree 2017.15-1.fc27.x86_64 -&gt; 2018.1-1.fc27.x86_64</li>
+<li>ostree-grub2 2017.15-1.fc27.x86_64 -&gt; 2018.1-1.fc27.x86_64</li>
+<li>ostree-libs 2017.15-1.fc27.x86_64 -&gt; 2018.1-1.fc27.x86_64</li>
+<li>python2 2.7.14-5.fc27.x86_64 -&gt; 2.7.14-6.fc27.x86_64</li>
+<li>python2-libs 2.7.14-5.fc27.x86_64 -&gt; 2.7.14-6.fc27.x86_64</li>
+<li>python3 3.6.3-2.fc27.x86_64 -&gt; 3.6.4-6.fc27.x86_64</li>
+<li>python3-libs 3.6.3-2.fc27.x86_64 -&gt; 3.6.4-6.fc27.x86_64</li>
+<li>python3-libxml2 2.9.5-2.fc27.x86_64 -&gt; 2.9.7-1.fc27.x86_64</li>
+<li>rpm-ostree 2017.11-1.fc27.x86_64 -&gt; 2018.1-2.fc27.x86_64</li>
+<li>rpm-ostree-libs 2017.11-1.fc27.x86_64 -&gt; 2018.1-2.fc27.x86_64</li>
+<li>sed 4.4-3.fc27.x86_64 -&gt; 4.4-4.fc27.x86_64</li>
+<li>timedatex 0.4-5.fc27.x86_64 -&gt; 0.5-2.fc27.x86_64</li>
+<li>vim-minimal 2:8.0.1427-1.fc27.x86_64 -&gt; 2:8.0.1438-1.fc27.x86_64</li>
+</ul>
+
+<p>Removed:</p>
+
+<ul>
+<li>python-rhsm-certificates-1.20.1-3.fc27.x86_64</li>
+</ul>
+
+<p>Added:</p>
+
+<ul>
+<li>subscription-manager-rhsm-certificates-1.21.1-1.fc27.x86_64</li>
+</ul>
+
+<p>Corresponding image media for new installations can be downloaded from: <a href="https://getfedora.org/en/atomic/download/">Fedora Downloads</a>.</p>
+
+<p>Alternatively, image artifacts can be found at the following links:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/Atomic/aarch64/iso/Fedora-Atomic-ostree-aarch64-27-20180201.0.iso">aarch64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/Atomic/ppc64le/iso/Fedora-Atomic-ostree-ppc64le-27-20180201.0.iso">ppc64le ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/Atomic/x86_64/iso/Fedora-Atomic-ostree-x86_64-27-20180201.0.iso">x86_64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/aarch64/images/Fedora-Atomic-27-20180201.0.aarch64.qcow2">aarch64 Cloud Image QCOW</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/aarch64/images/Fedora-Atomic-27-20180201.0.aarch64.raw.xz">aarch64 Cloud Image raw</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/ppc64le/images/Fedora-Atomic-27-20180201.0.ppc64le.qcow2">ppc64le Cloud Image QCOW</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/ppc64le/images/Fedora-Atomic-27-20180201.0.ppc64le.raw.xz">ppc64le Cloud Image raw</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/x86_64/images/Fedora-Atomic-27-20180201.0.x86_64.qcow2">x86_64 Cloud Image QCOW</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/x86_64/images/Fedora-Atomic-27-20180201.0.x86_64.raw.xz">x86_64 Cloud Image raw</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/x86_64/images/Fedora-Atomic-Vagrant-27-20180201.0.x86_64.vagrant-libvirt.box">x86_64 Cloud Image LibVirt</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/x86_64/images/Fedora-Atomic-Vagrant-27-20180201.0.x86_64.vagrant-virtualbox.box">x86_64 Cloud Image VirtualBox</a></li>
+</ul>
+
+<p>Respective signed CHECKSUM files can be found here:
+* <a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/Atomic/aarch64/iso/Fedora-Atomic-27-20180201.0-aarch64-CHECKSUM">aarch64 ISO</a>
+* <a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/Atomic/ppc64le/iso/Fedora-Atomic-27-20180201.0-ppc64le-CHECKSUM">ppc64le ISO</a>
+* <a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/Atomic/x86_64/iso/Fedora-Atomic-27-20180201.0-x86_64-CHECKSUM">x86_64 ISO</a>
+* <a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/aarch64/images/Fedora-CloudImages-27-20180201.0-aarch64-CHECKSUM">aarch64 Cloud Image</a>
+* <a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/ppc64le/images/Fedora-CloudImages-27-20180201.0-ppc64le-CHECKSUM">ppc64le Cloud Image</a>
+* <a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180201.0/CloudImages/x86_64/images/Fedora-CloudImages-27-20180201.0-x86_64-CHECKSUM">x86_64 Cloud Image</a></p>
+
+<p>For direct download, the <q>latest</q> targets are always available here:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest">VirtualBox</a></li>
+</ul>
+
+<p>Filename fetching URLs are available here:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest_filename">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest_filename">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest_filename">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename">VirtualBox</a></li>
+</ul>
+
+<p>For more information about the latest targets, please reference the <a href="https://fedoraproject.org/wiki/Atomic_WG#Fedora_Atomic_Image_Download_Links">Fedora Atomic Wiki</a> space.</p>
+
+<p><em>Do note that it can take some of the mirrors up to 12 hours to <q>check-in</q> at
+their own discretion.</em></p>
+
+<p>The Vagrant Cloud page with the new Atomic Host:</p>
+
+<ul>
+<li><a href="https://app.vagrantup.com/fedora/boxes/27-atomic-host">https://app.vagrantup.com/fedora/boxes/27-atomic-host</a></li>
+<li><a href="https://app.vagrantup.com/fedora/boxes/27-atomic-host/versions/27.20180201.0">https://app.vagrantup.com/fedora/boxes/27-atomic-host/versions/27.20180201.0</a></li>
+</ul>
+
+<p>For posterity the AMIs for this release are:</p>
+
+<ul>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (ap-northeast-1) ami-234e2545    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (ap-southeast-1) ami-cd7236b1    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (ap-southeast-2) ami-46827a24    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (eu-central-1)   ami-e0b9238f    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (eu-west-1)      ami-32b4d94b    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (sa-east-1)      ami-035b146f    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (us-east-1)      ami-97ebeced    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (us-west-1)      ami-854b44e5    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (us-west-2)      ami-d075cea8    hvm  standard</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (ap-northeast-1) ami-e24c2784    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (ap-southeast-1) ami-d27236ae    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (ap-southeast-2) ami-47827a25    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (eu-central-1)   ami-adb822c2    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (eu-west-1)      ami-fdb0dd84    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (sa-east-1)      ami-325c135e    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (us-east-1)      ami-56e2e52c    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (us-west-1)      ami-f84c4398    hvm  gp2</li>
+<li>Fedora-Atomic-27-20180201.0.x86_64  EC2 (us-west-2)      ami-b66ad1ce    hvm  gp2</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/02/fedora-atomic-2-feb-18/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/02/fedora-atomic-2-feb-18/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/02/fedora-atomic-2-feb-18/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

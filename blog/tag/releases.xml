@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Releases</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/releases.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Vagrant Service Manager 1.3.0 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/08/vagrant-service-manager-1-3-0-release/"/>
+    <id>http://www.projectatomic.io/blog/2016/08/vagrant-service-manager-1-3-0-release/</id>
+    <published>2016-08-16T12:54:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Budh Ram Gurung</name>
+    </author>
+    <content type="html">&lt;p&gt;This version of &lt;a href="https://github.com/projectatomic/vagrant-service-manager"&gt;vagrant-service-manager&lt;/a&gt; introduces support for displaying Kubernetes configuration information. This enable users to access the Kubernetes server that runs inside ADB virtual machine from their host machine.&lt;/p&gt;
+
+&lt;p&gt;This version also includes binary installation support for Kubernetes. This support is extended to users of the &lt;a href="http://developers.redhat.com/products/cdk/overview"&gt;Red Hat Container Development Kit&lt;/a&gt;. For information about client binary installation, see the previous release announcement &lt;a href="../../../../blog/2016/07/vagrant-service-manager-install-cli"&gt;&lt;q&gt;Client Binary Installation Now Included in the ADB&lt;/q&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The full list of features from this version are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Configuration information for Kubernetes provided as part of the &lt;code&gt;env&lt;/code&gt; command&lt;/li&gt;
+&lt;li&gt;Client binary installation support for Kubernetes added to the ADB&lt;/li&gt;
+&lt;li&gt;Client binary installation support for OpenShift, Kubernetes and Docker in the Red Hat Container Development Kit&lt;/li&gt;
+&lt;li&gt;Auto-detection of a previously downloaded &lt;code&gt;oc&lt;/code&gt; executable binary on Windows operating systems&lt;/li&gt;
+&lt;li&gt;Unit and acceptance tests for the Kubernetes service&lt;/li&gt;
+&lt;li&gt;Option to enable Kubernetes from a Vagrantfile  with the following command:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  config.servicemanager.services = 'kubernetes'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;1. Install the kubernetes client binary&lt;/h3&gt;
+
+&lt;h4&gt;Run the following command to install the kubernetes binary, &lt;code&gt;kubectl&lt;/code&gt;&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant service-manager install-cli kubernetes
+# Binary now available at /home/budhram/.vagrant.d/data/service-manager/bin/kubernetes/1.2.0/kubectl
+# run binary as:
+# kubectl &amp;lt;command&amp;gt;
+export PATH=/home/budhram/.vagrant.d/data/service-manager/bin/kubernetes/1.2.0:$PATH
+
+# run following command to configure your shell:
+# eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli kubernetes | tr -d '\r')"
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Run the following command to configure your shell&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli kubernetes | tr -d '\r')"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;2. Enable access to the kubernetes server that runs inside of the ADB&lt;/h3&gt;
+
+&lt;h4&gt;Run the following command to display environment variable for kubernetes&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant service-manager env kubernetes
+# Set the following environment variables to enable access to the
+# kubernetes server running inside of the vagrant virtual machine:
+export KUBECONFIG=/home/budhram/.vagrant.d/data/service-manager/kubeconfig
+
+# run following command to configure your shell:
+# eval "$(vagrant service-manager env kubernetes)"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Run the following command to configure your shell&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;eval "$(vagrant service-manager env kubernetes)"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For a full list of changes in version 1.3.0, see &lt;a href="https://github.com/projectatomic/vagrant-service-manager/releases/tag/v1.3.0"&gt;the release log&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.6.2 released with new index CLI command</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/atomic-app-0-6-2-release/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/atomic-app-0-6-2-release/</id>
+    <published>2016-07-27T16:55:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;This release of Atomic App introduces the new &lt;code&gt;atomicapp index&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;We add this command in order to give a quick overview of all available featured and tested Nuleculized applications on &lt;a href="https://github.com/projectatomic/nulecule-library"&gt;github.com/projectatomic/nulecule-library&lt;/a&gt;. The ability to generate your own list is available as well with the &lt;code&gt;atomicapp index generate&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The main features of this release are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Addition of the &lt;code&gt;atomicapp index&lt;/code&gt; command&lt;/li&gt;
+&lt;li&gt;Correct file permissions are now when extracting Nuleculized containers&lt;/li&gt;
+&lt;li&gt;OpenShift connection issue bugfix&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;code&gt;atomicapp index&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;This release adds the addition of the &lt;code&gt;atomicapp index&lt;/code&gt; command. By using the &lt;code&gt;atomicapp index list&lt;/code&gt; command, Atomic App will retrieve a container containing a valid &lt;code&gt;index.yml&lt;/code&gt; and output all available Nulecule containers. This index can also be updated by using &lt;code&gt;atomicapp index update&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;atomicapp index list&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Outputs the list of available containers located at &lt;code&gt;~/.atomicapp/index.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;▶ atomicapp index list
+INFO   :: Atomic App: 0.6.2 - Mode: Index
+ID                        VER      PROVIDERS  LOCATION                                             
+postgresql-atomicapp      1.0.0    {D,O,K}    docker.io/projectatomic/postgresql-centos7-atomicapp 
+flask_redis_nulecule      0.0.1    {D,K}      docker.io/projectatomic/flask-redis-centos7-atomicapp
+redis-atomicapp           0.0.1    {D,O,K}    docker.io/projectatomic/redis-centos7-atomicapp      
+gocounter                 0.0.1    {D,K}      docker.io/projectatomic/gocounter-scratch-atomicapp  
+mariadb-atomicapp         1.0.0    {D,O,K}    docker.io/projectatomic/mariadb-centos7-atomicapp    
+helloapache-app           0.0.1    {D,K,M}    docker.io/projectatomic/helloapache                  
+mongodb-atomicapp         1.0.0    {D,O,K}    docker.io/projectatomic/mongodb-centos7-atomicapp    
+etherpad-app              0.0.1    {D,O,K}    docker.io/projectatomic/etherpad-centos7-atomicapp   
+apache-centos7-atomicapp  0.0.1    {D,K,M}    docker.io/projectatomic/apache-centos7-atomicapp     
+wordpress-atomicapp       2.0.0    {D,O,K}    docker.io/projectatomic/wordpress-centos7-atomicapp  
+skydns-atomicapp          0.0.1    {K}        docker.io/projectatomic/skydns-atomicapp             
+guestbookgo-atomicapp     0.0.1    {O,K}      docker.io/projectatomic/guestbookgo-atomicapp        
+mariadb-app               0.0.1    {D,K}      docker.io/projectatomic/mariadb-fedora-atomicapp     
+gitlab-atomicapp          1.2.0    {D,K}      docker.io/projectatomic/gitlab-centos7-atomicapp 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;atomicapp index update&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Updates the &lt;code&gt;index.yml&lt;/code&gt; file.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;▶ atomicapp index update
+INFO   :: Atomic App: 0.6.2 - Mode: Index
+INFO   :: Updating the index list
+INFO   :: Pulling latest index image...
+INFO   :: Skipping pulling docker image: projectatomic/nulecule-library
+INFO   :: Copying files from image projectatomic/nulecule-library:/index.yaml to /home/wikus/.atomicapp/index.yaml
+INFO   :: Index updated
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;atomicapp index generate&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Generates a valid &lt;code&gt;index.yml&lt;/code&gt; file to use in listing all available containers.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;▶ atomicapp index generate ./nulecule-library
+INFO   :: Atomic App: 0.6.1 - Mode: Index
+INFO   :: Generating index.yaml from ./nulecule-library
+INFO   :: index.yaml generated
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Want to get started using Atomic App? Have a look at our extensive &lt;a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md"&gt;start guide&lt;/a&gt;, or use Atomic App as part of the Atomic CLI on an &lt;a href="http://www.projectatomic.io/download/"&gt;Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For a full list of changes between 0.6.1 and the 0.6.2 please see &lt;a href="https://github.com/projectatomic/atomicapp/commits/0.6.2"&gt;the commit log&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.6.0 Released&amp;mdash;Native Kubernetes API Integration</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/06/atomic-app-0-6-0-release/"/>
+    <id>http://www.projectatomic.io/blog/2016/06/atomic-app-0-6-0-release/</id>
+    <published>2016-06-15T16:55:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;This release of Atomic App introduces a large code-base change related to our Kubernetes provider.&lt;/p&gt;
+
+&lt;p&gt;We incorporate major changes to the Kubernetes provider. With this release, we replace the usage of &lt;code&gt;kubectl&lt;/code&gt; with the &lt;em&gt;requests&lt;/em&gt; Python library and the Kubernetes HTTP API end-point. This change results in faster deployment, smaller image sizes, and increased detail in logging messages.&lt;/p&gt;
+
+&lt;p&gt;The main features of this release are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Kubectl to API conversion&lt;/li&gt;
+&lt;li&gt;Removal of ASCII art&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Kubernetes &lt;code&gt;kubectl&lt;/code&gt; to API Conversion&lt;/h3&gt;
+
+&lt;p&gt;Changes to the Kubernetes provider introduces cleaner and more detailed logging messages for application deployment.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;▶ sudo atomicapp run projectatomic/helloapache --destination helloapache
+INFO   :: Atomic App: 0.6.0 - Mode: Run
+INFO   :: Unpacking image projectatomic/helloapache to helloapache
+INFO   :: Skipping pulling docker image: projectatomic/helloapache
+INFO   :: Extracting Nulecule data from image projectatomic/helloapache to helloapache
+INFO   :: App exists locally and no update requested
+INFO   :: Using namespace default
+INFO   :: Deploying to Kubernetes
+INFO   :: Pods 'helloapache' successfully created
+
+Your application resides in helloapache
+Please use this directory for managing your application
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Want to get started using Atomic App? Have a look at our extensive &lt;a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md"&gt;start guide&lt;/a&gt;, or use Atomic App as part of the Atomic CLI on an &lt;a href="http://www.projectatomic.io/download/"&gt;Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For a full list of changes between 0.5.2 and the 0.6.0 please see &lt;a href="https://github.com/projectatomic/atomicapp/commits/0.6.0"&gt;the commit log&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.5.2 released - Cleaner logging and binary generation!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/05/atomic-app-0-5-2-release/"/>
+    <id>http://www.projectatomic.io/blog/2016/05/atomic-app-0-5-2-release/</id>
+    <published>2016-05-31T16:55:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;In this week&amp;rsquo;s release of Atomic App we not only have cleaner logging output when using the tool, but we&amp;rsquo;ve also added binary generation!&lt;/p&gt;
+
+&lt;p&gt;The main features of this release are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Cleaning logging&lt;/li&gt;
+&lt;li&gt;Binary generation&lt;/li&gt;
+&lt;li&gt;README.MD generation removed from &lt;code&gt;atomicapp init&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Other:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Code cleanup / minor code modifications (dictionary searches, loops)&lt;/li&gt;
+&lt;li&gt;Provider module / class loading refactoring&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Cleaner Logging&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ve completed a clean-up on how we log Atomic App. With this release, we&amp;rsquo;ve added ASCII art as well as cleaned up a lot of the redundant information outputted when deploying an Atomic App.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;▶ atomicapp run projectatomic/helloapache --destination helloapache --provider=docker
+INFO   ::    _  _             _      _
+INFO   ::   /_\| |_ ___ _ __ (_)__  /_\  _ __ _ __   Version:  0.5.1
+INFO   ::  / _ \  _/ _ \ '  \| / _|/ _ \| '_ \ '_ \  Nulecule: 0.0.2
+INFO   :: /_/ \_\__\___/_|_|_|_\__/_/ \_\ .__/ .__/  Mode:     Run
+INFO   ::                                |_|  |_|
+INFO   :: Unpacking image: projectatomic/helloapache to helloapache
+INFO   :: Skipping pulling Docker image: projectatomic/helloapache
+INFO   :: Extracting nulecule data from image: projectatomic/helloapache to helloapache
+INFO   :: Deploying to provider: Docker
+
+Your application resides in helloapache
+Please use this directory for managing your application
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Binary Generation&lt;/h3&gt;
+
+&lt;p&gt;You&amp;rsquo;ll now be able to generate a stand-alone binary for Atomic App without the need of having Python installed.  This removes some issues around Python versions and module installation.&lt;/p&gt;
+
+&lt;p&gt;Simply use &lt;code&gt;make binary&lt;/code&gt; in the root folder of the Atomic App source code and your binary will be generated!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;▶ make binary
+...
+Binary created at bin/atomicapp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Want to get started using Atomic App? Have a look at our extensive &lt;a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md"&gt;start guide&lt;/a&gt;, or use Atomic App as part of the Atomic CLI on an &lt;a href="http://www.projectatomic.io/download/"&gt;Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For a full list of changes between 0.5.1 and 0.5.2 please see &lt;a href="https://github.com/projectatomic/atomicapp/commits/0.5.2"&gt;the commit log&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic App 0.5.0 Released!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/atomic-app-0-5-0-release/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/atomic-app-0-5-0-release/</id>
+    <published>2016-04-14T12:15:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Charlie Drage</name>
+    </author>
+    <content type="html">&lt;p&gt;This is a major release of Atomic App where we introduce a new CLI command as well as the renaming of multiple provider configuration parameters.&lt;/p&gt;
+
+&lt;p&gt;The main features of this release are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Introduction of the &lt;code&gt;atomicapp init&lt;/code&gt; CLI command&lt;/li&gt;
+&lt;li&gt;Renaming of provider configuration related parameters&lt;/li&gt;
+&lt;li&gt;&amp;ndash;provider-auth added as a CLI command&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Other:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Updated legal information&lt;/li&gt;
+&lt;li&gt;Bug fix on persistent storage initialization&lt;/li&gt;
+&lt;li&gt;Utility method to gather sudo user path and information&lt;/li&gt;
+&lt;li&gt;Improved detection if we&amp;rsquo;re inside a Docker container&lt;/li&gt;
+&lt;li&gt;Improved readability on provider failed exceptions&lt;/li&gt;
+&lt;li&gt;docker inspect bugfix&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Atomic App Initialization&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ve included support for initializing a basic Atomic App via the &lt;code&gt;atomicapp init&lt;/code&gt; command. This creates a basic example that can be used on Docker and Kubernetes providers based on the &lt;a href="https://hub.docker.com/r/centos/httpd/"&gt;centos/httpd&lt;/a&gt; docker image.&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;▶ atomicapp init helloworld
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - main.py - Action/Mode Selected is: init
+
+Atomic App: helloworld initialized at ./helloworld
+
+▶ vim ./helloworld/Nulecule &lt;span class="c"&gt;# Make changes to the Nulecule file&lt;/span&gt;
+
+▶ atomicapp run ./helloworld
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - main.py - Action/Mode Selected is: run
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - base.py - Provider not specified, using default provider - kubernetes
+&lt;span class="o"&gt;[&lt;/span&gt;WARNING] - plugin.py - Configuration option &lt;span class="s1"&gt;'provider-config'&lt;/span&gt; not found
+&lt;span class="o"&gt;[&lt;/span&gt;WARNING] - plugin.py - Configuration option &lt;span class="s1"&gt;'provider-config'&lt;/span&gt; not found
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - kubernetes.py - Using namespace default
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - kubernetes.py - trying kubectl at /usr/bin/kubectl
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - kubernetes.py - trying kubectl at /usr/local/bin/kubectl
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - kubernetes.py - found kubectl at /usr/local/bin/kubectl
+&lt;span class="o"&gt;[&lt;/span&gt;INFO] - kubernetes.py - Deploying to Kubernetes
+
+Your application resides &lt;span class="k"&gt;in&lt;/span&gt; ./helloworld
+Please use this directory &lt;span class="k"&gt;for &lt;/span&gt;managing your application
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;New Provider Configuration Parameter Names&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ve renamed the provider-specific parameters for better clarity by adding dashes in-between &amp;lsquo;provider&amp;rsquo; and the specified function.&lt;/p&gt;
+
+&lt;p&gt;Major changes include the renaming of accesstoken to provider-auth.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;providerapi --&amp;gt; provider-api
+accesstoken --&amp;gt; provider-auth
+providertlsverify --&amp;gt; provider-tlsverify
+providercafile --&amp;gt; provider-cafile
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight ini"&gt;&lt;code&gt;&lt;span class="nn"&gt;[general]&lt;/span&gt;
+&lt;span class="py"&gt;provider&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s"&gt;openshift&lt;/span&gt;
+&lt;span class="py"&gt;namespace&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s"&gt;mynamespace&lt;/span&gt;
+&lt;span class="err"&gt;provider-&lt;/span&gt;&lt;span class="py"&gt;api&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s"&gt;https://127.0.0.1:8443&lt;/span&gt;
+&lt;span class="err"&gt;provider-&lt;/span&gt;&lt;span class="py"&gt;auth&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s"&gt;sadfasdfasfasfdasfasfasdfsafasfd&lt;/span&gt;
+&lt;span class="err"&gt;provider-&lt;/span&gt;&lt;span class="py"&gt;tlsverify&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s"&gt;True&lt;/span&gt;
+&lt;span class="err"&gt;provider-&lt;/span&gt;&lt;span class="py"&gt;cafile&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="s"&gt;/etc/myca/ca.pem&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;atomicapp run projectatomic/etherpad-centos7-atomicapp --provider openshift --provider-tlsverify False --provider-auth foo --provider-api &lt;span class="s2"&gt;"https://localhost:8443"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Want to get started using Atomic App? Have a look at our extensive &lt;a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md"&gt;start guide&lt;/a&gt;, or use Atomic App as part of the Atomic CLI on an &lt;a href="http://www.projectatomic.io/download/"&gt;Atomic Host&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For a full list of changes between 0.4.5 and 0.4.5 please see &lt;a href="https://github.com/projectatomic/atomicapp/commits/0.4.5"&gt;the commit log&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

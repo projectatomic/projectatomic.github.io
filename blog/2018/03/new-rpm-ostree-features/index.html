@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Latest rpm-ostree features &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Latest rpm-ostree features' property='og:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host.&#x000A;&#x000A;This blog post is a high-level summary of the recent&#x000A;features that were added in the last few releases.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/03/new-rpm-ostree-features/' property='og:url'>
+<meta content='2018-03-20T17:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm' property='article:tag'>
+<link href='/blog/tag/rpm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Latest rpm-ostree features' name='twitter:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host.&#x000A;&#x000A;This blog post is a high-level summary of the recent&#x000A;features that were added in the last few releases.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_03 blog_2018_03_new-rpm-ostree-features blog_2018_03_new-rpm-ostree-features_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Latest rpm-ostree features
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-20T17:00:00Z'>
+Tuesday 20 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://rpm-ostree.readthedocs.org/">rpm-ostree</a> is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host.</p>
+
+<p>This blog post is a high-level summary of the recent
+features that were added in the last few releases.</p>
+
+<p></p>
+
+<h3>New rojig delivery mechanism</h3>
+
+<p>By far the most fundamental shift that has occurred in the
+latest releases is support for a different way of delivering
+OSTrees to client machines. Dubbed <q>rojig</q>, the idea is that
+rather than clients downloading commits from OSTree remotes,
+they instead re-assemble the exact same commit using RPMs
+from yum repos. How? When OSTree commits are created on the
+server, most of its files can be traced back to specific
+RPMs. The work of figuring out which files come from which
+RPM is done on the compose server. Files which do not come
+from an RPM (e.g. the initramfs) are dumped in a special
+<q>rojig RPM</q>. Using this rojig RPM and all other constituent
+RPMs, which are in essence fancy archives, the client is
+capable of reproducing the bit-for-bit matching OSTree
+commit.</p>
+
+<p>This allows content providers to only worry about delivering
+RPMs, rather than yet another format. It opens the doors to
+the many established tools and services that exist for
+organizing and distributing RPMs.</p>
+
+<p>You can try this out today using the instructions in
+<a href="https://pagure.io/fedora-atomic-host-continuous/">FAHC</a>:</p>
+<pre class="highlight plaintext"><code>$ rpm-ostree status&#x000A;State: idle; auto updates disabled&#x000A;Deployments:&#x000A;● ostree://fedora-atomic:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.100 (2018-03-13 17:19:44)&#x000A;                    Commit: 326f62b93a5cc836c97d31e73a71b6b6b6955c0f225f7651b52a693718e6aa91&#x000A;              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4&#x000A;$ cat &gt;/etc/yum.repos.d/fahc.repo &lt;&lt;EOF&#x000A;[fahc]&#x000A;baseurl=https://ci.centos.org/artifacts/sig-atomic/fahc/jigdo&#x000A;gpgcheck=0&#x000A;EOF&#x000A;$ rpm-ostree rebase --experimental rojig://fahc:fedora-atomic-host&#x000A;...&#x000A;Will download: 463 packages (349.5 MB)&#x000A;  Downloading from updates: [=============] 100%&#x000A;  Downloading from fedora: [=============] 100%&#x000A;  Downloading from fahc: [=============] 100%&#x000A;Importing (463/463) [=============] 100%&#x000A;...&#x000A;$ rpm-ostree status -v&#x000A;State: idle; auto updates disabled&#x000A;Deployments:&#x000A;  fahc:fedora-atomic-host-27.406-1.fc27.x86_64&#x000A;                   Version: 27.406 (2018-03-19 19:55:50)&#x000A;                    Commit: 6495a62314ea2158240cba6a2cbb687bb6965a38d1c724ebdfaa63a13bf9ef73&#x000A;                 StateRoot: fedora-atomic&#x000A;&#x000A;● ostree://fedora-atomic:fedora/27/x86_64/atomic-host&#x000A;                   Version: 27.100 (2018-03-13 17:19:44)&#x000A;                    Commit: 326f62b93a5cc836c97d31e73a71b6b6b6955c0f225f7651b52a693718e6aa91&#x000A;                 StateRoot: fedora-atomic&#x000A;              GPGSignature: 1 signature&#x000A;                            Signature made Tue 13 Mar 2018 05:19:53 PM UTC using RSA key ID F55E7430F5282EE4&#x000A;                            Good signature from "Fedora 27 &lt;fedora-27@fedoraproject.org&gt;"&#x000A;</code></pre>
+
+<p>At no point in the above did we reach out to the
+<code>fedora-atomic</code> remote for data. Yet, we match the exact
+same checksum:</p>
+<pre class="highlight plaintext"><code>$ ostree remote summary fahc | grep -A2 fahc/27/x86_64/buildmaster&#x000A;* fahc/27/x86_64/buildmaster&#x000A;    Latest Commit (20.7 kB):&#x000A;      6495a62314ea2158240cba6a2cbb687bb6965a38d1c724ebdfaa63a13bf9ef73&#x000A;</code></pre>
+
+<p>This is still a work in progress, though much of the
+implementation has already been done. We&rsquo;re hoping to drive
+this as an experimental option in a future release of
+Fedora.</p>
+
+<p>Upstream issue: <a href="https://github.com/projectatomic/rpm-ostree/issues/1081">https://github.com/projectatomic/rpm-ostree/issues/1081</a></p>
+
+<h3>Automatic updates</h3>
+
+<p>Another major effort currently underway is a push for adding
+support for automatic updates. As of the latest release,
+rpm-ostree now supports a new <code>AutomaticUpdatePolicy</code>
+configuration option with only two possible values: <code>off</code>
+and <code>check</code>. In <code>check</code> mode, rpm-ostree will routinely
+check the remote for updates and display any pending updates
+in the output of <code>status</code>:</p>
+<pre class="highlight plaintext"><code>$ rpm-ostree status -v&#x000A;State: idle; auto updates enabled (check; last run 56m ago)&#x000A;Deployments:&#x000A;● ostree://fedora:fedora/27/x86_64/workstation&#x000A;                   Version: 27.94 (2018-03-16 16:33:28)&#x000A;                    Commit: dc9d19682ca2414d5a76a9765a772d5f4d8f0d9768579ee434d742555168b40c&#x000A;                 StateRoot: fedora&#x000A;              GPGSignature: 1 signature&#x000A;                            Signature made Fri 16 Mar 2018 12:33:36 PM EDT using RSA key ID F55E7430F5282EE4&#x000A;                            Good signature from "Fedora 27 &lt;fedora-27@fedoraproject.org&gt;"&#x000A;&#x000A;Available update:&#x000A;        Version: 27.95 (2018-03-19 04:29:52)&#x000A;         Commit: 6a99b39d701a243ec9668efe7511879df4697087869e913ec9f0a4d04fdffcb3&#x000A;   GPGSignature: 1 signature&#x000A;                 Signature made Mon 19 Mar 2018 12:30:00 AM EDT using RSA key ID F55E7430F5282EE4&#x000A;                 Good signature from "Fedora 27 &lt;fedora-27@fedoraproject.org&gt;"&#x000A;  SecAdvisories: FEDORA-2018-a068ade416  Critical   firefox-59.0.1-1.fc27.x86_64&#x000A;       Upgraded: firefox 59.0-4.fc27 -&gt; 59.0.1-1.fc27&#x000A;                 osinfo-db 20170813-1.fc27 -&gt; 20180311-1.fc27&#x000A;</code></pre>
+
+<p>As shown in the output above, it also includes open security
+advisories and their severities.</p>
+
+<p>This is only the start. The goal is to support fully
+automated updates, including automatic reboots as well as a
+<q>softer</q> pending mode where new deployments are created, but
+reboots are initiated manually.</p>
+
+<p>Upstream issue: <a href="https://github.com/projectatomic/rpm-ostree/issues/247">https://github.com/projectatomic/rpm-ostree/issues/247</a></p>
+
+<h3>Overrides no longer experimental</h3>
+
+<p>We have now straightened out the <code>override</code> commands enough
+that we feel confident declaring it stable. For example, we
+now support doing <code>override replace</code> to replace the kernel
+itself. As a result it has been moved out of <code>ex</code>.</p>
+
+<p>Upstream patch: <a href="https://github.com/projectatomic/rpm-ostree/pull/1089">https://github.com/projectatomic/rpm-ostree/pull/1089</a></p>
+
+<h3>New kargs experimental feature</h3>
+
+<p>There is a new <code>kargs</code> command to make it easier to modify
+kernel arguments. The feature is marked experimental for
+now, and thus is found under the <code>ex</code> command. For more
+information on <code>kargs</code>, check out Peter&rsquo;s blog post covering
+it in details
+<a href="../../../2018/03/update-kernel-arguments-on-atomic-host/">here</a>.</p>
+
+<p>Upstream patch: <a href="https://github.com/projectatomic/rpm-ostree/pull/1013">https://github.com/projectatomic/rpm-ostree/pull/1013</a></p>
+
+<h3>New cancel command</h3>
+
+<p>rpm-ostree now supports a new <code>cancel</code> command to cancel any
+ongoing transaction. This is useful for cases where you lost
+the controlling TTY from which you initiated the operation.</p>
+
+<p>More fundamentally, this is a classic display of the power
+of the background update mechanism in Atomic Host. You can
+safely cancel an update at any time without affecting the
+stability of your running system.</p>
+
+<p>Upstream patch: <a href="https://github.com/projectatomic/rpm-ostree/pull/1019">https://github.com/projectatomic/rpm-ostree/pull/1019</a></p>
+
+<h3>LiveFS support for full filesystem update</h3>
+
+<p>Previously, the experimental <code>livefs</code> command only worked
+when the pending deployment had pure additions (e.g. a new
+layered package). <code>livefs</code> now supports a <code>--replace</code> switch
+to take this to the extreme and switch all of <code>/usr</code>. This
+is essentially a big hammer, so use with care.</p>
+
+<p>As usual, please remember that details of the <code>livefs</code>
+command may change in a future release.</p>
+
+<p>Upstream patch: <a href="https://github.com/projectatomic/rpm-ostree/pull/1028">https://github.com/projectatomic/rpm-ostree/pull/1028</a></p>
+
+<h3>Other minor fixes and improvements</h3>
+
+<ul>
+<li>The <code>upgrade</code>, <code>deploy</code>, and <code>rebase</code> commands learned new
+<code>--download-only</code> and <code>--cache-only</code> switches. This is
+analogous to <code>dnf</code>&rsquo;s <code>--downloadonly</code> and <code>--cacheonly</code>
+switches, but extends to layered packages as well.</li>
+<li>Related to the previous item, a new <code>refresh-md</code> command
+was added to support refreshing the rpm-md. This is
+analogous to <code>dnf</code>&rsquo;s <code>makecache</code> command.</li>
+<li>In the spirit of making rpm-ostree the only front-facing
+application, a new <code>usroverlay</code> command was added to take
+over the functionality of <code>ostree admin unlock</code>.</li>
+<li>The <code>compose tree</code> subcommand has now been split into
+three subcommands: <code>install</code>, <code>postprocess</code>, and <code>commit</code>.
+This can be used to more easily customize the rootfs
+before committing it to the OSTree repo.</li>
+<li>The <code>db diff</code> command now can use commit metadata to
+retrive package lists. This means that one no longer needs
+to have the full commit when performing diffs.</li>
+<li>The <code>status</code> command learned a new <code>--booted</code> switch to
+only display information about the booted deployment.</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm/">rpm</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/03/new-rpm-ostree-features/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/03/new-rpm-ostree-features/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/03/new-rpm-ostree-features/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

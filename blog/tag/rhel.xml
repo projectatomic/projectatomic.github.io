@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Rhel</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/rhel.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Why we don't let non-root users run Docker in CentOS, Fedora, or RHEL</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/"/>
+    <id>http://www.projectatomic.io/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/</id>
+    <published>2015-08-10T14:53:25+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I often get bug reports from users asking &lt;em&gt;&lt;q&gt;why can&amp;rsquo;t I use `docker` as a non root user, by default?&lt;/q&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Docker has the ability to change the group ownership of the /run/docker.socket to have group permission of 660, with the &lt;code&gt;group&lt;/code&gt; ownership the docker group.  This would allow users added to the docker group to be able to run docker containers without having to execute &lt;code&gt;sudo&lt;/code&gt; or &lt;code&gt;su&lt;/code&gt; to become root. Sounds great&amp;hellip;&lt;br&gt;
+&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ls -l /var/run/docker.sock 
+srw-rw----. 1 root docker 0 Aug  3 13:02 /var/run/docker.sock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;But&lt;/strong&gt; on Red Hat Enterprise Linux (RHEL), Fedora, and CentOS we prefer to have the docker.socket set to:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ls -l /var/run/docker.sock 
+srw-rw----. 1 root root 0 Aug  3 13:02 /var/run/docker.sock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Why is that? Simple: if a user can talk to the &lt;code&gt;docker&lt;/code&gt; socket, they can execute the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -ti --privileged -v /:/host fedora chroot /host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Giving them full root access to the host system. This is similar to giving them the following in sudo.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;grep dwalsh /etc/sudoers
+dwalsh  ALL=(ALL)   NOPASSWD: ALL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which would allow them to run &lt;code&gt;sudo sh&lt;/code&gt; and get the same access. But there is one big flaw with this. Docker has no auditing or logging built in, while &lt;code&gt;sudo&lt;/code&gt; does.  &lt;/p&gt;
+
+&lt;p&gt;Docker currently records events but the events disappear when the docker daemon is restarted. Docker does not currently do any auditing.&lt;/p&gt;
+
+&lt;p&gt;From a security perspective, Red Hat has expressed concerns with enabling access to the docker daemon from non-root users, absent auditing and proper logging.  We&amp;rsquo;ve implemented those controls in &lt;a href="https://github.com/docker/docker/pull/14446"&gt;PR14446&lt;/a&gt; though it depends on an authentication framework which is still being discussed. Until we can implement proper auditing and logging, we recommend implementing sudo rules to permit access to the docker daemon. That allows &lt;code&gt;sudo&lt;/code&gt; to provide logging and audit.&lt;/p&gt;
+
+&lt;h3&gt;Setting up sudo&lt;/h3&gt;
+
+&lt;p&gt;If you want to give &lt;code&gt;docker&lt;/code&gt; access to non-root users we recommend setting up sudo.  Here is a short guide on how to do this.&lt;/p&gt;
+
+&lt;p&gt;Add an entry like the following to &lt;code&gt;/etc/sudoers&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;grep dwalsh /etc/sudoers
+dwalsh        ALL=(ALL)       NOPASSWD: /usr/bin/docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will allow the specified user to run docker as root, without a password.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; I do &lt;em&gt;not&lt;/em&gt; recommend using &lt;code&gt;NOPASSWD&lt;/code&gt;, this would allow any process on your system to become root. If you require the password, the user needs to specify his password when running the docker command, making the system a bit more secure. If a password is required, &lt;code&gt;sudo&lt;/code&gt; gives you a five minute grace period to run docker again without entering the password.&lt;/p&gt;
+
+&lt;p&gt;Now, set up an alias for running the &lt;code&gt;docker&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;alias docker="sudo /usr/bin/docker"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now when the user executes the &lt;code&gt;docker&lt;/code&gt; command as non-root it will be allowed and get proper logging.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -ti --privileged -v /:/host fedora chroot /host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Look at the journal or &lt;code&gt;/var/log/messages&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;journalctl -b | grep docker.*privileged
+Aug 04 09:02:56 dhcp-10-19-62-196.boston.devel.redhat.com sudo[23422]:   dwalsh : TTY=pts/3 ; PWD=/home/dwalsh/docker/src/github.com/docker/docker ; USER=root ; COMMAND=/usr/bin/docker run -ti --privileged -v /:/host fedora chroot /host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Look at the audit log:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ausearch -m USER_ROLE_CHANGE -i
+type=USER_ROLE_CHANGE msg=audit(08/04/2015 09:02:56.514:1460) : pid=23423 uid=root auid=dwalsh ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='newrole: old-context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+new-context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 exe=/usr/bin/sudo hostname=? addr=? terminal=/dev/pts/3 res=success'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Better Security&lt;/h4&gt;
+
+&lt;p&gt;Better yet, if you wanted to only allow a user to access a particular container, you could write a simple script:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat /usr/bin/docker-fedora
+#!/bin/sh
+docker run -ti --rm fedora /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After writing the script, configure sudoers to run it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;grep dwalsh /etc/sudoers
+dwalsh        ALL=(ALL)       NOPASSWD: /usr/bin/docker-fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This user would only be able to run the fedora container, without privileges.&lt;/p&gt;
+
+&lt;h3&gt;Authentication&lt;/h3&gt;
+
+&lt;p&gt;We have other patches that we are working on to make the docker daemon more secure, including authentication. We have an ongoing discussion &lt;a href="https://github.com/docker/docker/issues/13697"&gt;in issue #13697 &amp;ldquo;Adding Kerberos support to Docker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Authorization&lt;/h3&gt;
+
+&lt;p&gt;We are also developing a proposal to add Authorization/RBAC (Roles Based Access Control) to docker, to allow administrators to specify which users are allowed to do which activity on which containers/images.&lt;/p&gt;
+
+&lt;p&gt;That proposal is &lt;a href="https://github.com/rhatdan/docker-rbac"&gt;on GitHub&lt;/a&gt; if you&amp;rsquo;d like to review it, add comments, or suggestions. &lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;We believe the security of managing the docker daemon needs a lot of improvement, before we can think of opening up access to non-privileged users directly. Until these fixes are made &lt;code&gt;sudo&lt;/code&gt; is the best option. We&amp;rsquo;re working on better options, but for the time being we strongly recommend using &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>CentOS Atomic Host Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/centos-atomic-host-rebuild-released/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/centos-atomic-host-rebuild-released/</id>
+    <published>2015-06-23T16:30:55+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;We would like to announce the general availability of CentOS Atomic Host (May 2015), a lean operating system designed to run Docker containers, derived from Red Hat Enterprise Linux Atomic Host (7.1.2), and built from standard CentOS 7 RPMs. &lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host is produced by the &lt;a href="http://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS Atomic SIG&lt;/a&gt;, based on upstream work from  &lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;CentOS Atomic Host is available as a qcow2 image, as VirtualBox or libvirt-formatted Vagrant box and as an installable ISO image. These images are available for download at &lt;a href="http://cloud.centos.org/centos/7/atomic/images/"&gt;cloud.centos.org&lt;/a&gt;. The backing ostree repo is published to &lt;a href="http://mirror.centos.org/centos/7/atomic/x86_64/repo"&gt;mirror.centos.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you currently run an atomic host (from any distro or release in the past), you can rebase to this released CentOS Atomic Host by running the following two commands :&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  ostree remote add centos-atomic-host http://mirror.centos.org/centos/7/atomic/x86_64/repo
+  rpm-ostree rebase  centos-atomic-host:centos-atomic-host/7/x86_64/standard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Images&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2"&gt;CentOS-Atomic-Host-7-GenericCloud.qcow2&lt;/a&gt; (847MB)  is suitable for use in on-premise and local virtualised environments. We test this on OpenStack, AWS and local Libvirt installs. In order to login, you will need to provide a cloud-init consumeable metadata source, like the NoCloud iso file. The Generic Cloud image is also available &lt;a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2.gz"&gt;compressed in gz format&lt;/a&gt; (388 MB) and &lt;a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2.xz"&gt;xz compressed&lt;/a&gt; (308MB).&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Installer.iso"&gt;installer ISO&lt;/a&gt; (660 MB) can be used via regular install methods (PXE, CD, USB image, etc.) and uses the Anaconda installer to deliver the CentOS Atomic Host. This allows flexibility to control the install using kickstarts and define custom storage, networking and user accounts. This is the recommended process for getting CentOS Atomic Host onto bare metal machines, or to generate your own image sets for custom environments.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Libvirt.box"&gt;CentOS-Atomic-Host-7-Vagrant-Libvirt.box&lt;/a&gt; (385 MB) and &lt;a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Virtualbox.box"&gt;CentOS-Atomic-Host-7-Vagrant-Virtualbox.box&lt;/a&gt; (395 MB) are Vagrant boxes for Libvirt and Virtualbox providers. &lt;/p&gt;
+
+&lt;p&gt;The easiest way to consume these images is via the Atlas / Vagrant Cloud setup (see &lt;a href="https://atlas.hashicorp.com/centos/boxes/atomic-host"&gt;https://atlas.hashicorp.com/centos/boxes/atomic-host&lt;/a&gt;. For example, getting the VirtualBox instance up would involve running the following two commands on a machine with vagrant installed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  vagrant init centos/atomic-host &amp;amp;&amp;amp; vagrant up --provider virtualbox 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;SHA Sums&lt;/h4&gt;
+
+&lt;p&gt;c7eb7d770947d3bbb18464d621bb7597b3ecd41dd518551ca6269c7630edc347  CentOS-Atomic-Host-7-GenericCloud.qcow2
+d371c3e4441fef32d3c4456fb08cbd01f0d3c30baafd60c25f4f7f9be4eca1c5  CentOS-Atomic-Host-7-GenericCloud.qcow2.gz
+7ab0e527e108ce8e8861f59f34b9206ea3ac45e3944ce419fc0fa754fbd8b08d  CentOS-Atomic-Host-7-GenericCloud.qcow2.xz
+bfd773fbec8fe15f58e9bb01d91809d2ccc9671079b2dff572d08ab607b12acf  CentOS-Atomic-Host-7-Installer.iso
+8cf02325b1aa04b04c18d988bd3a31b049c2487768f718e3093ade7e8fe33cd4  CentOS-Atomic-Host-7-Vagrant-Libvirt.box
+af8fd6b5af0c98a87543578591230b7f20da97a4d5f53fb091306616bf34577a  CentOS-Atomic-Host-7-Vagrant-Virtualbox.box&lt;/p&gt;
+
+&lt;h3&gt;Component Versions:&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Kernel 3.10.0-229&lt;/li&gt;
+&lt;li&gt;Docker 1.6.0&lt;/li&gt;
+&lt;li&gt;Kubernetes 0.15.0-123&lt;/li&gt;
+&lt;li&gt;Flannel 0.2.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Release Cycle&lt;/h3&gt;
+
+&lt;p&gt;The rebuild image will follow the upstream Red Hat Enterprise Linux Atomic Host cadence. After sources are released, they&amp;rsquo;ll be rebuild and included in new images. After the images are tested by the SIG and deemed ready, they&amp;rsquo;ll be announced. If you&amp;rsquo;d like to help with the process, there&amp;rsquo;s plenty to do!&lt;/p&gt;
+
+&lt;h3&gt;Getting Involved&lt;/h3&gt;
+
+&lt;p&gt;The CentOS Atomic SIG seeks to produce two &amp;lsquo;streams&amp;rsquo; for users, a rebuild of the RHEL Atomic Host, and a monthly release that tracks upstream components more closely. Users who want to take a more conservative approach to components like Docker, Kubernetes, and so forth will prefer the rebuild.&lt;/p&gt;
+
+&lt;p&gt;Our monthly image gives the community the opportunity to preview new technologies, and to experiment with packages that may not be carried in RHEL Atomic Host. If you&amp;rsquo;d like to work on testing images, help with packaging, documentation, or even help define the direction of our montly release &amp;ndash; join us! &lt;/p&gt;
+
+&lt;p&gt;The SIG meets weekly on Thursdays at 16:00 UTC in the #centos-devel channel, and you&amp;rsquo;ll often find us in #atomic and/or #centos-devel if you have questions. You can also join the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel&lt;/a&gt; mailing list if you&amp;rsquo;d like to discuss the direction of Project Atomic, its components, or have other questions. &lt;/p&gt;
+
+&lt;h3&gt;Getting Help&lt;/h3&gt;
+
+&lt;p&gt;If you run into any problems with the images or components, feel free to ask on the &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;centos-devel&lt;/a&gt; mailing list. &lt;/p&gt;
+
+&lt;p&gt;Have questions about using Atomic? See the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic"&gt;atomic&lt;/a&gt; mailing list or find us in the #atomic channel on Freenode.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Red Hat Enterprise Linux Atomic Host released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/03/red-hat-enterprise-linux-atomic-host-released/"/>
+    <id>http://www.projectatomic.io/blog/2015/03/red-hat-enterprise-linux-atomic-host-released/</id>
+    <published>2015-03-05T14:15:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Red Hat &lt;a href="http://developerblog.redhat.com/2015/03/05/announcement-rhel-atomic-host-ga/"&gt;announced&lt;/a&gt; the general availability of Red Hat Linux Enterprise Atomic Host earlier today. This pulls together work from Project Atomic and makes it ready for organizations that are looking to package and run applications based on Red Hat Enterprise Linux (RHEL) 6 and 7 as containers. &lt;/p&gt;
+
+&lt;p&gt;This release includes all the components (Docker, Kubernetes, Flannel, systemd, etc.) that you need to &lt;a href="http://rhelblog.redhat.com/2014/12/04/top-7-reasons-to-use-red-hat-enterprise-linux-atomic-host/"&gt;deploy a container-based architecture&lt;/a&gt; in an environment based on RHEL. &lt;/p&gt;
+
+&lt;p&gt;Not quite sure about the benefits of containers? The RHEL folks are hosting a &lt;a href="http://www.redhat.com/en/about/events/transform-application-delivery-containers-red-hat-virtual-event"&gt;virtual event on March 12th&lt;/a&gt;. This features Tim Yeaton and Lars Herrman from Red Hat, and principal analyst Dave Bartoletti from Forrester. Odds are if you&amp;rsquo;re following Project Atomic you&amp;rsquo;re &lt;em&gt;already&lt;/em&gt; pretty hip to the benefits fo containers, but if not &amp;ndash; this should answer many of your questions.&lt;/p&gt;
+
+&lt;h3&gt;Getting RHEL Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;Interested in trying RHEL Atomic Host? Head over to the Red Hat &lt;a href="https://access.redhat.com/products/red-hat-enterprise-linux/atomic-host"&gt;Customer Portal&lt;/a&gt; and grab the installation media and &lt;a href="https://www.redhat.com/en/resources/red-hat-enterprise-linux-atomic-host"&gt;read up&lt;/a&gt; on the offering. You can download installation media and test it out with out a RHEL subscription.&lt;/p&gt;
+
+&lt;h3&gt;More Fun Ahead&lt;/h3&gt;
+
+&lt;p&gt;The fun doesn&amp;rsquo;t stop with the RHEL Atomic Host release, of course. We are still working on getting Fedora Atomic Host ready for the Fedora 22 release, and the &lt;a href="http://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS SIG&lt;/a&gt; is continuing to work on CentOS Atomic Host as well. Naturally, the work in Fedora and CentOS will benefit future RHEL Atomic Host releases. &lt;/p&gt;
+
+&lt;p&gt;The alpha for the Fedora 22 Cloud edition, including Atomic, should be released in the next week or two (the schedule currently calls for 10 March). A new CentOS image should be out in the next day or two, including some additional image types! &lt;/p&gt;
+
+&lt;p&gt;Have questions, or want to get involved in Project Atomic? Here&amp;rsquo;s where to find us:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic"&gt;Atomic&lt;/a&gt; mailing list is for discussions around using Atomic Hosts or containers on Atomic.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;Atomic-Devel&lt;/a&gt; mailing list is for discussions around building Atomic Hosts and the Atomic Host Definition.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;CentOS-Devel&lt;/a&gt; mailing list is where CentOS-specific discussions happen.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="https://admin.fedoraproject.org/mailman/listinfo/cloud"&gt;Fedora Cloud&lt;/a&gt; mailing list is where Fedora-specific discussions happen.&lt;/li&gt;
+&lt;li&gt;Chat with us real-time in #atomic on Freenode.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And, as always, ping me directly (jzb, at RedHat.com) if you can&amp;rsquo;t find what you need elsewhere! &lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Running Syslog Within a Docker Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/"/>
+    <id>http://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/</id>
+    <published>2014-09-11T20:06:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently I received a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1139734"&gt;bug report&lt;/a&gt; on Docker complaining about using rsyslogd within a container.  &lt;/p&gt;
+
+&lt;p&gt;The user ran a RHEL7 container, installed rsyslog, started the daemon, and then sent a logger message, and nothing happened.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -it --rm rhel /bin/bash
+# yum -y install rsyslog
+# /usr/sbin/rsyslogd
+# logger "this is a test"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;No message showed up in &lt;code&gt;/var/log/messages&lt;/code&gt; within the container, or on the host machine for that matter.&lt;/p&gt;
+
+&lt;p&gt;The user then looked and noticed that &lt;code&gt;/dev/log&lt;/code&gt; did not exist and this was where logger was writing the message. The user thought this was a bug.&lt;/p&gt;
+
+&lt;p&gt;The problem was that in RHEL7 and Fedora we now use journald, which listens on &lt;code&gt;/dev/log&lt;/code&gt; for incoming messages. In RHEL7 and Fedora, rsyslog actually reads messages from the journal via its API by default.&lt;/p&gt;
+
+&lt;p&gt;But not all docker containers run systemd and journald. (Most don&amp;rsquo;t). In order to get the rsyslogd to work the way the user wanted, he would have to modify the configuration file, &lt;code&gt;/etc/rsyslogd.conf&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In &lt;code&gt;/etc/rsyslog.conf&lt;/code&gt; remove &lt;code&gt;$ModLoad imjournal&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Set &lt;code&gt;$OmitLocalLogging&lt;/code&gt; to &lt;code&gt;off&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Make sure &lt;code&gt;$ModLoad imuxsock&lt;/code&gt; is present.&lt;/li&gt;
+&lt;li&gt;Also comment out: &lt;code&gt;$IMJournalStateFile imjournal.state&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After making these changes rsyslogd will start listening on &lt;code&gt;/dev/log&lt;/code&gt; within the container and the logger messages will get accepted by rsyslogd and written to &lt;code&gt;/var/log/messages&lt;/code&gt; within the container.&lt;/p&gt;
+
+&lt;p&gt;If you wanted to logging messages to go to the host logger, you could &lt;q&gt;volume&lt;/q&gt; mount &lt;code&gt;/dev/log&lt;/code&gt; into the container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -v /dev/log:/dev/log -it --rm rhel /bin/bash
+# logger "this is a test"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The message should show up in the host&amp;rsquo;s journalct log, and if you are running rsyslog on the host, the message should end up in &lt;code&gt;/var/log/messages&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Bringing new security features to Docker</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/09/bringing-new-security-features-to-docker/"/>
+    <id>http://www.projectatomic.io/blog/2014/09/bringing-new-security-features-to-docker/</id>
+    <published>2014-09-04T21:44:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;A great follow-up to my post about &lt;a href="http://www.projectatomic.io/blog/2014/08/is-it-safe-a-look-at-docker-and-security-from-linuxcon/"&gt;Jérôme Petazzoni&amp;rsquo;s post on Docker and security&lt;/a&gt;, Dan Walsh has a post up on OpenSource.com explaining just what&amp;rsquo;s being done about Docker security.&lt;/p&gt;
+
+&lt;p&gt;Says Dan, &amp;ldquo;Docker, Red Hat, and the open source community are working together to make Docker more secure. When I look at security containers, I am looking to protect the host from the processes within the container, and I&amp;rsquo;m also looking to protect containers from each other. With Docker we are using the layered security approach, which is &amp;lsquo;the practice of combining multiple mitigating security controls to protect resources and data.&amp;rsquo;&lt;/p&gt;
+
+&lt;p&gt;Basically, we want to put in as many security barriers as possible to prevent a break out. If a privileged process can break out of one containment mechanism, we want to block them with the next. With Docker, we want to take advantage of as many security mechanisms of Linux as possible.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://opensource.com/business/14/9/security-for-docker"&gt;Read the full post over on OpenSource.com. &amp;raquo;&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

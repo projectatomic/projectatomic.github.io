@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic at Flock to Fedora 2017 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic at Flock to Fedora 2017' property='og:title'>
+<meta content='This year’s Flock to Fedora contributor conference is chock-full of Atomic project work.  If you’re interested in Atomic Host, containers, and Kubernetes, you’ll have plenty to do for the whole week in Cape Cod.  Sessions will cover maintaining containers, writing docs, the FLIBS build system, building alternate-arch containers, and much more. And if you’re in the Boston area … there’s still time to register!&#x000A;&#x000A;Read through for a list of sessions.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/08/atomic-flock/' property='og:url'>
+<meta content='2017-08-21T18:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='FLIBS' property='article:tag'>
+<link href='/blog/tag/flibs.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic at Flock to Fedora 2017' name='twitter:title'>
+<meta content='This year’s Flock to Fedora contributor conference is chock-full of Atomic project work.  If you’re interested in Atomic Host, containers, and Kubernetes, you’ll have plenty to do for the whole week in Cape Cod.  Sessions will cover maintaining containers, writing docs, the FLIBS build system, building alternate-arch containers, and much more. And if you’re in the Boston area … there’s still time to register!&#x000A;&#x000A;Read through for a list of sessions.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_08 blog_2017_08_atomic-flock blog_2017_08_atomic-flock_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic at Flock to Fedora 2017
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-21T18:00:00Z'>
+Monday 21 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This year&rsquo;s <a href="https://flocktofedora.org/">Flock to Fedora</a> contributor conference is chock-full of Atomic project work.  If you&rsquo;re interested in Atomic Host, containers, and Kubernetes, you&rsquo;ll have plenty to do for the whole week in Cape Cod.  Sessions will cover maintaining containers, writing docs, the FLIBS build system, building alternate-arch containers, and much more. And if you&rsquo;re in the Boston area &hellip; there&rsquo;s still time to <a href="https://register.flocktofedora.org/">register</a>!</p>
+
+<p>Read through for a list of sessions.</p>
+
+<p></p>
+
+<h3>Regular Sessions</h3>
+
+<p>Atomic is so much of Fedora these days, about &frac14; of the program is Atomic-related.  Sessions include the following:</p>
+
+<ul>
+<li><a href="https://flock2017.sched.com/event/Bm97/atomic-host-101">Atomic Host 101</a> will explain Atomic Host to Fedora members who are new to the platform.</li>
+<li><a href="https://flock2017.sched.com/event/Bm9F/multi-arch-container-layered-image-build-system">Multi-Arch Container Layered Image Build System</a>, covering how Fedora is planning to have ARM and PPC containers.</li>
+<li><a href="https://flock2017.sched.com/event/Bm9d/new-container-technologies">New Container Technologies</a> covers the various Atomic projects around building and deploying containers.</li>
+<li>The <a href="https://flock2017.sched.com/event/Bm9U/system-containers-concept-creation-and-usage">System Containers</a> session will show you how to make your own system containers for installing key software.</li>
+<li>A <a href="https://flock2017.sched.com/event/Bm9T/discussing-kubernetes-origin-deployment-options">Kubernetes vs. OpenShift</a> talk will explain the two kinds of Atomic clusters and how to handle each.</li>
+<li>Fedora engineering folks will explain <a href="https://flock2017.sched.com/event/Bm94/on-openshift-in-fedora-infrastructure">how we&rsquo;re using OpenShift in the Fedora Infrastucture</a>.</li>
+<li>You can find out how to <a href="https://flock2017.sched.com/event/Bm9Y/setup-your-own-atomic-workstation">set up your own Atomic Workstation</a>.</li>
+<li>Need to create your own custom OStrees?  <a href="https://flock2017.sched.com/event/Bm9b/automate-building-custom-atomic-host-with-ansible">Use Ansible</a>.</li>
+</ul>
+
+<h3>Work Sessions</h3>
+
+<p>More than anything, we want you to contribute to Atomic.  As such, we&rsquo;ve created the following Work Sessions for you to get started with some hands-on contributions:</p>
+
+<ul>
+<li><a href="https://flock2017.sched.com/event/Bm9B/become-a-container-maintainer">Become a Container Maintainer</a>, because we need you to create, maintain, and review container images for FLIBS!</li>
+<li>Help us create a new Administrator Guide for Atomic Host in this <a href="https://flock2017.sched.com/event/Bm9S/fedora-atomic-doc-work">Doc Work Session</a>.</li>
+</ul>
+
+<p>See you at Flock!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/flibs/">FLIBS</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/08/atomic-flock/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/08/atomic-flock/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/08/atomic-flock/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

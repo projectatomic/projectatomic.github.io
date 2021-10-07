@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Building a Buildah container image for Kubernetes &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='ipbabble' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Building a Buildah container image for Kubernetes' property='og:title'>
+<meta content='Building a Buildah Container Image for Kubernetes&#x000A;&#x000A;Background&#x000A;&#x000A;Dan Walsh (@rhatdan) asked me to look into building a working Buildah container image. This was not just a cool experiment. It has a real purpose. As many readers know, Dan is not a fan of big fat daemons. This has become less of an issue when running containers in Kubernetes as there is an alternative with CRI-O. CRI-O provides kubernetes a standard interface to OCI compliant runtimes. runC is the reference implementation of the OCI runtime specification. Kubernetes calls the runtC runtime through CRI-O and runC then talks to the Linux kernel to run a container. This bypasses the need for the Docker daemon, and containerd. With CRI-O, there is no requirement for the Docker daemon for a kubernetes cluster to run containers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/' property='og:url'>
+<meta content='2018-03-01T00:00:00Z' property='article:published_time'>
+<meta content='ipbabble' property='article:author:username'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oci' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Building a Buildah container image for Kubernetes' name='twitter:title'>
+<meta content='Building a Buildah Container Image for Kubernetes&#x000A;&#x000A;Background&#x000A;&#x000A;Dan Walsh (@rhatdan) asked me to look into building a working Buildah container image. This was not just a cool experiment. It has a real purpose. As many readers know, Dan is not a fan of big fat daemons. This has become less of an issue when running containers in Kubernetes as there is an alternative with CRI-O. CRI-O provides kubernetes a standard interface to OCI compliant runtimes. runC is the reference implementation of the OCI runtime specification. Kubernetes calls the runtC runtime through CRI-O and runC then talks to the Linux kernel to run a container. This bypasses the need for the Docker daemon, and containerd. With CRI-O, there is no requirement for the Docker daemon for a kubernetes cluster to run containers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_03 blog_2018_03_building-buildah-container-image-for-kubernetes blog_2018_03_building-buildah-container-image-for-kubernetes_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Building a Buildah container image for Kubernetes
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/ipbabble/">ipbabble</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-01T00:00:00Z'>
+Thursday  1 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /></p>
+
+<h3>Building a Buildah Container Image for Kubernetes</h3>
+
+<h4>Background</h4>
+
+<p>Dan Walsh (<a href="https://github.com/rhatdan">@rhatdan</a>) asked me to look into building a working <a href="https://github.com/projectatomic/buildah">Buildah</a> container image. This was not just a cool experiment. It has a real purpose. As many readers know, Dan is not a fan of <a href="https://www.youtube.com/watch?v=BeRr3aZbzqo&amp;list=PLaR6Rq6Z4IqfhzC5ds3sMju7KKNzdd0xy&amp;t=1055s"><q>big fat daemons</q></a>. This has become less of an issue when running containers in Kubernetes as there is an alternative with <a href="http://cri-o.io/">CRI-O</a>. CRI-O provides kubernetes a standard interface to <a href="https://github.com/opencontainers/runtime-spec">OCI compliant runtimes</a>. <a href="https://github.com/opencontainers/runc">runC</a> is the reference implementation of the OCI runtime specification. Kubernetes calls the runtC runtime through CRI-O and runC then talks to the Linux kernel to run a container. This bypasses the need for the Docker daemon, and containerd. With CRI-O, there is no requirement for the Docker daemon for a kubernetes cluster to run containers.</p>
+
+<p></p>
+
+<p>However this does not solve the problem of building container images. Until recently, Docker was considered the gold standard for building OCI compliant container images - and with Docker, a running daemon is required to build them. There are two ways to solve this: have dedicated build nodes or run the Docker daemon across the cluster, which puts us back at square zero. </p>
+
+<p>The daemon runs as root, and adds complexity and attack surface. To mitigate this risk, having dedicated machines for doing builds seems the better choice. But when you have a cluster of resources with something like Kubernetes you really don’t want to waste resources with dedicated nodes which might sit idle when not doing builds. It’s much better to schedule builds in the cluster, just like any other process. There are several reasons for this.</p>
+
+<ul>
+<li>In a continuous integration, multi-tenant environment there can be multiple builds going on at any time. So if your cluster is a PaaS for developers you want to be able to schedule builds whenever the developer needs them as quickly as possible. Having the ability to schedule across the cluster is very efficient.</li>
+<li>When new base images become available in a continuous deployment environment, you will want to take advantage of them as soon as possible. This may cause a spike of build activity that you want to spread across the cluster rather than overloading a single machine.</li>
+<li>Related to the second point, when security events like a CVE occurs, many images will need to be rebuilt to ensure the vulnerability is addressed. Again this is going to cause spikes and will require many simultaneous build resources. </li>
+</ul>
+
+<p>Therefore it is important to be able to be able to schedule container image builds within the kubernetes cluster. But it&rsquo;s hardly worth having solved the <q>big fat daemon</q> issue for runtime if you still need the daemon for build time across the cluster. i.e. you still need to have Docker running on all the nodes in the cluster if you intend to do builds on them.</p>
+
+<p>Enter Buildah. Buildah doesn’t require a daemon to run on a host in order to build a container image. At the same time it would be great if we didn’t have to install Buildah on every node in the cluster, as we did with Docker, and also maintain consistent updates on each node. Instead it would be preferable to run Buildah as a container. If we can.</p>
+
+<p>So I embarked on this effort and hit several small roadblocks, but essentially got it working relatively quickly.</p>
+
+<h4>Building a Buildah OCI <a href="https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction/#h.dqlu6589ootw">image</a></h4>
+
+<p>First let’s summarize the goal and purpose of this exercise. We want to build a Buildah container that can be run by Kubernetes to perform image builds across the cluster on demand. This allows kubernetes to orchestrate build farms. If we can do this then we can remove the need for running a Docker daemon everywhere on the Kubernetes cluster. CRI-O and runC solve the runtime problem and CRI-O, runC and Buildah solve the build problem.</p>
+
+<p>Time to install Buildah. Run as root because you will need to be root for running Buildah commands for this exercise. My Linux of choice is Fedora and so I use DNF.</p>
+<pre class="highlight plaintext"><code># dnf -y install buildah&#x000A;</code></pre>
+
+<p>Here are the steps I performed to build my Buildah OCI image:</p>
+
+<p>First I wanted to build it from scratch. I wanted nothing in the container except what I need to run Buildah. But what about DNF or Yum, you might ask? Don&rsquo;t need them. If I&rsquo;m using this Buildah container from the command line then I&rsquo;ll be using the host’s package manager, whatever that might be. If I&rsquo;m using Buildah <code>bud</code>, aka build-using-dockerfile, then I&rsquo;m using the FROM images package manager. To start the process, I created a scratch container and stored the container&rsquo;s name, which happens to be working-container, in a environment variable for convenience.</p>
+<pre class="highlight plaintext"><code># containerid=$(buildah from scratch)&#x000A;</code></pre>
+
+<p>Now I need to mount the container&rsquo;s file system so that I can install the buildah package and dependencies.</p>
+<pre class="highlight plaintext"><code># scratchmnt=$(buildah mount $containerid)&#x000A;</code></pre>
+
+<p>Next I install the buildah package and dependencies into the containers filesystem. Notice that as I&rsquo;m doing this from a Fedora laptop I&rsquo;m defaulting to the Fedora repositories and I&rsquo;m specifying the version, 27. Also, I clean up afterward so that we can reduce the image size. If you skip the <code>dnf clean</code> step you&rsquo;ll have extra bloat.</p>
+<pre class="highlight plaintext"><code># dnf install --installroot $scratchmnt --release 27 buildah --setopt install_weak_deps=false -y&#x000A;# dnf clean all --installroot $scratchmnt --release 27&#x000A;</code></pre>
+
+<p>Now we need to set the container ENTRYPOINT and CMD. It&rsquo;s good practice to use ENTRYPOINT for the command that you want to run. When containerizing a command line tool, I usually set CMD to <code>--help</code> so that it gets appended to the ENTRYPOINT if you don&rsquo;t specify any parameters. I got into the practice after reading Michael Crosby’s <a href="http://crosbymichael.com/dockerfile-best-practices.html">Best Practices</a> post. See section 5. </p>
+
+<p>(Currently Buildah needs ‘\’ for parameters with ‘&ndash;’. That will get fixed.)</p>
+<pre class="highlight plaintext"><code># buildah config --cmd "\-\-help" $containerid&#x000A;# buildah config --entrypoint /usr/bin/buildah $containerid&#x000A;</code></pre>
+
+<p>It’s also good practice, and pretty important, to set some other metadata like the image name and who created it etc.</p>
+<pre class="highlight plaintext"><code># buildah config --author "wgh @ redhat.com" --created-by "ipbabble" --label name=buildah $containerid&#x000A;</code></pre>
+
+<p>Finally I need to commit the container to an image. It should be called <code>buildah</code> because it is good practice to name a command line tool container the name of the command. That way, if its ENTRYPOINT is set correctly, you can run it similar to the command it is containerizing. The following command ran a little over a minute and currently has no status output. So be patient.</p>
+<pre class="highlight plaintext"><code># buildah commit $containerid buildah&#x000A;</code></pre>
+
+<p>A bonus step is to push it to a registry so that other people can use it. I used the Podman client to do that. Below I push to the <a href="https://quay.io">Quay.io</a> public registry. In order to do that you need to create an account. Click on the “Create Account” link on the <a href="https://quay.io/signin/">sign in page</a>. Push to Quay just like Docker. (Quay supports OCI version 1.0 or above). You can install Podman (a daemon-less alternative to Docker) using DNF and then use it to authenticate with and then push the image to quay.io.</p>
+<pre class="highlight plaintext"><code># dnf -y install podman&#x000A;# podman login quay.io&#x000A;Username: ipbabble&#x000A;Password:&#x000A;Login Succeeded!&#x000A;# podman push buildah quay.io/ipbabble/buildah&#x000A;</code></pre>
+
+<h4>Running the Buildah container using Podman</h4>
+
+<p>To test it you can also use the Podman client. That way you don&rsquo;t have to install Docker and the <q>big fat daemon</q>. In order to do this there are a number of parameters required. Of course the purpose of this exercise to build a Buildah container for use with Kubernetes. So this will be run by runC through CRI-O and not Podman.</p>
+
+<ul>
+<li>For the main use case you need to run Podman as a privileged container. This will change in the future, but for right now building a container image requires access to the underlying <code>/var/lib/containers</code> directory so the the image is persisted and can be shared with others on the host. But for this case we&rsquo;ll make use of the <code>--privileged</code> parameter in <code>podman run</code>. It doesn’t require <code>/var/lib/containers</code> for building, just for sharing. You could bind mount another directory that doesn’t need privileges. See more about that below in “The case for no privilege”. There are some considerations.</li>
+<li>You probably need network access if you are going to run something like <code>buildah bud</code>. You don&rsquo;t need this if you are just running <code>buildah images/containers</code> etc. But many use cases will be using <code>bud</code> and so I&rsquo;ve just used the hosts network and now the bridge because it&rsquo;s a short running build process. So for the example I&rsquo;ll use the <code>--network host</code> parameter for <code>podman run</code>.</li>
+<li>You&rsquo;ll need to bind mount an area of the file system, so that <code>buildah bud</code> can build up and then commit the image to the host file system. This can be <code>/var/lib/containers</code> if you like, so as it’s immediately shared shared on the host, or it can be some build sandbox area etc. You also need to bind mount the Dockerfile path so that Buildah can see the Dockerfile. So for the example I’ll use the bind mount parameter <code>-v</code> or <code>--volume</code> parameter for <code>podman run</code>.</li>
+</ul>
+
+<p>Use your favorite Nginx Dockerfile or the one below. </p>
+<pre class="highlight plaintext"><code># Base on the Fedora&#x000A;FROM fedora:latest&#x000A;MAINTAINER http://fedoraproject.org/wiki/Cloud&#x000A;&#x000A;RUN dnf -y update &amp;&amp; dnf clean all&#x000A;RUN dnf -y install nginx &amp;&amp; dnf clean all&#x000A;RUN echo "daemon off;" &gt;&gt; /etc/nginx/nginx.conf&#x000A;RUN echo "nginx on Fedora" &gt; /usr/share/nginx/html/index.html&#x000A;&#x000A;EXPOSE 80&#x000A;&#x000A;ENTRYPOINT [ "/usr/sbin/nginx" ]&#x000A;</code></pre>
+
+<p>The following command builds an Nginx container image called ‘nginx’. Obviously using Podman (or Docker) is overkill because they both have build capabilities. Ideally this container would be run in a pod on kubernetes through CRI-O. My Dockerfile is in my <code>/home/whenry/dfs</code> directory (shorter for dockerfiles). So I bind mount that directory to <code>/tmp</code> inside the container. Inside it’s <code>/tmp/Dockerfile</code>.</p>
+<pre class="highlight plaintext"><code># podman run --privileged --network host -v /var/lib/containers:/var/lib/containers:rw  -v /home/whenry/dfs:/tmp:Z buildah bud -f /tmp/Dockerfile -t nginx &#x000A;</code></pre>
+
+<p>Currently, due to OverlayFS requiring root privileges, this container must run in privileged mode. This requirement should be deprecated when Fedora’s OverlayFS does not require a privileged user.</p>
+
+<h4>Current issues with non privileged mode</h4>
+
+<p>There is a requirement in large clusters for buildah not to run in privileged mode. There are ways to mitigate this but there will be cases where people demand it.</p>
+
+<p>I had prepared an example of how to do this but I will keep it for a later blog.  Here are some of the current constraints I encountered trying to solve the non-privileged problem.</p>
+
+<ul>
+<li>If you want to share the builds immediately through the hosts <code>/var/lib/containers</code> then you need to run Buildah as privileged. You could build somewhere else and then move the images to <code>/var/lib/containers</code> - see below. </li>
+<li>If you don&rsquo;t care to share on the host immediately then you can use unprivileged (don’t use &ndash;privileged) but you need to use a different directory than /var/lib/containers. However currently OverlayFS requires privileged mode on Fedora/RHEL. This should be fixed soon. You could use <code>--storage-driver=vfs</code>.</li>
+<li>If you decide to build inside the container you can do that with unprivileged, but you hit the overlay on overlay issue and will then need to run with <code>--storage-driver vfs</code>. This worked at one point but I’ve seen a regression. I am investigating.</li>
+</ul>
+
+<p>Watch for a progress upstream and for a new blog post on using Buildah unprivileged in a later blog. </p>
+
+<h4>Final thanks and some helpful links</h4>
+
+<p>Feel free to pull the Buildah image  ipbabble/buildah from Quay.io. Have fun. Thanks to <a href="https://github.com/nalind">@nalind</a>, <a href="https://github.com/nalind">@tsweeney</a> (so many great edits) , <a href="https://github.com/fatherlinux">@fatherlinux</a>,  <a href="https://twitter.com/bbaude">@bbaude</a>, <a href="https://github.com/rhatdan">@rhatdan</a>, <a href="https://twitter.com/rossturk">@rossturk</a>, and <a href="https://github.com/bparees">@bparees</a> (confirming the kubernetes use case) for all the input along the way. </p>
+
+<p>If you have any suggestions or issues please post them at the <a href="https://github.com/projectatomic/buildah/issues">Project Atomic Buildah Issues</a> page. For more information on Buildah and how you might contribute please visit the <a href="https://github.com/projectatomic/buildah">Buildah home page</a> on Github including <a href="https://github.com/projectatomic/buildah/blob/master/docs/tutorials/README.md">tutorials</a>.  For more information on the buildah system container see <a href="https://github.com/projectatomic/atomic-system-containers/buildah-fedora/config.json.template">here</a>. My previous blogs on Buildah: <a href="http://www.projectatomic.io/blog/2017/11/getting-started-with-buildah/">Intro to Buildah</a>, <a href="http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/">Using Buildah with registries</a>. Information on Podman can be found <a href="https://github.com/projectatomic/libpod">here</a>.  Podman man pages <a href="https://github.com/projectatomic/libpod/tree/master/docs">here</a>. </p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

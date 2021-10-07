@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Self</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/self.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>See you at Southeast LinuxFest (SELF)</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/see-you-at-southeast-linuxfest-self/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/see-you-at-southeast-linuxfest-self/</id>
+    <published>2015-06-11T13:42:50+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;img width="150" height="150" src="/images/self-logo.png?1633620578" /&gt; Heading to the &lt;a href="http://www.southeastlinuxfest.org/"&gt;SouthEast LinuxFest&lt;/a&gt; this weekend? If so, be sure to stop by the Red Hat booth to pick up some Project Atomic shirts and stickers!&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re looking about talks relevant to Atomic, you can catch my talk on Saturday &lt;strong&gt;&lt;em&gt;All You Wanted to Know About Linux Containers&lt;/em&gt;&lt;/strong&gt; at 2:45, or &lt;strong&gt;&lt;em&gt;Containers and the Future of Open Source Software Delivery&lt;/em&gt;&lt;/strong&gt; on Sunday at 11:30. &lt;/p&gt;
+
+&lt;p&gt;Michael Solberg will be speaking after lunch on Sunday (1:30) on &lt;strong&gt;&lt;em&gt;Streamlining Agile Linux Development with Docker and RHEL Atomic&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also interesting, though not directly related to Atomic, Tom Callaway and Ruth Suehle will be talking about Raspberry Pi on Saturday at 1:30, Tom Callaway will be covering &lt;strong&gt;&lt;em&gt;How to Understand FOSS Licenses without a Lawyer&lt;/em&gt;&lt;/strong&gt; at 5:15 on Saturday, and Brian Proffitt will deliver &lt;strong&gt;&lt;em&gt;It&amp;rsquo;s Metaphors All the Way Down&lt;/em&gt;&lt;/strong&gt; on Sunday at 2:45.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Se Linux</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/selinux.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 132 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/02/cockpit-132/"/>
+    <id>http://www.projectatomic.io/blog/2017/02/cockpit-132/</id>
+    <published>2017-02-24T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release
+regularly. Here are the release notes from version 130, 131 and 132.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Kernel dump configuration support added&lt;/h3&gt;
+
+&lt;p&gt;Kernel crash dump configuration is now possible in Cockpit: view and toggle the status of the kdump service,
+with hints how to enable if the kernel boot parameters need to be changed. Cockpit shows the amount of reserved
+memory and setting a path for dumping the kernel on the local filesystem, with a toggle for compressing the crash dumps.
+Take a look at the video below for a demo.&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/VXhuqPR2K5c?ecver=1" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;MAC addresses for ethernet adapters and bonds can be modified&lt;/h3&gt;
+
+&lt;p&gt;On the Networking page, MAC addresses for ethernet adapters can now be clicked to edit them, starting with
+NetworkManager version 1.4. For bonds, the MAC addresses are shown and can be edited starting with NetworkManager
+version 1.6. Take a look at the video below for a demo.&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/JIHQmFHOrO4?ecver=1" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Show session virtual Machines on the machines page&lt;/h3&gt;
+
+&lt;p&gt;Libvirt differentiates between system virtual machines and session ones, which are tied to the user. In Cockpit
+all the virtual machines accessible to the logged in user, system and session, are now shown in a combined list.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Session virtual machines" src="http://cockpit-project.org/blog/images/cockpit-machines-session.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;SELinux functionality is now available without setroubleshootd&lt;/h3&gt;
+
+&lt;p&gt;The SELinux page in Cockpit can do more than just troubleshoot. It was therefore renamed to &lt;code&gt;SELinux&lt;/code&gt; and
+the functionality of toggling between enforcing/permissive mode is now also available even if &lt;code&gt;setroubleshoot-server&lt;/code&gt;
+isn&amp;rsquo;t installed. This was cause for unexpected behavior on Atomic Host systems without &lt;code&gt;setroubleshoot-server&lt;/code&gt;
+where it&amp;rsquo;s non-trivial and often undesired to add that package.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="SELinux without troubleshooting" src="http://cockpit-project.org/blog/images/cockpit-selinux-disabled.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 132 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/132"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-132-1.fc25"&gt;Fedora 25&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use the packages to install this version of Cockpit. When installing from the tarball, remove
+/etc/systemd/system/cockpit.service.d/fatal.conf manually afterwards to prevent Cockpit from exiting in rare cases.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Tightening Up SELinux Policy for Containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/02/selinux-policy-containers/"/>
+    <id>http://www.projectatomic.io/blog/2017/02/selinux-policy-containers/</id>
+    <published>2017-02-16T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I wrote a blog post a couple of weeks ago &lt;a href="http://rhelblog.redhat.com/2017/01/13/selinux-mitigates-container-vulnerability/"&gt;explaining how SELinux can block breakout&lt;/a&gt; of processes in containers using when exploiting a vulnerability in the &lt;code&gt;/usr/bin/docker-runc&lt;/code&gt; or &lt;code&gt;/usr/bin/runc&lt;/code&gt; executable.  At the time, I explained that the policy for &lt;code&gt;container_t&lt;/code&gt; was blocked from writing to most parts of the OS other the container content labeled &lt;code&gt;container_file_t&lt;/code&gt;. Despite blocking writes, though, it still allowed reads of some files.&lt;/p&gt;
+
+&lt;p&gt;A few people were alarmed when they realized that SELinux would block the breakout on writes but there is a chance for information leakage into the container. The usual example was the ability to read /etc/passwd from the host. But this isn&amp;rsquo;t unlimited access to the host. If the same container processes tried to read /etc/shadow on the hosts, or content in users home directories, or database data in /var, they would be blocked.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Why is that allowed?&lt;/h3&gt;
+
+&lt;p&gt;When writing SELinux policy for a general purpose process type, you always have a battle between security and usability.  If you make the policy too tight, no one will use it. If you make it too loose, then it provides little additional security. Finding the sweet spot in the middle is difficult. The default SELinux policy allows this access for two main reasons.&lt;/p&gt;
+
+&lt;p&gt;The original policy for containers was written before docker for virt-sandbox. virt-sandbox was an effort to use libvirt-lxc tooling for splitting up the host OS Into several containers. Our idea at the time was to allow you to run multiple containers with a shared /usr and perhaps a shared /etc, but have each container have its own /var.  The thinking was read only content in /etc is shared with unprivileged users, and an admin should control the data available in /etc. Think of having hundreds of containers each running the same apache services off of the host OS.  Each one having their own private writable directories under /var.
+When docker came along, we decided to use the same policy mainly to allow people do things like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -v /etc/passwd:/etc/passwd rhel7 sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -d -v /usr:/usr rhel7 /usr/bin/foobar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also we saw people volume mounting in things like /etc/resolv.conf, /etc/hosts, /etc/localtime &amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;This allowed us flexibility on labeling, with limited exposure to information leak. Upstream docker now has the ability to relabel content on the host when running inside of a container.&lt;/p&gt;
+
+&lt;p&gt;Executing a command like the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -d -v /var/lib/mariadb:/var/lib/madiadb:Z mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Will cause the docker daemon to relabel the /var/lib/mariadb on the host to match the label of the container.  But you would not want to do this with shared content in /etc.&lt;/p&gt;
+
+&lt;p&gt;Using the ‘:Z’ on /etc/passwd would be a bad idea.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -v /etc/passwd:/etc/passwd:Z rhel7 sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command relabels /etc/passwd to a label that blocks access to other confined applications, potentially breaking those applications.&lt;/p&gt;
+
+&lt;p&gt;Since these issues have been pointed out I have decided to tighten the default policy by eliminating the container process types&amp;rsquo; ability to read default labels in /etc.  This will prevent a container process from being able to read /etc/passwd and other default files, but may cause certain issues when people want to volume mount in content from the hosts /etc directory.  We will try this out in Rawhide and Fedora 26, and see if it does not cause issues, eventually back port it to RHEL.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>What does --selinux-enabled do?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/docker-selinux-flag/</id>
+    <published>2016-07-11T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I recently answered an email asking about &amp;ndash;selinux-enabled in the docker daemon, I thought others might wonder about this, so I wrote this blog.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m currently researching the topic of &lt;code&gt;--selinux-enabled&lt;/code&gt; in docker and what it is doing when set to TRUE.&lt;/p&gt;
+
+&lt;p&gt;From what I&amp;rsquo;m seeing, it simply will set context and labels to the services (docker daemon) when SELinux is enabled on the system and not using OverlayFS.&lt;/p&gt;
+
+&lt;p&gt;But I&amp;rsquo;m wondering if that is even correct, and if so, what else is happening when setting &lt;code&gt;--selinux-enabled&lt;/code&gt; to TRUE.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;`&lt;code&gt;--selinux-enabled&lt;/code&gt; on the docker daemon causes it to set SELinux labels on the containers.  Docker reads the contexts file &lt;code&gt;/etc/selinux/targeted/contexts/lxc_contexts&lt;/code&gt; for the default context to run containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat /etc/selinux/targeted/contexts/lxc_contexts
+process = "system_u:system_r:svirt_lxc_net_t:s0"
+content = "system_u:object_r:virt_var_lib_t:s0"
+file = "system_u:object_r:svirt_sandbox_file_t:s0"
+sandbox_kvm_process = "system_u:system_r:svirt_qemu_net_t:s0"
+sandbox_kvm_process = "system_u:system_r:svirt_qemu_net_t:s0"
+sandbox_lxc_process = "system_u:system_r:svirt_lxc_net_t:s0"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Docker by default uses a confined SELinux type &lt;code&gt;svirt_lxc_net_t&lt;/code&gt; to isolate the container processes from the host, and it generates a unique MCS label to allow SELinux to prevent one container process from attacking other container processes and content.&lt;/p&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t specify &lt;code&gt;--selinux-enabled&lt;/code&gt;, docker does not execute SELinux code to set labels. When docker launches a container process, the system falls back to default transition policy.  This means the container processes will either run as docker_t or spc_t (depending on the version of policy you have installed). Both of these types are unconfined.  SELinux will provide no security separation for these container processes.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;In addition, I&amp;rsquo;m also wondering what the impact will be, when &lt;code&gt;--selinux-enabed&lt;/code&gt; is set to TRUE together with &lt;code&gt;--icc&lt;/code&gt; to TRUE? Does it have any impact or is it unrelated.&lt;/p&gt;
+
+&lt;p&gt;Could it be possible that with &lt;code&gt;--icc&lt;/code&gt; and &lt;code&gt;--selinux-enabed&lt;/code&gt; set to TRUE that we might have challenges when communicating between Containers when the connection is not specified (as it should be, when &lt;code&gt;--icc&lt;/code&gt; is set to FALSE).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It&amp;rsquo;s unrelated. &lt;code&gt;--icc FALSE&lt;/code&gt; sets up iptables rules that prevent containers from connecting to each other over the local network to each other.  The default SELinux policy allows all network connectivity between containers.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Also, does anybody know what will happen if I run &lt;code&gt;docker&lt;/code&gt; with &lt;code&gt;--selinux-enabled&lt;/code&gt; for a while (so start containers, pull images, etc.) and then restart the daemon with &lt;code&gt;--selinux-enabled&lt;/code&gt;. Is it possible that it does impact the environment somehow and that certain activities need to be done or shouldn&amp;rsquo;t this affect the service at all?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The only potential problem I can think of would be volume mounting being mislabeled.  If you volume mount content off of the host with &lt;code&gt;-v /source/path:/dest/path:Z&lt;/code&gt; and SELinux is disabled, docker will not set up labels for the container.  If you later turn on &lt;code&gt;--selinux-enabled&lt;/code&gt; these containers would not be able to read/write the content in the mounted volume.  Thinking about this further, I am not sure what labels the containers created while &lt;code&gt;--selinux-disabled&lt;/code&gt; was set.  These pre-created containers would probably continue to run with an unconfined domain, and newer containers would run with confinement.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 0.100 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/cockpit-100/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/cockpit-100/</id>
+    <published>2016-04-04T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>stefwalter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. There&amp;rsquo;s a new release every week. Here are the highlights from this weeks 0.100 release. Even though 0.100 may seem to be a magical number &amp;hellip; it&amp;rsquo;s really just the number after 0.99 :D&lt;/p&gt;
+
+&lt;h3&gt;SELinux Troubleshooting&lt;/h3&gt;
+
+&lt;p&gt;Cockpit can now help you troubleshoot &lt;a href="http://stopdisablingselinux.com/"&gt;SELinux&lt;/a&gt; problems, and show you fixes for repairing the various issues. This is pretty amazing for system admins who really would rather be secure, but keep bumping into stuff that SELinux is blocking. There&amp;rsquo;s more to come on both SELinux and troubleshooting in the future. Take a look at what landed in this release:&lt;/p&gt;
+
+&lt;iframe width="960" height="720" src="https://www.youtube.com/embed/eBGK6qSmnng?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Image Registry Interface&lt;/h3&gt;
+
+&lt;p&gt;There&amp;rsquo;s a new Image Registry user interface. It works with &lt;a href="http://www.projectatomic.io/"&gt;Atomic Platform&lt;/a&gt; or &lt;a href="https://www.openshift.org/"&gt;Openshift&lt;/a&gt; clusters. By default this shows up in the Cockpit &lt;q&gt;Cluster&lt;/q&gt; admin dashboard.&lt;/p&gt;
+
+&lt;p&gt;But more importantly you can deploy this as a standalone image registry, complete with storage, authentication and an interface. See &lt;a href="http://www.projectatomic.io/registry"&gt;www.projectatomic.io/registry&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a quick demo:&lt;/p&gt;
+
+&lt;iframe width="853" height="480" src="https://www.youtube.com/embed/VSOAASf1Usw?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Storage sliders and more&lt;/h3&gt;
+
+&lt;p&gt;Marius has been working on cleaning up the storage UI. One of the changes you&amp;rsquo;ll notice is that you can now use a slider to choose a size for new volumes or file systems, and specify the size units you want to use:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Storage number slider" src="/images/cockpit-storage-slider.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Debian builds now also include the Storage page.&lt;/p&gt;
+
+&lt;h3&gt;From the future&lt;/h3&gt;
+
+&lt;p&gt;Peter worked on adding Cluster storage configuration to the Kubernetes admin dashboard. Basic support will be in the next release. Here&amp;rsquo;s a screenshot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Kubernetes persistent volume" src="/images/cockpit-kubernetes-storage.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 0.100 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/0.100"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-0.100-1.fc24"&gt;Fedora 24&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/"&gt;COPR for Fedora 23, CentOS and RHEL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Added no-new-privileges Security Flag to Docker</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/</id>
+    <published>2016-03-17T12:40:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Mrunal Patel</name>
+    </author>
+    <content type="html">&lt;p&gt;I have contributed support for a &lt;code&gt;no-new-privileges&lt;/code&gt; option to &lt;a href="https://github.com/docker/docker/pull/20727"&gt;docker&lt;/a&gt;.
+This flag has already been included in &lt;a href="https://github.com/opencontainers/runc/pull/557"&gt;runc&lt;/a&gt; and the Open Container Initiative &lt;a href="https://github.com/opencontainers/specs/pull/290"&gt;spec&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The new flag supports, in Docker, a security feature that was added to the Linux kernel back in 2012 under the name &lt;code&gt;no_new_privs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The kernel feature works as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A process can set the &lt;code&gt;no_new_privs&lt;/code&gt; bit in the kernel that persists across fork, clone, and exec.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;no_new_privs&lt;/code&gt; bit ensures that the process or its children processes do not gain any additional privileges.&lt;/li&gt;
+&lt;li&gt;A process isn&amp;rsquo;t allowed to unset the &lt;code&gt;no_new_privs&lt;/code&gt; bit once it is set.&lt;/li&gt;
+&lt;li&gt;Processes with &lt;code&gt;no_new_privs&lt;/code&gt; are not allowed to change uid/gid or gain any other capabilities, even if the process executes setuid binaries or executables with file capability bits set.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;no_new_privs&lt;/code&gt; also prevents Linux Security Modules (LSMs) like SELinux from transitioning to process labels that have access not allowed to the current process. This means an SELinux process is only allowed to transition to a process type with less privileges.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details see the &lt;a href="https://www.kernel.org/doc/Documentation/prctl/no_new_privs.txt"&gt;kernel documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is an example showcasing how it helps in Docker.&lt;/p&gt;
+
+&lt;p&gt;Create a setuid binary that displays the effective uid:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# cat testnnp.c
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;sys/types.h&amp;gt;
+
+int main(int argc, char *argv[])
+{
+        printf("Effective uid: %d\n", geteuid());
+        return 0;
+}
+[$ dockerfiles]# make testnnp
+cc     testnnp.c   -o testnnp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we will add the binary to a docker image:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# cat Dockerfile
+FROM fedora:latest
+ADD testnnp /root/testnnp
+RUN chmod +s /root/testnnp
+ENTRYPOINT /root/testnnp
+
+[$ dockerfiles]# docker build -t testnnp .
+Sending build context to Docker daemon 12.29 kB
+Step 1 : FROM fedora:latest
+ ---&amp;gt; 760a896a323f
+Step 2 : ADD testnnp /root/testnnp
+ ---&amp;gt; 6c700f277948
+Removing intermediate container 0981144fe404
+Step 3 : RUN chmod +s /root/testnnp
+ ---&amp;gt; Running in c1215bfbe825
+ ---&amp;gt; f1f07d05a691
+Removing intermediate container c1215bfbe825
+Step 4 : ENTRYPOINT /root/testnnp
+ ---&amp;gt; Running in 5a4d324d54fa
+ ---&amp;gt; 44f767c67e30
+Removing intermediate container 5a4d324d54fa
+Successfully built 44f767c67e30
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we will create and run a container without &lt;code&gt;no-new-privileges&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# docker run -it --rm --user=1000  testnnp
+Effective uid: 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This shows that even though you requested a non-privileged user (UID=1000) to run your container, that user would be able to become root by executing the setuid app on the container image.&lt;/p&gt;
+
+&lt;p&gt;Running with &lt;code&gt;no-new-privileges&lt;/code&gt; prevents the uid transition while running a setuid binary:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# docker run -it --rm --user=1000 --security-opt=no-new-privileges testnnp
+Effective uid: 1000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see above the container process is still running as UID=1000, meaning that even if the image has dangerous code in it, we can still prevent the user from escalating privileges.&lt;/p&gt;
+
+&lt;p&gt;Turning on &lt;code&gt;no_new_privs&lt;/code&gt; actually stopped the SELinux transition from the docker daemon type &lt;code&gt;docker_t&lt;/code&gt; to the container type, &lt;code&gt;svirt_lxc_net_t&lt;/code&gt;. The &lt;code&gt;no_new_privs&lt;/code&gt; option only allows SELinux transitions from one type to another if the target type as a complete subset of the source type. Dan Walsh worked on the SELinux policy for docker to fix this. With the latest policy in Fedora 24, &lt;code&gt;no_new_privs&lt;/code&gt; and SELinux work well together. We will be back-porting these fixes to RHEL when we ship docker support for &lt;code&gt;no_new_privs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you want to allow users to run images as a non-privileged UID, in most cases you would want to prevent them from becoming root. &lt;code&gt;no_new_privileges&lt;/code&gt; is a great tool for guaranteeing this.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 27 Atomic Host January 18th Release &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 27 Atomic Host January 18th Release' property='og:title'>
+<meta content='In this week’s release of Fedora Atomic Host we have an updated kernel (the spectre patches are slowly working their way out), and an updated docker with a security fix. We also are including firewalld in the ostree now, but we are not enabling it by default. I’ll post a follow up blog post on this topic in the next day or two.&#x000A;&#x000A;The new Fedora Atomic Host update is available via an OSTree update:&#x000A;&#x000A;Version: 27.61&#x000A;&#x000A;&#x000A;Commit(x86_64): 772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9&#x000A;Commit(aarch64): 598626fd61dc6ed4b702159e50b6029ee70a527e855fce7d8e61a870b141f893&#x000A;Commit(ppc64le): 16ce78ee689066f582dbfc0672dab1706051fefab496fcebd8109d58738eb8fe&#x000A;&#x000A;&#x000A;We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.&#x000A;&#x000A;Existing systems can be upgraded in place via e.g. atomic host upgrade or atomic host deploy. Systems on Fedora Atomic 26 can be upgraded using rpm-ostree rebase. Refer to the upgrade guide for more details.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/01/fedora-atomic-18-jan-18/' property='og:url'>
+<meta content='2018-01-18T16:00:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 27 Atomic Host January 18th Release' name='twitter:title'>
+<meta content='In this week’s release of Fedora Atomic Host we have an updated kernel (the spectre patches are slowly working their way out), and an updated docker with a security fix. We also are including firewalld in the ostree now, but we are not enabling it by default. I’ll post a follow up blog post on this topic in the next day or two.&#x000A;&#x000A;The new Fedora Atomic Host update is available via an OSTree update:&#x000A;&#x000A;Version: 27.61&#x000A;&#x000A;&#x000A;Commit(x86_64): 772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9&#x000A;Commit(aarch64): 598626fd61dc6ed4b702159e50b6029ee70a527e855fce7d8e61a870b141f893&#x000A;Commit(ppc64le): 16ce78ee689066f582dbfc0672dab1706051fefab496fcebd8109d58738eb8fe&#x000A;&#x000A;&#x000A;We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.&#x000A;&#x000A;Existing systems can be upgraded in place via e.g. atomic host upgrade or atomic host deploy. Systems on Fedora Atomic 26 can be upgraded using rpm-ostree rebase. Refer to the upgrade guide for more details.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_01 blog_2018_01_fedora-atomic-18-jan-18 blog_2018_01_fedora-atomic-18-jan-18_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 27 Atomic Host January 18th Release
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-01-18T16:00:00Z'>
+Thursday 18 January 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Fedora Atomic Host we have an updated kernel (the <a href="https://fedoramagazine.org/update-ongoing-meltdown-spectre-work/">spectre patches</a> are slowly working their way out), and an <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1510351">updated docker with a security fix</a>. We also are <em>including</em> <a href="https://pagure.io/atomic-wg/issue/372">firewalld in the ostree</a> now, but we are <em>not</em> enabling it by default. I&rsquo;ll post a follow up blog post on this topic in the next day or two.</p>
+
+<p>The new Fedora Atomic Host update is available via an OSTree update:</p>
+
+<p><strong><em>Version: 27.61</em></strong></p>
+
+<ul>
+<li>Commit(x86_64): 772ab185b0752b0d6bc8b2096d08955660d80ed95579e13e136e6a54e3559ca9</li>
+<li>Commit(aarch64): 598626fd61dc6ed4b702159e50b6029ee70a527e855fce7d8e61a870b141f893</li>
+<li>Commit(ppc64le): 16ce78ee689066f582dbfc0672dab1706051fefab496fcebd8109d58738eb8fe</li>
+</ul>
+
+<p>We are releasing images from multiple architectures but please note that x86_64 architecture is the only one that undergoes automated testing at this time.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or <code>atomic host deploy</code>. Systems on Fedora Atomic 26 can be upgraded using <code>rpm-ostree rebase</code>. Refer to the <a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrade guide</a> for more details.</p>
+
+<p></p>
+
+<p>Upgraded:</p>
+
+<ul>
+<li>GeoIP-GeoLite-data 2017.10-1.fc27.noarch -&gt; 2018.01-1.fc27.noarch</li>
+<li>bash 4.4.12-12.fc27.x86_64 -&gt; 4.4.12-13.fc27.x86_64</li>
+<li>cockpit-bridge 158-1.fc27.x86_64 -&gt; 159-1.fc27.x86_64</li>
+<li>cockpit-docker 158-1.fc27.x86_64 -&gt; 159-1.fc27.x86_64</li>
+<li>cockpit-networkmanager 158-1.fc27.noarch -&gt; 159-1.fc27.noarch</li>
+<li>cockpit-ostree 158-1.fc27.x86_64 -&gt; 159-1.fc27.x86_64</li>
+<li>cockpit-system 158-1.fc27.noarch -&gt; 159-1.fc27.noarch</li>
+<li>container-selinux 2:2.37-1.fc27.noarch -&gt; 2:2.38-1.fc27.noarch</li>
+<li>dhcp-client 12:4.3.6-7.fc27.x86_64 -&gt; 12:4.3.6-8.fc27.x86_64</li>
+<li>dhcp-common 12:4.3.6-7.fc27.noarch -&gt; 12:4.3.6-8.fc27.noarch</li>
+<li>dhcp-libs 12:4.3.6-7.fc27.x86_64 -&gt; 12:4.3.6-8.fc27.x86_64</li>
+<li>docker 2:1.13.1-42.git4402c09.fc27.x86_64 -&gt; 2:1.13.1-44.git584d391.fc27.x86_64</li>
+<li>docker-common 2:1.13.1-42.git4402c09.fc27.x86_64 -&gt; 2:1.13.1-44.git584d391.fc27.x86_64</li>
+<li>docker-rhel-push-plugin 2:1.13.1-42.git4402c09.fc27.x86_64 -&gt; 2:1.13.1-44.git584d391.fc27.x86_64</li>
+<li>dracut 046-5.fc27.x86_64 -&gt; 046-8.git20180105.fc27.x86_64</li>
+<li>dracut-config-generic 046-5.fc27.x86_64 -&gt; 046-8.git20180105.fc27.x86_64</li>
+<li>dracut-network 046-5.fc27.x86_64 -&gt; 046-8.git20180105.fc27.x86_64</li>
+<li>gdbm 1.13-3.fc27.x86_64 -&gt; 1.14-1.fc27.x86_64</li>
+<li>gettext 0.19.8.1-11.fc27.x86_64 -&gt; 0.19.8.1-12.fc27.x86_64</li>
+<li>gettext-libs 0.19.8.1-11.fc27.x86_64 -&gt; 0.19.8.1-12.fc27.x86_64</li>
+<li>glusterfs 3.12.4-1.fc27.x86_64 -&gt; 3.12.5-1.fc27.x86_64</li>
+<li>glusterfs-client-xlators 3.12.4-1.fc27.x86_64 -&gt; 3.12.5-1.fc27.x86_64</li>
+<li>glusterfs-fuse 3.12.4-1.fc27.x86_64 -&gt; 3.12.5-1.fc27.x86_64</li>
+<li>glusterfs-libs 3.12.4-1.fc27.x86_64 -&gt; 3.12.5-1.fc27.x86_64</li>
+<li>initscripts 9.78-1.fc27.x86_64 -&gt; 9.79-1.fc27.x86_64</li>
+<li>iproute 4.13.0-1.fc27.x86_64 -&gt; 4.14.1-4.fc27.x86_64</li>
+<li>iproute-tc 4.13.0-1.fc27.x86_64 -&gt; 4.14.1-4.fc27.x86_64</li>
+<li>kernel 4.14.11-300.fc27.x86_64 -&gt; 4.14.13-300.fc27.x86_64</li>
+<li>kernel-core 4.14.11-300.fc27.x86_64 -&gt; 4.14.13-300.fc27.x86_64</li>
+<li>kernel-modules 4.14.11-300.fc27.x86_64 -&gt; 4.14.13-300.fc27.x86_64</li>
+<li>kmod 24-3.fc27.x86_64 -&gt; 25-1.fc27.x86_64</li>
+<li>kmod-libs 24-3.fc27.x86_64 -&gt; 25-1.fc27.x86_64</li>
+<li>libpkgconf 1.3.12-1.fc27.x86_64 -&gt; 1.3.12-2.fc27.x86_64</li>
+<li>libseccomp 2.3.2-5.fc27.x86_64 -&gt; 2.3.3-1.fc27.x86_64</li>
+<li>linux-firmware 20171215-81.git2451bb22.fc27.noarch -&gt; 20171215-82.git2451bb22.fc27.noarch</li>
+<li>microcode_ctl 2:2.1-19.fc27.x86_64 -&gt; 2:2.1-20.fc27.x86_64</li>
+<li>pcre 8.41-3.fc27.x86_64 -&gt; 8.41-4.fc27.x86_64</li>
+<li>pcre2 10.30-3.fc27.x86_64 -&gt; 10.30-5.fc27.x86_64</li>
+<li>pigz 2.3.4-3.fc27.x86_64 -&gt; 2.4-1.fc27.x86_64</li>
+<li>pkgconf 1.3.12-1.fc27.x86_64 -&gt; 1.3.12-2.fc27.x86_64</li>
+<li>pkgconf-m4 1.3.12-1.fc27.noarch -&gt; 1.3.12-2.fc27.noarch</li>
+<li>pkgconf-pkg-config 1.3.12-1.fc27.x86_64 -&gt; 1.3.12-2.fc27.x86_64</li>
+<li>publicsuffix-list-dafsa 20171028-1.fc27.noarch -&gt; 20171228-1.fc27.noarch</li>
+<li>python2 2.7.14-4.fc27.x86_64 -&gt; 2.7.14-5.fc27.x86_64</li>
+<li>python2-libs 2.7.14-4.fc27.x86_64 -&gt; 2.7.14-5.fc27.x86_64</li>
+<li>runc 2:1.0.0-12.rc4.gitaea4f21.fc27.x86_64 -&gt; 2:1.0.0-15.rc4.gite6516b3.fc27.x86_64</li>
+<li>selinux-policy 3.13.1-283.19.fc27.noarch -&gt; 3.13.1-283.21.fc27.noarch</li>
+<li>selinux-policy-targeted 3.13.1-283.19.fc27.noarch -&gt; 3.13.1-283.21.fc27.noarch</li>
+</ul>
+
+<p>Added:</p>
+
+<ul>
+<li>ebtables-2.0.10-24.fc27.x86_64</li>
+<li>firewalld-0.4.4.5-3.fc27.noarch</li>
+<li>firewalld-filesystem-0.4.4.5-3.fc27.noarch</li>
+<li>ipset-6.32-1.fc27.x86_64</li>
+<li>ipset-libs-6.32-1.fc27.x86_64</li>
+<li>python3-firewall-0.4.4.5-3.fc27.noarch</li>
+</ul>
+
+<p>Corresponding image media for new installations can be downloaded from <a href="https://getfedora.org/en/atomic/download/">Fedora Downloads</a>.</p>
+
+<p>Alternatively, image artifacts can be found at the following links:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/Atomic/aarch64/iso/Fedora-Atomic-ostree-aarch64-27-20180117.1.iso">aarch64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/Atomic/ppc64le/iso/Fedora-Atomic-ostree-ppc64le-27-20180117.1.iso">ppc64le ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/Atomic/x86_64/iso/Fedora-Atomic-ostree-x86_64-27-20180117.1.iso">x86_64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/aarch64/images/Fedora-Atomic-27-20180117.1.aarch64.qcow2">aarch64 Cloud Image QCOW</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/aarch64/images/Fedora-Atomic-27-20180117.1.aarch64.raw.xz">aarch64 Cloud Image raw</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20180117.1.ppc64le.qcow2">ppc64le Cloud Image QCOW</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/ppc64le/images/Fedora-Atomic-27-20180117.1.ppc64le.raw.xz">ppc64le Cloud Image raw</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/x86_64/images/Fedora-Atomic-27-20180117.1.x86_64.qcow2">x86_64 Cloud Image QCOW</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/x86_64/images/Fedora-Atomic-27-20180117.1.x86_64.raw.xz">x86_64 Cloud Image raw</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/x86_64/images/Fedora-Atomic-Vagrant-27-20180117.1.x86_64.vagrant-libvirt.box">x86_64 Cloud Image LibVirt</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/x86_64/images/Fedora-Atomic-Vagrant-27-20180117.1.x86_64.vagrant-virtualbox.box">x86_64 Cloud Image VirtualBox</a></li>
+</ul>
+
+<p>Respective signed CHECKSUM files can be found here:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/Atomic/aarch64/iso/Fedora-Atomic-27-20180117.1-aarch64-CHECKSUM">aarch64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/Atomic/ppc64le/iso/Fedora-Atomic-27-20180117.1-ppc64le-CHECKSUM">ppc64le ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/Atomic/x86_64/iso/Fedora-Atomic-27-20180117.1-x86_64-CHECKSUM">x86_64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/aarch64/images/Fedora-CloudImages-27-20180117.1-aarch64-CHECKSUM">aarch64 Cloud Image</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/ppc64le/images/Fedora-CloudImages-27-20180117.1-ppc64le-CHECKSUM">ppc64le Cloud Image</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20180117.1/CloudImages/x86_64/images/Fedora-CloudImages-27-20180117.1-x86_64-CHECKSUM">x86_64 Cloud Image</a></li>
+</ul>
+
+<p>For direct download, the <q>latest</q> targets are always available here:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest">VirtualBox</a></li>
+</ul>
+
+<p>Filename fetching URLs are available here:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest_filename">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest_filename">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest_filename">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename">VirtualBox</a></li>
+</ul>
+
+<p>For more information about the latest targets, please reference the <a href="https://fedoraproject.org/wiki/Atomic_WG#Fedora_Atomic_Image_Download_Links">Fedora Atomic Wiki</a>.</p>
+
+<p><em>Do note that it can take some of the mirrors up to 12 hours to <q>check-in</q> at
+their own discretion.</em></p>
+
+<p>Vagrant Cloud page: <a href="https://app.vagrantup.com/fedora/boxes/27-atomic-host/versions/27.20180117.1">new Atomic Host</a></p>
+
+<p>For posterity the AMIs for this release are:</p>
+
+<ul>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (ap-northeast-1) ami-047b1d62    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (ap-southeast-1) ami-df6a15a3    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (ap-southeast-2) ami-a6b34cc4    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (eu-central-1)   ami-88b926e7    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (eu-west-1)      ami-9b0a93e2    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (sa-east-1)      ami-0e6b2662    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (us-east-1)      ami-6a98b410    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (us-west-1)      ami-27313347    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (us-west-2)      ami-ee952696    hvm   standard</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (ap-northeast-1) ami-1846207e    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (ap-southeast-1) ami-6666191a    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (ap-southeast-2) ami-bab14ed8    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (eu-central-1)   ami-76b62919    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (eu-west-1)      ami-a8069fd1    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (sa-east-1)      ami-006a276c    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (us-east-1)      ami-6593bf1f    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (us-west-1)      ami-29323049    hvm   gp2</li>
+<li>Fedora-Atomic-27-20180117.1.x86_64  EC2 (us-west-2)      ami-7c9f2c04    hvm   gp2</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/01/fedora-atomic-18-jan-18/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/01/fedora-atomic-18-jan-18/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/01/fedora-atomic-18-jan-18/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

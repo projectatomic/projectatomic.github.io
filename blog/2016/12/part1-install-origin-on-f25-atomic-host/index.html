@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1' property='og:title'>
+<meta content='Introduction&#x000A;&#x000A;Openshift Origin is the upstream&#x000A;project that builds on top of the Kubernetes platform and feeds into the&#x000A;OpenShift Container Platform product that is available from Red Hat today.&#x000A;Origin is a great way to get started with Kubernetes, and what better&#x000A;place to run a container orchestration layer than on top of Fedora&#x000A;Atomic Host?&#x000A;&#x000A;We recently released Fedora&#x000A;25, along with the&#x000A;first biweekly release of Fedora 25 Atomic Host. This blog post&#x000A;will show you the basics for getting a production installation of Origin&#x000A;running on Fedora 25 Atomic Host using the OpenShift Ansible&#x000A;Installer. The&#x000A;OpenShift Ansible installer will allow you to install a&#x000A;production-worthy OpenShift cluster. If you’d like to just&#x000A;try out OpenShift on a single node instead, you can set up OpenShift with&#x000A;the oc cluster up command, which we will detail in a later blog&#x000A;post.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/' property='og:url'>
+<meta content='2016-12-07T15:23:32Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='origin' property='article:tag'>
+<link href='/blog/tag/origin.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1' name='twitter:title'>
+<meta content='Introduction&#x000A;&#x000A;Openshift Origin is the upstream&#x000A;project that builds on top of the Kubernetes platform and feeds into the&#x000A;OpenShift Container Platform product that is available from Red Hat today.&#x000A;Origin is a great way to get started with Kubernetes, and what better&#x000A;place to run a container orchestration layer than on top of Fedora&#x000A;Atomic Host?&#x000A;&#x000A;We recently released Fedora&#x000A;25, along with the&#x000A;first biweekly release of Fedora 25 Atomic Host. This blog post&#x000A;will show you the basics for getting a production installation of Origin&#x000A;running on Fedora 25 Atomic Host using the OpenShift Ansible&#x000A;Installer. The&#x000A;OpenShift Ansible installer will allow you to install a&#x000A;production-worthy OpenShift cluster. If you’d like to just&#x000A;try out OpenShift on a single node instead, you can set up OpenShift with&#x000A;the oc cluster up command, which we will detail in a later blog&#x000A;post.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_12 blog_2016_12_part1-install-origin-on-f25-atomic-host blog_2016_12_part1-install-origin-on-f25-atomic-host_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Installing an OpenShift Origin Cluster on Fedora 25 Atomic Host: Part 1
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-12-07T15:23:32Z'>
+Wednesday  7 December 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p><a href="https://github.com/openshift/origin">Openshift Origin</a> is the upstream
+project that builds on top of the Kubernetes platform and feeds into the
+OpenShift Container Platform product that is available from Red Hat today.
+Origin is a great way to get started with Kubernetes, and what better
+place to run a container orchestration layer than on top of Fedora
+Atomic Host?</p>
+
+<p>We recently released <a href="https://fedoramagazine.org/fedora-25-released/">Fedora
+25</a>, along with the
+first biweekly release of Fedora 25 Atomic Host. This blog post
+will show you the basics for getting a production installation of Origin
+running on Fedora 25 Atomic Host using the <a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible
+Installer</a>. The
+OpenShift Ansible installer will allow you to install a
+production-worthy OpenShift cluster. If you&rsquo;d like to just
+try out OpenShift on a single node instead, you can set up OpenShift with
+the <code>oc cluster up</code> command, which we will detail in a later blog
+post.</p>
+
+<p></p>
+
+<p>This first post will cover just the installation. In a later blog post
+we&rsquo;ll take the system we just installed for a spin and make sure
+everything is working as expected.</p>
+
+<h3>Environment</h3>
+
+<p>We&rsquo;ve tried to make this setup as generic as possible. In this case we
+will be targeting three generic servers that are running Fedora 25
+Atomic Host. As is common with cloud environments these servers each
+have an <q>internal</q> private address that can&rsquo;t be accessed from the
+internet, and a public NATed address that can be accessed from
+the outside. Here is the identifying information for the three servers:</p>
+<pre class="highlight plaintext"><code>|    Role     |  Public IPv4   | Private IPv4 |&#x000A;|-------------|----------------|--------------|&#x000A;| master,etcd | 54.175.0.44    | 10.0.173.101 |&#x000A;| worker      | 52.91.115.81   | 10.0.156.20  |&#x000A;| worker      | 54.204.208.138 | 10.0.251.101 |&#x000A;</code></pre>
+
+<p><em><strong>NOTE</strong> In a real production setup we would want multiple master
+nodes and multiple etcd nodes closer to what is shown in the
+<a href="https://docs.openshift.org/latest/install_config/install/advanced_install.html#multiple-masters">installation docs</a>.</em></p>
+
+<p>As you can see from the table, we&rsquo;ve marked one of the nodes as the master
+and the other two as what we&rsquo;re calling <em>worker nodes</em>. The master node
+will run the api server, scheduler, and controller manager. We&rsquo;ll also
+run etcd on it. Since we want to make sure we don&rsquo;t starve the node running
+etcd, we&rsquo;ll mark the master node as <strong>unschedulable</strong> so that
+application containers don&rsquo;t get scheduled to run on it.</p>
+
+<p>The other two nodes, the worker nodes, will have the proxy and the
+kubelet running on them; this is where the containers (inside of pods)
+will get scheduled to run. We&rsquo;ll also tell the installer to run a
+registry and an HAProxy router on the two worker nodes so that we can
+perform builds as well as access our services from the outside world via
+HAProxy.</p>
+
+<h3>The Installer</h3>
+
+<p><a href="https://github.com/openshift/origin">Openshift Origin</a> uses
+<a href="https://www.ansible.com/">Ansible</a> to manage the installation of
+different nodes in a cluster. The code for this is aggregated in the
+<a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible
+Installer</a> on GitHub.
+Additionally, to run the installer we&rsquo;ll need to
+<a href="http://docs.ansible.com/ansible/intro_installation.html#installing-the-control-machine">install Ansible</a>
+on our workstation or laptop.</p>
+
+<p><em><strong>NOTE</strong> At this time Ansible 2.2 or greater is <strong>REQUIRED</strong>.</em></p>
+
+<p>We already have Ansible 2.2 installed so we can skip to cloning the repo:</p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/openshift/openshift-ansible.git &amp;&gt;/dev/null&#x000A;$ cd openshift-ansible/&#x000A;$ git checkout 734b9ae199bd585d24c5131f3403345fe88fe5e6&#x000A;Previous HEAD position was 6d2a272... Merge pull request #2884 from sdodson/image-stream-sync&#x000A;HEAD is now at 734b9ae... Merge pull request #2876 from dustymabe/dusty-fix-etcd-selinux&#x000A;</code></pre>
+
+<p>In order to document this better in this blog post we are specifically
+checking out commit <code>734b9ae199bd585d24c5131f3403345fe88fe5e6</code> so that
+we can get reproducible results, since the Openshift Ansible project
+is fast-moving. These instructions will probably work on the latest
+master, but you may hit a bug, in which case you should open an issue.</p>
+
+<p>Now that we have the installer we can create an inventory file called
+<code>myinventory</code> in the same directory as the git repo. This inventory
+file can be anywhere, but for this install we&rsquo;ll place it there.</p>
+
+<p>Using the IP information from the table above we create the following
+inventory file:</p>
+<pre class="highlight plaintext"><code># Create an OSEv3 group that contains the masters and nodes groups&#x000A;[OSEv3:children]&#x000A;masters&#x000A;nodes&#x000A;etcd&#x000A;&#x000A;# Set variables common for all OSEv3 hosts&#x000A;[OSEv3:vars]&#x000A;ansible_user=fedora&#x000A;ansible_become=true&#x000A;deployment_type=origin&#x000A;containerized=true&#x000A;openshift_release=v1.3.1&#x000A;openshift_router_selector='router=true'&#x000A;openshift_registry_selector='registry=true'&#x000A;openshift_master_default_subdomain=54.204.208.138.xip.io&#x000A;&#x000A;# enable htpasswd auth&#x000A;openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]&#x000A;openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1', 'user': '$apr1$.gw8w9i1$ln9bfTRiD6OwuNTG5LvW50'}&#x000A;&#x000A;# host group for masters&#x000A;[masters]&#x000A;54.175.0.44 openshift_public_hostname=54.175.0.44 openshift_hostname=10.0.173.101&#x000A;&#x000A;# host group for etcd, should run on a node that is not schedulable&#x000A;[etcd]&#x000A;54.175.0.44&#x000A;&#x000A;# host group for worker nodes, we list master node here so that&#x000A;# openshift-sdn gets installed. We mark the master node as not&#x000A;# schedulable.&#x000A;[nodes]&#x000A;54.175.0.44    openshift_hostname=10.0.173.101 openshift_schedulable=false&#x000A;52.91.115.81   openshift_hostname=10.0.156.20  openshift_node_labels="{'router':'true','registry':'true'}"&#x000A;54.204.208.138 openshift_hostname=10.0.251.101 openshift_node_labels="{'router':'true','registry':'true'}"&#x000A;</code></pre>
+
+<p>Well that is quite a bit to digest, isn&rsquo;t it? Don&rsquo;t worry, we&rsquo;ll break
+down this file in detail.</p>
+
+<h3>Details of the Inventory File</h3>
+
+<p>OK, so how did we create this inventory file? We started with <a href="https://docs.openshift.org/latest/install_config/install/advanced_install.html">the
+docs</a>
+and copied one of the examples from there. This type of install we are
+doing is called a <strong>BYO</strong> (Bring Your Own) install because we are
+bringing our own servers and not having the installer contact a cloud
+provider to bring up the infrastructure for us. For reference there is
+also a much more detailed <a href="https://github.com/openshift/openshift-ansible/blob/master/inventory/byo/hosts.ose.example">BYO inventory
+file</a>
+you can study.</p>
+
+<p>So let&rsquo;s break down our inventory file. First we have the <code>OSEv3</code> group
+and list the hosts in the <code>masters</code>, <code>nodes</code>, and <code>etcd</code> groups as
+children of that group:</p>
+<pre class="highlight plaintext"><code># Create an OSEv3 group that contains the masters and nodes groups&#x000A;[OSEv3:children]&#x000A;masters&#x000A;nodes&#x000A;etcd&#x000A;</code></pre>
+
+<p>Then we set a bunch of variables for that group:</p>
+<pre class="highlight plaintext"><code># Set variables common for all OSEv3 hosts&#x000A;[OSEv3:vars]&#x000A;ansible_user=fedora&#x000A;ansible_become=true&#x000A;deployment_type=origin&#x000A;containerized=true&#x000A;openshift_release=v1.3.1&#x000A;openshift_router_selector='router=true'&#x000A;openshift_registry_selector='registry=true'&#x000A;openshift_master_default_subdomain=54.204.208.138.xip.io&#x000A;</code></pre>
+
+<p>Let&rsquo;s run through each of them:</p>
+
+<ul>
+<li>  <code>ansible_user=fedora</code> - <code>fedora</code> is the user that you use to connect
+to Fedora 25 Atomic Host.</li>
+<li>  <code>ansible_become=true</code> - We want the installer to <code>sudo</code> when
+running commands.</li>
+<li>  <code>deployment_type=origin</code> - Run OpenShift Origin.</li>
+<li>  <code>containerized=true</code> - Run Origin from containers.</li>
+<li>  <code>openshift_release=v1.3.1</code> - The version of Origin to run.</li>
+<li>  <code>openshift_router_selector=&#39;router=true&#39;</code> - Set it so that any nodes
+that have this label applied to them will run a router by default.</li>
+<li>  <code>openshift_registry_selector=&#39;registry=true&#39;</code> - Set it so that any
+nodes that have this label applied to them will run a registry
+by default.</li>
+<li>  <code>openshift_master_default_subdomain=54.204.208.138.xip.io</code> - This
+setting is used to tell OpenShift what subdomain to apply to routes
+that are created when exposing services to the outside world.</li>
+</ul>
+
+<p>Whew &hellip; quite a bit to run through there! Most of them are relatively
+self-explanatory. but the <code>openshift_master_default_subdomain</code> might need
+a little more explanation. Basically, the value of this needs to be a
+<a href="https://en.wikipedia.org/wiki/Wildcard_DNS_record">Wildcard DNS Record</a>
+so that any domain can be prefixed onto the front of the record and it
+will still resolve to the same IP address. We have decided to use a free
+service called <a href="http://xip.io/">xip.io</a> so that we don&rsquo;t have to set up
+wildcard DNS just for this example.</p>
+
+<p>So for our example, a domain like <code>app1.54.204.208.138.xip.io</code> will
+resolve to IP address <code>54.204.208.138</code>. This needs to be the address
+of one of the worker nodes, because there will be no routers running
+on the master node. A domain like
+<code>app2.54.204.208.138.xip.io</code> will also resolve to the same address.
+These requests will come in to node <code>54.204.208.138</code>, which is one of
+our worker nodes where a <em>router</em> (HAProxy) is running. HAProxy will
+route the traffic based on the domain used (<code>app1</code> vs <code>app2</code>, etc) to
+the appropriate service within OpenShift.</p>
+
+<p>OK, next up in our inventory file we have some auth settings:</p>
+<pre class="highlight plaintext"><code># enable htpasswd auth&#x000A;openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]&#x000A;openshift_master_htpasswd_users={'admin': '$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1', 'user': '$apr1$.gw8w9i1$ln9bfTRiD6OwuNTG5LvW50'}&#x000A;</code></pre>
+
+<p>You can use a <a href="https://docs.openshift.com/enterprise/3.0/admin_guide/configuring_authentication.html">multitude of authentication
+providers</a>
+with OpenShift. The above statements say that we want to use <code>htpasswd</code>
+for authentication and we want to create two users. The password for the
+<code>admin</code> user is <code>OriginAdmin</code>, while the password for the <code>user</code> user is
+<code>OriginUser</code>. We generated these passwords by running <code>htpasswd</code> on the
+command line like so:</p>
+<pre class="highlight plaintext"><code>$ htpasswd -bc /dev/stdout admin OriginAdmin&#x000A;Adding password for admin user&#x000A;admin:$apr1$zgSjCrLt$1KSuj66CggeWSv.D.BXOA1&#x000A;$ htpasswd -bc /dev/stdout user OriginUser&#x000A;Adding password for user user&#x000A;user:$apr1$.gw8w9i1$ln9bfTRiD6OwuNTG5LvW50&#x000A;</code></pre>
+
+<p>OK, now on to the host groups. First up, our <code>master</code> nodes:</p>
+<pre class="highlight plaintext"><code># host group for masters&#x000A;[masters]&#x000A;54.175.0.44 openshift_public_hostname=54.175.0.44 openshift_hostname=10.0.173.101&#x000A;</code></pre>
+
+<p>We have used <code>54.175.0.44</code> as the hostname and also set
+<code>openshift_public_hostname</code> to this same value so that certificates will
+use that hostname rather than a <em>detected</em> hostname. We&rsquo;re also setting
+<code>openshift_hostname=10.0.173.101</code> because there is a
+<a href="https://github.com/golang/go/issues/17967">bug</a> where the golang
+resolver can&rsquo;t resolve <code>*.ec2.internal</code> addresses. This is also
+documented as an
+<a href="https://github.com/openshift/origin/issues/11962">issue</a> against
+Origin. Once this bug is resolved, you won&rsquo;t have to set
+<code>openshift_hostname</code>.</p>
+
+<p>Next up we have the <code>etcd</code> host group. We&rsquo;re simply re-using the master
+node for a single etcd node. In a production deployment, we&rsquo;d have
+several:</p>
+<pre class="highlight plaintext"><code># host group for etcd, should run on a node that is not schedulable&#x000A;[etcd]&#x000A;54.175.0.44&#x000A;</code></pre>
+
+<p>Finally, we have our worker nodes:</p>
+<pre class="highlight plaintext"><code># host group for worker nodes, we list master node here so that&#x000A;# openshift-sdn gets installed. We mark the master node as not&#x000A;# schedulable.&#x000A;[nodes]&#x000A;54.175.0.44    openshift_hostname=10.0.173.101 openshift_schedulable=false&#x000A;52.91.115.81   openshift_hostname=10.0.156.20  openshift_node_labels="{'router':'true','registry':'true'}"&#x000A;54.204.208.138 openshift_hostname=10.0.251.101 openshift_node_labels="{'router':'true','registry':'true'}"&#x000A;</code></pre>
+
+<p>We include the master node in this group so that the <code>openshift-sdn</code>
+will get installed and run there. However, we do set the master node as
+<code>openshift_schedulable=false</code> because it is running <code>etcd</code>. The last two
+nodes are our worker nodes and we have also added the <code>router=true</code> and
+<code>registry=true</code> node labels to them so that the registry and the router
+will run on them.</p>
+
+<h3>Executing the Installer</h3>
+
+<p>Now that we have the installer code and the inventory file named
+<code>myinventory</code> in the same directory, let&rsquo;s see if we can ping our hosts
+and check their state:</p>
+<pre class="highlight plaintext"><code>$ ansible -i myinventory nodes -a '/usr/bin/rpm-ostree status'&#x000A;54.175.0.44 | SUCCESS | rc=0 &gt;&gt;&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.42 (2016-11-16 10:26:30)&#x000A;        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4&#x000A;        OSName: fedora-atomic&#x000A;&#x000A;54.204.208.138 | SUCCESS | rc=0 &gt;&gt;&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.42 (2016-11-16 10:26:30)&#x000A;        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4&#x000A;        OSName: fedora-atomic&#x000A;&#x000A;52.91.115.81 | SUCCESS | rc=0 &gt;&gt;&#x000A;State: idle&#x000A;Deployments:&#x000A;● fedora-atomic:fedora-atomic/25/x86_64/docker-host&#x000A;       Version: 25.42 (2016-11-16 10:26:30)&#x000A;        Commit: c91f4c671a6a1f6770a0f186398f256abf40b2a91562bb2880285df4f574cde4&#x000A;        OSName: fedora-atomic&#x000A;</code></pre>
+
+<p>Looks like they are up and all at the same state. The next step is to
+unleash the installer. Before we do, we should note that Fedora has moved
+to python3 by default. While Atomic Host still has python2 installed
+for legacy package support not all of the modules needed by the installer are
+supported in python2 on Atomic Host. Thus, we&rsquo;ll forge ahead and use python3 as the
+interpreter for ansible by specifying
+<code>-e &#39;ansible_python_interpreter=/usr/bin/python3&#39;</code> on the command line:</p>
+<pre class="highlight plaintext"><code>$ ansible-playbook -i myinventory playbooks/byo/config.yml -e 'ansible_python_interpreter=/usr/bin/python3'&#x000A;Using /etc/ansible/ansible.cfg as config file&#x000A;....&#x000A;....&#x000A;PLAY RECAP *********************************************************************&#x000A;52.91.115.81               : ok=162  changed=49   unreachable=0    failed=0   &#x000A;54.175.0.44                : ok=540  changed=150  unreachable=0    failed=0   &#x000A;54.204.208.138             : ok=159  changed=49   unreachable=0    failed=0   &#x000A;localhost                  : ok=15   changed=9    unreachable=0    failed=0&#x000A;</code></pre>
+
+<p>We snipped pretty much all of the output. You can download the log
+file in its entirety from <a href="../../../../images/2016-12-07_origin-install-output.txt.gz">here</a>.</p>
+
+<p>So now the installer has run, and our systems should be up and running.
+There is only one more thing we have to do before we can take this
+system for a spin.</p>
+
+<p>We created two users <code>user</code> and <code>admin</code>. Currently there is no way to
+have the installer associate one of these users with the <em>cluster admin</em>
+role in OpenShift (we opened a
+<a href="https://github.com/openshift/openshift-ansible/issues/2877">request</a>
+for that). We must run a command to associate the <code>admin</code> user we
+created with cluster admin role for the cluster. The command is
+<code>oadm policy add-cluster-role-to-user cluster-admin admin</code>.</p>
+
+<p>We&rsquo;ll go ahead and run that command now on the master node via
+<code>ansible</code>:</p>
+<pre class="highlight plaintext"><code>$ ansible -i myinventory masters -a '/usr/local/bin/oadm policy add-cluster-role-to-user cluster-admin admin'&#x000A;54.175.0.44 | SUCCESS | rc=0 &gt;&gt;&#x000A;</code></pre>
+
+<p>And now we are ready to log in as either the <code>admin</code> or <code>user</code> users
+using <code>oc login https://54.175.0.44:8443</code> from the command line or
+visiting the web frontend at <code>https://54.175.0.44:8443</code>.</p>
+
+<p><em><strong>NOTE</strong> To install the <code>oc</code> CLI tool on your workstation follow <a href="https://docs.openshift.org/latest/cli_reference/get_started_cli.html#installing-the-cli">these instructions</a></em></p>
+
+<h3>To Be Continued</h3>
+
+<p>In this blog we brought up an OpenShift Origin cluster on three servers
+that were running Fedora 25 Atomic Host. We reviewed the inventory file
+in detail to explain exactly what options were used and why. In a <a href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/">part 2</a>,
+we&rsquo;ll take the system for a spin, inspect some of the
+running system that was generated from the installer, and spin up an
+application that will run on and be hosted by the Origin cluster.</p>
+
+<p>If you run into issues following these installation instructions, please report
+them in one of the following places:</p>
+
+<ul>
+<li>The <a href="https://lists.projectatomic.io/mailman/listinfo/atomic">Project Atomic mailing list</a></li>
+<li>The <a href="https://lists.fedoraproject.org/admin/lists/cloud.lists.fedoraproject.org/">Fedora Cloud mailing list</a></li>
+<li>The #atomic channel on <a href="https://freenode.net/">IRC.freenode.net</a></li>
+<li>In the comments below</li>
+</ul>
+
+<p><a href="/blog/2016/12/part2-install-origin-on-f25-atomic-host/">Click to continue on to Part 2.</a></p>
+
+<p>Cheers!</p>
+
+<p>Dusty</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

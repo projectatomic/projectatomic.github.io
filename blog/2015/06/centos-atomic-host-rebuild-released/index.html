@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CentOS Atomic Host Released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='CentOS Atomic Host Released' property='og:title'>
+<meta content='We would like to announce the general availability of CentOS Atomic Host (May 2015), a lean operating system designed to run Docker containers, derived from Red Hat Enterprise Linux Atomic Host (7.1.2), and built from standard CentOS 7 RPMs. &#x000A;&#x000A;CentOS Atomic Host is produced by the CentOS Atomic SIG, based on upstream work from  Project Atomic.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/06/centos-atomic-host-rebuild-released/' property='og:url'>
+<meta content='2015-06-23T16:30:55Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='RHEL' property='article:tag'>
+<link href='/blog/tag/rhel.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='CentOS Atomic Host Released' name='twitter:title'>
+<meta content='We would like to announce the general availability of CentOS Atomic Host (May 2015), a lean operating system designed to run Docker containers, derived from Red Hat Enterprise Linux Atomic Host (7.1.2), and built from standard CentOS 7 RPMs. &#x000A;&#x000A;CentOS Atomic Host is produced by the CentOS Atomic SIG, based on upstream work from  Project Atomic.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_06 blog_2015_06_centos-atomic-host-rebuild-released blog_2015_06_centos-atomic-host-rebuild-released_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+CentOS Atomic Host Released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-06-23T16:30:55Z'>
+Tuesday 23 June 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We would like to announce the general availability of CentOS Atomic Host (May 2015), a lean operating system designed to run Docker containers, derived from Red Hat Enterprise Linux Atomic Host (7.1.2), and built from standard CentOS 7 RPMs. </p>
+
+<p>CentOS Atomic Host is produced by the <a href="http://wiki.centos.org/SpecialInterestGroup/Atomic">CentOS Atomic SIG</a>, based on upstream work from  <a href="http://www.projectatomic.io/">Project Atomic</a>. </p>
+
+<p></p>
+
+<p>CentOS Atomic Host is available as a qcow2 image, as VirtualBox or libvirt-formatted Vagrant box and as an installable ISO image. These images are available for download at <a href="http://cloud.centos.org/centos/7/atomic/images/">cloud.centos.org</a>. The backing ostree repo is published to <a href="http://mirror.centos.org/centos/7/atomic/x86_64/repo">mirror.centos.org</a>.</p>
+
+<p>If you currently run an atomic host (from any distro or release in the past), you can rebase to this released CentOS Atomic Host by running the following two commands :</p>
+<pre class="highlight plaintext"><code>  ostree remote add centos-atomic-host http://mirror.centos.org/centos/7/atomic/x86_64/repo&#x000A;  rpm-ostree rebase  centos-atomic-host:centos-atomic-host/7/x86_64/standard&#x000A;</code></pre>
+
+<h3>Images</h3>
+
+<p>The <a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2">CentOS-Atomic-Host-7-GenericCloud.qcow2</a> (847MB)  is suitable for use in on-premise and local virtualised environments. We test this on OpenStack, AWS and local Libvirt installs. In order to login, you will need to provide a cloud-init consumeable metadata source, like the NoCloud iso file. The Generic Cloud image is also available <a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2.gz">compressed in gz format</a> (388 MB) and <a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-GenericCloud.qcow2.xz">xz compressed</a> (308MB).</p>
+
+<p>The <a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Installer.iso">installer ISO</a> (660 MB) can be used via regular install methods (PXE, CD, USB image, etc.) and uses the Anaconda installer to deliver the CentOS Atomic Host. This allows flexibility to control the install using kickstarts and define custom storage, networking and user accounts. This is the recommended process for getting CentOS Atomic Host onto bare metal machines, or to generate your own image sets for custom environments.</p>
+
+<p><a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Libvirt.box">CentOS-Atomic-Host-7-Vagrant-Libvirt.box</a> (385 MB) and <a href="http://cloud.centos.org/centos/7/atomic/images/CentOS-Atomic-Host-7-Vagrant-Virtualbox.box">CentOS-Atomic-Host-7-Vagrant-Virtualbox.box</a> (395 MB) are Vagrant boxes for Libvirt and Virtualbox providers. </p>
+
+<p>The easiest way to consume these images is via the Atlas / Vagrant Cloud setup (see <a href="https://atlas.hashicorp.com/centos/boxes/atomic-host">https://atlas.hashicorp.com/centos/boxes/atomic-host</a>. For example, getting the VirtualBox instance up would involve running the following two commands on a machine with vagrant installed:</p>
+<pre class="highlight plaintext"><code>  vagrant init centos/atomic-host &amp;&amp; vagrant up --provider virtualbox &#x000A;</code></pre>
+
+<h4>SHA Sums</h4>
+
+<p>c7eb7d770947d3bbb18464d621bb7597b3ecd41dd518551ca6269c7630edc347  CentOS-Atomic-Host-7-GenericCloud.qcow2
+d371c3e4441fef32d3c4456fb08cbd01f0d3c30baafd60c25f4f7f9be4eca1c5  CentOS-Atomic-Host-7-GenericCloud.qcow2.gz
+7ab0e527e108ce8e8861f59f34b9206ea3ac45e3944ce419fc0fa754fbd8b08d  CentOS-Atomic-Host-7-GenericCloud.qcow2.xz
+bfd773fbec8fe15f58e9bb01d91809d2ccc9671079b2dff572d08ab607b12acf  CentOS-Atomic-Host-7-Installer.iso
+8cf02325b1aa04b04c18d988bd3a31b049c2487768f718e3093ade7e8fe33cd4  CentOS-Atomic-Host-7-Vagrant-Libvirt.box
+af8fd6b5af0c98a87543578591230b7f20da97a4d5f53fb091306616bf34577a  CentOS-Atomic-Host-7-Vagrant-Virtualbox.box</p>
+
+<h3>Component Versions:</h3>
+
+<ul>
+<li>Kernel 3.10.0-229</li>
+<li>Docker 1.6.0</li>
+<li>Kubernetes 0.15.0-123</li>
+<li>Flannel 0.2.0</li>
+</ul>
+
+<h3>Release Cycle</h3>
+
+<p>The rebuild image will follow the upstream Red Hat Enterprise Linux Atomic Host cadence. After sources are released, they&rsquo;ll be rebuild and included in new images. After the images are tested by the SIG and deemed ready, they&rsquo;ll be announced. If you&rsquo;d like to help with the process, there&rsquo;s plenty to do!</p>
+
+<h3>Getting Involved</h3>
+
+<p>The CentOS Atomic SIG seeks to produce two &lsquo;streams&rsquo; for users, a rebuild of the RHEL Atomic Host, and a monthly release that tracks upstream components more closely. Users who want to take a more conservative approach to components like Docker, Kubernetes, and so forth will prefer the rebuild.</p>
+
+<p>Our monthly image gives the community the opportunity to preview new technologies, and to experiment with packages that may not be carried in RHEL Atomic Host. If you&rsquo;d like to work on testing images, help with packaging, documentation, or even help define the direction of our montly release &ndash; join us! </p>
+
+<p>The SIG meets weekly on Thursdays at 16:00 UTC in the #centos-devel channel, and you&rsquo;ll often find us in #atomic and/or #centos-devel if you have questions. You can also join the <a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel</a> mailing list if you&rsquo;d like to discuss the direction of Project Atomic, its components, or have other questions. </p>
+
+<h3>Getting Help</h3>
+
+<p>If you run into any problems with the images or components, feel free to ask on the <a href="http://lists.centos.org/mailman/listinfo/centos-devel">centos-devel</a> mailing list. </p>
+
+<p>Have questions about using Atomic? See the <a href="https://lists.projectatomic.io/mailman/listinfo/atomic">atomic</a> mailing list or find us in the #atomic channel on Freenode.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/rhel/">RHEL</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/06/centos-atomic-host-rebuild-released/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/06/centos-atomic-host-rebuild-released/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/06/centos-atomic-host-rebuild-released/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

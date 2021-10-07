@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Migrating Kubernetes on Fedora Atomic Host 27 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Migrating Kubernetes on Fedora Atomic Host 27' property='og:title'>
+<meta content='Starting with Fedora 27 Atomic Host, the RPMs for Kubernetes, Flannel and Etcd are no longer included in the host’s image, but are installable instead either as system containers or via package layering.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/11/migrating-kubernetes-on-fedora-atomic-host-27/' property='og:url'>
+<meta content='2017-11-15T18:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='system containers' property='article:tag'>
+<link href='/blog/tag/system containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Migrating Kubernetes on Fedora Atomic Host 27' name='twitter:title'>
+<meta content='Starting with Fedora 27 Atomic Host, the RPMs for Kubernetes, Flannel and Etcd are no longer included in the host’s image, but are installable instead either as system containers or via package layering.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_11 blog_2017_11_migrating-kubernetes-on-fedora-atomic-host-27 blog_2017_11_migrating-kubernetes-on-fedora-atomic-host-27_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Migrating Kubernetes on Fedora Atomic Host 27
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-11-15T18:00:00Z'>
+Wednesday 15 November 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Starting with Fedora 27 Atomic Host, the RPMs for Kubernetes, Flannel and Etcd are no longer included in the host&rsquo;s image, but are installable instead either as <a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">system containers</a> or via <a href="https://rpm-ostree.readthedocs.io/en/latest/manual/administrator-handbook/#hybrid-imagepackaging-via-package-layering">package layering</a>.</p>
+
+<p></p>
+
+<p>System containers can serve as drop-in replacements for components that had been included in the Fedora Atomic image. Once installed, these components will be manageable using the same <code>systemctl</code> commands that apply to regular RPM-installed components. System containers are very flexible; you can easily run system container images based on CentOS, or on older (or newer) versions of Fedora on a Fedora 27 Atomic  host.</p>
+
+<p>Package layering makes it possible to install regular RPM packages from configured repositories. These additional <q>layered</q> packages are persistent across upgrades, rebases, and deploys. You must typically reboot after layering on packages, and not all packages may be installed in this way. For instance, RPMs that install content to <code>/opt</code> <a href="https://github.com/projectatomic/rpm-ostree/issues/233">aren&rsquo;t currently installable</a> via package layering. Unlike with system containers, the packages you layer onto your host must be compatible with the version of Fedora the host is running.</p>
+
+<p>If you&rsquo;re running a Kubernetes cluster on Fedora Atomic Host that depends on the baked-in versions of these components, such as a cluster installed via the Ansible scripts in the <a href="https://github.com/kubernetes/contrib/tree/master/ansible">kubernetes/contrib repo</a>, you&rsquo;ll need to choose one of these methods to migrate your cluster when <a href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrading to Fedora Atomic 27</a>.</p>
+
+<h3>Migrating Kubernetes and related components using System Containers</h3>
+
+<p>To replace Kubernetes, Flannel, and Etcd with system containers, you would run the following commands. You could run these commands on a Fedora 26 Atomic Host, and then <a href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrade to 27</a>. Upon rebooting, your components and any cluster based on them should be up and running.</p>
+
+<h4>System containers for master nodes</h4>
+<pre class="highlight plaintext"><code># atomic install --system --system-package=no --name kube-apiserver registry.fedoraproject.org/f27/kubernetes-apiserver&#x000A;&#x000A;# atomic install --system --system-package=no --name kube-controller-manager registry.fedoraproject.org/f27/kubernetes-controller-manager&#x000A;&#x000A;# atomic install --system --system-package=no --name kube-scheduler registry.fedoraproject.org/f27/kubernetes-scheduler&#x000A;</code></pre>
+
+<p>Note: the <code>kube-apiserver</code> system container provides the <code>kubectl</code> client.</p>
+
+<h4>System containers for worker nodes</h4>
+<pre class="highlight plaintext"><code># atomic install --system --system-package=no --name kubelet registry.fedoraproject.org/f27/kubernetes-kubelet&#x000A;&#x000A;# atomic install --system --system-package=no --name kube-proxy registry.fedoraproject.org/f27/kubernetes-proxy&#x000A;</code></pre>
+
+<h4>System container for etcd</h4>
+<pre class="highlight plaintext"><code># atomic install --system --system-package=no --storage=ostree --name etcd registry.fedoraproject.org/f27/etcd&#x000A;</code></pre>
+
+<p>When installed with the name <strong>etcd</strong>, the etcd system container expects to find stores etcd data in <code>/var/lib/etcd/etcd.etcd</code>. The etcd RPM is configured by default to store data in <code>/var/lib/etcd/default.etcd</code>, and the ansible scripts in <a href="https://github.com/kubernetes/contrib/tree/master/ansible">kubernetes/contrib</a> use <code>/var/lib/etcd</code>. On a system running etcd as configured by the kubernetes/contrib ansible scripts, you&rsquo;d move your data as follows:</p>
+<pre class="highlight plaintext"><code># systemctl stop etcd&#x000A;&#x000A;# cp -r /var/lib/etcd/member /var/lib/etcd/etcd.etcd/&#x000A;</code></pre>
+
+<p>Note: the etcd container provides the <code>etcdctl</code> client.  There will be more about the etcd container on this blog on Friday.</p>
+
+<h4>System container for flannel</h4>
+<pre class="highlight plaintext"><code># atomic install --system --system-package=no --name flanneld registry.fedoraproject.org/f27/flannel&#x000A;</code></pre>
+
+<h4>Updating system containers</h4>
+
+<p>System container updates are independent of host updates. You can update a system container by pulling an updated version of the image, and then running the <code>atomic containers update</code> command.</p>
+<pre class="highlight plaintext"><code># atomic pull registry.fedoraproject.org/f27/etcd&#x000A;# atomic containers update etcd&#x000A;</code></pre>
+
+<p>You can then roll back to the previous system container version by running <code>atomic containers rollback</code>.</p>
+<pre class="highlight plaintext"><code> # atomic containers rollback etcd&#x000A;</code></pre>
+
+<h3>Migrating Kubernetes and related components using RPM Package Layering</h3>
+
+<p>During the <a href="http://www.projectatomic.io/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrade to 27</a>, you can opt to layer on particular packages by appending <code>--install PACKAGE</code> to the <code>rpm-ostree rebase</code> commands. Upon rebooting into 27, your components and any cluster based on them should be up and running.</p>
+
+<p>To layer packages on master and etcd nodes, run the following command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree rebase fedora-atomic-27:fedora/27/x86_64/atomic-host --install kubernetes-master --install flannel --install etcd -r&#x000A;</code></pre>
+
+<p>To layer packages on worker nodes, run the following command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree rebase fedora-atomic-27:fedora/27/x86_64/atomic-host --install kubernetes-node --install flannel -r&#x000A;</code></pre>
+
+<h3>Updating package layers</h3>
+
+<p>During regular rpm-ostree upgrades (with <code>rpm-ostree upgrade</code> or <code>atomic host upgrade</code>), your host will fetch updated package versions from your configured repositories.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+<li><a href="/blog/tag/system-containers/">system containers</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/11/migrating-kubernetes-on-fedora-atomic-host-27/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/11/migrating-kubernetes-on-fedora-atomic-host-27/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/11/migrating-kubernetes-on-fedora-atomic-host-27/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

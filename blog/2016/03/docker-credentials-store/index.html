@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Docker Credential Store &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Antonio Murdaca' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Docker Credential Store' property='og:title'>
+<meta content='One security feature in the upcoming Docker 1.11 is the capability to use an external credential store for registry authentication. The new version will automatically detect a configured external store, if it is available, and use it instead of the JSON file. We’ll be talking more about this in a few paragraphs, but first, let’s see how Docker is currently storing credentials.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/docker-credentials-store/' property='og:url'>
+<meta content='2016-03-16T13:25:00Z' property='article:published_time'>
+<meta content='runcom' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Docker Credential Store' name='twitter:title'>
+<meta content='One security feature in the upcoming Docker 1.11 is the capability to use an external credential store for registry authentication. The new version will automatically detect a configured external store, if it is available, and use it instead of the JSON file. We’ll be talking more about this in a few paragraphs, but first, let’s see how Docker is currently storing credentials.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_docker-credentials-store blog_2016_03_docker-credentials-store_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Docker Credential Store
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-16T13:25:00Z'>
+Wednesday 16 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>One security feature in the upcoming Docker 1.11 is the capability to use an external credential store for registry authentication. The new version will automatically detect a configured external store, if it is available, and use it instead of the JSON file. We&rsquo;ll be talking more about this in a few paragraphs, but first, let&rsquo;s see how Docker is currently storing credentials.</p>
+
+<p></p>
+
+<h3>Login and Logout</h3>
+
+<p>Today, Docker stores the credentials used for registry authentication inside a JSON file (usually in <code>$HOME/.docker/config.json</code>). Its format is pretty simple:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>cat <span class="nv">$HOME</span>/.docker/config.json&#x000A;<span class="o">{</span>&#x000A;    <span class="s2">"auths"</span>: <span class="o">{</span>&#x000A;        <span class="s2">"https://index.docker.io/v1/"</span>: <span class="o">{</span>&#x000A;            <span class="s2">"auth"</span>: <span class="s2">"YW11cmRhY2E6c3VwZXJzZWNyZXRwYXNzd29yZA=="</span>,&#x000A;            <span class="s2">"email"</span>: <span class="s2">"amurdaca@redhat.com"</span>&#x000A;        <span class="o">}</span>,&#x000A;        <span class="s2">"localhost:5001"</span>: <span class="o">{</span>&#x000A;            <span class="s2">"auth"</span>: <span class="s2">"aGVzdHVzZXI6dGVzdHBhc3N3b3Jk"</span>,&#x000A;            <span class="s2">"email"</span>: <span class="s2">""</span>&#x000A;        <span class="o">}</span>&#x000A;    <span class="o">}</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre>
+
+<p>After a successful <code>docker login</code>, Docker stores a base64 encoded string from the concatenation of the username, a colon, and the password and associates this string to the registry the user is logging into:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span><span class="nb">echo </span><span class="nv">YW11cmRhY2E6c3VwZXJzZWNyZXRwYXNzd29yZA</span><span class="o">==</span> | base64 -d -&#x000A;amurdaca:supersecretpassword&#x000A;</code></pre>
+
+<p>Let&rsquo;s forget about the <code>email</code> field, since it will be removed in Docker 1.11, and has never been used for authentication purposes.</p>
+
+<p>A <code>docker logout</code> simply removes the entry from the JSON file for the given registry:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>docker <span class="nb">logout </span>localhost:5001&#x000A;Remove login credentials <span class="k">for </span>localhost:5001&#x000A;&#x000A;<span class="gp">$ </span>cat <span class="nv">$HOME</span>/.docker/config.json&#x000A;<span class="o">{</span>&#x000A;    <span class="s2">"auths"</span>: <span class="o">{</span>&#x000A;        <span class="s2">"https://index.docker.io/v1/"</span>: <span class="o">{</span>&#x000A;            <span class="s2">"auth"</span>: <span class="s2">"YW11cmRhY2E6c3VwZXJzZWNyZXRwYXNzd29yZA=="</span>,&#x000A;            <span class="s2">"email"</span>: <span class="s2">"amurdaca@redhat.com"</span>&#x000A;        <span class="o">}</span>&#x000A;    <span class="o">}</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre>
+
+<h3>Interacting with Registries</h3>
+
+<p>Let&rsquo;s put this simply; if the registry the user is interacting with requires authentication, Docker retrieves the username and the password from the aforementioned JSON file and uses them to authenticate. No big deal.</p>
+
+<h3>External Credential Store</h3>
+
+<p>As said above, Docker 1.11 implements communication with an external credential store, in the same way as the <code>git-credential-helper</code> does for git.</p>
+
+<p>The implementation calls out to a helper program process when a credential store is configured. The helper program can be implemented in any programming language as long as it follows the conventions for passed arguments and information. The pull request that added this new feature can be found at <a href="https://github.com/docker/docker/pull/20107">docker/docker#20107</a>.
+Docker is also providing a library to help building those credentials helpers at <a href="https://github.com/docker/docker-credential-helpers">docker/docker-credential-helpers</a>.</p>
+
+<p>To configure an <em>external</em> credential store a user need an external helper program to interact with a specific keychain or external store. Docker requires the helper  program to be in the client&rsquo;s host <code>$PATH</code>. The Docker project itself is providing sane defaults for OS X and Windows. I&rsquo;ve recently added support for a credential store for desktop Linux (<a href="https://github.com/docker/docker-credential-helpers/pull/7">docker/docker-credential-helpers#7</a>), which is using <code>libsecret</code> to work with the gnome keyring (and the KDE one).</p>
+
+<p>Once the helper program is installed on the client&rsquo;s host the user just needs to tell the Docker client to actually use it. Be aware that the user needs to perform a <code>docker logout</code> to remove the credentials already stored in the JSON file.</p>
+
+<p>This is what a configuration file looks like after a successful <code>docker login</code>:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>cat <span class="nv">$HOME</span>/.docker/config.json&#x000A;<span class="o">{</span>&#x000A;    <span class="s2">"auths"</span>: <span class="o">{</span>&#x000A;        <span class="s2">"localhost:5001"</span>: <span class="o">{}</span>&#x000A;    <span class="o">}</span>,&#x000A;    <span class="s2">"credsStore"</span>: <span class="s2">"secretservice"</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre>
+
+<p>This file is telling us that we have stored credentials for the registry at <code>localhost:5001</code> and we can see no credentials are stored in the file. Instead we can see that <code>credsStore</code> is populated with the string <code>secretservice</code> (which is the default on Linux if installed). Docker reads the <code>credsStore</code> string and execute the helper <code>docker-credential-secretservice</code> to interact with the credential store.</p>
+
+<p>With the help of the binary <code>secret-tool</code> we can retrieve the credentials stored (just for debugging purposes):</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>secret-tool search server localhost:5001&#x000A;<span class="o">[</span>/org/freedesktop/secrets/collection/login/3774]&#x000A;label <span class="o">=</span> localhost:5001&#x000A;secret <span class="o">=</span> testpassword&#x000A;created <span class="o">=</span> 2016-03-11 17:47:36&#x000A;modified <span class="o">=</span> 2016-03-12 12:29:31&#x000A;schema <span class="o">=</span> io.docker.Credentials&#x000A;attribute.username <span class="o">=</span> testuser&#x000A;attribute.server <span class="o">=</span> localhost:5001&#x000A;attribute.docker_cli <span class="o">=</span> 1&#x000A;</code></pre>
+
+<p>When interacting with registries Docker queries the credential store configured and uses the credentials returned (if any).</p>
+
+<p>Generally, it&rsquo;s desirable to have the system credential store managing secrets (specifically passwords) in order to apply any additional security measures (apart from file permissions).<br>
+The default desktop Linux credential store uses the system keyring to store username and password for Docker in the default Login session, in the same way that other software like Google Chrome does. This means the keyring is automatically unlocked when the user logins into the system. Passwords stored there also persist indefinitely, so that a reboot won&rsquo;t erase them.  </p>
+
+<p>The feature&rsquo;s pluggability helps us create and use more advanced <em>secrets backends</em>, especially for server use. We&rsquo;re currently exploring the <a href="https://github.com/latchset/custodia"><code>custodia</code></a> project to be used as an external credential store for Docker, so stay tuned for more information!</p>
+
+<p>If you want to understand more about how all this is working or if you want to implement your own credential store, you can find more information at <a href="https://github.com/docker/docker-credential-helpers">docker/docker-credential-helpers</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/docker-credentials-store/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/docker-credentials-store/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/docker-credentials-store/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

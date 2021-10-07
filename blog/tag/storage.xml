@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Storage</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/storage.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 0.100 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/cockpit-100/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/cockpit-100/</id>
+    <published>2016-04-04T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>stefwalter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. There&amp;rsquo;s a new release every week. Here are the highlights from this weeks 0.100 release. Even though 0.100 may seem to be a magical number &amp;hellip; it&amp;rsquo;s really just the number after 0.99 :D&lt;/p&gt;
+
+&lt;h3&gt;SELinux Troubleshooting&lt;/h3&gt;
+
+&lt;p&gt;Cockpit can now help you troubleshoot &lt;a href="http://stopdisablingselinux.com/"&gt;SELinux&lt;/a&gt; problems, and show you fixes for repairing the various issues. This is pretty amazing for system admins who really would rather be secure, but keep bumping into stuff that SELinux is blocking. There&amp;rsquo;s more to come on both SELinux and troubleshooting in the future. Take a look at what landed in this release:&lt;/p&gt;
+
+&lt;iframe width="960" height="720" src="https://www.youtube.com/embed/eBGK6qSmnng?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Image Registry Interface&lt;/h3&gt;
+
+&lt;p&gt;There&amp;rsquo;s a new Image Registry user interface. It works with &lt;a href="http://www.projectatomic.io/"&gt;Atomic Platform&lt;/a&gt; or &lt;a href="https://www.openshift.org/"&gt;Openshift&lt;/a&gt; clusters. By default this shows up in the Cockpit &lt;q&gt;Cluster&lt;/q&gt; admin dashboard.&lt;/p&gt;
+
+&lt;p&gt;But more importantly you can deploy this as a standalone image registry, complete with storage, authentication and an interface. See &lt;a href="http://www.projectatomic.io/registry"&gt;www.projectatomic.io/registry&lt;/a&gt; for more info.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a quick demo:&lt;/p&gt;
+
+&lt;iframe width="853" height="480" src="https://www.youtube.com/embed/VSOAASf1Usw?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Storage sliders and more&lt;/h3&gt;
+
+&lt;p&gt;Marius has been working on cleaning up the storage UI. One of the changes you&amp;rsquo;ll notice is that you can now use a slider to choose a size for new volumes or file systems, and specify the size units you want to use:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Storage number slider" src="/images/cockpit-storage-slider.png" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Debian builds now also include the Storage page.&lt;/p&gt;
+
+&lt;h3&gt;From the future&lt;/h3&gt;
+
+&lt;p&gt;Peter worked on adding Cluster storage configuration to the Kubernetes admin dashboard. Basic support will be in the next release. Here&amp;rsquo;s a screenshot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Kubernetes persistent volume" src="/images/cockpit-kubernetes-storage.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 0.100 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/0.100"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-0.100-1.fc24"&gt;Fedora 24&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://copr.fedoraproject.org/coprs/g/cockpit/cockpit-preview/"&gt;COPR for Fedora 23, CentOS and RHEL&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

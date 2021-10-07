@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Dockerfiles</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/dockerfiles.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Don't Run yum update Within a Running Container</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/02/dont-run-yum-update-within-a-running-container/"/>
+    <id>http://www.projectatomic.io/blog/2016/02/dont-run-yum-update-within-a-running-container/</id>
+    <published>2016-02-04T10:04:54+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brent Baude</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently, I have been reviewing a massive collection of Dockerfiles and interacting with customers
+and ISVs alike. In this time, I have seen all sorts of actions being taken for container design and how
+those containers should be run. One such action I really struggle with is when users are either told
+or take the initiative themselves to update packages within a running container. For example, they execute something like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -it foobar yum -y update
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;While there could be a litany of reasons for doing this, consider the potential consequences:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Only the container itself is updated, the image remains unchanged&lt;/li&gt;
+&lt;li&gt;If you were running 10 of these containers, that would result in 10 separate yum updates&lt;/li&gt;
+&lt;li&gt;With multiple updated containers, perhaps at different times, each container could potentially have different packages in it.&lt;/li&gt;
+&lt;li&gt;The author of the image may not have tested with the updated packages and therefore you may encounter undesirable results.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That said, there are certainly a lot of images on various registries that have grown stale or are not updated with the frequency users desire.  Clearly, in this case, it would be ideal if there was an automated build service from the provider to rebuild the images if its packages were updated.&lt;/p&gt;
+
+&lt;p&gt;Absent of that, I think there is a better way.  If we follow the container paradigm, it would be more prudent to update &lt;em&gt;the image&lt;/em&gt; in question rather than the container.  This can simply be done with Docker, where you would use the image from the registry as a seed image and then run &lt;code&gt;yum update&lt;/code&gt; to create a new image.  The Dockerfile could be as simple as:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Use the image from the registry as a seed
+FROM 192.168.122.161:5000/foobar
+
+# Run yum update and then clean the cache
+RUN yum -y update &amp;amp;&amp;amp; yum clean all
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then build the image and name it with some obvious marker to differentiate it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker build -t foobar-updated .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, instead of running an image based on &lt;em&gt;&lt;code&gt;foobar&lt;/code&gt;&lt;/em&gt;, use &lt;em&gt;&lt;code&gt;foobar-updated&lt;/code&gt;&lt;/em&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;By following this paradigm, you will now be able to push the image through your lifecycle testing and verify functionality. All you need to do is stop the existing containers and start new ones based on your newly updated image. You will now have consistent and well-formed images.&lt;/p&gt;
+
+&lt;h3&gt;atomic verify Can Help&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;verify&lt;/code&gt; subcommand of the &lt;a href="https://github.com/projectatomic/atomic"&gt;atomic application&lt;/a&gt; can also be helpful in this scenario. It can be used to determine if an image or its layers have been updated. &lt;code&gt;verify&lt;/code&gt; uses the &lt;em&gt;&lt;code&gt;Version&lt;/code&gt;&lt;/em&gt; label to store its version as metadata within the image. For more information about labels, see the &lt;a href="https://github.com/projectatomic/ContainerApplicationGenericLabels"&gt;ContainerApplicationGenericLabels&lt;/a&gt; GitHub repository. Carrying our example from earlier, suppose we have pulled our &lt;em&gt;foobar&lt;/em&gt; image from a registry, like so:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker pull 192.168.122.161:5000/foobar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using the advice from above, we can then use that image as a seed image to rebuild &lt;em&gt;&lt;code&gt;foobar&lt;/code&gt;&lt;/em&gt; having run a &lt;code&gt;yum update&lt;/code&gt; and now have a &lt;em&gt;&lt;code&gt;foobar-updated&lt;/code&gt;&lt;/em&gt; image present on our system.  This can be observed with using Docker:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker images
+REPOSITORY                    TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+foobar-updated                latest              9045d1c4d8c0        5 minutes ago       194.7 MB
+192.168.122.161:5000/foobar   latest              ff7d910bca97        7 minutes ago       194.7 MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Supposing the foobar image is updated, we can use &lt;code&gt;atomic verify&lt;/code&gt; to identify that:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# sudo ./atomic verify -v foobar-updated
+
+foobar-updated contains the following images:
+
+     Local Version                  Latest Version
+     -------------                  --------------
+     foobar-updated-1.0-5-updated   foobar-updated-1.0-5-updated
+     foobar-1.0-5                   foobar-1.0-6                   *
+
+     * = version difference
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice how the version level has been updated from 1.0.5 to 1.0.6 on the remote registry. This is a sign we should now use the new version on the registry and, if desired, rebuild our local &lt;code&gt;-updated&lt;/code&gt; version updates as needed.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

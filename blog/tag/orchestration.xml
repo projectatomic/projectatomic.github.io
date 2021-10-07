@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Orchestration</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/orchestration.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>How I Wrote exec Support for docker-compose</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/</id>
+    <published>2016-03-29T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tomáš Tomeček</name>
+    </author>
+    <content type="html">&lt;p&gt;If you are a &lt;code&gt;docker-compose&lt;/code&gt; user, as I am, you may be missing one feature:
+&lt;code&gt;exec&lt;/code&gt;&amp;mdash;spawning arbitrary commands in already running containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead of doing this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker exec -ti $container bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;you should be able do the same with &lt;code&gt;docker-compose&lt;/code&gt; itself:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker-compose exec web bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Usually when you wanted to do such thing, you had to:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Type &lt;code&gt;docker exec -ti&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Now, the container name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;^c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker ps&lt;/code&gt;, I forgot to name my container again!&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ba3f7099b709&lt;/code&gt;, ugh&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker exec -ti&lt;/code&gt;, once again, copy-paste that ID, write &lt;code&gt;bash&lt;/code&gt; and 30 seconds later:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@ba3f7099b709 /] # █
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That workflow isn&amp;rsquo;t very ideal. So I realized I wanted to implement the feature (especially when there already was &lt;a href="https://github.com/docker/compose/issues/593"&gt;an
+issue open&lt;/a&gt;, with tons of &lt;code&gt;+1&lt;/code&gt; and not even a single promise of someone working on it).&lt;/p&gt;
+
+&lt;h3&gt;Easy Start&lt;/h3&gt;
+
+&lt;p&gt;In September, I cloned &lt;code&gt;compose&lt;/code&gt; and started working on the code. I managed to have a working prototype very soon:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker-compose exec web ls
+bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Time to Go Interactive&lt;/h3&gt;
+
+&lt;p&gt;That&amp;rsquo;s when all the fun started.&lt;/p&gt;
+
+&lt;p&gt;Running simple, non-interactive commands is pretty trivial. Just &lt;a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-create"&gt;create an exec
+object&lt;/a&gt; via engine&amp;rsquo;s API,
+&lt;a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-start"&gt;start&lt;/a&gt; it, and collect results. Easy.&lt;/p&gt;
+
+&lt;p&gt;When you want an interactive session, it&amp;rsquo;s getting a bit more complex than a simple request/response over HTTP. That&amp;rsquo;s when
+&lt;a href="https://github.com/d11wtq/dockerpty"&gt;dockerpty&lt;/a&gt; comes into the play. It is able to &lt;em&gt;attach&lt;/em&gt; to the process via engine&amp;rsquo;s
+API, send input, receive output and display it. Brief code-browsing revealed there&amp;rsquo;s tons of work ahead:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I had to &lt;a href="https://github.com/d11wtq/dockerpty/pull/48/commits/df6ac1a49b99803c95233e51d0cd9b8f6aba9240"&gt;rewrite&lt;/a&gt; big part of existing codebase.&lt;/li&gt;
+&lt;li&gt;I had to change existing API and add a new one.&lt;/li&gt;
+&lt;li&gt;Cherry on top: the tests didn&amp;rsquo;t work and I had to &lt;a href="https://github.com/d11wtq/dockerpty/pull/53/commits/555b525f49026271c9a291f014c3b7025b183d4a"&gt;fix&lt;/a&gt; those.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Even &lt;code&gt;dockerpty&lt;/code&gt; didn&amp;rsquo;t have all the bits to write proper &lt;code&gt;exec&lt;/code&gt; support for interactive commands. I had to go deeper:
+improve python&amp;rsquo;s API client&amp;mdash;&lt;code&gt;docker-py&lt;/code&gt;. Luckily that &lt;a href="https://github.com/docker/docker-py/pull/858"&gt;patch&lt;/a&gt; was pretty
+easy: just return socket directly, not a generator.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/d11wtq/dockerpty/pull/48"&gt;The patch&lt;/a&gt; for &lt;code&gt;dockerpty&lt;/code&gt; turned out to be super-complex. In the end, it took me more than 5 months to get the former &lt;code&gt;compose&lt;/code&gt; patch merged.&lt;/p&gt;
+
+&lt;p&gt;Enjoy &lt;code&gt;docker-compose exec&lt;/code&gt; once 1.7 is out! Happy &lt;code&gt;exec&lt;/code&gt;ing!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit Roadmap and Contributing</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/08/cockpit-roadmap-and-contributing/"/>
+    <id>http://www.projectatomic.io/blog/2014/08/cockpit-roadmap-and-contributing/</id>
+    <published>2014-08-14T09:22:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;These days it&amp;rsquo;s easier than ever to contribute to Cockpit. Here&amp;rsquo;s how.&lt;/p&gt;
+
+&lt;p&gt;Make sure you have it installed and running. Then checkout the cockpit sources and link the modules directory into your home directory.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/cockpit-project/cockpit.git
+$ mkdir -p ~/.local/share
+$ ln -snf $(pwd)/cockpit/modules ~/.local/share/cockpit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now log into Cockpit with your own user login. Any changes you make in the modules subdirectory of the cockpit javascript or HTML that you checked out, should be visible immediately after a refresh.&lt;/p&gt;
+
+&lt;p&gt;If you want to hack on other parts of Cockpit, such as the backend, there&amp;rsquo;s a handy guide here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/blob/master/HACKING.md"&gt;https://github.com/cockpit-project/cockpit/blob/master/HACKING.md&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;You can file issues you run into here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/issues/new"&gt;https://github.com/cockpit-project/cockpit/issues/new&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;And finally you can see what we&amp;rsquo;re working on at our Trello board:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://trello.com/b/mtBhMA1l/cockpit"&gt;https://trello.com/b/mtBhMA1l/cockpit&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Have fun!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Upstream Atomic: Vagrant Support for Kubernetes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/"/>
+    <id>http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/</id>
+    <published>2014-07-25T16:49:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian Proffitt</name>
+    </author>
+    <content type="html">&lt;p&gt;One of the most interesting things about Project Atomic is how much work is going on, even as the project seems to be standing still. After the discussions Joe and I have had at OSCON this past week, I can safely say the work around containers is moving so fast that it almost seems that if you blink you will miss it.&lt;/p&gt;
+
+&lt;p&gt;Atomic is not the usual open source project, in that there&amp;rsquo;s not really code to download and install as a separate package. Rather, Project Atomic a combination of a lot of upstream projects that will be integrated within CentOS and Fedora. And, of course, Red Hat plans to build and distribute its own Red Hat Enterprise Linux Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;Because Atomic&amp;rsquo;s small but growing community is using upstream projects like &lt;a href="http://mesos.apache.org/"&gt;Apache Mesos&lt;/a&gt;, Google&amp;rsquo;s &lt;a href="https://github.com/GoogleCloudPlatform/kubernetes"&gt;Kubernetes&lt;/a&gt;, and &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt;, community members are submitting new code and features to those projects on almost a daily basis.&lt;/p&gt;
+
+&lt;p&gt;Case in point: yesterday Red Hat&amp;rsquo;s &lt;a href="https://github.com/derekwaynecarr"&gt;Derek Carr&lt;/a&gt; let us know that a new feature he was working on for Kubernetes had been merged into that project: the capability to &lt;a href="https://github.com/GoogleCloudPlatform/kubernetes/pull/550"&gt;manage Vagrant clusters with Kubernetes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Kubernetes is just one of the orchestration tools that will be included in Atomic for container management, and the inclusion of Vagrant support is a key move to get more developer involvement. While developers have long coded Linux applications, many programmers prefer Apple&amp;rsquo;s hardware for their needs. Vagrant is very useful tool enabling them to have the best of both worlds.&lt;/p&gt;
+
+&lt;p&gt;Specifically, Kubernetes users will be able to spin up a local &lt;a href="http://www.vagrantup.com/"&gt;Vagrant&lt;/a&gt; cluster of Fedora machines running a single master with &lt;em&gt;N&lt;/em&gt; minions. Kubernetes will reuse existing Salt configuration scripts to provision master and minions. Carr has also added support to run on Red Hat-based operating systems, where systemd manages installed services. &lt;/p&gt;
+
+&lt;p&gt;Carr has tested this on Vagrant 1.6.2, and it is recommended that users who want to test this feature use this version or higher of Vagrant. Head on over to GitHub and test this new feature today.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

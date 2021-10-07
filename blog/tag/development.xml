@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Development</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/development.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic Docker Patches</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/08/docker-patches/"/>
+    <id>http://www.projectatomic.io/blog/2016/08/docker-patches/</id>
+    <published>2016-08-18T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic&amp;rsquo;s version of the Docker-based container runtime has been carrying a series of patches on the upstream Docker project for a while now.  Each time we carry a patch, it adds significant effort as we continue to track upstream, therefore we would prefer to never carry any patches.  We always strive to get our patches upstream and do it in the open.&lt;/p&gt;
+
+&lt;p&gt;This post, and the accompanying document, will attempt to describe the patches we are currently carrying:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Explanation on types of patches.&lt;/li&gt;
+&lt;li&gt;Description of patches.&lt;/li&gt;
+&lt;li&gt;Links to GitHub discussions, and pull requests for upstreaming the patches to Docker.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some people have asserted that &lt;a href="https://github.com/projectatomic/docker"&gt;our repo&lt;/a&gt; is a fork of the upstream Docker project.&lt;/p&gt;
+
+&lt;h3&gt;What Does It Mean To Be a Fork?&lt;/h3&gt;
+
+&lt;p&gt;I have been in open source for a long time, and my definition of a &lt;q&gt;fork&lt;/q&gt; might be dated. I think of a &lt;q&gt;fork&lt;/q&gt; as a hostile action taken by one group to get others to use and contribute to their version of an upstream project and ignore the &lt;q&gt;original&lt;/q&gt; version. For example, LibreOffice forking off of OpenOffice or going way back Xorg forking off of Xfree86.&lt;/p&gt;
+
+&lt;p&gt;Nowadays, GitHub has changed the meaning. When a software repository exists on GitHub or a similar platform, everyone who wants to contribute has to hit the &lt;q&gt;fork&lt;/q&gt; button, and start building their patches. As of this writing, Docker on GitHub has 9,860 forks, including ours. By this definition, however, all packages that distributions ship that include patches are forks. Red Hat ships the Linux Kernel, and I have not heard this referred to as a fork. But it would be considered a &lt;q&gt;fork&lt;/q&gt; if you&amp;rsquo;re considering any upstream project shipped with patches a fork.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The Docker upstream even relies on Ubuntu carrying patches for AUFS that were never merged into the upstream kernel.&lt;/em&gt; Since Red Hat-based distributions don’t carry the AUFS patches, we contributed the support for Devicemapper, OverlayFS, and Btrfs backends, which are fully supported in the upstream kernel.  This is what enterprise distributions should do: attempt to ship packages configured in a way that they can be supported for a long time.&lt;/p&gt;
+
+&lt;p&gt;At the end of the day, we continue to track the changes made to the upstream Docker Project and re-apply our patches to that project. We believe this is an important distinction to allow freedom in software to thrive while continually building stronger communities.  It’s very different than a hostile fork that divides communities&amp;mdash;we are still working very hard to maintain continuity around unified upstreams.&lt;/p&gt;
+
+&lt;h3&gt;How Can I Find Out About Patches for a Particular Version of Docker?&lt;/h3&gt;
+
+&lt;p&gt;All of the patches we ship are described in the README.md file on the appropriate branch of &lt;a href="https://github.com/projectatomic/docker"&gt;our repository&lt;/a&gt;. If you want to look at the patches for Docker 1.12 you would look at &lt;a href="https://github.com/projectatomic/docker/tree/docker-1.12"&gt;the 1.12 branch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can then look on the &lt;a href="/docs/docker_patches"&gt;patches list page&lt;/a&gt; for information about these patches.&lt;/p&gt;
+
+&lt;h3&gt;What Kind of Patches does Project Atomic Include?&lt;/h3&gt;
+
+&lt;p&gt;Here is a quick overview of the kinds of patches we carry, and then guidance on finding information on specific patches.&lt;/p&gt;
+
+&lt;h4&gt;Upstream Fixes&lt;/h4&gt;
+
+&lt;p&gt;The Docker Project upstream tends to fix issues in the &lt;strong&gt;next&lt;/strong&gt; version of Docker. This means if a user finds an issue in Docker 1.11 and we provide a fix for this to upstream, the patch gets merged in to the master branch, and it will probably not get back ported to Docker 1.11.&lt;/p&gt;
+
+&lt;p&gt;Since Docker is releasing at such a rapid rate, they tell users to just install Docker 1.12 when it is available. This is fine for people who want to be on the bleeding edge, but in a lot of cases the newer version of Docker comes with new issues along with the fixes.&lt;/p&gt;
+
+&lt;p&gt;For example, Docker 1.11 split the Docker daemon into three parts: Docker daemon, containerd, and runc.  We did not feel this was stable enough to ship to enterprise customers right when it came out, yet it had multiple fixes for the Docker 1.10 version. Many users want to only get new fixes to their existing software and not have to re-certify their apps every two months.&lt;/p&gt;
+
+&lt;p&gt;Another issue with supporting stable software with rapidly changing dependencies is that developers on the stable projects must spend time ensuring that their product remains stable every time one of their dependencies is updated. This is an expensive process, dependencies end up being updated only infrequently. This causes us to &lt;q&gt;cherry-pick&lt;/q&gt; fixes from upstream Docker and to ship these fixes on older versions so that we can get the benefits from the bug fixes without the cost of updating the entire dependency. This is the same approach we take in order to add capabilities to the Linux kernel, a practice that has proven to be very valuable to our users.&lt;/p&gt;
+
+&lt;h4&gt;Proposed Patches for Upstream&lt;/h4&gt;
+
+&lt;p&gt;We carry patches that we know our users require right now, but have not yet been merged into the upstream project.  Every patch that we add to the Project Atomic repository also gets proposed to the upstream Docker repository.&lt;/p&gt;
+
+&lt;p&gt;These sorts of patches remain on the Project Atomic repository briefly while they’re being considered upstream, or forever if the upstream community rejects them. If we don&amp;rsquo;t agree with upstream Docker and feel our users need these patches, we continue to carry them. In some cases we have worked out alternative solutions like building authorization plugins.&lt;/p&gt;
+
+&lt;p&gt;For example, users of RHEL images are not supposed to push these images onto public web sites. We wanted a way to prevent users from accidentally pushing RHEL based images to Docker Hub, so we originally created a patch to block the pushing.  When authorization plugins were added we then created a plugin to protect users from pushing RHEL content to a public registry like Docker Hub, and no longer had to carry the custom patch.&lt;/p&gt;
+
+&lt;h3&gt;Detailed List of Patches&lt;/h3&gt;
+
+&lt;p&gt;Want to know more about specific patches? You can find the current table and list of patches on our new &lt;a href="/docs/docker_patches"&gt;patches list page&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Projectatomic.io Running in Atomic App</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/atomic-site-on-atomic-app/</id>
+    <published>2016-03-07T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Since Atomic App has released version 0.4.2, I decided it was past time
+to make the atomic-site into an Atomic App instead of using a shell script that
+wraps Docker to test it. The new setup is a big improvement, and a useful
+guide to &lt;q&gt;Nuleculizing&lt;/q&gt; your own apps.&lt;/p&gt;
+
+&lt;p&gt;As you know, the purpose of Atomic App and Nulecule is to give you a provider-agnostic
+way to specify multi-container applications and orchestration metadata that stays
+with the application image(s). Eventually, this will allow for single-command
+deploys of even large, scalable apps involving many containers. For now, it
+enables us get rid of some hackish shell scripting around Docker in our atomic-site
+test setup.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to turn atomic-site into an Atomic App, I had to do five things:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create and register an application image that expected the /source and /data
+directories to be mounted as volumes, and set permissions on those;&lt;/li&gt;
+&lt;li&gt;Create a template Dockerfile for the Atomic App;&lt;/li&gt;
+&lt;li&gt;Create a Nulecule configuration file;&lt;/li&gt;
+&lt;li&gt;Create a provider file for Docker;&lt;/li&gt;
+&lt;li&gt;Generate a an answers.conf file and edit it.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Since the atomic-site is just a single-container app, and here we&amp;rsquo;re just running
+it for testing purposes, we&amp;rsquo;re only going to support Docker as a provider, and
+not Kubernetes or Mesos. However, either of those could be added with just a few
+lines of configuration and a single provider file (or more than one if we wanted
+a bunch of load-balanced webservers).&lt;/p&gt;
+
+&lt;p&gt;I won&amp;rsquo;t go over the first step in detail, since it&amp;rsquo;s a standard Docker build; you
+can &lt;a href="https://github.com/projectatomic/atomic-site/blob/master/Dockerfile"&gt;look at the dockerfile here&lt;/a&gt;. The
+important thing is that both the &lt;code&gt;source&lt;/code&gt; and &lt;code&gt;data&lt;/code&gt; mounts are commented out
+because those are the parts of the Middleman application which change, and thus
+need to be mounted as volumes. I then pushed this image to &lt;a href="https://hub.docker.com/r/jberkus/atomic-site/"&gt;jberkus/atomic-site&lt;/a&gt; (eventually it will go to projectatomic/atomic-site).&lt;/p&gt;
+
+&lt;p&gt;Because we&amp;rsquo;re sharing some volumes and I have SELinux turned on (don&amp;rsquo;t you?), I also
+need to tell SELinux that the container is allowed to share access to those directories.
+So I added a little &lt;a href="https://github.com/projectatomic/atomic-site/blob/master/selinux_share.sh"&gt;selinux_share.sh&lt;/a&gt;
+ script in the repo&amp;rsquo;s home directory that sets those.&lt;/p&gt;
+
+&lt;p&gt;The second part is to create a placeholder Dockerfile, which is used to build the Atomic App wrapper container. These files pretty much all look the same:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM projectatomic/atomicapp:0.4.2
+
+MAINTAINER Red Hat, Inc. &amp;lt;container-tools@redhat.com&amp;gt;
+
+LABEL io.projectatomic.nulecule.providers="docker" \
+      io.projectatomic.nulecule.specversion="0.0.2"
+
+ADD /Nulecule /Dockerfile README.md /application-entity/
+ADD /artifacts /application-entity/artifacts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The only thing that really changes is which providers you support and the spec
+and app versions.&lt;/p&gt;
+
+&lt;p&gt;Now we get to the good stuff: the Nulecule file, which is most of the definition.
+Let&amp;rsquo;s do this one a little at a time.&lt;/p&gt;
+
+&lt;p&gt;First, we define the spec version and the application ID in the header. Nothing
+exciting here:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;---
+specversion: 0.0.2
+id: atomic-site
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we set some overall metadata, which is pretty much just for registry
+and future searching use:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;metadata:
+  name: Atomic Site app
+  appversion: 0.1.0
+  description: Atomic app for testing the Atomic Website
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;q&gt;graph&lt;/q&gt; contains the definition of all of the app&amp;rsquo;s objects. While ordering-independant, we&amp;rsquo;re going to start it with the parameters that will need to be supplied by the answers.conf file:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;graph:
+  - name: atomic-site
+    params:
+      - name: image
+        description: The webserver image
+        default: jberkus/atomic-site
+      - name: provider
+        description: only support Docker, so need to set it here
+        default: docker
+      - name: hostport
+        description: The host TCP port as the external endpoint
+        default: 4567
+      - name: sourcedir
+        description: location of the middleman source directory
+      - name: datadir
+        description: the middleman data directory
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here you&amp;rsquo;ll notice that we supplied some defaults for the image name and the
+port to be used on the host, because we expect those to be the same for most
+users. We don&amp;rsquo;t expect that most users will have the same path to their local
+copy of the atomic-site repo, though, so those parameters have no defaults, meaning
+that the user has to supply them. While expressly setting the &lt;code&gt;provider&lt;/code&gt; here is
+optional, since we&amp;rsquo;re only supporting docker for this app, we want to set it
+as the default.&lt;/p&gt;
+
+&lt;p&gt;Finally, the &lt;q&gt;artifacts&lt;/q&gt; section defines where the provider files live:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;artifacts:
+  docker:
+    - file://artifacts/docker/atomic-site-run
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Since we&amp;rsquo;re supporting only Docker right now, one line is all we need. We also
+don&amp;rsquo;t currently define any persistent volumes, even though we&amp;rsquo;ll be using some
+volumes; this is because of a limitation that will be resolved when we start requiring
+Docker 1.9 or later.&lt;/p&gt;
+
+&lt;p&gt;As a fourth step, we need to create that atomic-site-run file. Right now that&amp;rsquo;s
+a bit of a messy command line because of the lack of volume support, but not
+too bad:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run --rm -p $hostport:4567 --volume $sourcedir:/tmp/source --volume $datadir:/tmp/data $image
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One thing we are doing here is adding &lt;code&gt;--rm&lt;/code&gt; because this Atomic App is strictly for testing; for production you might not want it. You&amp;rsquo;ll notice that the parameters are supplied here as $variables.&lt;/p&gt;
+
+&lt;p&gt;Finally, we generate the answers file from Nulecule:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cd Nulecule/
+atomicapp genanswers .
+sudo emacs answers.conf
+
+[atomic-site]
+image = jberkus/atomic-site
+hostport = 4567
+sourcedir = /home/josh/git/redhat/atomic-site-master/source
+datadir = /home/josh/git/redhat/atomic-site-master/data
+[general]
+namespace = default
+provider = docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So the [general] section is something all Atomic Apps have. Here you supply a
+namespace and a provider, which in our case is docker. The parameters are supplied
+in the section named after the app. For atomic-site, you&amp;rsquo;d want to change
+the full path to the directories to one which matches your own workstation.&lt;/p&gt;
+
+&lt;p&gt;Now, with it all together, I can now run my atomic app:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[josh@redhat atomic-site-master]$ sudo atomicapp run Nulecule/
+2016-03-02 18:55:37,514 - [INFO] - main.py - Action/Mode Selected is: run
+2016-03-02 18:55:37,585 - [INFO] - docker.py - Deploying to provider: Docker
+
+== The Middleman is loading
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;and access the site on &lt;a href="http://127.0.0.1:4567"&gt;http://127.0.0.1:4567&lt;/a&gt; so that I can test changes.&lt;/p&gt;
+
+&lt;p&gt;Now, it&amp;rsquo;s your turn to Nuleculize an app.&lt;/p&gt;
+
+&lt;p&gt;Check out the config here on the &lt;a href="https://github.com/projectatomic/atomic-site"&gt;atomic-site repo&lt;/a&gt;, and additional sample Atomic App
+configurations in the
+&lt;a href="https://github.com/projectatomic/nulecule-library"&gt;Nulecule-library&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Bugfix Container Software In Place</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/05/bugfix-container-software-in-place/"/>
+    <id>http://www.projectatomic.io/blog/2015/05/bugfix-container-software-in-place/</id>
+    <published>2015-05-19T17:54:07+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Aaron Weitekamp</name>
+    </author>
+    <content type="html">&lt;p&gt;Debugging container applications can be frustrating. Last week a few of us got together to hack on &lt;a href="https://github.com/projectatomic/atomicapp"&gt;Atomicapp&lt;/a&gt; and the &lt;a href="https://github.com/projectatomic/nulecule"&gt;Nulecule specification&lt;/a&gt;. The codebase was moving fast, so I hit a few bugs. The problem was the application I was running was in a container and the bug was difficult to reproduce on my local workstation. The python traceback output suggested it was a simple fix so I wanted to just edit the code in place in the container and keep moving. But then how would I get the code onto my local development box and into my git repository? And how could I test this code change?&lt;/p&gt;
+
+&lt;p&gt;My approach was to bindmount the source from the local workstation into the container so the files being edited can remain in the local git repository.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Setup&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;m running a &lt;a href="https://atlas.hashicorp.com/atomicapp/boxes/dev"&gt;vagrant box&lt;/a&gt; that rsync&amp;rsquo;s content from the current directory into &lt;code&gt;/home/vagrant/sync&lt;/code&gt;. The container image &lt;code&gt;projectatomic/atomicapp:dev&lt;/code&gt; is run in the vagrant VM. The challenge is to bindmount the sync directory into the container to overwrite the container code with my local development git repository.&lt;/p&gt;
+
+&lt;p&gt;&lt;img width="452" height="441" src="/images/vagrant-docker-dev-env.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Procedure&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Clone your fork of the source code repository.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;git clone https://github.com/projectatomic/atomicapp.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create a simple Vagrantfile that will rsync the current working directory. The default Vagrantfile should do.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Start the vagrant box&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;vagrant up
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;SSH to the vagrant VM&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;vagrant ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Now you&amp;rsquo;re in the vagrant VM. Pull the buggy container image&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker pull projectatomic/atomicapp:dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We need to know how to run the image. Inspect the RUN LABEL using the atomic CLI&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ atomic info projectatomic/atomicapp:dev
+RUN          : docker run -it --rm --privileged --net=host -v `pwd`:/atomicapp -v /run:/run -v /:/host --name NAME -e NAME=NAME -e IMAGE=IMAGE IMAGE -v run /atomicapp
+INSTALL      : docker run --rm -it --privileged -v /run:/run -v `pwd`:/atomicapp -e IMAGE=IMAGE -e NAME=NAME --name NAME IMAGE -v install --destination /atomicapp /application-entity
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Copy the RUN line and add a bindmount of the rsync directory to the installed directory of the container. Since this is a python application this is in &lt;code&gt;/usr/lib/python2.7/site-packages/&lt;/code&gt;. We&amp;rsquo;ll also need to change the &lt;code&gt;ENTRYPOINT&lt;/code&gt; of the container to bash so we can do interactive development.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker run -it --rm --privileged --net=host \
+  -v /home/vagrant/sync/atomicapp:/usr/lib/python2.7/site-packages/atomicapp-0.1-py2.7.egg/atomicapp \
+  --entrypoint bash -v /run:/run -v /:/host \
+  --name atomicapp -e NAME=atomicapp -e IMAGE=projectatomic/atomicapp:dev \
+  projectatomic/atomicapp:dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Now you&amp;rsquo;re in the container bash shell. Run the application to reproduce the bug.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In another terminal window on your local workstation, edit the source code to add some debugging statements and save.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;From the local workstation rsync the repo changes you just made.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;vagrant rsync
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Back in the other window running the container bash shell you should now see the changes you just made. Try running the application again.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Repeat steps 8-10 as your development workflow. When you have fixed the bug, commit the changes, push and submit a pull request.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;This example uses Python, an interpreted language, but a similar approach should work with compiled languages such as &lt;a href="http://golang.org/"&gt;Go&lt;/a&gt;. If you&amp;rsquo;re not running in a Vagrant environment the steps are fewer but I included them here so you might benefit from seeing the rsync workflow.&lt;/p&gt;
+
+&lt;p&gt;Working with containers means learning new ways of debugging. I hope this post helps broaden your vision of how this can be done while still retaining efficient workflows under version control.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

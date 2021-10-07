@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Containerized Directory Services with Docker and FreeIPA &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Containerized Directory Services with Docker and FreeIPA' property='og:title'>
+<meta content='I’ve tried out a lot of different software applications in my time, so I’ve come to appreciate projects and products that make it easy to get up and running quickly and without the need for assembling a whole labful of equipment.&#x000A;&#x000A;In this vein, the various components that comprise oVirt, the open source virtualization management project, can be piled onto a single piece of hardware in form that works well enough to credibly kick the project’s tires.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/' property='og:url'>
+<meta content='2014-10-15T00:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='CentOS' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='FreeIPA' property='article:tag'>
+<link href='/blog/tag/freeipa.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Containerized Directory Services with Docker and FreeIPA' name='twitter:title'>
+<meta content='I’ve tried out a lot of different software applications in my time, so I’ve come to appreciate projects and products that make it easy to get up and running quickly and without the need for assembling a whole labful of equipment.&#x000A;&#x000A;In this vein, the various components that comprise oVirt, the open source virtualization management project, can be piled onto a single piece of hardware in form that works well enough to credibly kick the project’s tires.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_10 blog_2014_10_containerized-directory-services-with-docker-and-freeipa blog_2014_10_containerized-directory-services-with-docker-and-freeipa_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Containerized Directory Services with Docker and FreeIPA
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-10-15T00:00:00Z'>
+Wednesday 15 October 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I&rsquo;ve tried out a lot of different software applications in my time, so I&rsquo;ve come to appreciate projects and products that make it easy to get up and running quickly and without the need for assembling a whole labful of equipment.</p>
+
+<p>In this vein, the various components that comprise <a href="http://www.ovirt.org/Home">oVirt</a>, the open source virtualization management project, can be piled onto a single piece of hardware in form that works well enough to credibly kick the project&rsquo;s tires. </p>
+
+<p></p>
+
+<p>Well, mostly. In order to really get your oVirt on, you need to hook up a directory service of some sort. FreeIPA is an obvious choice to provide oVirt with directory services, but due to conflicts between their package sets, oVirt&rsquo;s management engine can&rsquo;t be installed on the same host as FreeIPA.</p>
+
+<p>Sounds like a job for Docker, right? Just in time for the approaching release of <a href="http://www.ovirt.org/OVirt_3.5_Release_Notes">oVirt 3.5</a>, the good people behind the CentOS Dockerfiles repository (the same one I mentioned in a <a href="http://www.projectatomic.io/blog/2014/09/exploring-web-apps-with-docker/">recent post</a> about trying out WordPress 4.0) have recently added a <a href="https://github.com/CentOS/CentOS-Dockerfiles/tree/master/freeipa/centos7">FreeIPA Dockerfile</a> to the list of containerized components on offer.</p>
+
+<p>I set out to deploy a dockerized FreeIPA instance on the same machine as the oVirt management engine, to see whether the combination would work well enough for testing oVirt&rsquo;s multiuser capabilities.</p>
+
+<p>I started off with a machine running a minimal install of CentOS 6.5, to which I added the EPEL repository (for Docker) and the oVirt 3.5 RC4 repository:</p>
+<pre class="highlight plaintext"><code>sudo yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm epel-release&#x000A;</code></pre>
+
+<p>Next, I added git, Docker, and the oVirt Engine:</p>
+<pre class="highlight plaintext"><code>sudo yum install -y git docker-io ovirt-engine&#x000A;</code></pre>
+
+<p>Then, I set up oVirt Engine, by running the command <code>engine-setup</code> and accepting all the defaults suggested by the install script.</p>
+
+<p>With the engine up and running, I started up the Docker service, grabbed the source of the FreeIPA Dockerfile, and kicked off a build of the image:</p>
+<pre class="highlight plaintext"><code>sudo service docker start&#x000A;git clone https://github.com/CentOS/CentOS-Dockerfiles.git&#x000A;cd CentOS-Dockerfiles/freeipa/centos7/&#x000A;sudo docker build -t freeipa-server .&#x000A;</code></pre>
+
+<p>Next, as described in the <a href="https://github.com/CentOS/CentOS-Dockerfiles/blob/master/freeipa/centos7/README">README</a>, I ran the container image:</p>
+<pre class="highlight plaintext"><code>docker run --privileged --name freeipa-server-container -ti -h ipa.example.test -e PASSWORD=Secret123 freeipa-server&#x000A;</code></pre>
+
+<p>The FreeIPA image is set up to configure itself on first run, a process that takes a couple of minutes. When the setup was complete, I found myself at a bash prompt within the new container (couresy of the optional <code>-ti</code> in the run command).  From this shell, I had to make a small configuration tweak to <a href="http://www.ovirt.org/Troubleshooting#Adding_an_IPA_domain_to_ovirt_engine">deal with an issue</a> between FreeIPA and oVirt Engine.</p>
+
+<p>I needed to modify the file <code>/etc/dirsrv/slapd-EXAMPLE-TEST/dse.ldif</code> and change the line <code>nsslapd-minssf: 0</code> to <code>nsslapd-minssf: 1</code> before stopping and restarting the container. </p>
+
+<p>From the shell within the container, I could stop the container by typing <code>exit</code>, and, once returned to the promt on my test machine, restart the container with the command <code>docker start -ai freeipa-server-container</code>.</p>
+
+<p>Once I was back at the shell within my FreeIPA container, I created a new user to use with oVirt:</p>
+
+<ul>
+<li><code>kinit admin</code> <em>to authenticate as the FreeIPA admin, using the <code>Secret123</code> password from the run command</em></li>
+<li><code>ipa user-add</code> <em>to create my user account, I chose the user name <code>ouser</code></em></li>
+<li><code>ipa passwd ouser</code> <em>to set an initial password for the new user</em></li>
+<li><code>kinit ouser</code> <em>to authenticate as ouser, and change its password, as required by FreeIPA</em></li>
+</ul>
+
+<p>After that, I ran <code>ip a</code> from the container shell to figure out the container&rsquo;s IP address. With that address in hand, I visited a separate terminal window, outside of the container, and I edited the <code>/etc/resolv.conf</code> file in my test machine to include the line <code>namesever CONTAINER-IP-HERE</code> so that my machine would use the new containerized FreeIPA for DNS.</p>
+
+<p>Finally, I was ready to hook my containerized FreeIPA to oVirt&rsquo;s management engine, using the account <code>admin</code> and the <code>Secret123</code> password referenced above, before adding superuser privileges to the <code>ouser</code> account and restarting ovirt-engine for the new setup to take effect:</p>
+<pre class="highlight plaintext"><code>engine-manage-domains add --domain=example.test --user=admin --provider=ipa&#x000A;engine-manage-domains edit --add-permissions --domain=example.test --user=ouser&#x000A;service ovirt-engine restart&#x000A;</code></pre>
+
+<p>And there we have it, a containerized copy of FreeIPA to ride alongside the oVirt management engine, RPM conflicts be damned:</p>
+
+<p><img src="http://www.projectatomic.io/images/ovirt-freeipa-docker.png"></p>
+
+<p>After playing with this long enough to get it working, I do think that this is a decent option for testing oVirt&rsquo;s various user permission-tied features in a lab setting, but it could use some smoothing-out before I could see using it more broadly. In particular, the way I used the container&rsquo;s internal IP address for the host machine DNS is brittle, since that IP changes at every boot. </p>
+
+<p>Also, since oVirt Engine and FreeIPA each expect to use port 443 for their web interfaces, I had to stick to accessing FreeIPA through the command line. </p>
+
+<p>If the engine also ran within a container, I could use Docker&rsquo;s linking functionality to deal with these changing IPs. Soon, I think I&rsquo;ll try to pick up on the <a href="http://allthingsopen.com/2013/12/19/building-docker-images-on-fedora/">experiments others have begun</a> w/ oVirt Engine and Docker, and delve into running the hypervisor portion of the oVirt stack within a container as well, building on this recent howto on <a href="http://www.projectatomic.io/blog/2014/10/libvirtd_in_containers/">running libvirtd within a container</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">CentOS</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/freeipa/">FreeIPA</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/10/containerized-directory-services-with-docker-and-freeipa/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

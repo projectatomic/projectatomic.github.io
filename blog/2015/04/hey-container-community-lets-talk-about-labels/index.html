@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hey Container Community, Let's Talk about Labels &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content="Hey Container Community, Let's Talk about Labels" property='og:title'>
+<meta content='We have added a new tool called atomic which I announced last week. &#x000A;&#x000A;The Atomic tool currently takes advantage of the Label patch in docker that allows developers shipping applications as container images, to add arbitrary labels to the images json data.  We chose to use some top level names for identifiers. Right now, Labels support free-form text without any restrictions. This is good in that it’s flexible, but bad in that we want containers to be portable and tools like Atomic that make use of the Label should co-exist with other tools that may also use the Label.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/04/hey-container-community-lets-talk-about-labels/' property='og:url'>
+<meta content='2015-04-29T15:08:06Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Labels' property='article:tag'>
+<link href='/blog/tag/labels.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content="Hey Container Community, Let's Talk about Labels" name='twitter:title'>
+<meta content='We have added a new tool called atomic which I announced last week. &#x000A;&#x000A;The Atomic tool currently takes advantage of the Label patch in docker that allows developers shipping applications as container images, to add arbitrary labels to the images json data.  We chose to use some top level names for identifiers. Right now, Labels support free-form text without any restrictions. This is good in that it’s flexible, but bad in that we want containers to be portable and tools like Atomic that make use of the Label should co-exist with other tools that may also use the Label.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_04 blog_2015_04_hey-container-community-lets-talk-about-labels blog_2015_04_hey-container-community-lets-talk-about-labels_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Hey Container Community, Let's Talk about Labels
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-04-29T15:08:06Z'>
+Wednesday 29 April 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>We have added a new tool called atomic <a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command/">which I announced last week. </a></p>
+
+<p>The Atomic tool currently takes advantage of the Label patch in docker that allows developers shipping applications as container images, to add arbitrary labels to the images json data.  We chose to use some top level names for identifiers. Right now, Labels support free-form text without any restrictions. This is good in that it&rsquo;s flexible, but bad in that we want containers to be portable and tools like Atomic that make use of the Label should co-exist with other tools that may also use the Label.</p>
+
+<p></p>
+
+<p>We do not want to namespace these names for the atomic tool since we believe that we should build a <em>de facto</em> standard for these names.  Then other tools could take advantage of the labels.</p>
+
+<p>We were <a href="https://twitter.com/solomonstre/status/590996458440011776">encouraged to invite our competitors to participate in this conversation</a> so, we have put together a GitHub page with some suggested top level label IDs. We&rsquo;re hoping to bring together folks from all the interested projects and come up with a Generic Label proposal/standard that works for all of us.</p>
+
+<p>See <a href="https://github.com/projectatomic/ContainerApplicationGenericLabels">the ContainerApplicationGenericLabels repository on GitHub</a> for our first take. Please open issues if you have points to discuss, and pull requests to modify the document.</p>
+
+<p>We actually want Labels to be agnostic of the container tools, so they could be used in other container frameworks/tools like CoreOS and systemd-nspawn. The applications spec introduced by CoreOS has the concept of Annotations, which could take advantage of these names.</p>
+
+<p>The goal of these labels is to give software delivery engineers a somewhat standard way of describing the application they are delivering.</p>
+
+<p>We welcome suggestions from anyone in the containers community, including (but not limited to!) CoreOS, Docker, VMware, IBM, Microsoft, Google, Amazon, RackSpace, SUSE, Canonical, and any other projects or companies doing work that might benefit from top-level label IDs.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/labels/">Labels</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/04/hey-container-community-lets-talk-about-labels/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/04/hey-container-community-lets-talk-about-labels/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/04/hey-container-community-lets-talk-about-labels/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

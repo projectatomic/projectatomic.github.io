@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Upstream</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/upstream.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>What's New in Cockpit?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/05/what-s-new-in-cockpit/"/>
+    <id>http://www.projectatomic.io/blog/2014/05/what-s-new-in-cockpit/</id>
+    <published>2014-05-23T14:55:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://cockpit-project.org/"&gt;&lt;img src="http://www.projectatomic.io/images/cockpit-logo.png"&gt;&lt;/a&gt; &lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt; 0.9 has been released and includes some major milestones for the project. With Cockpit 0.8, we&amp;rsquo;d moved beyond the prototype stage, and have closed a bunch of security and stability issues.&lt;/p&gt;
+
+&lt;p&gt;With Cockpit 0.9 we added continuous integration tests for running on SELinux. We want to be the first to know if Cockpit breaks due to SELinux and not find out about it because someone ran into a problem somewhere. At least that&amp;rsquo;s the goal!&lt;/p&gt;
+
+&lt;p&gt;One of the most notable changes is that Cockpit now respects the system access privileges and won&amp;rsquo;t provide a way to escalate privileges without going through the usual channels like &lt;code&gt;polkit&lt;/code&gt; or &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Because of this some features that used to work for accounts in the wheel group, now only work as root. We&amp;rsquo;re working on fixing this regression by fixing system default policies in the various services (like NetworkManager) that we access.&lt;/p&gt;
+
+&lt;h3&gt;Still Evolving, Be Careful&lt;/h3&gt;
+
+&lt;p&gt;Soon to come down the pipe are Docker image pull support in 0.10, and soon a redone Networking configuration page.&lt;/p&gt;
+
+&lt;p&gt;Cockpit has changed a bit in the jump to 0.8, and a lot of it runs unprivileged now. We&amp;rsquo;ve built our own quite restrictive SELinux policy, and will be running test suites against this policy and updating it to make changes. &lt;/p&gt;
+
+&lt;p&gt;Our goal is that having Cockpit 0.8 or later installed should pose no security risk. That said, Cockpit is still in rapid development, and you should still be careful when using it to manage your system.&lt;/p&gt;
+
+&lt;p&gt;Want to take a look at Cockpit, or provide feedback? Check it out &lt;a href="https://github.com/cockpit-project/cockpit/releases"&gt;on GitHub&lt;/a&gt;, and open an &lt;a href="https://github.com/cockpit-project/cockpit/issues"&gt;issue if you find any problems&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;We hope to have a new Atomic Fedora 20-based image up soon that will include the latest Docker, Cockpit, and other updates. &lt;/p&gt;
+</content>
+  </entry>
+</feed>

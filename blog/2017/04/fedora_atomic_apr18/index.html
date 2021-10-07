@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora Atomic April 18 Release &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora Atomic April 18 Release' property='og:title'>
+<meta content='A new Fedora Atomic Host update is available via an OSTree commit:&#x000A;Commit: 9f0b576461f4baa2b5749003a8628fbf0a456942f37e17a9ceabdb29fc014b0e&#x000A;Version: 25.108&#x000A;&#x000A;&#x000A;This release replaces the scheduled release from last week that was delayed&#x000A;due to a kernel regression. We plan to return to our regularly scheduled release&#x000A;process by performing a release next week as well.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr18/' property='og:url'>
+<meta content='2017-04-19T14:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora Atomic April 18 Release' name='twitter:title'>
+<meta content='A new Fedora Atomic Host update is available via an OSTree commit:&#x000A;Commit: 9f0b576461f4baa2b5749003a8628fbf0a456942f37e17a9ceabdb29fc014b0e&#x000A;Version: 25.108&#x000A;&#x000A;&#x000A;This release replaces the scheduled release from last week that was delayed&#x000A;due to a kernel regression. We plan to return to our regularly scheduled release&#x000A;process by performing a release next week as well.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_04 blog_2017_04_fedora_atomic_apr18 blog_2017_04_fedora_atomic_apr18_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora Atomic April 18 Release
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-04-19T14:00:00Z'>
+Wednesday 19 April 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit:</p>
+<pre class="highlight plaintext"><code>Commit: 9f0b576461f4baa2b5749003a8628fbf0a456942f37e17a9ceabdb29fc014b0e&#x000A;Version: 25.108&#x000A;</code></pre>
+
+<p>This release replaces the scheduled release from last week that was delayed
+due to a kernel regression. We plan to return to our regularly scheduled release
+process by performing a release next week as well.</p>
+
+<p></p>
+
+<p>This release contains the following changes since last release:</p>
+
+<ul>
+<li>ostree diff commit old: 6a71adb06bc296c19839e951c38dc0b71ee5d7a82262fef9612f256f0c2a70da</li>
+<li>ostree diff commit new: 9f0b576461f4baa2b5749003a8628fbf0a456942f37e17a9ceabdb29fc014b0e</li>
+</ul>
+
+<p>Upgraded:</p>
+
+<ul>
+<li>GeoIP 1.6.9-2.fc24.x86_64 -&gt; 1.6.10-1.fc25.x86_64</li>
+<li>GeoIP-GeoLite-data 2017.01-1.fc25.noarch -&gt; 2017.04-1.fc25.noarch</li>
+<li>audit 2.7.3-1.fc25.x86_64 -&gt; 2.7.5-1.fc25.x86_64</li>
+<li>audit-libs 2.7.3-1.fc25.x86_64 -&gt; 2.7.5-1.fc25.x86_64</li>
+<li>audit-libs-python 2.7.3-1.fc25.x86_64 -&gt; 2.7.5-1.fc25.x86_64</li>
+<li>audit-libs-python3 2.7.3-1.fc25.x86_64 -&gt; 2.7.5-1.fc25.x86_64</li>
+<li>ca-certificates 2017.2.11-1.0.fc25.noarch -&gt; 2017.2.11-1.1.fc25.noarch</li>
+<li>cloud-init 0.7.8-6.fc25.noarch -&gt; 0.7.9-4.fc25.noarch</li>
+<li>cockpit-bridge 135-1.fc25.x86_64 -&gt; 137-1.fc25.x86_64</li>
+<li>cockpit-docker 135-1.fc25.x86_64 -&gt; 137-1.fc25.x86_64</li>
+<li>cockpit-networkmanager 135-1.fc25.noarch -&gt; 137-1.fc25.noarch</li>
+<li>cockpit-ostree 135-1.fc25.x86_64 -&gt; 137-1.fc25.x86_64</li>
+<li>cockpit-system 135-1.fc25.noarch -&gt; 137-1.fc25.noarch</li>
+<li>curl 7.51.0-4.fc25.x86_64 -&gt; 7.51.0-6.fc25.x86_64</li>
+<li>dbus 1:1.11.10-1.fc25.x86_64 -&gt; 1:1.11.12-1.fc25.x86_64</li>
+<li>dbus-libs 1:1.11.10-1.fc25.x86_64 -&gt; 1:1.11.12-1.fc25.x86_64</li>
+<li>file 5.29-3.fc25.x86_64 -&gt; 5.29-4.fc25.x86_64</li>
+<li>file-libs 5.29-3.fc25.x86_64 -&gt; 5.29-4.fc25.x86_64</li>
+<li>gdbm 1.12-1.fc25.x86_64 -&gt; 1.13-1.fc25.x86_64</li>
+<li>glusterfs 3.10.0-1.fc25.x86_64 -&gt; 3.10.1-1.fc25.x86_64</li>
+<li>glusterfs-client-xlators 3.10.0-1.fc25.x86_64 -&gt; 3.10.1-1.fc25.x86_64</li>
+<li>glusterfs-fuse 3.10.0-1.fc25.x86_64 -&gt; 3.10.1-1.fc25.x86_64</li>
+<li>glusterfs-libs 3.10.0-1.fc25.x86_64 -&gt; 3.10.1-1.fc25.x86_64</li>
+<li>gssproxy 0.7.0-2.fc25.x86_64 -&gt; 0.7.0-3.fc25.x86_64</li>
+<li>kernel 4.9.14-200.fc25.x86_64 -&gt; 4.10.10-200.fc25.x86_64</li>
+<li>kernel-core 4.9.14-200.fc25.x86_64 -&gt; 4.10.10-200.fc25.x86_64</li>
+<li>kernel-modules 4.9.14-200.fc25.x86_64 -&gt; 4.10.10-200.fc25.x86_64</li>
+<li>libcurl 7.51.0-4.fc25.x86_64 -&gt; 7.51.0-6.fc25.x86_64</li>
+<li>libidn2 0.16-1.fc25.x86_64 -&gt; 2.0.0-1.fc25.x86_64</li>
+<li>libsolv 0.6.26-1.fc25.x86_64 -&gt; 0.6.26-3.fc25.x86_64</li>
+<li>linux-firmware 20161205-69.git91ddce49.fc25.noarch -&gt; 20170313-72.git695f2d6d.fc25.noarch</li>
+<li>make 1:4.1-5.fc24.x86_64 -&gt; 1:4.1-6.fc25.x86_64</li>
+<li>nfs-utils 1:2.1.1-2.rc1.fc25.x86_64 -&gt; 1:2.1.1-3.rc1.fc25.x86_64</li>
+<li>nss 3.28.3-1.1.fc25.x86_64 -&gt; 3.29.3-1.1.fc25.x86_64</li>
+<li>nss-pem 1.0.3-2.fc25.x86_64 -&gt; 1.0.3-3.fc25.x86_64</li>
+<li>nss-softokn 3.28.3-1.1.fc25.x86_64 -&gt; 3.29.3-1.0.fc25.x86_64</li>
+<li>nss-softokn-freebl 3.28.3-1.1.fc25.x86_64 -&gt; 3.29.3-1.0.fc25.x86_64</li>
+<li>nss-sysinit 3.28.3-1.1.fc25.x86_64 -&gt; 3.29.3-1.1.fc25.x86_64</li>
+<li>nss-tools 3.28.3-1.1.fc25.x86_64 -&gt; 3.29.3-1.1.fc25.x86_64</li>
+<li>nss-util 3.28.3-1.0.fc25.x86_64 -&gt; 3.29.3-1.1.fc25.x86_64</li>
+<li>openldap 2.4.44-7.fc25.x86_64 -&gt; 2.4.44-10.fc25.x86_64</li>
+<li>os-prober 1.71-1.fc25.x86_64 -&gt; 1.74-1.fc25.x86_64</li>
+<li>p11-kit 0.23.2-2.fc24.x86_64 -&gt; 0.23.2-3.fc25.x86_64</li>
+<li>p11-kit-trust 0.23.2-2.fc24.x86_64 -&gt; 0.23.2-3.fc25.x86_64</li>
+<li>pcre 8.40-5.fc25.x86_64 -&gt; 8.40-6.fc25.x86_64</li>
+<li>policycoreutils 2.5-19.fc25.x86_64 -&gt; 2.5-20.fc25.x86_64</li>
+<li>policycoreutils-python 2.5-19.fc25.x86_64 -&gt; 2.5-20.fc25.x86_64</li>
+<li>policycoreutils-python-utils 2.5-19.fc25.x86_64 -&gt; 2.5-20.fc25.x86_64</li>
+<li>policycoreutils-python3 2.5-19.fc25.x86_64 -&gt; 2.5-20.fc25.x86_64</li>
+<li>polkit 0.113-5.fc24.x86_64 -&gt; 0.113-8.fc25.x86_64</li>
+<li>polkit-libs 0.113-5.fc24.x86_64 -&gt; 0.113-8.fc25.x86_64</li>
+<li>sos 3.3-1.fc25.noarch -&gt; 3.4-1.fc25.noarch</li>
+<li>sudo 1.8.18p1-1.fc25.x86_64 -&gt; 1.8.19p2-1.fc25.x86_64</li>
+<li>tzdata 2017a-1.fc25.noarch -&gt; 2017b-1.fc25.noarch</li>
+<li>vim-minimal 2:8.0.502-1.fc25.x86_64 -&gt; 2:8.0.562-1.fc25.x86_64</li>
+</ul>
+
+<p>This includes a fix to the kernel for <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1441310">BZ#1441310</a>. Another notable change
+is the new version of cloud-init.</p>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or
+<code>atomic host deploy</code>.</p>
+
+<p>Corresponding image media for new installations can be <a href="https://getfedora.org/en/atomic/download/">downloaded from GetFedora.org</a>.</p>
+
+<p>Respective signed CHECKSUM files can be found here:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-25-20170418.0/CloudImages/x86_64/images/Fedora-CloudImages-25-20170418.0-x86_64-CHECKSUM">Cloud image checksum</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-25-20170418.0/Atomic/x86_64/iso/Fedora-Atomic-25-20170418.0-x86_64-CHECKSUM">ISO Checksum</a></li>
+</ul>
+
+<p>For direct download, the <q>latest</q> targets are always available at the following URLs:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest">Latest ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest">Latest QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest">Latest raw image</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest">Latest LibVirt VM</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest">Latest VirtualBox VM</a></li>
+</ul>
+
+<p>Filename fetching URLs for downloading to remote systems are available by querying the following links:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest_filename">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest_filename">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest_filename">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename">VirtualBox</a></li>
+</ul>
+
+<p>For more information about the latest targets, please reference <a href="https://fedoraproject.org/wiki/Cloud#Quick_Links">the Fedora
+Cloud Wiki space</a>.</p>
+
+<p>The Vagrant Atlas page with the new atomic host:</p>
+
+<ul>
+<li><a href="https://atlas.hashicorp.com/fedora/boxes/">All Fedora boxes</a></li>
+<li><a href="https://atlas.hashicorp.com/fedora/boxes/25-atomic-host/versions/20170418">Fedora Atomic 25</a></li>
+</ul>
+<pre class="highlight plaintext"><code>vagrant init fedora/25-atomic-host; vagrant up&#x000A;</code></pre>
+
+<p>or, if you already have the box, to get the new one:</p>
+<pre class="highlight plaintext"><code>vagrant box update --box fedora/25-atomic-host&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr18/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr18/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/04/fedora_atomic_apr18/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

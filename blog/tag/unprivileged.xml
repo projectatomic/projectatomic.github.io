@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Unprivileged</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/unprivileged.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Unprivileged containers with bwrap-oci and bubblewrap</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/07/unprivileged-containers-with-bwrap-oci-and-bubblewrap/"/>
+    <id>http://www.projectatomic.io/blog/2017/07/unprivileged-containers-with-bwrap-oci-and-bubblewrap/</id>
+    <published>2017-07-14T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Giuseppe Scrivano</name>
+    </author>
+    <content type="html">&lt;p&gt;The introduction of user namespaces in the Linux kernel has opened the
+doors to running containers as default user logins via e.g. ssh or desktop.
+On Fedora, bwrap-oci lets you make use of this feature, as I will
+demonstrate.&lt;/p&gt;
+
+&lt;p&gt;The concept behind user namespaces is quite simple: UIDs and GIDs in
+a user namespace are converted to a different set in the parent
+namespace, so that an application thinks it&amp;rsquo;s executed as root while
+instead a non-privileged user is running it.
+User namespaces are not limited to altering  an application&amp;rsquo;s UID/GID
+mappings, a user can keep capabilities in the new namespace and
+together with other namespaces perform privileged operations there
+that are unprivileged in the parent namespace.  For example, an
+application with a new network namespace can create firewall rules
+that only affect its namespace.  This offers extra security since the
+container is limited to the user that is running it, so even if
+something goes wrong the process has no more privileges than the user
+who runs it (unless things go &lt;em&gt;very&lt;/em&gt; wrong!).&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;At the time of writing this post, the changes required into bubblewrap
+and bwrap-oci are not part of a stable release yet.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;d like to try the demo out, you’ll need to build the
+development version for both of them.  You can get the last source
+from the git repos here:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/bubblewrap"&gt;bubblewrap&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/projectatomic/bwrap-oci"&gt;bwrap-oci&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can install the needed libraries with &lt;code&gt;sudo dnf build bubblewrap
+bwrap-oci&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;After you&amp;rsquo;ve cloned the git repos, you can build bubblewrap and
+bwrap-oci doing the usual:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;autoreconf -f
+./configure
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will be the only time you need root access through the demo.&lt;/p&gt;
+
+&lt;p&gt;If you are not already familiar with
+it, &lt;a href="https://github.com/projectatomic/bubblewrap"&gt;bubblewrap&lt;/a&gt; is the
+core technology used by Flatpak for running sandboxed applications and
+take advantage of user namespaces in the kernel.  It has a simple but
+effective CLI interface:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap --uid 0 --gid 0 --ro-bind / / bash -c \
+   'echo "I am $(whoami) but cannot do much, see..."; touch pizza'
+I am root but cannot do much, see...
+touch: cannot touch 'pizza': Read-only file system
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Bubblewrap needed a few features added to run privileged containers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;allowing configuration of namespaces from an external application&lt;/li&gt;
+&lt;li&gt;running a container without bubblewrap process reaping zombie processes&lt;/li&gt;
+&lt;li&gt;allowing Usernamespace linux capabilities to be left in the container&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/opencontainers/runtime-spec/blob/master/spec.md"&gt;The OCI runtime spec&lt;/a&gt; describes
+how to run a container using a standard JSON format.  The runtime spec
+is used by runC.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/bwrap-oci"&gt;bwrap-oci&lt;/a&gt; is a tool that
+bridges the gap between an OCI container and bubblewrap.  It
+translates the JSON description into a list of arguments that
+bubblewrap can understand.&lt;/p&gt;
+
+&lt;p&gt;One limitation with user namespaces is that a non privileged user, a
+user process not holding &lt;code&gt;CAP_SETUID&lt;/code&gt;/&lt;code&gt;CAP_SETGID&lt;/code&gt; , is only allowed
+to map one user in the new namespace.  This is fine for most
+containers, but prevents  running containers that require multiple
+different UIDS, for example systemd based containers.   Systemd needs
+a range of uids/gids to be defined for its execution so that some
+system services can be run as non root user (&lt;code&gt;User=&lt;/code&gt; in a  &lt;code&gt;.service&lt;/code&gt;
+file).&lt;/p&gt;
+
+&lt;p&gt;We  want to remove this limitation.   &lt;code&gt;bwrap-oci&lt;/code&gt; uses a set of tools
+that are part of the &lt;code&gt;shadow-utils&lt;/code&gt; package: &lt;code&gt;newuidmap&lt;/code&gt; and &lt;code&gt;newgidmap&lt;/code&gt; to
+circumvent this limitation.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;newuidmap&lt;/code&gt; and &lt;code&gt;newgidmap&lt;/code&gt;  are setuid root applications that configure
+a user/group mapping in a new user namespace.  Since they run as
+root, they can allow a user to create usernamespaces with multiple
+user mappings.&lt;/p&gt;
+
+&lt;p&gt;This is, of course, risky in principle since any user could map an
+uid/gid in the parent namespace to the user namespace gaining full
+control over it.  To prevent this, the system administrator limits the mappings done by
+these tools to what is defined in &lt;code&gt;/etc/subuid&lt;/code&gt; and &lt;code&gt;/etc/subgid&lt;/code&gt;.  The
+administrator defines a range  of uid/gid that each user can set for
+their user namespaces. Mappings are denied by default.  Each
+line in the file &lt;code&gt;/etc/subuid&lt;/code&gt; file specifies the user in the parent
+namespace, the initial uid of the range and the range length.  Same
+thing for &lt;code&gt;/etc/subgid&lt;/code&gt; and gids.&lt;/p&gt;
+
+&lt;p&gt;For example on my system, for my user I have defined this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ id -u
+1000
+
+$ grep ^gscrivano /etc/subgid
+gscrivano:110000:65536
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This allows my login process to use &lt;code&gt;newuidmap&lt;/code&gt; to setup any mapping
+in a new user namespace that points back to my uid 1000 and any other
+defined in the additional range of 110000 to 175535.&lt;/p&gt;
+
+&lt;p&gt;The uid/gid mapping done by bwrap-oci follows these two rules:&lt;/p&gt;
+
+&lt;p&gt;The uid/gid defined in the OCI &lt;code&gt;config.json&lt;/code&gt; file (i.e. the uid/gid used
+to exec the sandboxed program) must be  mapped to the uid/gid of the
+user in the parent namespace.
+Any other uid/gid in the range [0, AVAILABLE_UIDS] is mapped to the
+additional ids defined for the user in the parent namespace, as
+described above.&lt;/p&gt;
+
+&lt;p&gt;At this point we have all we need to run systemd as a non privileged
+user.&lt;/p&gt;
+
+&lt;p&gt;In the bwrap-oci repository there is a &lt;a href="https://github.com/projectatomic/bwrap-oci/blob/master/demos/run-systemd/run_demo.sh"&gt;demo&lt;/a&gt;
+on how to setup a container. For simplicity, I&amp;rsquo;ll skip the steps
+required to build it here.&lt;/p&gt;
+
+&lt;p&gt;Running a container with &lt;code&gt;bwrap-oci&lt;/code&gt; is extremely easy once you have the
+rootfs with all the files required by the container and the
+&lt;code&gt;config.json&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;I am not root:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ id -u
+1000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And I do not have any current capabilities:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ grep ^Cap /proc/self/status
+CapInh:    0000000000000000
+CapPrm:    0000000000000000
+CapEff:    0000000000000000
+CapBnd:    0000003fffffffff
+CapAmb:    0000000000000000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to run a container I am required to have a json file
+describing the application to run and a rootfs directory structure
+containing the application:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ls -l
+-rw-rw-r--.  1 gscrivano gscrivano   5741 Jul  7 11:53 config.json
+drwxrwxr-x. 18 gscrivano gscrivano   4096 Jul  6 12:26 rootfs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I use bwrap-oci to run the container:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci run systemd-demo
+systemd 231 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD +IDN)
+Detected virtualization container-other.
+Detected architecture x86-64.
+
+Welcome to Fedora 25 (Twenty Five)!
+
+....
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thus, &lt;code&gt;systemd --system&lt;/code&gt; running as an unprivileged init container!&lt;/p&gt;
+
+&lt;p&gt;From another shell, we can get a list of the containers known by bwrap-oci:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci list
+NAME                          PID       STATUS    BUNDLE
+systemd-demo               7412      running   /home/gscrivano/systemd-container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Systemd halts the machine on receiving the signal &lt;code&gt;SIGRTMIN+3&lt;/code&gt;.  I use
+directly the value of &lt;code&gt;SIGRTMIN+3&lt;/code&gt; until &lt;code&gt;bwrap-oci kill&lt;/code&gt; understands
+signal names (you can also use directly kill -SIGRTMIN+3 $PID):&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci kill systemd-demo 37
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the first shell we can see that systemd container is stopped now.&lt;/p&gt;
+
+&lt;h3&gt;Future directions:&lt;/h3&gt;
+
+&lt;p&gt;We plan to improve the integration of bwrap-oci tool into the Atomic CLI. We&amp;rsquo;d like to
+get more containers that we use now with &lt;code&gt;atomic install --system&lt;/code&gt; to
+work with &lt;code&gt;atomic install --user&lt;/code&gt;.  The main difference will be to use
+bwrap-oci instead of runC as the containers backend.
+User containers will use &lt;code&gt;systemd --user&lt;/code&gt; instead of the system
+systemd as we do with system containers to manage their life cycle.&lt;/p&gt;
+
+&lt;p&gt;The etcd container already works with bwrap-oci/bwrap and you should
+be able to fully run it with &lt;code&gt;atomic install --user&lt;/code&gt; and &lt;code&gt;systemctl
+--user&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

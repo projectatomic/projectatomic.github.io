@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Logging</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/logging.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Better ways of handling logging in containers</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/playing-with-docker-logging/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/playing-with-docker-logging/</id>
+    <published>2016-10-24T10:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Traditional logging systems, like syslog, do not quite work by default with Containers. This is especially true if they are running without an init system in the container.&lt;/p&gt;
+
+&lt;h4&gt;STDIN/STDERR messages in journal&lt;/h4&gt;
+
+&lt;p&gt;I recently received a &lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1386661"&gt;bugzilla&lt;/a&gt; report complaining about logging inside of a docker container.&lt;/p&gt;
+
+&lt;p&gt;First the user complained about all of STDOUT/STDERR showing up in the journal. This can actually be configured in the docker daemon using the &amp;ndash;log-driver parameter:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;man dockerd
+...
+
+  --log-driver="json-file|syslog|journald|gelf|fluentd|
+   awslogs|splunk|etwlogs|gcplogs|none"
+  Default driver for container logs. Default is json-file.
+  Warning: docker logs command works only for json-file logging driver.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Red Hat based Operating Systems use &lt;code&gt;--log-driver=journald&lt;/code&gt; by default, because we believe log files should be permanently stored on the host system.  The upstream docker default is &lt;code&gt;json-file&lt;/code&gt;.  With &lt;code&gt;json-file&lt;/code&gt; the logs are removed when an admin removes the container using &lt;code&gt;docker rm&lt;/code&gt;. .  Another problem with the &lt;code&gt;json-file&lt;/code&gt; logger is that tools that maintain logs won’t work with them. ,  We were having problems with containers’ logs filling up the system, and users not knowing what was using up the space.  &lt;/p&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t like our default, including the STDOUT/STDERR messages being recorded in the journal, you can edit /etc/sysconfig/docker and change the log-driver.&lt;/p&gt;
+
+&lt;p&gt;The bugzilla report then went on to ask about getting syslog and journal messages from the container.  Where do these messages generated inside of the container end up?&lt;/p&gt;
+
+&lt;h4&gt;syslog and journal log messages silently dropped by default&lt;/h4&gt;
+
+&lt;p&gt;One big problem with standard docker containers is that any service that writes messages to syslog or directly to the journal get dropped by default.  Docker does not record any logs unless the messages are written to STDIN/STDERR.  There is no logging service running inside of the container to catch these messages.&lt;/p&gt;
+
+&lt;h4&gt;Running a logging system inside of the container&lt;/h4&gt;
+
+&lt;p&gt;If you want proper logging setup, I would suggest that you investigate running
+&lt;a href="http://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/"&gt;systemd inside of a container.&lt;/a&gt;.  This would setup systemd as pid 1, but would also run journald inside of the container and the syslog and journal messages would be handled the same was as when they are on the hosts.&lt;/p&gt;
+
+&lt;p&gt;A lot of people do not want to run a full init system inside of their containers.  Another option would be to have services running on the host listen for these messages.  An administrator can  volume mount in the hosts sockets into your container.  &lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s look into this.&lt;/p&gt;
+
+&lt;h4&gt;Getting messages out of the container to the host logging system.&lt;/h4&gt;
+
+&lt;p&gt;The bug reporter went on to show that volume mounting the /dev/log from the host into the container did not successfully get log messages from the container to the host journal.  They got messages sent to syslog, but not to the journal:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -ti -v /dev/log:/dev/log fedora sh
+container# dnf -y install systemd-python
+...
+container# python &amp;lt;&amp;lt;&amp;lt; "from systemd import journal; journal.send('journald Hello')"
+container# logger "logger Hello"
+container# exit
+
+# journalctl -b | grep Hello
+Oct 19 09:53:28 dhcp-10-19-62-196.boston.devel.redhat.com root[16787]: logger Hello
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice that the &lt;q&gt;journald Hello&lt;/q&gt; message to the journal does not show up, but the logger message does. The difference is syslog messages sent from the logger command write to /dev/log, and journald on the host is listening for syslog messages there. When it sees the message sent to the bind mounted /dev/log, it logs the message in the journal.&lt;/p&gt;
+
+&lt;p&gt;The python &lt;code&gt;journal.send&lt;/code&gt; call attempts to write &lt;q&gt;journald Hello&lt;/q&gt; to the  /run/systemd/journald/socket socket.  This socket does not exists inside of the container and the python code silently drops the message.&lt;/p&gt;
+
+&lt;p&gt;The following example works for me, binding in the hosts journal socket:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -ti -v /dev/log:/dev/log -v /var/run/systemd/journal/socket:/var/run/systemd/journal/socket fedora sh
+container# dnf -y install systemd-python
+...
+container# python &amp;lt;&amp;lt;&amp;lt; "from systemd import journal; journal.send('journald Hello')"
+container# logger "logger Hello"
+container# exit
+
+# journalctl -b | grep Hello
+Oct 19 09:57:51 dhcp-10-19-62-196.boston.devel.redhat.com python[17523]: journald Hello
+Oct 19 09:57:53 dhcp-10-19-62-196.boston.devel.redhat.com root[16787]: logger Hello
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;journal.Send&lt;/code&gt; call above connects to /run/systemd/journal/socket and since we leaked it into the container, the messages gets to the host’s journal.&lt;/p&gt;
+
+&lt;p&gt;Note: SELinux was in enforcing mode for all of these tests.   We allow container processes to communicate with the journal/syslog sockets on the host by default.&lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Handling of logging messages inside of containers can be difficult, most users just ignore this and rely on the applications to read/write STDOUT/STDERR.   Getting syslog and journal messages out of the containers, requires an application to be listening on /dev/log and /run/system/journal/socket.  The application that listens can either be run inside of the container or you can take advantage of volume mounts to listen from outside of the container.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Logging Docker Container Output to journald</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/04/logging-docker-container-output-to-journald/"/>
+    <id>http://www.projectatomic.io/blog/2015/04/logging-docker-container-output-to-journald/</id>
+    <published>2015-04-28T17:26:27+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; has added a new feature to allow alternate logging drivers, and soon you&amp;rsquo;ll be able to use &lt;code&gt;journald&lt;/code&gt; as a supported driver.&lt;/p&gt;
+
+&lt;p&gt;With Docker 1.6 they support json-file, which is the old default, syslog, or no logging at all.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;If you ran your docker daemon with the &lt;code&gt;--log-driver=syslog&lt;/code&gt; option, any output from a container would go directly to system syslog daemon, and usually end up in /var/log/messages.&lt;/p&gt;
+
+&lt;p&gt;I added a patch to support journald as a logging driver, and it was &lt;a href="https://github.com/docker/docker/pull/12557"&gt;recently merged&lt;/a&gt;.  &lt;/p&gt;
+
+&lt;p&gt;In docker-1.7 you will have the option to use &lt;code&gt;--log-driver=journald&lt;/code&gt; on either your docker daemon to cause all of your container logging to go directly to the journal, or you could use the &amp;ndash;log-driver=journald on a docker run/create line, so you could get individual containers running with different logging drivers.&lt;/p&gt;
+
+&lt;p&gt;To test this I set up my docker daemon to run with the following options.  &lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker -d --selinux-enabled --log-driver=journald&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now I run a simple container.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker run fedora echo &amp;quot;Dan Walsh was here&amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Then I look up the container ID for the newly created container, and I can use journalctl to examine the content.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;journalctl MESSAGE_ID=cdf02c627e27
+-- Logs begin at Mon 2015-04-06 16:06:42 EDT, end at Fri 2015-04-24 08:40:38 EDT. --
+Apr 20 15:06:39 dhcp-10-19-62-196.boston.devel.redhat.com docker[27792]: Dan Walsh was here
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Currently the &lt;code&gt;docker logs&lt;/code&gt; command only works with the json-file backend. But I hope to eventually get the docker daemon to communicate with the journald to get this information. Of course if anyone wants to take a stab at this, we would welcome your effort.&lt;/p&gt;
+
+&lt;p&gt;As mentioned, the journald backend for &lt;code&gt;--log-driver&lt;/code&gt; is not shipping in Docker today, but should be available in the 1.7 release. Keep reading here or follow &lt;a href="https://twitter.com/projectatomic"&gt;@projectatomic&lt;/a&gt; for updates on new and interesting features in Docker.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

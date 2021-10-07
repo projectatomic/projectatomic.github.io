@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic App 0.5.2 released - Cleaner logging and binary generation! &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Charlie Drage' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic App 0.5.2 released - Cleaner logging and binary generation!' property='og:title'>
+<meta content='In this week’s release of Atomic App we not only have cleaner logging output when using the tool, but we’ve also added binary generation!&#x000A;&#x000A;The main features of this release are:&#x000A;&#x000A;&#x000A;Cleaning logging&#x000A;Binary generation&#x000A;README.MD generation removed from atomicapp init' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/05/atomic-app-0-5-2-release/' property='og:url'>
+<meta content='2016-05-31T16:55:00Z' property='article:published_time'>
+<meta content='cdrage' property='article:author:username'>
+<meta content='atomicapp' property='article:tag'>
+<link href='/blog/tag/atomicapp.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Nulecule' property='article:tag'>
+<link href='/blog/tag/nulecule.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='releases' property='article:tag'>
+<link href='/blog/tag/releases.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic App 0.5.2 released - Cleaner logging and binary generation!' name='twitter:title'>
+<meta content='In this week’s release of Atomic App we not only have cleaner logging output when using the tool, but we’ve also added binary generation!&#x000A;&#x000A;The main features of this release are:&#x000A;&#x000A;&#x000A;Cleaning logging&#x000A;Binary generation&#x000A;README.MD generation removed from atomicapp init' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_05 blog_2016_05_atomic-app-0-5-2-release blog_2016_05_atomic-app-0-5-2-release_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic App 0.5.2 released - Cleaner logging and binary generation!
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-05-31T16:55:00Z'>
+Tuesday 31 May 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>In this week&rsquo;s release of Atomic App we not only have cleaner logging output when using the tool, but we&rsquo;ve also added binary generation!</p>
+
+<p>The main features of this release are:</p>
+
+<ul>
+<li>Cleaning logging</li>
+<li>Binary generation</li>
+<li>README.MD generation removed from <code>atomicapp init</code></li>
+</ul>
+
+<p></p>
+
+<p>Other:</p>
+
+<ul>
+<li>Code cleanup / minor code modifications (dictionary searches, loops)</li>
+<li>Provider module / class loading refactoring</li>
+</ul>
+
+<h3>Cleaner Logging</h3>
+
+<p>We&rsquo;ve completed a clean-up on how we log Atomic App. With this release, we&rsquo;ve added ASCII art as well as cleaned up a lot of the redundant information outputted when deploying an Atomic App.</p>
+<pre class="highlight plaintext"><code>▶ atomicapp run projectatomic/helloapache --destination helloapache --provider=docker&#x000A;INFO   ::    _  _             _      _&#x000A;INFO   ::   /_\| |_ ___ _ __ (_)__  /_\  _ __ _ __   Version:  0.5.1&#x000A;INFO   ::  / _ \  _/ _ \ '  \| / _|/ _ \| '_ \ '_ \  Nulecule: 0.0.2&#x000A;INFO   :: /_/ \_\__\___/_|_|_|_\__/_/ \_\ .__/ .__/  Mode:     Run&#x000A;INFO   ::                                |_|  |_|&#x000A;INFO   :: Unpacking image: projectatomic/helloapache to helloapache&#x000A;INFO   :: Skipping pulling Docker image: projectatomic/helloapache&#x000A;INFO   :: Extracting nulecule data from image: projectatomic/helloapache to helloapache&#x000A;INFO   :: Deploying to provider: Docker&#x000A;&#x000A;Your application resides in helloapache&#x000A;Please use this directory for managing your application&#x000A;</code></pre>
+
+<h3>Binary Generation</h3>
+
+<p>You&rsquo;ll now be able to generate a stand-alone binary for Atomic App without the need of having Python installed.  This removes some issues around Python versions and module installation.</p>
+
+<p>Simply use <code>make binary</code> in the root folder of the Atomic App source code and your binary will be generated!</p>
+<pre class="highlight plaintext"><code>▶ make binary&#x000A;...&#x000A;Binary created at bin/atomicapp&#x000A;</code></pre>
+
+<p>Want to get started using Atomic App? Have a look at our extensive <a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md">start guide</a>, or use Atomic App as part of the Atomic CLI on an <a href="http://www.projectatomic.io/download/">Atomic Host</a>.</p>
+
+<p>For a full list of changes between 0.5.1 and 0.5.2 please see <a href="https://github.com/projectatomic/atomicapp/commits/0.5.2">the commit log</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/05/atomic-app-0-5-2-release/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/05/atomic-app-0-5-2-release/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/05/atomic-app-0-5-2-release/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

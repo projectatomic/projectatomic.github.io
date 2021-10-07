@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Vagrant Service Manager</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/vagrant-service-manager.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Client Binary Installation Now Included in the ADB</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/07/vagrant-service-manager-install-cli/"/>
+    <id>http://www.projectatomic.io/blog/2016/07/vagrant-service-manager-install-cli/</id>
+    <published>2016-07-22T09:56:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Budh Ram Gurung</name>
+    </author>
+    <content type="html">&lt;p&gt;As part of the effort to continually improve the developer experience and make getting started easier, the ADB now supports client binary downloads. These downloads are facilitated by a new feature in &amp;lsquo;vagrant-service-manger&amp;rsquo;, the &lt;code&gt;install-cli&lt;/code&gt; command.&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href="https://github.com/projectatomic/vagrant-service-manager"&gt;vagrant-service-manager&lt;/a&gt; plugin enables easier access to the features and services provided by the &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;Atomic Developer Bundle (ADB)&lt;/a&gt;. More information can be found in the README of &amp;#39;vagrant-service-manager&amp;rsquo; repo.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;install-cli&lt;/code&gt; command was released as part of &amp;#39;vagrant-service-manager&amp;rsquo; version 1.2.0. This command installs the client binary for services provided by the ADB. Today it can download client binaries for docker and OpenShift. This feature allows developers to know they have the best client for use with the ADB services they are using.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;To use the &amp;#39;install-cli&amp;rsquo; command, you must have version 1.2.0 or later of &amp;#39;vagrant-service-manager&amp;rsquo; installed. You can verify the version you have installed with the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant plugin list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can install the plugin with the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant plugin install vagrant-service-manager
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The usage of the &amp;#39;install-cli&amp;rsquo; command is very straightforward:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;vagrant service-manager install-cli [service]
+
+Where 'service' can be 'docker' and 'openshift'.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is how you can use the command. In this example, we will use an ADB set up and running OpenShift Origin. To setup the ADB and start OpenShift, use the following commands:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir adb-openshift
+$ cd adb-openshift
+$ curl -o Vagrantfile https://raw.githubusercontent.com/projectatomic/adb-atomic-developer-bundle/master/components/centos/centos-openshift-setup/Vagrantfile
+$ vagrant up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;vagrant up&lt;/code&gt; will take a few minutes (and longer in the case of a slow network connection) to finish as it has to download the OpenShift Origin images from the Docker Hub. Once everything is ready you will see the information about how to access OpenShift Origin.&lt;/p&gt;
+
+&lt;p&gt;Now, the OpenShift origin server is ready and you may need a client to access it and perform your desired operations. You can manually download the client binary from &lt;a href="https://github.com/openshift/origin/releases"&gt;OpenShift repository&lt;/a&gt; but we recommend you to use &amp;#39;install-cli&amp;rsquo; command provided.&lt;/p&gt;
+
+&lt;p&gt;To get started, let&amp;rsquo;s review the help:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant service-manager install-cli --help
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, if you want to install the OpenShift client binary, &amp;#39;oc&amp;rsquo;, run the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant service-manager install-cli openshift
+# Binary now available at /home/budhram/.vagrant.d/data/service-manager/bin/openshift/1.1.1/oc
+# run binary as:
+# oc &amp;lt;command&amp;gt;
+export PATH=/home/budhram/.vagrant.d/data/service-manager/bin/openshift/1.1.1:$PATH
+
+# run following command to configure your shell:
+# eval "$(VAGRANT_NO_COLOR=1 vagrant service-manager install-cli openshift | tr -d '\r')"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, the binary has been downloaded and made available in the listed directory. You can configure your shell with the command mentioned in the output. This will make sure that the &amp;#39;oc&amp;rsquo; binary is in your executable path.&lt;/p&gt;
+
+&lt;p&gt;You can verify everything worked by running the &lt;code&gt;oc version&lt;/code&gt; command as is shown below:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ oc version
+oc v1.1.1
+kubernetes v1.1.0-origin-1107-g4c8e6f4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great!&lt;/p&gt;
+
+&lt;p&gt;Now the OpenShift binary client has been set up and you can play around with it. You may wish to watch &lt;a href="https://www.youtube.com/watch?v=HiE7TgjLjAk"&gt;OpenShift Origin quickstart with Atomic Developer Bundle&lt;/a&gt; as a next step.&lt;/p&gt;
+
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/HiE7TgjLjAk" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+</content>
+  </entry>
+</feed>

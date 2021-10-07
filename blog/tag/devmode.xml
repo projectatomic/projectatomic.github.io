@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Devmode</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/devmode.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Introducing Atomic Developer Mode</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/introducing-atomic-devmode/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/introducing-atomic-devmode/</id>
+    <published>2016-03-11T17:02:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jonathan Lebon</name>
+    </author>
+    <content type="html">&lt;p&gt;In this week&amp;rsquo;s latest release of Fedora Atomic Host, you might notice something
+different when you boot the new image. There is now a &lt;q&gt;Developer Mode&lt;/q&gt; entry in
+the GRUB boot menu. This blog post will describe why this new feature was added
+and what it does.&lt;/p&gt;
+
+&lt;p&gt;One of the confusing things that newcomers encounter when they want to try out
+Atomic Host is setting up
+&lt;a href="http://cloudinit.readthedocs.org/en/latest/"&gt;cloud-init&lt;/a&gt;. Currently, it is
+impossible to use an Atomic Host image without providing cloud-init with a
+data source. In the absence of a source, cloud-init will try connecting to
+various known metadata URLs for about four minutes and then give up.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;For most first-timers, the easiest way to get started has been to follow
+&lt;a href="http://www.projectatomic.io/docs/quickstart/"&gt;the Quick Start Guide&lt;/a&gt;, which
+takes them through the process of creating the meta-data and user-data files,
+generating the cloud-init ISO, and attaching it to a virtual machine.&lt;/p&gt;
+
+&lt;p&gt;This represents pure &lt;q&gt;overhead&lt;/q&gt; for folks who just want to try out Atomic Host
+so they can play around with the
+&lt;a href="https://github.com/projectatomic/atomic"&gt;atomic tool&lt;/a&gt;,
+&lt;a href="https://github.com/projectatomic/rpm-ostree"&gt;rpm-ostree&lt;/a&gt;,
+&lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt;, or even
+&lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The new Atomic Developer Mode addresses this by adding a new entry in the GRUB
+boot menu. Because a picture is worth a thousand words, here&amp;rsquo;s a screenshot of
+what the menu will now look like on the first boot:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="../../../../images/atomic-devmode-boot.png"&gt;
+  &lt;img src="../../../../images/atomic-devmode-boot.png" width="60%"&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A word of caution:&lt;/strong&gt; the GRUB menu timeout has a timeout of one second. Though
+increasing it would make it easier for people to select a different boot entry,
+it would also increase the boot up time for every other regular use case. If you
+miss it the first time, simply restart and try again! If you&amp;rsquo;re using
+virt-manager, selecting &lt;q&gt;Enable boot menu&lt;/q&gt; in the machine&amp;rsquo;s boot options will
+give you a couple of extra seconds.&lt;/p&gt;
+
+&lt;p&gt;When booted in Developer Mode, cloud-init will be provided with a local
+data source that will automatically:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Generate a random root password&lt;/li&gt;
+&lt;li&gt;Autologin as root into a &lt;a href="https://tmux.github.io/"&gt;tmux&lt;/a&gt; session&lt;/li&gt;
+&lt;li&gt;Pull and start a cockpit/ws container&lt;/li&gt;
+&lt;li&gt;Print out all the useful info on the terminal&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The benefit of using tmux is its scriptability. A custom tmux configuration file
+is used to provide some easier navigation hotkeys. Here is a screenshot of the
+tmux environment once it is fully booted up:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="../../../../images/atomic-devmode-env.png"&gt;
+  &lt;img src="../../../../images/atomic-devmode-env.png" width="60%"&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the great strengths of Atomic Developer Mode is that its functionality is
+baked into the image. Thus, it does not assume any special setup of the host
+environment/OS, as long as it is capable of booting the image.&lt;/p&gt;
+
+&lt;p&gt;If you already have an Atomic Host installation, you can still get the boot menu
+added by upgrading to the new tree and running:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;bash
+/usr/libexec/atomic-devmode/bootentry add
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can find more information on Atomic Developer Mode on the
+&lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2015-December/msg00034.html"&gt;atomic-devel mailing list&lt;/a&gt;, the &lt;a href="https://lists.fedoraproject.org/archives/list/cloud@lists.fedoraproject.org/thread/M75UQFVNUPNC6ES3RZMT5PXRHIH3FMP5/"&gt;cloud mailing list&lt;/a&gt;,
+the &lt;a href="https://fedoraproject.org/wiki/Changes/Atomic_Developer_Mode"&gt;Fedora wiki&lt;/a&gt;,
+and the &lt;a href="https://github.com/jlebon/atomic-devmode"&gt;upstream project&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Patches</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/patches.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic Docker Patches</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/08/docker-patches/"/>
+    <id>http://www.projectatomic.io/blog/2016/08/docker-patches/</id>
+    <published>2016-08-18T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic&amp;rsquo;s version of the Docker-based container runtime has been carrying a series of patches on the upstream Docker project for a while now.  Each time we carry a patch, it adds significant effort as we continue to track upstream, therefore we would prefer to never carry any patches.  We always strive to get our patches upstream and do it in the open.&lt;/p&gt;
+
+&lt;p&gt;This post, and the accompanying document, will attempt to describe the patches we are currently carrying:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Explanation on types of patches.&lt;/li&gt;
+&lt;li&gt;Description of patches.&lt;/li&gt;
+&lt;li&gt;Links to GitHub discussions, and pull requests for upstreaming the patches to Docker.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some people have asserted that &lt;a href="https://github.com/projectatomic/docker"&gt;our repo&lt;/a&gt; is a fork of the upstream Docker project.&lt;/p&gt;
+
+&lt;h3&gt;What Does It Mean To Be a Fork?&lt;/h3&gt;
+
+&lt;p&gt;I have been in open source for a long time, and my definition of a &lt;q&gt;fork&lt;/q&gt; might be dated. I think of a &lt;q&gt;fork&lt;/q&gt; as a hostile action taken by one group to get others to use and contribute to their version of an upstream project and ignore the &lt;q&gt;original&lt;/q&gt; version. For example, LibreOffice forking off of OpenOffice or going way back Xorg forking off of Xfree86.&lt;/p&gt;
+
+&lt;p&gt;Nowadays, GitHub has changed the meaning. When a software repository exists on GitHub or a similar platform, everyone who wants to contribute has to hit the &lt;q&gt;fork&lt;/q&gt; button, and start building their patches. As of this writing, Docker on GitHub has 9,860 forks, including ours. By this definition, however, all packages that distributions ship that include patches are forks. Red Hat ships the Linux Kernel, and I have not heard this referred to as a fork. But it would be considered a &lt;q&gt;fork&lt;/q&gt; if you&amp;rsquo;re considering any upstream project shipped with patches a fork.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The Docker upstream even relies on Ubuntu carrying patches for AUFS that were never merged into the upstream kernel.&lt;/em&gt; Since Red Hat-based distributions don’t carry the AUFS patches, we contributed the support for Devicemapper, OverlayFS, and Btrfs backends, which are fully supported in the upstream kernel.  This is what enterprise distributions should do: attempt to ship packages configured in a way that they can be supported for a long time.&lt;/p&gt;
+
+&lt;p&gt;At the end of the day, we continue to track the changes made to the upstream Docker Project and re-apply our patches to that project. We believe this is an important distinction to allow freedom in software to thrive while continually building stronger communities.  It’s very different than a hostile fork that divides communities&amp;mdash;we are still working very hard to maintain continuity around unified upstreams.&lt;/p&gt;
+
+&lt;h3&gt;How Can I Find Out About Patches for a Particular Version of Docker?&lt;/h3&gt;
+
+&lt;p&gt;All of the patches we ship are described in the README.md file on the appropriate branch of &lt;a href="https://github.com/projectatomic/docker"&gt;our repository&lt;/a&gt;. If you want to look at the patches for Docker 1.12 you would look at &lt;a href="https://github.com/projectatomic/docker/tree/docker-1.12"&gt;the 1.12 branch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can then look on the &lt;a href="/docs/docker_patches"&gt;patches list page&lt;/a&gt; for information about these patches.&lt;/p&gt;
+
+&lt;h3&gt;What Kind of Patches does Project Atomic Include?&lt;/h3&gt;
+
+&lt;p&gt;Here is a quick overview of the kinds of patches we carry, and then guidance on finding information on specific patches.&lt;/p&gt;
+
+&lt;h4&gt;Upstream Fixes&lt;/h4&gt;
+
+&lt;p&gt;The Docker Project upstream tends to fix issues in the &lt;strong&gt;next&lt;/strong&gt; version of Docker. This means if a user finds an issue in Docker 1.11 and we provide a fix for this to upstream, the patch gets merged in to the master branch, and it will probably not get back ported to Docker 1.11.&lt;/p&gt;
+
+&lt;p&gt;Since Docker is releasing at such a rapid rate, they tell users to just install Docker 1.12 when it is available. This is fine for people who want to be on the bleeding edge, but in a lot of cases the newer version of Docker comes with new issues along with the fixes.&lt;/p&gt;
+
+&lt;p&gt;For example, Docker 1.11 split the Docker daemon into three parts: Docker daemon, containerd, and runc.  We did not feel this was stable enough to ship to enterprise customers right when it came out, yet it had multiple fixes for the Docker 1.10 version. Many users want to only get new fixes to their existing software and not have to re-certify their apps every two months.&lt;/p&gt;
+
+&lt;p&gt;Another issue with supporting stable software with rapidly changing dependencies is that developers on the stable projects must spend time ensuring that their product remains stable every time one of their dependencies is updated. This is an expensive process, dependencies end up being updated only infrequently. This causes us to &lt;q&gt;cherry-pick&lt;/q&gt; fixes from upstream Docker and to ship these fixes on older versions so that we can get the benefits from the bug fixes without the cost of updating the entire dependency. This is the same approach we take in order to add capabilities to the Linux kernel, a practice that has proven to be very valuable to our users.&lt;/p&gt;
+
+&lt;h4&gt;Proposed Patches for Upstream&lt;/h4&gt;
+
+&lt;p&gt;We carry patches that we know our users require right now, but have not yet been merged into the upstream project.  Every patch that we add to the Project Atomic repository also gets proposed to the upstream Docker repository.&lt;/p&gt;
+
+&lt;p&gt;These sorts of patches remain on the Project Atomic repository briefly while they’re being considered upstream, or forever if the upstream community rejects them. If we don&amp;rsquo;t agree with upstream Docker and feel our users need these patches, we continue to carry them. In some cases we have worked out alternative solutions like building authorization plugins.&lt;/p&gt;
+
+&lt;p&gt;For example, users of RHEL images are not supposed to push these images onto public web sites. We wanted a way to prevent users from accidentally pushing RHEL based images to Docker Hub, so we originally created a patch to block the pushing.  When authorization plugins were added we then created a plugin to protect users from pushing RHEL content to a public registry like Docker Hub, and no longer had to carry the custom patch.&lt;/p&gt;
+
+&lt;h3&gt;Detailed List of Patches&lt;/h3&gt;
+
+&lt;p&gt;Want to know more about specific patches? You can find the current table and list of patches on our new &lt;a href="/docs/docker_patches"&gt;patches list page&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>How I Wrote exec Support for docker-compose</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/how-i-wrote-compose-exec/</id>
+    <published>2016-03-29T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tomáš Tomeček</name>
+    </author>
+    <content type="html">&lt;p&gt;If you are a &lt;code&gt;docker-compose&lt;/code&gt; user, as I am, you may be missing one feature:
+&lt;code&gt;exec&lt;/code&gt;&amp;mdash;spawning arbitrary commands in already running containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead of doing this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker exec -ti $container bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;you should be able do the same with &lt;code&gt;docker-compose&lt;/code&gt; itself:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker-compose exec web bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Usually when you wanted to do such thing, you had to:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Type &lt;code&gt;docker exec -ti&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Now, the container name&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;^c&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker ps&lt;/code&gt;, I forgot to name my container again!&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ba3f7099b709&lt;/code&gt;, ugh&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;docker exec -ti&lt;/code&gt;, once again, copy-paste that ID, write &lt;code&gt;bash&lt;/code&gt; and 30 seconds later:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[root@ba3f7099b709 /] # █
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That workflow isn&amp;rsquo;t very ideal. So I realized I wanted to implement the feature (especially when there already was &lt;a href="https://github.com/docker/compose/issues/593"&gt;an
+issue open&lt;/a&gt;, with tons of &lt;code&gt;+1&lt;/code&gt; and not even a single promise of someone working on it).&lt;/p&gt;
+
+&lt;h3&gt;Easy Start&lt;/h3&gt;
+
+&lt;p&gt;In September, I cloned &lt;code&gt;compose&lt;/code&gt; and started working on the code. I managed to have a working prototype very soon:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ docker-compose exec web ls
+bin  boot  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Time to Go Interactive&lt;/h3&gt;
+
+&lt;p&gt;That&amp;rsquo;s when all the fun started.&lt;/p&gt;
+
+&lt;p&gt;Running simple, non-interactive commands is pretty trivial. Just &lt;a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-create"&gt;create an exec
+object&lt;/a&gt; via engine&amp;rsquo;s API,
+&lt;a href="https://docs.docker.com/engine/reference/api/docker_remote_api_v1.22/#exec-start"&gt;start&lt;/a&gt; it, and collect results. Easy.&lt;/p&gt;
+
+&lt;p&gt;When you want an interactive session, it&amp;rsquo;s getting a bit more complex than a simple request/response over HTTP. That&amp;rsquo;s when
+&lt;a href="https://github.com/d11wtq/dockerpty"&gt;dockerpty&lt;/a&gt; comes into the play. It is able to &lt;em&gt;attach&lt;/em&gt; to the process via engine&amp;rsquo;s
+API, send input, receive output and display it. Brief code-browsing revealed there&amp;rsquo;s tons of work ahead:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I had to &lt;a href="https://github.com/d11wtq/dockerpty/pull/48/commits/df6ac1a49b99803c95233e51d0cd9b8f6aba9240"&gt;rewrite&lt;/a&gt; big part of existing codebase.&lt;/li&gt;
+&lt;li&gt;I had to change existing API and add a new one.&lt;/li&gt;
+&lt;li&gt;Cherry on top: the tests didn&amp;rsquo;t work and I had to &lt;a href="https://github.com/d11wtq/dockerpty/pull/53/commits/555b525f49026271c9a291f014c3b7025b183d4a"&gt;fix&lt;/a&gt; those.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Even &lt;code&gt;dockerpty&lt;/code&gt; didn&amp;rsquo;t have all the bits to write proper &lt;code&gt;exec&lt;/code&gt; support for interactive commands. I had to go deeper:
+improve python&amp;rsquo;s API client&amp;mdash;&lt;code&gt;docker-py&lt;/code&gt;. Luckily that &lt;a href="https://github.com/docker/docker-py/pull/858"&gt;patch&lt;/a&gt; was pretty
+easy: just return socket directly, not a generator.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/d11wtq/dockerpty/pull/48"&gt;The patch&lt;/a&gt; for &lt;code&gt;dockerpty&lt;/code&gt; turned out to be super-complex. In the end, it took me more than 5 months to get the former &lt;code&gt;compose&lt;/code&gt; patch merged.&lt;/p&gt;
+
+&lt;p&gt;Enjoy &lt;code&gt;docker-compose exec&lt;/code&gt; once 1.7 is out! Happy &lt;code&gt;exec&lt;/code&gt;ing!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Added no-new-privileges Security Flag to Docker</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/no-new-privs-docker/</id>
+    <published>2016-03-17T12:40:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Mrunal Patel</name>
+    </author>
+    <content type="html">&lt;p&gt;I have contributed support for a &lt;code&gt;no-new-privileges&lt;/code&gt; option to &lt;a href="https://github.com/docker/docker/pull/20727"&gt;docker&lt;/a&gt;.
+This flag has already been included in &lt;a href="https://github.com/opencontainers/runc/pull/557"&gt;runc&lt;/a&gt; and the Open Container Initiative &lt;a href="https://github.com/opencontainers/specs/pull/290"&gt;spec&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The new flag supports, in Docker, a security feature that was added to the Linux kernel back in 2012 under the name &lt;code&gt;no_new_privs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The kernel feature works as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A process can set the &lt;code&gt;no_new_privs&lt;/code&gt; bit in the kernel that persists across fork, clone, and exec.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;no_new_privs&lt;/code&gt; bit ensures that the process or its children processes do not gain any additional privileges.&lt;/li&gt;
+&lt;li&gt;A process isn&amp;rsquo;t allowed to unset the &lt;code&gt;no_new_privs&lt;/code&gt; bit once it is set.&lt;/li&gt;
+&lt;li&gt;Processes with &lt;code&gt;no_new_privs&lt;/code&gt; are not allowed to change uid/gid or gain any other capabilities, even if the process executes setuid binaries or executables with file capability bits set.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;no_new_privs&lt;/code&gt; also prevents Linux Security Modules (LSMs) like SELinux from transitioning to process labels that have access not allowed to the current process. This means an SELinux process is only allowed to transition to a process type with less privileges.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details see the &lt;a href="https://www.kernel.org/doc/Documentation/prctl/no_new_privs.txt"&gt;kernel documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is an example showcasing how it helps in Docker.&lt;/p&gt;
+
+&lt;p&gt;Create a setuid binary that displays the effective uid:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# cat testnnp.c
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;sys/types.h&amp;gt;
+
+int main(int argc, char *argv[])
+{
+        printf("Effective uid: %d\n", geteuid());
+        return 0;
+}
+[$ dockerfiles]# make testnnp
+cc     testnnp.c   -o testnnp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we will add the binary to a docker image:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# cat Dockerfile
+FROM fedora:latest
+ADD testnnp /root/testnnp
+RUN chmod +s /root/testnnp
+ENTRYPOINT /root/testnnp
+
+[$ dockerfiles]# docker build -t testnnp .
+Sending build context to Docker daemon 12.29 kB
+Step 1 : FROM fedora:latest
+ ---&amp;gt; 760a896a323f
+Step 2 : ADD testnnp /root/testnnp
+ ---&amp;gt; 6c700f277948
+Removing intermediate container 0981144fe404
+Step 3 : RUN chmod +s /root/testnnp
+ ---&amp;gt; Running in c1215bfbe825
+ ---&amp;gt; f1f07d05a691
+Removing intermediate container c1215bfbe825
+Step 4 : ENTRYPOINT /root/testnnp
+ ---&amp;gt; Running in 5a4d324d54fa
+ ---&amp;gt; 44f767c67e30
+Removing intermediate container 5a4d324d54fa
+Successfully built 44f767c67e30
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we will create and run a container without &lt;code&gt;no-new-privileges&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# docker run -it --rm --user=1000  testnnp
+Effective uid: 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This shows that even though you requested a non-privileged user (UID=1000) to run your container, that user would be able to become root by executing the setuid app on the container image.&lt;/p&gt;
+
+&lt;p&gt;Running with &lt;code&gt;no-new-privileges&lt;/code&gt; prevents the uid transition while running a setuid binary:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[$ dockerfiles]# docker run -it --rm --user=1000 --security-opt=no-new-privileges testnnp
+Effective uid: 1000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see above the container process is still running as UID=1000, meaning that even if the image has dangerous code in it, we can still prevent the user from escalating privileges.&lt;/p&gt;
+
+&lt;p&gt;Turning on &lt;code&gt;no_new_privs&lt;/code&gt; actually stopped the SELinux transition from the docker daemon type &lt;code&gt;docker_t&lt;/code&gt; to the container type, &lt;code&gt;svirt_lxc_net_t&lt;/code&gt;. The &lt;code&gt;no_new_privs&lt;/code&gt; option only allows SELinux transitions from one type to another if the target type as a complete subset of the source type. Dan Walsh worked on the SELinux policy for docker to fix this. With the latest policy in Fedora 24, &lt;code&gt;no_new_privs&lt;/code&gt; and SELinux work well together. We will be back-porting these fixes to RHEL when we ship docker support for &lt;code&gt;no_new_privs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you want to allow users to run images as a non-privileged UID, in most cases you would want to prevent them from becoming root. &lt;code&gt;no_new_privileges&lt;/code&gt; is a great tool for guaranteeing this.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

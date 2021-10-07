@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Last Week In Atomic &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Last Week In Atomic' property='og:title'>
+<meta content='Since Project Atomic has now spread out across several blogs and websites, this is the second of what will become regular updates on events and posts around the Atomic community.  This is also a useful catch-up for anyone who doesn’t have time to backfill on all of the individual blog posts.&#x000A;&#x000A;This week includes kpod, vagrant-buildah, Fedora Atomic Host, CentOS Atomic Host, Kubernetes containers, and more.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/' property='og:url'>
+<meta content='2017-08-14T18:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='cri-o' property='article:tag'>
+<link href='/blog/tag/cri-o.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kpod' property='article:tag'>
+<link href='/blog/tag/kpod.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Last Week In Atomic' name='twitter:title'>
+<meta content='Since Project Atomic has now spread out across several blogs and websites, this is the second of what will become regular updates on events and posts around the Atomic community.  This is also a useful catch-up for anyone who doesn’t have time to backfill on all of the individual blog posts.&#x000A;&#x000A;This week includes kpod, vagrant-buildah, Fedora Atomic Host, CentOS Atomic Host, Kubernetes containers, and more.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_08 blog_2017_08_last-week-in-atomic blog_2017_08_last-week-in-atomic_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Last Week In Atomic
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-08-14T18:00:00Z'>
+Monday 14 August 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Since Project Atomic has now spread out across several blogs and websites, this is the second of what will become regular updates on events and posts around the Atomic community.  This is also a useful catch-up for anyone who doesn&rsquo;t have time to backfill on all of the individual blog posts.</p>
+
+<p>This week includes kpod, vagrant-buildah, Fedora Atomic Host, CentOS Atomic Host, Kubernetes containers, and more.</p>
+
+<p></p>
+
+<h3>New Projects and Tools</h3>
+
+<p>As a sub-project of CRI-O, that team has now <a href="https://medium.com/cri-o/introducing-kpod-f06109b96374">announced development of the <code>kpod</code> command</a>.  <code>kpod</code> is an administrative and troubleshooting tool for containers running on individual kubernetes nodes, especially if the docker daemon is not involved.  Current commands include <a href="https://medium.com/cri-o/kpod-version-b9fd7175c730">version</a>, <a href="https://medium.com/cri-o/kpod-push-62bce8705c3f">push</a>, and <a href="https://medium.com/cri-o/kpod-pull-36765d2e5fb8">pull</a>.</p>
+
+<p>Tyler Britten released some scripts for <a href="https://github.com/vmtyler/vagrant-buildah">playing with Buildah on Windows or Mac</a>, using Vagrant.</p>
+
+<h3>Releases</h3>
+
+<ul>
+<li>Fedora released their <a href="http://www.projectatomic.io/blog/2017/08/fedora-atomic-august-08/">August 8th Update for Fedora 26 Atomic</a>.</li>
+<li>CentOS released <a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/">version 7.1707 of CentOS Atomic Host</a>.</li>
+<li>The CentOS Virt SIG and Atomic SIG released <a href="http://www.projectatomic.io/blog/2017/08/new-centos-atomic-release-and-kubernetes-system-containers-now-available/">new Kubernetes system containers</a> based on version 1.7.</li>
+</ul>
+
+<h3>Blog Posts</h3>
+
+<ul>
+<li>Dusty Mabe explained <a href="https://dustymabe.com/2017/08/08/how-do-we-create-ostree-repos-and-artifacts-in-fedora/">how the Fedora OSTree repos get built</a>.</li>
+<li>Tom Sweeney blogged about <a href="http://www.projectatomic.io/blog/2017/08/buildah-getting-fit/">using Buildah to create <q>fit</q> images</a>.</li>
+<li>Joe Brockmeier lays out <a href="http://rhelblog.redhat.com/2017/08/01/whats-new-in-red-hat-enterprise-linux-atomic-host-7-4/">what will be in RHEL Atomic 7.4</a>, coming soon.</li>
+</ul>
+
+<h3>Events</h3>
+
+<p>The Fedora Atomic WG will be participating heavily in the upcoming <a href="https://flocktofedora.org/">Flock to Fedora</a> conference.  This includes sessions on multi-architecture containers, becoming a container package maintainer, system containers, an Atomic Host documentation writeathon, and many more sessions.</p>
+
+<p><a href="https://2017.container.camp/uk/speakers/michael-hausenblas/">ContainerCamp UK</a> will feature Michael Hausenblas of the OpenShift team talking about Kubernetes backup.</p>
+
+<p><a href="http://events.linuxfoundation.org/events/open-source-summit-north-america">OSS Summit NA</a> will have an Atomic booth presence in the Red Hat pavillion. We could use booth volunteers if you love Atomic.  We will also have a <a href="http://sched.co/BDpX">BOF on Atomic Host</a>.</p>
+
+<p><a href="http://events.linuxfoundation.org/events/cloudnativecon-and-kubecon-north-america">Kubecon US</a> still has their CfP open.  Sumbit talks involving Atomic projects!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/cri-o/">cri-o</a></li>
+<li><a href="/blog/tag/kpod/">kpod</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/08/last-week-in-atomic/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Extending SELinux Policy for Containers &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Extending SELinux Policy for Containers' property='og:title'>
+<meta content='A developer contacted me about building a container that will run as a log aggregator for&#x000A;fluentd.  This container needed to be a SPC container that would manage parts of the host system, namely the log files under /var/logs.&#x000A;&#x000A;Being a good conscientious developer, he wanted to run his application as securely as possible.&#x000A;The option he wanted to avoid was running the container in --privileged mode, removing all security from the container.  When he ran his container SELinux complained about the container processes trying to read log files.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/03/selinux-and-docker-part-2/' property='og:url'>
+<meta content='2016-03-15T12:12:00Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='selinux' property='article:tag'>
+<link href='/blog/tag/selinux.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Extending SELinux Policy for Containers' name='twitter:title'>
+<meta content='A developer contacted me about building a container that will run as a log aggregator for&#x000A;fluentd.  This container needed to be a SPC container that would manage parts of the host system, namely the log files under /var/logs.&#x000A;&#x000A;Being a good conscientious developer, he wanted to run his application as securely as possible.&#x000A;The option he wanted to avoid was running the container in --privileged mode, removing all security from the container.  When he ran his container SELinux complained about the container processes trying to read log files.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_03 blog_2016_03_selinux-and-docker-part-2 blog_2016_03_selinux-and-docker-part-2_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Extending SELinux Policy for Containers
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-03-15T12:12:00Z'>
+Tuesday 15 March 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A developer contacted me about building a container that will run as a log aggregator for
+<code>fluentd</code>.  This container needed to be a <a href="http://developers.redhat.com/blog/2014/11/06/introducing-a-super-privileged-container-concept/">SPC container</a> that would manage parts of the host system, namely the log files under /var/logs.</p>
+
+<p>Being a good conscientious developer, he wanted to run his application as securely as possible.
+The option he wanted to avoid was running the container in <code>--privileged</code> mode, removing all security from the container.  When he ran his container <code>SELinux</code> complained about the container processes trying to read log files.</p>
+
+<p></p>
+
+<h3>The Problem: A Logger SPC</h3>
+
+<p>He asked me if there was a way to run a container where SELinux would allow the access but the container process could still be confined.  I suggested that he could disable SELinux protections for just this container, leaving SELinux enforcing on for the other containers and for the host:</p>
+<pre class="highlight plaintext"><code>docker run -d --security-opt label:disable -v /var/log:/var/log fluentd&#x000A;</code></pre>
+
+<p>We did not like this solution.  I believe SELinux provides the best security separation currently available for containers.</p>
+
+<p>Another option we talked about was relabeling the content in the /var/log directories:</p>
+<pre class="highlight plaintext"><code>docker run -d -v /var/log:/var/log:Z fluentd&#x000A;</code></pre>
+
+<p>The problem with this is that all of the files under /var/log would not be labeled with a container
+specific label (<code>svirt_sandbox_file_t</code>). Other parts of the host system like Logrotate, and log scanners would now be blocked from access the log files.</p>
+
+<p>The best option we came up with was to generate a new <code>type</code> to run the container with.  </p>
+
+<p>We need to write a little bit of writing policy to make this happen.  Here is what I came up with:</p>
+<pre class="highlight plaintext"><code>cat container_logger.te&#x000A;policy_module(container_logger, 1.0)&#x000A;&#x000A;virt_sandbox_domain_template(container_logger)&#x000A;##############################&#x000A;# virt_sandbox_net_domain(container_logger_t)&#x000A;gen_require(`&#x000A; attribute   sandbox_net_domain;&#x000A;')&#x000A;&#x000A;typeattribute container_logger_t sandbox_net_domain;&#x000A;##############################&#x000A;logging_manage_all_logs(container_logger_t)&#x000A;</code></pre>
+
+<p>Compile and install the policy.</p>
+<pre class="highlight plaintext"><code>make -f /usr/selinux/devel/Makefile container_login.pp&#x000A;semodule -i container_login.pp&#x000A;</code></pre>
+
+<p>Run the container with the new policy.</p>
+<pre class="highlight plaintext"><code>docker run -d -v /var/log:/var/log --security-opt label:type:container_logger_t -n logger fluentd&#x000A;</code></pre>
+
+<p>Exec into the container to make sure you can read/write the log files.</p>
+<pre class="highlight plaintext"><code>docker exec -ti logger cat /var/log/messages&#x000A;docker exec -ti logger touch /var/log/foobar&#x000A;docker exec -ti logger rm /var/log/foobar&#x000A;</code></pre>
+
+<p>Everything works!</p>
+
+<h3>A Closer Look at This Policy</h3>
+<pre class="highlight plaintext"><code>policy_module(container_logger, 1.0)&#x000A;</code></pre>
+
+<p><code>policy_module</code> names the policy and also brings in all standard definitions of policy.  All policy type
+enforcement files start with this.</p>
+<pre class="highlight plaintext"><code>virt_sandbox_domain_template(container_logger)&#x000A;</code></pre>
+
+<p><code>virt_sandbox_domain_template</code> is a template macro that actually creates the <code>container_logger_t</code> type, and
+sets up all of the policy so that the docker process (<code>docker_t</code>) can transition to it.  It also defines
+rules that allow it to manage <code>svirt_sandbox_file_t</code> files and sets it up to be MCS Separated.  This means it
+will only be able to use its content and no other containers&rsquo; content, whether or not the container is running
+as the default type <code>svirt_lxc_net_t</code> or a custom type.</p>
+<pre class="highlight plaintext"><code>##############################&#x000A;# virt_sandbox_net_domain(container_logger_t)&#x000A;gen_require(`&#x000A;    attribute sandbox_net_domain;&#x000A;')&#x000A;&#x000A;typeattribute container_logger_t sandbox_net_domain;&#x000A;##############################&#x000A;</code></pre>
+
+<p>This section will eventually be an interface <code>virt_sandbox_net_domain</code>.  (I sent a patch to the upstream
+selinux-policy package to add this interface.) This new interface just assigns an attribute to <code>container_logger_t</code>.  Attributes bring in lots of policy rules, basically this attribute gives full network access to the <code>container_logger_t</code> processes.  If your container did not need access to the network, or you wanted to tighten the network ports that <code>container_logger_t</code> would be able to listen on or connect to, you would not use this interface.  </p>
+<pre class="highlight plaintext"><code>logging_manage_all_logs(container_logger_t)&#x000A;</code></pre>
+
+<p>This last interface <code>logging_manage_all_logs</code> gives <code>container_logger_t</code> the ability to manage all of the log file types.  SELinux interfaces are defined and shipped under /usr/share/selinux/devel.</p>
+
+<h3>Conclusion</h3>
+
+<p>Adding a fairly simple policy module allows us to run the container as securely as possible and still able to get the job done.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+<li><a href="/blog/tag/selinux/">selinux</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/03/selinux-and-docker-part-2/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/03/selinux-and-docker-part-2/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/03/selinux-and-docker-part-2/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

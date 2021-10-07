@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Atomic Host</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/atomic-host.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic at Red Hat Summit</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/atomic-at-summit/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/atomic-at-summit/</id>
+    <published>2018-05-07T05:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Coming to Red Hat Summit?  Project Atomic will be there! We will have multiple sessions plus demonstrations at the booth in Community Central.  Click through for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Key sessions include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=163857"&gt;Container Linux And Red Hat: the Road Ahead&lt;/a&gt;, where you&amp;rsquo;ll hear what&amp;rsquo;s planned for CoreOS Container Linux and Red Hat Atomic.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=154411"&gt;Atomic BOF&lt;/a&gt;, where we&amp;rsquo;ll discuss the upcoming changes &lt;em&gt;and&lt;/em&gt; introduce some new projects.&lt;/li&gt;
+&lt;li&gt;A great workshop on &lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=166833"&gt;Containerizing Applications&lt;/a&gt;, which will be given three times by Fedora Atomic project contributors.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://agenda.summit.redhat.com/SessionDetail.aspx?id=153605"&gt;Next-Generation Tools for Container Tech&lt;/a&gt;, covering Buildah, CRI-O, and more.&lt;/li&gt;
+&lt;li&gt;Tons of &lt;a href="https://agenda.summit.redhat.com/?buildah=11&amp;amp;containers=11"&gt;other talks on Atomic, OpenShift and containers&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will also have a set of live demonstrations running in our &lt;q&gt;pod&lt;/q&gt; in Community Central on the show floor.  This includes demos by Atomic contributors and maintainers from other container projects.  Here&amp;rsquo;s a schedule:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;strong&gt;Day&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Time&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;*&lt;em&gt;Demo *&lt;/em&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Name&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Tuesday May 8&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Fabian Deutsch &amp;amp; Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:45:00&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;5:15&lt;/td&gt;
+&lt;td&gt;Running and Persisting VMs on Openshift&lt;/td&gt;
+&lt;td&gt;Adam Litke&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Wednesday May 9&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:15&lt;/td&gt;
+&lt;td&gt;Using Podman and Buildah&lt;/td&gt;
+&lt;td&gt;Dan Walsh&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Running VMs on OpenShift&lt;/td&gt;
+&lt;td&gt;Ryan Hallisey&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;4:45&lt;/td&gt;
+&lt;td&gt;Operator-based Atomic Host upgrades&lt;/td&gt;
+&lt;td&gt;Colin Walters&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Thursday May 10&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;11:45&lt;/td&gt;
+&lt;td&gt;Using Fedora Atomic Host with Auto-Scaling Groups on AWS&lt;/td&gt;
+&lt;td&gt;David Duncan, AWS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;12:15&lt;/td&gt;
+&lt;td&gt;Provisioning Fedora with Ignition&lt;/td&gt;
+&lt;td&gt;Derek Gonyeo&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at Red Hat Summit!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Latest rpm-ostree features</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/03/new-rpm-ostree-features/"/>
+    <id>http://www.projectatomic.io/blog/2018/03/new-rpm-ostree-features/</id>
+    <published>2018-03-20T17:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jonathan Lebon</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://rpm-ostree.readthedocs.org/"&gt;rpm-ostree&lt;/a&gt; is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;This blog post is a high-level summary of the recent
+features that were added in the last few releases.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;New rojig delivery mechanism&lt;/h3&gt;
+
+&lt;p&gt;By far the most fundamental shift that has occurred in the
+latest releases is support for a different way of delivering
+OSTrees to client machines. Dubbed &lt;q&gt;rojig&lt;/q&gt;, the idea is that
+rather than clients downloading commits from OSTree remotes,
+they instead re-assemble the exact same commit using RPMs
+from yum repos. How? When OSTree commits are created on the
+server, most of its files can be traced back to specific
+RPMs. The work of figuring out which files come from which
+RPM is done on the compose server. Files which do not come
+from an RPM (e.g. the initramfs) are dumped in a special
+&lt;q&gt;rojig RPM&lt;/q&gt;. Using this rojig RPM and all other constituent
+RPMs, which are in essence fancy archives, the client is
+capable of reproducing the bit-for-bit matching OSTree
+commit.&lt;/p&gt;
+
+&lt;p&gt;This allows content providers to only worry about delivering
+RPMs, rather than yet another format. It opens the doors to
+the many established tools and services that exist for
+organizing and distributing RPMs.&lt;/p&gt;
+
+&lt;p&gt;You can try this out today using the instructions in
+&lt;a href="https://pagure.io/fedora-atomic-host-continuous/"&gt;FAHC&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ rpm-ostree status
+State: idle; auto updates disabled
+Deployments:
+● ostree://fedora-atomic:fedora/27/x86_64/atomic-host
+                   Version: 27.100 (2018-03-13 17:19:44)
+                    Commit: 326f62b93a5cc836c97d31e73a71b6b6b6955c0f225f7651b52a693718e6aa91
+              GPGSignature: Valid signature by 860E19B0AFA800A1751881A6F55E7430F5282EE4
+$ cat &amp;gt;/etc/yum.repos.d/fahc.repo &amp;lt;&amp;lt;EOF
+[fahc]
+baseurl=https://ci.centos.org/artifacts/sig-atomic/fahc/jigdo
+gpgcheck=0
+EOF
+$ rpm-ostree rebase --experimental rojig://fahc:fedora-atomic-host
+...
+Will download: 463 packages (349.5 MB)
+  Downloading from updates: [=============] 100%
+  Downloading from fedora: [=============] 100%
+  Downloading from fahc: [=============] 100%
+Importing (463/463) [=============] 100%
+...
+$ rpm-ostree status -v
+State: idle; auto updates disabled
+Deployments:
+  fahc:fedora-atomic-host-27.406-1.fc27.x86_64
+                   Version: 27.406 (2018-03-19 19:55:50)
+                    Commit: 6495a62314ea2158240cba6a2cbb687bb6965a38d1c724ebdfaa63a13bf9ef73
+                 StateRoot: fedora-atomic
+
+● ostree://fedora-atomic:fedora/27/x86_64/atomic-host
+                   Version: 27.100 (2018-03-13 17:19:44)
+                    Commit: 326f62b93a5cc836c97d31e73a71b6b6b6955c0f225f7651b52a693718e6aa91
+                 StateRoot: fedora-atomic
+              GPGSignature: 1 signature
+                            Signature made Tue 13 Mar 2018 05:19:53 PM UTC using RSA key ID F55E7430F5282EE4
+                            Good signature from "Fedora 27 &amp;lt;fedora-27@fedoraproject.org&amp;gt;"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At no point in the above did we reach out to the
+&lt;code&gt;fedora-atomic&lt;/code&gt; remote for data. Yet, we match the exact
+same checksum:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ostree remote summary fahc | grep -A2 fahc/27/x86_64/buildmaster
+* fahc/27/x86_64/buildmaster
+    Latest Commit (20.7 kB):
+      6495a62314ea2158240cba6a2cbb687bb6965a38d1c724ebdfaa63a13bf9ef73
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is still a work in progress, though much of the
+implementation has already been done. We&amp;rsquo;re hoping to drive
+this as an experimental option in a future release of
+Fedora.&lt;/p&gt;
+
+&lt;p&gt;Upstream issue: &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/1081"&gt;https://github.com/projectatomic/rpm-ostree/issues/1081&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Automatic updates&lt;/h3&gt;
+
+&lt;p&gt;Another major effort currently underway is a push for adding
+support for automatic updates. As of the latest release,
+rpm-ostree now supports a new &lt;code&gt;AutomaticUpdatePolicy&lt;/code&gt;
+configuration option with only two possible values: &lt;code&gt;off&lt;/code&gt;
+and &lt;code&gt;check&lt;/code&gt;. In &lt;code&gt;check&lt;/code&gt; mode, rpm-ostree will routinely
+check the remote for updates and display any pending updates
+in the output of &lt;code&gt;status&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ rpm-ostree status -v
+State: idle; auto updates enabled (check; last run 56m ago)
+Deployments:
+● ostree://fedora:fedora/27/x86_64/workstation
+                   Version: 27.94 (2018-03-16 16:33:28)
+                    Commit: dc9d19682ca2414d5a76a9765a772d5f4d8f0d9768579ee434d742555168b40c
+                 StateRoot: fedora
+              GPGSignature: 1 signature
+                            Signature made Fri 16 Mar 2018 12:33:36 PM EDT using RSA key ID F55E7430F5282EE4
+                            Good signature from "Fedora 27 &amp;lt;fedora-27@fedoraproject.org&amp;gt;"
+
+Available update:
+        Version: 27.95 (2018-03-19 04:29:52)
+         Commit: 6a99b39d701a243ec9668efe7511879df4697087869e913ec9f0a4d04fdffcb3
+   GPGSignature: 1 signature
+                 Signature made Mon 19 Mar 2018 12:30:00 AM EDT using RSA key ID F55E7430F5282EE4
+                 Good signature from "Fedora 27 &amp;lt;fedora-27@fedoraproject.org&amp;gt;"
+  SecAdvisories: FEDORA-2018-a068ade416  Critical   firefox-59.0.1-1.fc27.x86_64
+       Upgraded: firefox 59.0-4.fc27 -&amp;gt; 59.0.1-1.fc27
+                 osinfo-db 20170813-1.fc27 -&amp;gt; 20180311-1.fc27
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As shown in the output above, it also includes open security
+advisories and their severities.&lt;/p&gt;
+
+&lt;p&gt;This is only the start. The goal is to support fully
+automated updates, including automatic reboots as well as a
+&lt;q&gt;softer&lt;/q&gt; pending mode where new deployments are created, but
+reboots are initiated manually.&lt;/p&gt;
+
+&lt;p&gt;Upstream issue: &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/247"&gt;https://github.com/projectatomic/rpm-ostree/issues/247&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Overrides no longer experimental&lt;/h3&gt;
+
+&lt;p&gt;We have now straightened out the &lt;code&gt;override&lt;/code&gt; commands enough
+that we feel confident declaring it stable. For example, we
+now support doing &lt;code&gt;override replace&lt;/code&gt; to replace the kernel
+itself. As a result it has been moved out of &lt;code&gt;ex&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Upstream patch: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/1089"&gt;https://github.com/projectatomic/rpm-ostree/pull/1089&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;New kargs experimental feature&lt;/h3&gt;
+
+&lt;p&gt;There is a new &lt;code&gt;kargs&lt;/code&gt; command to make it easier to modify
+kernel arguments. The feature is marked experimental for
+now, and thus is found under the &lt;code&gt;ex&lt;/code&gt; command. For more
+information on &lt;code&gt;kargs&lt;/code&gt;, check out Peter&amp;rsquo;s blog post covering
+it in details
+&lt;a href="../../../2018/03/update-kernel-arguments-on-atomic-host/"&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Upstream patch: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/1013"&gt;https://github.com/projectatomic/rpm-ostree/pull/1013&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;New cancel command&lt;/h3&gt;
+
+&lt;p&gt;rpm-ostree now supports a new &lt;code&gt;cancel&lt;/code&gt; command to cancel any
+ongoing transaction. This is useful for cases where you lost
+the controlling TTY from which you initiated the operation.&lt;/p&gt;
+
+&lt;p&gt;More fundamentally, this is a classic display of the power
+of the background update mechanism in Atomic Host. You can
+safely cancel an update at any time without affecting the
+stability of your running system.&lt;/p&gt;
+
+&lt;p&gt;Upstream patch: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/1019"&gt;https://github.com/projectatomic/rpm-ostree/pull/1019&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;LiveFS support for full filesystem update&lt;/h3&gt;
+
+&lt;p&gt;Previously, the experimental &lt;code&gt;livefs&lt;/code&gt; command only worked
+when the pending deployment had pure additions (e.g. a new
+layered package). &lt;code&gt;livefs&lt;/code&gt; now supports a &lt;code&gt;--replace&lt;/code&gt; switch
+to take this to the extreme and switch all of &lt;code&gt;/usr&lt;/code&gt;. This
+is essentially a big hammer, so use with care.&lt;/p&gt;
+
+&lt;p&gt;As usual, please remember that details of the &lt;code&gt;livefs&lt;/code&gt;
+command may change in a future release.&lt;/p&gt;
+
+&lt;p&gt;Upstream patch: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/1028"&gt;https://github.com/projectatomic/rpm-ostree/pull/1028&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Other minor fixes and improvements&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The &lt;code&gt;upgrade&lt;/code&gt;, &lt;code&gt;deploy&lt;/code&gt;, and &lt;code&gt;rebase&lt;/code&gt; commands learned new
+&lt;code&gt;--download-only&lt;/code&gt; and &lt;code&gt;--cache-only&lt;/code&gt; switches. This is
+analogous to &lt;code&gt;dnf&lt;/code&gt;&amp;rsquo;s &lt;code&gt;--downloadonly&lt;/code&gt; and &lt;code&gt;--cacheonly&lt;/code&gt;
+switches, but extends to layered packages as well.&lt;/li&gt;
+&lt;li&gt;Related to the previous item, a new &lt;code&gt;refresh-md&lt;/code&gt; command
+was added to support refreshing the rpm-md. This is
+analogous to &lt;code&gt;dnf&lt;/code&gt;&amp;rsquo;s &lt;code&gt;makecache&lt;/code&gt; command.&lt;/li&gt;
+&lt;li&gt;In the spirit of making rpm-ostree the only front-facing
+application, a new &lt;code&gt;usroverlay&lt;/code&gt; command was added to take
+over the functionality of &lt;code&gt;ostree admin unlock&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;compose tree&lt;/code&gt; subcommand has now been split into
+three subcommands: &lt;code&gt;install&lt;/code&gt;, &lt;code&gt;postprocess&lt;/code&gt;, and &lt;code&gt;commit&lt;/code&gt;.
+This can be used to more easily customize the rootfs
+before committing it to the OSTree repo.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;db diff&lt;/code&gt; command now can use commit metadata to
+retrive package lists. This means that one no longer needs
+to have the full commit when performing diffs.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;status&lt;/code&gt; command learned a new &lt;code&gt;--booted&lt;/code&gt; switch to
+only display information about the booted deployment.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Atomic and Friends at KubeCon</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/"/>
+    <id>http://www.projectatomic.io/blog/2017/11/atomic-at-kubecon/</id>
+    <published>2017-11-29T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Going to KubeCon?  Contributors from Project Atomic, OpenShift Origin, and other related projects will be all over the conference, including talks, salons, and a whole schedule of back-to-back demos in the Red Hat booth. Read on for details on what to see at Kubecon.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The week kicks off with &lt;a href="http://openshiftgathering.com/openshiftgathering/austin"&gt;OpenShift Commons&lt;/a&gt;, including &lt;q&gt;The State of the Container Ecosystem&lt;/q&gt; with Dan Walsh and Mrunal Patel, and &lt;q&gt;OpenShift on AWS&lt;/q&gt; by Fedora Atomic contributor David Duncan.  As of this post, registration is still open.&lt;/p&gt;
+
+&lt;p&gt;Mrunal Patel is then &lt;a href="https://kccncna17.sched.com/event/CU6T/cri-o-all-the-runtime-kubernetes-needs-and-nothing-more-mrunal-patel-red-hat"&gt;explaining CRI-O&lt;/a&gt; during the main conference, and there&amp;rsquo;s a &lt;a href="https://kccncna17.sched.com/event/CU8j/cri-o-hosted-by-daniel-walsh-red-hat"&gt;CRI-O BOF&lt;/a&gt;.  Clayton Coleman is keynoting about &amp;ldquo;&lt;a href="https://kccncna17.sched.com/event/CUEB/keynote-red-hat-making-containers-boring-again-clayton-coleman-architect-kubernetes-and-openshift-red-hat"&gt;Making containers boring&lt;/a&gt;.&amp;rdquo;  Fabian Deutsch of KubeVirt is hosting a salon on &lt;a href="https://kccncna17.sched.com/event/CU8m/virtualizing-workloads-on-kubernetes-hosted-by-fabian-deutsch-red-hat"&gt;virtualization in Kubernetes&lt;/a&gt;.  Plus lots of other interesting sessions.&lt;/p&gt;
+
+&lt;p&gt;Then there&amp;rsquo;s the main action, in the Red Hat Booth on the show floor.  We&amp;rsquo;ll have back-to-back demos in the mini-theater all conference long, so that you can see lots of cool technology without ever leaving the show floor.  Here&amp;rsquo;s a full schedule for you to track what&amp;rsquo;s going on; most demos will be given twice.  &lt;/p&gt;
+
+&lt;table class="waffle" cellspacing="2" cellpadding="2"&gt;&lt;tbody&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;&lt;strong&gt;Start Time&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Topic&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&lt;strong&gt;Speaker&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Wednesday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;MiniShift Hands-On&lt;/td&gt;&lt;td&gt;Adam Miller&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td&gt;Live Hot Security Patching on OpenShift&lt;/td&gt;&lt;td&gt;Ryan Jarvinen&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;System containers&lt;/td&gt;&lt;td&gt;Jason Brooks&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;Container Native Storage&lt;/td&gt;&lt;td&gt;Jose Rivera&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:00:00 PM&lt;/td&gt;&lt;td&gt;ManageIQ-for-Kubernetes&lt;/td&gt;&lt;td&gt;Federico Simoncelli&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:30:00 PM&lt;/td&gt;&lt;td&gt;CI/CD Flow&lt;/td&gt;&lt;td&gt;Mauricio &amp;ldquo;Maltron&amp;rdquo; Leal&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Native Postgres&lt;/td&gt;&lt;td&gt;Josh Berkus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;05:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Wednesday Evening Booth Crawl&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;06:45:00 PM&lt;/td&gt;&lt;td&gt;New Container Tools&lt;/td&gt;&lt;td&gt;Dan Walsh&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;07:30:00 PM&lt;/td&gt;&lt;td&gt;KubeVirt&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;Fabian Deutch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Thursday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;10:30:00 AM&lt;/td&gt;&lt;td&gt;CI/CD Flow&lt;/td&gt;&lt;td&gt;Mauricio &amp;ldquo;Maltron&amp;rdquo; Leal&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;CRI-O&lt;/td&gt;&lt;td&gt;Mrunal Patel&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;OpenShift Developer Workflow&lt;/td&gt;&lt;td&gt;Ryan Jarvinen&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;MiniShift Hands-On&lt;/td&gt;&lt;td&gt;Adam Miller&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Native Postgres&lt;/td&gt;&lt;td&gt;Josh Berkus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;02:30:00 PM&lt;/td&gt;&lt;td&gt;System containers&lt;/td&gt;&lt;td&gt;Jason Brooks&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:00:00 PM&lt;/td&gt;&lt;td&gt;KubeVirt&lt;/td&gt;&lt;td class="s3" dir="ltr"&gt;Fabian Deutch&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;03:30:00 PM&lt;/td&gt;&lt;td&gt;Container Native Storage&lt;/td&gt;&lt;td&gt;Jose Rivera&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:00:00 PM&lt;/td&gt;&lt;td&gt;ManageIQ-for-Kubernetes&lt;/td&gt;&lt;td&gt;Federico Simoncelli&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;04:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;05:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td class="s1" dir="ltr" colspan="3"&gt;&lt;strong&gt;Friday&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;10:30:00 AM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:00:00 AM&lt;/td&gt;&lt;td&gt;OpenShift On Multi-Architecture Clusters&lt;/td&gt;&lt;td&gt;Jason DeTiberus&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;11:30:00 AM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;12:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:00:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;
+&lt;tr style='height:16px;'&gt;&lt;td&gt;01:30:00 PM&lt;/td&gt;&lt;td&gt;OpenShift Self-paced Lab&lt;/td&gt;&lt;td&gt;OpenShift Team&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;See you at KubeCon!&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>rpm-ostree v2017.8 released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/09/rpm-ostree-v2017.8-released/"/>
+    <id>http://www.projectatomic.io/blog/2017/09/rpm-ostree-v2017.8-released/</id>
+    <published>2017-09-13T17:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jonathan Lebon</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://rpm-ostree.readthedocs.org/"&gt;rpm-ostree&lt;/a&gt; is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host. Here are some highlights from
+version
+&lt;a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2017.8"&gt;v2017.8&lt;/a&gt;,
+including better PolicyKit integration and support for RPM file triggers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;You can test it out by rebasing to the
+&lt;a href="http://www.projectatomic.io/blog/2017/09/fedora-atomic-26-120/"&gt;latest Fedora Atomic Host release&lt;/a&gt;
+or &lt;a href="https://getfedora.org/en/atomic/download/"&gt;downloading it&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Better PolicyKit integration&lt;/h3&gt;
+
+&lt;p&gt;In this release, we built upon the PolicyKit support added
+in the previous release to allow authentication directly
+from the terminal. This means that users can now run
+rpm-ostree operations as non-root and only authenticate for
+the operation requested instead of resorting to &lt;code&gt;sudo&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[cloud-user@f26-tmp ~]$ rpm-ostree status
+State: idle
+Deployments:
+* fedora-atomic:fedora/26/x86_64/atomic-host
+                   Version: 26.120 (2017-09-05 00:05:09)
+                    Commit: 0b0127864022dd6ffad1a183241fbd5482ef5a1642ff3c8751c2e6cae6070b1a
+              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D
+[cloud-user@f26-tmp ~]$ rpm-ostree install cowsay
+==== AUTHENTICATING FOR org.projectatomic.rpmostree1.install-uninstall-packages ===
+Authentication is required to install and remove software
+Authenticating as: Fedora (cloud-user)
+Password:
+==== AUTHENTICATION COMPLETE ===
+Checking out tree 0b01278... done
+...
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Upstream patches: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/894"&gt;https://github.com/projectatomic/rpm-ostree/pull/894&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Support for RPM file triggers&lt;/h3&gt;
+
+&lt;p&gt;When layering packages, rpm-ostree essentially re-implements
+parts of the functionality of &lt;code&gt;rpm&lt;/code&gt;. For example, RPM
+scriptlets are run in a locked down environment to ensure
+minimal exposure. In this release, rpm-ostree added support
+for running &lt;a href="http://rpm.org/user_doc/file_triggers.html"&gt;file trigger scriptlets&lt;/a&gt;.
+This is necessary for successfully layering some packages,
+such as &lt;code&gt;vagrant&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Upstream patches: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/869"&gt;https://github.com/projectatomic/rpm-ostree/pull/869&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Upgrade command also upgrades layered packages&lt;/h3&gt;
+
+&lt;p&gt;Previously, the &lt;code&gt;upgrade&lt;/code&gt; command only layered a new
+deployment if a new ostree commit was available, regardless
+of whether new versions were available for layered packages.
+This was fixed in this release so that &lt;code&gt;upgrade&lt;/code&gt; always
+checks for outdated layered packages even if there are no
+new commits.&lt;/p&gt;
+
+&lt;p&gt;Upstream issue: &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/391"&gt;https://github.com/projectatomic/rpm-ostree/issues/391&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Better help output&lt;/h3&gt;
+
+&lt;p&gt;For commands that take subcommands, the help output now
+outputs a description of each subcommand. This is especially
+useful on Atomic Host, where man pages are not readily
+available.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[cloud-user@f26-tmp ~]$ rpm-ostree --help
+Usage:
+  rpm-ostree [OPTION?] COMMAND
+
+Builtin Commands:
+  compose          Commands to compose a tree
+  cleanup          Clear cached/pending data
+  db               Commands to query the RPM database
+  deploy           Deploy a specific commit
+  rebase           Switch to a different tree
+  rollback         Revert to the previously booted tree
+  status           Get the version of the booted system
+  upgrade          Perform a system upgrade
+  reload           Reload configuration
+  initramfs        Enable or disable local initramfs regeneration
+  install          Download and install layered RPM packages
+  uninstall        Remove one or more overlay packages
+
+Help Options:
+  -h, --help       Show help options
+
+Application Options:
+  --version        Print version information and exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Upstream issue: &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/806"&gt;https://github.com/projectatomic/rpm-ostree/issues/806&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Other minor fixes and improvements&lt;/h3&gt;
+
+&lt;p&gt;There are many other small improvements, here are a few:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;rpm-ostree learned about the &lt;code&gt;ostree.endoflife&lt;/code&gt; metadata
+key, which displays an informative message when an OS
+stream (branch) reaches end-of-life. This will likely be
+used for Fedora Atomic Host.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Upstream patches: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/889"&gt;https://github.com/projectatomic/rpm-ostree/pull/889&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;rpm-ostree was submitted to
+&lt;a href="https://scan.coverity.com/"&gt;Coverity&lt;/a&gt; and received many
+fixes detected in the scan. No major issues were
+uncovered.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Upstream patches: &lt;a href="https://github.com/projectatomic/rpm-ostree/pull/918"&gt;https://github.com/projectatomic/rpm-ostree/pull/918&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Fedora Layered Image Release August 2017</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/fedora-images-aug-2017/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/fedora-images-aug-2017/</id>
+    <published>2017-08-30T12:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;The &lt;a href="https://pagure.io/atomic-wg"&gt;Fedora Atomic WG&lt;/a&gt; and
+&lt;a href="https://docs.pagure.org/releng/"&gt;Fedora Release Engineering&lt;/a&gt; teams have updated the Fedora Layered Image Registry.  With this latest release, images based on Fedora 26 are now available, in addition to the images which were already available based on Fedora 25.  This update also includes &lt;q&gt;fedora-minimal&lt;/q&gt; images for all active releases, each containing a stripped-down version of Fedora at about 100MB in size.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;At this time the following Container Images are available in the &lt;a href="https://fedoraproject.org/wiki/Atomic/FLIBS_Catalog"&gt;Fedora Registry&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;Updated Base Images:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora:latest&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora:rawhide&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora:28&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora:27&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora:26&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora:25&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Fedora-Minimal Images:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora-minimal:latest&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora-minimal:rawhide&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora-minimal:28&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora-minimal:27&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora-minimal:26&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/fedora-minimal:25&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Fedora 25 Images:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-scheduler:0.1-18.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-scheduler:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-scheduler&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/nodejs:0-8.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/nodejs:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/nodejs&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-apiserver:0.1-18.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-apiserver:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-apiserver&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/httpd:0-10.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/httpd:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/httpd&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/php:0-7.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/php:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/php&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/container-engine:0-3.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/container-engine:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/container-engine&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-proxy:0-18.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-proxy:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-proxy&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/redis:0-8.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/redis:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/redis&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/etcd:0.1-18.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/etcd:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/etcd&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-controller-manager:0.1-18.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-controller-manager:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-controller-manager&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mongodb:0-7.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mongodb:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mongodb&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mirrormanager2-mirrorlist:0.7.3-10.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mirrormanager2-mirrorlist:0.7.3&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mirrormanager2-mirrorlist&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/waiverdb:0-3.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/waiverdb:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/waiverdb&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/cockpit:135-13.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/cockpit:135&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/cockpit&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mariadb:10.1-16.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mariadb:10.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/mariadb&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/ruby:0-11.f25docker&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/ruby:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/ruby&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/s2i-base:1-16.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/s2i-base:1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/s2i-base&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/flannel:0.1-15.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/flannel:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/flannel&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-master:0.1-20.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-master:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-master&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/toolchain:1-14.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/toolchain:1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/toolchain&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-node:0.1-17.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-node:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-node&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-kubelet:0-17.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-kubelet:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/kubernetes-kubelet&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/docker:0-7.f25container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/docker:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f25/docker&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Fedora 26 Images:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-scheduler:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-scheduler:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-scheduler&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/nodejs:0-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/nodejs:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/nodejs&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-apiserver:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-apiserver:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-apiserver&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mariadb:10.1-11.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mariadb:10.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mariadb&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-proxy:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-proxy:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-proxy&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/redis:0-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/redis:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/redis&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/python3:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/python3:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/python3&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/etcd:0.1-6.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/etcd:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/etcd&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-controller-manager:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-controller-manager:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-controller-manager&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/python-classroom:0.3-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/python-classroom:0.3&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/python-classroom&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mongodb:0-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mongodb:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mongodb&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mirrormanager2-mirrorlist:0.7.3-9.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mirrormanager2-mirrorlist:0.7.3&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/mirrormanager2-mirrorlist&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/waiverdb:0-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/waiverdb:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/waiverdb&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/docker-distribution:2.5.1-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/docker-distribution:2.5.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/docker-distribution&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/php:0-3.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/php:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/php&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/s2i-base:1-10.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/s2i-base:1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/s2i-base&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/flannel:0.1-5.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/flannel:0.1&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/flannel&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-master:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-master:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-master&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-node:0-1.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-node:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-node&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-kubelet:0-2.f26container&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-kubelet:0&lt;/li&gt;
+&lt;li&gt;registry.fedoraproject.org/f26/kubernetes-kubelet&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The source of this content is provided in DistGit which can easily be
+searched via the &lt;a href="https://admin.fedoraproject.org/pkgdb/packages/container/%2A/"&gt;container pkgdb namespace&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;As always, we welcome feedback and would encourage anyone interested
+to come join the Fedora Atomic WG as we continue to iterate on
+integrating the Project Atomic family of technologies into Fedora.
+Anyone interested in contributing Container Images, please feel free
+to join in and &lt;a href="https://fedoraproject.org/wiki/Container:Review_Process"&gt;submit one for Review&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+First atomic upgrade for Fedora 21 Atomic &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Colin Walters' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='First atomic upgrade for Fedora 21 Atomic' property='og:title'>
+<meta content='There was an update earlier that was broken due to a bug in rpm-ostree. This is fixed by a new release of rpm-ostree.&#x000A;&#x000A;You should now be able to atomic upgrade.  The delta you should see as of today from gold follows.  Things to call out specifically:&#x000A;&#x000A;&#x000A;Lots of CVE fixes, notably to docker&#x000A;Major new version of kubernetes' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/' property='og:url'>
+<meta content='2014-12-20T23:07:00Z' property='article:published_time'>
+<meta content='walters' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Upgrade' property='article:tag'>
+<link href='/blog/tag/upgrade.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='First atomic upgrade for Fedora 21 Atomic' name='twitter:title'>
+<meta content='There was an update earlier that was broken due to a bug in rpm-ostree. This is fixed by a new release of rpm-ostree.&#x000A;&#x000A;You should now be able to atomic upgrade.  The delta you should see as of today from gold follows.  Things to call out specifically:&#x000A;&#x000A;&#x000A;Lots of CVE fixes, notably to docker&#x000A;Major new version of kubernetes' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_12 blog_2014_12_first-atomic-upgrade-for-fedora-21-atomic blog_2014_12_first-atomic-upgrade-for-fedora-21-atomic_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+First atomic upgrade for Fedora 21 Atomic
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/walters/">Colin Walters</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-12-20T23:07:00Z'>
+Saturday 20 December 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>There was an update earlier that was broken due to <a href="https://github.com/projectatomic/rpm-ostree/commit/3e84cb249acbaa1b664aeb30e6534a3ebc6bb23e">a bug in rpm-ostree</a>. This is fixed by <a href="https://admin.fedoraproject.org/updates/rpm-ostree-2014.114-2.fc21?_csrf_token=9c9be2b07813e17db050fbbec3533d5abf005ebb">a new release of rpm-ostree</a>.</p>
+
+<p>You should now be able to <q>atomic upgrade.</q>  The delta you should see as of today from gold follows.  Things to call out specifically:</p>
+
+<ul>
+<li>Lots of CVE fixes, notably to docker</li>
+<li>Major new version of kubernetes</li>
+</ul>
+
+<p></p>
+
+<p>Note that this update <em>adds</em> flannel.  This is a key aspect of the <q>image-like</q> feel of rpm-ostree.  With <a href="https://git.fedorahosted.org/cgit/fedora-atomic.git/commit/?h=f21&amp;id=9e4082f9ce8506cd8b2138e986358b5e533767b5">this commit</a> it was added to the tree. (And conversely, if a package is removed there, it&rsquo;s removed when you upgrade.)  </p>
+
+<p>For the new Kubernetes, I recommend looking at <a href="http://www.projectatomic.io/blog/2014/11/testing-kubernetes-with-an-atomic-host/">this blog entry</a>. <a href="https://github.com/eparis/kubernetes-ansible">This repository has Ansible scripts</a> that are a useful reference for Flannel set up as well.</p>
+
+<p><strong>Upgraded:</strong></p>
+
+<ul>
+<li>NetworkManager-1:0.9.10.0-14.git20140704.fc21.x86_64</li>
+<li>NetworkManager-glib-1:0.9.10.0-14.git20140704.fc21.x86_64</li>
+<li>PackageKit-glib-1.0.3-4.fc21.x86_64</li>
+<li>avahi-autoipd-0.6.31-30.fc21.x86_64</li>
+<li>avahi-libs-0.6.31-30.fc21.x86_64</li>
+<li>cpio-2.11-33.fc21.x86_64</li>
+<li>curl-7.37.0-11.fc21.x86_64</li>
+<li>dbus-1:1.8.12-1.fc21.x86_64</li>
+<li>dbus-libs-1:1.8.12-1.fc21.x86_64</li>
+<li>docker-io-1.4.0-1.fc21.x86_64</li>
+<li>dracut-038-31.git20141204.fc21.x86_64</li>
+<li>dracut-config-generic-038-31.git20141204.fc21.x86_64</li>
+<li>filesystem-3.2-28.fc21.x86_64</li>
+<li>grep-2.21-1.fc21.x86_64</li>
+<li>hawkey-0.5.2-1.fc21.x86_64</li>
+<li>hwdata-0.272-1.fc21.noarch</li>
+<li>initscripts-9.56.1-5.fc21.x86_64</li>
+<li>kernel-3.17.6-300.fc21.x86_64</li>
+<li>kernel-core-3.17.6-300.fc21.x86_64</li>
+<li>kernel-modules-3.17.6-300.fc21.x86_64</li>
+<li>kmod-19-1.fc21.x86_64</li>
+<li>kmod-libs-19-1.fc21.x86_64</li>
+<li>kubernetes-0.6-4.0.git993ef88.fc21.x86_64</li>
+<li>libblkid-2.25.2-2.fc21.x86_64</li>
+<li>libcurl-7.37.0-11.fc21.x86_64</li>
+<li>libdrm-2.4.58-3.fc21.x86_64</li>
+<li>libmount-2.25.2-2.fc21.x86_64</li>
+<li>libreport-filesystem-2.3.0-5.fc21.x86_64</li>
+<li>libsmartcols-2.25.2-2.fc21.x86_64</li>
+<li>libuuid-2.25.2-2.fc21.x86_64</li>
+<li>libyaml-0.1.6-6.fc21.x86_64</li>
+<li>net-tools-2.0-0.31.20141124git.fc21.x86_64</li>
+<li>nss-3.17.3-1.fc21.x86_64</li>
+<li>nss-softokn-3.17.3-1.fc21.x86_64</li>
+<li>nss-softokn-freebl-3.17.3-1.fc21.x86_64</li>
+<li>nss-sysinit-3.17.3-1.fc21.x86_64</li>
+<li>nss-tools-3.17.3-1.fc21.x86_64</li>
+<li>nss-util-3.17.3-1.fc21.x86_64</li>
+<li>openssh-6.6.1p1-9.fc21.x86_64</li>
+<li>openssh-clients-6.6.1p1-9.fc21.x86_64</li>
+<li>openssh-server-6.6.1p1-9.fc21.x86_64</li>
+<li>pcre-8.35-8.fc21.x86_64</li>
+<li>ppp-2.4.7-5.fc21.x86_64</li>
+<li>rpcbind-0.2.2-0.0.fc21.x86_64</li>
+<li>rpm-4.12.0.1-4.fc21.x86_64</li>
+<li>rpm-build-libs-4.12.0.1-4.fc21.x86_64</li>
+<li>rpm-libs-4.12.0.1-4.fc21.x86_64</li>
+<li>rpm-ostree-2014.114-2.fc21.x86_64</li>
+<li>rpm-plugin-selinux-4.12.0.1-4.fc21.x86_64</li>
+<li>rpm-python-4.12.0.1-4.fc21.x86_64</li>
+<li>selinux-policy-3.13.1-103.fc21.noarch</li>
+<li>selinux-policy-targeted-3.13.1-103.fc21.noarch</li>
+<li>sqlite-3.8.7.2-1.fc21.x86_64</li>
+<li>sudo-1.8.11p2-1.fc21.x86_64</li>
+<li>tcpdump-14:4.6.2-2.fc21.x86_64</li>
+<li>tzdata-2014j-1.fc21.noarch</li>
+<li>util-linux-2.25.2-2.fc21.x86_64</li>
+</ul>
+
+<p><strong>Added:</strong></p>
+
+<ul>
+<li>flannel-0.1.0-8.gita7b435a.fc21.x86_64</li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/upgrade/">Upgrade</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/12/first-atomic-upgrade-for-fedora-21-atomic/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

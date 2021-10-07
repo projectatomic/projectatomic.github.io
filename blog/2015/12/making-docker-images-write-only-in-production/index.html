@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Making Docker images read-only in production &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dan Walsh' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Making Docker images read-only in production' property='og:title'>
+<meta content='With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new --tmpfs you can run a container as read only, but still use writeable directories for things like /etc, /tmp or /run but discard changes when a container is stopped.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/' property='og:url'>
+<meta content='2015-12-16T22:06:42Z' property='article:published_time'>
+<meta content='dwalsh' property='article:author:username'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='images' property='article:tag'>
+<link href='/blog/tag/images.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='operations' property='article:tag'>
+<link href='/blog/tag/operations.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='production' property='article:tag'>
+<link href='/blog/tag/production.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='tmpfs' property='article:tag'>
+<link href='/blog/tag/tmpfs.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Making Docker images read-only in production' name='twitter:title'>
+<meta content='With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new --tmpfs you can run a container as read only, but still use writeable directories for things like /etc, /tmp or /run but discard changes when a container is stopped.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_12 blog_2015_12_making-docker-images-write-only-in-production blog_2015_12_making-docker-images-write-only-in-production_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Making Docker images read-only in production
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-16T22:06:42Z'>
+Wednesday 16 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new <code>--tmpfs</code> you can run a container as read only, but still use writeable directories for things like <code>/etc</code>, <code>/tmp</code> or <code>/run</code> but discard changes when a container is stopped.</p>
+
+<p></p>
+
+<h3>Developer Mode vs Production Mode</h3>
+
+<p>One of the reasons Docker has taken off is because it made it easier for developers to ship and update their software. Docker has streamlined the development process and allowed developers to choose the runtime environments that their applications are going to run.  The runtime/userspace that the developer (or developers) chooses can be tested by the QE Team and the exact same runtime can be deployed in production.</p>
+
+<p>Part of the development process is usually built around updating the application and the userspace. The developer team does things like <code>yum install</code> or <code>dnf install</code>, and then copies in code that is particular to the application. But, once developers hand off to the quality engineers (QE) or operations, they expect content to be treated as read-only. </p>
+
+<p>I believe that the image of a container should be put into production in a read only mode, which would prevent the application or processes within the container from writing to the container, it would only allow these processes to write to volumes mounted into the container.  </p>
+
+<h4>Security</h4>
+
+<p>From a security point of view, this would be great.  Imagine you are running an application that gets hacked.  The first thing the hacker wants to do is to write the exploit into the application, so that the next time the application starts up, it starts up with the exploit in place.  If the image was read-only the hacker would be prevented from leaving a back door in place and be forced to start the cycle from the beginning. </p>
+
+<p>Docker added a feature to handle this via <code>docker run -d --read-only image ...</code>  a while ago. But it is difficult to use, since a lot of applications need to write to temporary directories like <code>/run</code> or <code>/tmp</code> When these are read-only the apps fail. You could set up temporary locations on your host to volume mount into the container, but this ends up exposing temporary data to the host.  </p>
+
+<p>What I wanted to be able to do is mount a tmpfs into the container. I have been working on a fix for this since last May, and it was finally merged in on December 2, from <a href="https://github.com/docker/docker/pull/13587">this pull request</a>. It will show up in docker-1.10.</p>
+
+<p>With this patch you can set up tmpfs as <code>/run</code> and <code>/tmp</code>.</p>
+<pre class="highlight plaintext"><code>docker run -d --read-only --tmpfs /run --tmpfs /tmp IMAGE&#x000A;</code></pre>
+
+<p>I would actually recommend all applications in production run with this mode.  You might want to continue to mount in volumes from the host for permanent data.</p>
+
+<h3>Other cool stuff.</h3>
+
+<p>One cool thing about this patch is that it <code>tar</code>s up the contents of the underlying directory in the image on top of the tmpfs. So if you have <code>/run/httpd</code> directory in the container image, you will have <code>/run/httpd</code> in the container&rsquo;s tmpfs.</p>
+
+<p>You can also do some other stuff with this patch like setting up a temporary <code>/var</code> or <code>/etc</code> inside of your container.</p>
+
+<p>If you execute <code>docker run -ti --tmpfs /etc fedora /bin/sh</code> then docker will mount a tmpfs on <code>/etc</code>, and tar up the content of the underlying <code>/etc</code> onto the new <code>/etc</code> tmpfs.  This means you could make changes to the <code>/etc</code> but it will not survive a container stop.  The container will be fresh every time you start and stop the container.</p>
+
+<p>You can also pass tmpfs mount options on the command line, like so:</p>
+<pre class="highlight plaintext"><code>docker run -ti --tmpfs /etc:rw,noexec,nosuid,size=2g container&#x000A;</code></pre>
+
+<p>Docker will pass down these mount options.</p>
+
+<h3>Call to action</h3>
+
+<p>It would be nice in the future if developers told QE and operations to run in production with the <code>--read-only</code> docker run/create flags. Or better yet set up <a href="http://developerblog.redhat.com/2015/04/21/introducing-the-atomic-command/">atomic labels</a> to do this by default. Then we can separate the way a container application runs in development from the way it runs in production.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/images/">images</a></li>
+<li><a href="/blog/tag/operations/">operations</a></li>
+<li><a href="/blog/tag/production/">production</a></li>
+<li><a href="/blog/tag/tmpfs/">tmpfs</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/12/making-docker-images-write-only-in-production/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

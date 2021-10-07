@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+The Many Ways to Build an OCI Image without Docker &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Micah Abbott' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='The Many Ways to Build an OCI Image without Docker' property='og:title'>
+<meta content='When containers initially made their big splash into the industry via Docker,&#x000A;users were almost required to use the docker CLI and daemon to create and&#x000A;manage their container images.  But a lot has happened since then and now it&#x000A;is easier than ever to create a container image without using docker at all,&#x000A;since the Docker image format has been standardized as the&#x000A;OCI Image format.&#x000A;&#x000A;In this post, we’ll review some of the ways you can create and manage your&#x000A;container images without ever having to start the docker daemon.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/' property='og:url'>
+<meta content='2018-03-06T00:00:00Z' property='article:published_time'>
+<meta content='miabbott' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='buildah' property='article:tag'>
+<link href='/blog/tag/buildah.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='containers' property='article:tag'>
+<link href='/blog/tag/containers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oci' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='runc' property='article:tag'>
+<link href='/blog/tag/runc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='skopeo' property='article:tag'>
+<link href='/blog/tag/skopeo.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='The Many Ways to Build an OCI Image without Docker' name='twitter:title'>
+<meta content='When containers initially made their big splash into the industry via Docker,&#x000A;users were almost required to use the docker CLI and daemon to create and&#x000A;manage their container images.  But a lot has happened since then and now it&#x000A;is easier than ever to create a container image without using docker at all,&#x000A;since the Docker image format has been standardized as the&#x000A;OCI Image format.&#x000A;&#x000A;In this post, we’ll review some of the ways you can create and manage your&#x000A;container images without ever having to start the docker daemon.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_03 blog_2018_03_the-many-ways-to-build-oci-images blog_2018_03_the-many-ways-to-build-oci-images_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+The Many Ways to Build an OCI Image without Docker
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/miabbott/">Micah Abbott</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-03-06T00:00:00Z'>
+Tuesday  6 March 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>When containers initially made their big splash into the industry via Docker,
+users were almost required to use the <code>docker</code> CLI and daemon to create and
+manage their container images.  But a lot has happened since then and now it
+is easier than ever to create a container image without using <code>docker</code> at all,
+since the Docker image format has been standardized as the
+<a href="https://github.com/opencontainers/image-spec">OCI Image format</a>.</p>
+
+<p>In this post, we&rsquo;ll review some of the ways you can create and manage your
+container images without ever having to start the <code>docker</code> daemon.</p>
+
+<p></p>
+
+<p>We&rsquo;ll explore these alternative ways to build container images using a
+privileged user, but most of the approaches also have a way to build images
+using a non-privileged user.  We&rsquo;ll cover using a non-privileged user in a
+future blog post.</p>
+
+<h3>orca-build</h3>
+
+<p>The project that was probably first to build container images without <code>docker</code>
+is the <a href="https://github.com/cyphar/orca-build">orca-build</a> project from
+<a href="https://twitter.com/lordcyphar">Aleksa Sarai</a> of SUSE.  He&rsquo;s created a simple
+Python3 script which leverages <a href="https://github.com/opencontainers/runc">runC</a>,
+<a href="http://github.com/projectatomic/skopeo">skopeo</a>, and the
+<a href="https://github.com/openSUSE/umoci">umoci</a> library to build container images.</p>
+
+<p>Let&rsquo;s see how it works with this simple Dockerfile that I&rsquo;ve created to build
+an <code>httpd</code> container.</p>
+<pre class="highlight plaintext"><code>$ cat fedora27-httpd/Dockerfile&#x000A;FROM registry.fedoraproject.org/fedora:27&#x000A;LABEL maintainer='Micah Abbott &lt;miabbott@redhat.com&gt;' \&#x000A;      version='1.0'&#x000A;&#x000A;ENV container=docker&#x000A;&#x000A;COPY Dockerfile /root/&#x000A;&#x000A;RUN dnf -y install httpd &amp;&amp; \&#x000A;    dnf clean all &amp;&amp; \&#x000A;    echo "SUCCESS fedora27_httpd" &gt; /var/www/html/index.html&#x000A;&#x000A;EXPOSE 80&#x000A;&#x000A;ENTRYPOINT [ "/usr/sbin/httpd" ]&#x000A;CMD [ "-D", "FOREGROUND" ]&#x000A;</code></pre>
+
+<p>Using a Fedora 27 system, I&rsquo;ll install the dependencies for using <code>orca-build</code>
+and then build the container image from the Dockerfile.  (But obviously, I
+won&rsquo;t be installing <code>docker</code>).</p>
+<pre class="highlight plaintext"><code># rpm -q docker&#x000A;package docker is not installed&#x000A;# systemctl status docker&#x000A;Unit docker.service could not be found.&#x000A;&#x000A;# dnf -y install git golang runc skopeo&#x000A;# export GOPATH=$HOME/go&#x000A;# export PATH=$PATH:$GOPATH/bin&#x000A;# go get -d github.com/openSUSE/umoci&#x000A;# cd $GOPATH/src/github.com/openSUSE/umoci/&#x000A;# make&#x000A;# cp $GOPATH/src/github.com/openSUSE/umoci/umoci $GOPATH/bin/&#x000A;# cd $HOME&#x000A;# git clone https://github.com/cyphar/orca-build.git&#x000A;# cd orca-build&#x000A;# python3 orca-build -t fedora27-httpd:orca $HOME/fedora27-httpd/&#x000A;orca-build[INFO] Created new image for build: /tmp/orca-build.y3n_2i0m&#x000A;orca-build[INFO] BUILD[1 of 8]: from ['registry.fedoraproject.org/fedora:27'] [json=False]&#x000A;  ---&gt; [skopeo]&#x000A;Getting image source signatures&#x000A;Copying blob sha256:d445b8c354cc48e75ed621cb6783a80c29ac24135cdd98fd02ae70e1f18345bc&#x000A; 80.81 MB / 80.81 MB [=====================================================] 10s&#x000A;Copying config sha256:400ec4f003634cb31d8b37d68ac56c41c6bbd8eb02eb7d7151b0ade59e513594&#x000A; 424 B / 424 B [============================================================] 0s&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;  &lt;--- [skopeo]&#x000A;orca-build[INFO] BUILD[2 of 8]: label ['maintainer=Micah Abbott &lt;miabbott@redhat.com&gt;', 'version=1.0'] [json=False]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;orca-build[INFO] BUILD[3 of 8]: env ['container=docker'] [json=False]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;orca-build[INFO] BUILD[4 of 8]: copy ['Dockerfile', '/root/'] [json=False]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;orca-build[INFO] BUILD[5 of 8]: run ['dnf', '-y', 'install', 'httpd', '&amp;&amp;', 'dnf', 'clean', 'all', '&amp;&amp;', 'echo', 'SUCCESS fedora27_httpd', '&gt;', '/var/www/html/index.html'] [json=False]&#x000A;  ---&gt; [umoci]&#x000A;  &lt;--- [umoci]&#x000A;  ---&gt; [runc]&#x000A;Error: Failed to synchronize cache for repo 'updates'&#x000A;  &lt;--- [runc]&#x000A;orca-build[CRITICAL] Error executing subprocess: runc --root=/tmp/orca-runcroot.un2g__rz run --bundle=/tmp/orca-bundle.dw5x64x0 orca-build-6bE2dWZlNxyZELMtkmHjObCb9fAkvMbq failed with error code 1&#x000A;</code></pre>
+
+<p>Hmmm&hellip;I believe <code>runc</code> doesn&rsquo;t have network access to allow <code>dnf</code> to install
+packages.  That is disappointing.  But I don&rsquo;t want to spend too much time on
+any one way of building an image, so let&rsquo;s move on to another method.</p>
+
+<h3>jessfraz/img</h3>
+
+<p><a href="https://twitter.com/jessfraz">Jessie Frazelle</a> recently announced her own
+project called <a href="https://github.com/jessfraz/img">img</a> that handles building
+OCI images without <code>docker</code>. Her approach uses a Go binary that leverages
+<a href="https://github.com/moby/buildkit">buildkit</a> from the Moby project to build
+images.</p>
+
+<p>Using the same Dockerfile and Fedora 27 system, let&rsquo;s try to build the image.</p>
+<pre class="highlight plaintext"><code># go get github.com/jessfraz/img&#x000A;# img build -t fedora27-httpd:img $HOME/fedora27-httpd/&#x000A;Building fedora27-httpd:img&#x000A;Setting up the rootfs... this may take a bit.&#x000A;INFO[0001] resolving docker.io/tonistiigi/copy@sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e&#x000A;INFO[0001] resolving registry.fedoraproject.org/fedora:27@sha256:3a75aec3625da0c80dcedda6a0321f997f812e24336a1c06d8b402afffc55450&#x000A;INFO[0010] unpacking registry.fedoraproject.org/fedora:27@sha256:3a75aec3625da0c80dcedda6a0321f997f812e24336a1c06d8b402afffc55450&#x000A;RUN [copy /src-0/Dockerfile /dest/root/]&#x000A;---&gt;&#x000A;&lt;--- e70rtudliv77emdm70tc5m027 0 &lt;nil&gt;&#x000A;RUN [/bin/sh -c dnf -y install httpd &amp;&amp;     dnf clean all &amp;&amp;     echo "SUCCESS fedora27_httpd" &gt; /var/www/html/index.html]&#x000A;---&gt;&#x000A;Fedora 27 - x86_64 - Updates                    8.8 MB/s |  20 MB     00:02&#x000A;Fedora 27 - x86_64                              6.1 MB/s |  58 MB     00:09&#x000A;Last metadata expiration check: 0:00:05 ago on Sat Mar  3 21:06:25 2018.&#x000A;Dependencies resolved.&#x000A;================================================================================&#x000A; Package                  Arch         Version              Repository     Size&#x000A;================================================================================&#x000A;Installing:&#x000A; httpd                    x86_64       2.4.29-1.fc27        updates       1.3 M&#x000A;Installing dependencies:&#x000A; apr                      x86_64       1.6.3-1.fc27         updates       121 k&#x000A; apr-util                 x86_64       1.6.1-2.fc27         updates       102 k&#x000A; fedora-logos-httpd       noarch       28.0.2-1.fc27        updates        33 k&#x000A; httpd-filesystem         noarch       2.4.29-1.fc27        updates        25 k&#x000A; httpd-tools              x86_64       2.4.29-1.fc27        updates        89 k&#x000A; mailcap                  noarch       2.1.48-2.fc27        fedora         37 k&#x000A; mod_http2                x86_64       1.10.13-1.fc27       updates       151 k&#x000A;&#x000A;Transaction Summary&#x000A;================================================================================&#x000A;Install  8 Packages&#x000A;&#x000A;Total download size: 1.9 M&#x000A;Installed size: 5.0 M&#x000A;Downloading Packages:&#x000A;(1/8): httpd-filesystem-2.4.29-1.fc27.noarch.rp  66 kB/s |  25 kB     00:00&#x000A;(2/8): mailcap-2.1.48-2.fc27.noarch.rpm         431 kB/s |  37 kB     00:00&#x000A;(3/8): httpd-tools-2.4.29-1.fc27.x86_64.rpm     136 kB/s |  89 kB     00:00&#x000A;(4/8): apr-1.6.3-1.fc27.x86_64.rpm              319 kB/s | 121 kB     00:00&#x000A;(5/8): apr-util-1.6.1-2.fc27.x86_64.rpm         338 kB/s | 102 kB     00:00&#x000A;(6/8): mod_http2-1.10.13-1.fc27.x86_64.rpm      728 kB/s | 151 kB     00:00&#x000A;(7/8): fedora-logos-httpd-28.0.2-1.fc27.noarch. 332 kB/s |  33 kB     00:00&#x000A;(8/8): httpd-2.4.29-1.fc27.x86_64.rpm           984 kB/s | 1.3 MB     00:01&#x000A;--------------------------------------------------------------------------------&#x000A;Total                                           857 kB/s | 1.9 MB     00:02&#x000A;Running transaction check&#x000A;Transaction check succeeded.&#x000A;Running transaction test&#x000A;Transaction test succeeded.&#x000A;Running transaction&#x000A;  Preparing        :                                                        1/1&#x000A;  Installing       : apr-1.6.3-1.fc27.x86_64                                1/8&#x000A;  Running scriptlet: apr-1.6.3-1.fc27.x86_64                                1/8&#x000A;  Installing       : apr-util-1.6.1-2.fc27.x86_64                           2/8&#x000A;  Running scriptlet: apr-util-1.6.1-2.fc27.x86_64                           2/8&#x000A;  Installing       : httpd-tools-2.4.29-1.fc27.x86_64                       3/8&#x000A;  Installing       : fedora-logos-httpd-28.0.2-1.fc27.noarch                4/8&#x000A;  Installing       : mailcap-2.1.48-2.fc27.noarch                           5/8&#x000A;  Running scriptlet: httpd-filesystem-2.4.29-1.fc27.noarch                  6/8&#x000A;  Installing       : httpd-filesystem-2.4.29-1.fc27.noarch                  6/8&#x000A;  Installing       : mod_http2-1.10.13-1.fc27.x86_64                        7/8&#x000A;  Installing       : httpd-2.4.29-1.fc27.x86_64                             8/8&#x000A;  Running scriptlet: httpd-2.4.29-1.fc27.x86_64                             8/8Failed to connect to bus: No such file or directory&#x000A;&#x000A;  Verifying        : httpd-2.4.29-1.fc27.x86_64                             1/8&#x000A;  Verifying        : httpd-filesystem-2.4.29-1.fc27.noarch                  2/8&#x000A;  Verifying        : httpd-tools-2.4.29-1.fc27.x86_64                       3/8&#x000A;  Verifying        : mailcap-2.1.48-2.fc27.noarch                           4/8&#x000A;  Verifying        : apr-1.6.3-1.fc27.x86_64                                5/8&#x000A;  Verifying        : apr-util-1.6.1-2.fc27.x86_64                           6/8&#x000A;  Verifying        : mod_http2-1.10.13-1.fc27.x86_64                        7/8&#x000A;  Verifying        : fedora-logos-httpd-28.0.2-1.fc27.noarch                8/8&#x000A;&#x000A;Installed:&#x000A;  httpd.x86_64 2.4.29-1.fc27            apr.x86_64 1.6.3-1.fc27&#x000A;  apr-util.x86_64 1.6.1-2.fc27          fedora-logos-httpd.noarch 28.0.2-1.fc27&#x000A;  httpd-filesystem.noarch 2.4.29-1.fc27 httpd-tools.x86_64 2.4.29-1.fc27&#x000A;  mailcap.noarch 2.1.48-2.fc27          mod_http2.x86_64 1.10.13-1.fc27&#x000A;&#x000A;Complete!&#x000A;18 files removed&#x000A;&lt;--- rx3j12yy3t0ea0shbimrgxtdx 0 &lt;nil&gt;&#x000A;INFO[0063] exporting layers&#x000A;INFO[0066] exporting manifest sha256:1fd9c488a4f116e3d02c5ea0d9277994bc8145ea7bb5021442b348b257b7b6e6&#x000A;INFO[0066] exporting config sha256:ae05d003b8ec6d046eb73ca8d3333a9d6e10bac332af7591a101f6f118f2bf7c&#x000A;INFO[0066] naming to fedora27-httpd:img&#x000A;Successfully built fedora27-httpd:img&#x000A;</code></pre>
+
+<p>We can also use <code>img</code> to list the container image that was just built.</p>
+<pre class="highlight plaintext"><code># img ls&#x000A;NAME                                        SIZE        CREATED AT  UPDATED AT  DIGEST&#x000A;docker.io/tonistiigi/copy@sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e   1.333KiB    7 days ago  7 days ago  sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e&#x000A;fedora27-httpd:img                              754B        7 days ago  43 hours ago    sha256:1fd9c488a4f116e3d02c5ea0d9277994bc8145ea7bb5021442b348b257b7b6e6&#x000A;</code></pre>
+
+<p>That was pretty easy and successful!  There are more things that <code>img</code> can
+do, but let&rsquo;s continue to expore other ways to build container images.</p>
+
+<h3>DIY Docker using Skopeo+OStree+Runc</h3>
+
+<p><a href="https://twitter.com/muayyadalsadi">Muayyad Alsadi</a> recently shared his blog
+post called <a href="https://bcksp.blogspot.com/2018/02/diy-docker-using-skopeoostreerunc.html">DIY Docker using Skopeo+OStree+Runc</a>
+to the <a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-February/msg00087.html">atomic-devel</a>
+mailing list.  In his post, he describes using <code>skopeo</code> and <code>ostree</code> to pull
+down existing Docker images and building out a rootfs that can be used by
+<code>runc</code>.  It is not exactly the same operation as building a container image
+from a Dockerfile, but it is a useful exercise to show off some of the gory
+details of working with OCI images.</p>
+
+<p>But what if you don&rsquo;t want to have to run multiple <code>skopeo</code> and <code>ostree</code>
+commands to pull down content and prep a container image?  Or maybe you don&rsquo;t
+really care about the details of OCI images and you just want to pull a
+container image without <code>docker</code>?</p>
+
+<p>All of those operations are neatly wrapped up in the <a href="http://github.com/projectatomic/atomic">atomic CLI</a>
+and can be reduced to a single command!</p>
+<pre class="highlight plaintext"><code> # atomic pull --storage=ostree docker.io/redis:alpine&#x000A;Getting image source signatures&#x000A;Copying blob sha256:ff3a5c916c92643ff77519ffa742d3ec61b7f591b6b7504599d95a4a41134e28&#x000A; 1.97 MB / 1.97 MB [========================================================] 0s&#x000A;Copying blob sha256:aae70a2e60279ffae89150a59b81fe10d1d81f341ef6f31b9714ea6cc3418577&#x000A; 1.22 KB / 1.22 KB [========================================================] 0s&#x000A;Copying blob sha256:87c655da471c9a7d8f946ec7b04a6a72a98ae8c1734bddf4b950861b5638fe20&#x000A; 8.35 KB / 8.35 KB [========================================================] 0s&#x000A;Copying blob sha256:a0bd51ac7350a7048a0bd85a83d87181a0b851952e94f70e18c1ddb6ff96e66e&#x000A; 7.73 MB / 7.73 MB [========================================================] 0s&#x000A;Copying blob sha256:755565c3ea2b1335705a21024b1bdb607f85492b284e8dec37eb759c0d601f57&#x000A; 99 B / 99 B [==============================================================] 0s&#x000A;Copying blob sha256:8bf100ea488d16d4401a9af72879db0c1ab56045b42670ebf64fe1f8d90568fc&#x000A; 397 B / 397 B [============================================================] 0s&#x000A;Copying config sha256:d3117424aaee14ab2b0edb68d3e3dcc1785b2e243b06bd6322f299284c640465&#x000A; 4.68 KB / 4.68 KB [========================================================] 0s&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;</code></pre>
+
+<p>And soon, you&rsquo;ll be able to use the very same <code>atomic</code> command to run the
+container image via <code>runc</code>.  Keep your eyes open for new versions of <code>atomic</code>
+that will include this <a href="https://github.com/projectatomic/atomic/pull/1196">pull request</a>
+from <a href="https://twitter.com/gscrivano">Giuseppe Scrivano</a>.</p>
+
+<p>There&rsquo;s one more way to build container images that we&rsquo;ll cover before
+wrapping up this post.</p>
+
+<h3>Use This One Weird Command to Build OCI Images!</h3>
+
+<p>Maybe you are thinking, <q>Gee, it&rsquo;s great that we have all these ways to build
+container images without Docker, but I&rsquo;d really like a tool that highlights my
+Boston accent.</q></p>
+
+<p>Enter <a href="https://github.com/projectatomic/buildah">buildah</a>!</p>
+
+<p>You&rsquo;ve probably already seen this tool mentioned on this blog a few times,
+but it&rsquo;s worth showing off another time just how easy it is to install and use.
+We&rsquo;ll continue to use the same Dockerfile and Fedora 27 system to build our
+image.</p>
+<pre class="highlight plaintext"><code># dnf install buildah&#x000A;# buildah bud -t fedora27_httpd:buildah $HOME/fedora27-httpd/&#x000A;STEP 1: FROM registry.fedoraproject.org/fedora:27&#x000A;Getting image source signatures&#x000A;Copying blob sha256:d445b8c354cc48e75ed621cb6783a80c29ac24135cdd98fd02ae70e1f18345bc&#x000A; 80.81 MiB / 80.81 MiB [===================================================] 32s&#x000A;Copying config sha256:99b71991af6eef73e85e3a657641cf2447929f37fff1f9570d525a6ef485a4a8&#x000A; 1.27 KiB / 1.27 KiB [======================================================] 0s&#x000A;Writing manifest to image destination&#x000A;Storing signatures&#x000A;STEP 2: LABEL maintainer='Micah Abbott &lt;miabbott@redhat.com&gt;'       version='1.0'&#x000A;STEP 3: ENV container=docker&#x000A;STEP 4: COPY Dockerfile /root/&#x000A;STEP 5: RUN dnf -y install httpd &amp;&amp;     dnf clean all &amp;&amp;     echo "SUCCESS fedora27_httpd" &gt; /var/www/html/index.html&#x000A;Fedora 27 - x86_64 - Updates                    3.0 MB/s |  20 MB     00:06&#x000A;Fedora 27 - x86_64                              1.6 MB/s |  58 MB     00:35&#x000A;Last metadata expiration check: 0:00:08 ago on Mon Mar  5 16:02:41 2018.&#x000A;Dependencies resolved.&#x000A;================================================================================&#x000A; Package                  Arch         Version              Repository     Size&#x000A;================================================================================&#x000A;Installing:&#x000A; httpd                    x86_64       2.4.29-1.fc27        updates       1.3 M&#x000A;Installing dependencies:&#x000A; apr                      x86_64       1.6.3-1.fc27         updates       121 k&#x000A; apr-util                 x86_64       1.6.1-2.fc27         updates       102 k&#x000A; fedora-logos-httpd       noarch       28.0.2-1.fc27        updates        33 k&#x000A; httpd-filesystem         noarch       2.4.29-1.fc27        updates        25 k&#x000A; httpd-tools              x86_64       2.4.29-1.fc27        updates        89 k&#x000A; mailcap                  noarch       2.1.48-2.fc27        fedora         37 k&#x000A; mod_http2                x86_64       1.10.13-1.fc27       updates       151 k&#x000A;&#x000A;Transaction Summary&#x000A;================================================================================&#x000A;Install  8 Packages&#x000A;&#x000A;Total download size: 1.9 M&#x000A;Installed size: 5.0 M&#x000A;Downloading Packages:&#x000A;(1/8): httpd-filesystem-2.4.29-1.fc27.noarch.rp 107 kB/s |  25 kB     00:00&#x000A;(2/8): httpd-tools-2.4.29-1.fc27.x86_64.rpm     208 kB/s |  89 kB     00:00&#x000A;(3/8): mailcap-2.1.48-2.fc27.noarch.rpm         127 kB/s |  37 kB     00:00&#x000A;(4/8): apr-util-1.6.1-2.fc27.x86_64.rpm         452 kB/s | 102 kB     00:00&#x000A;(5/8): apr-1.6.3-1.fc27.x86_64.rpm              305 kB/s | 121 kB     00:00&#x000A;(6/8): fedora-logos-httpd-28.0.2-1.fc27.noarch. 355 kB/s |  33 kB     00:00&#x000A;(7/8): mod_http2-1.10.13-1.fc27.x86_64.rpm      699 kB/s | 151 kB     00:00&#x000A;(8/8): httpd-2.4.29-1.fc27.x86_64.rpm           1.1 MB/s | 1.3 MB     00:01&#x000A;--------------------------------------------------------------------------------&#x000A;Total                                           933 kB/s | 1.9 MB     00:02&#x000A;Running transaction check&#x000A;Transaction check succeeded.&#x000A;Running transaction test&#x000A;Transaction test succeeded.&#x000A;Running transaction&#x000A;  Preparing        :                                                        1/1&#x000A;  Installing       : apr-1.6.3-1.fc27.x86_64                                1/8&#x000A;  Running scriptlet: apr-1.6.3-1.fc27.x86_64                                1/8&#x000A;  Installing       : apr-util-1.6.1-2.fc27.x86_64                           2/8&#x000A;  Running scriptlet: apr-util-1.6.1-2.fc27.x86_64                           2/8&#x000A;  Installing       : httpd-tools-2.4.29-1.fc27.x86_64                       3/8&#x000A;  Installing       : fedora-logos-httpd-28.0.2-1.fc27.noarch                4/8&#x000A;  Installing       : mailcap-2.1.48-2.fc27.noarch                           5/8&#x000A;  Running scriptlet: httpd-filesystem-2.4.29-1.fc27.noarch                  6/8&#x000A;  Installing       : httpd-filesystem-2.4.29-1.fc27.noarch                  6/8&#x000A;  Installing       : mod_http2-1.10.13-1.fc27.x86_64                        7/8&#x000A;  Installing       : httpd-2.4.29-1.fc27.x86_64                             8/8&#x000A;  Running scriptlet: httpd-2.4.29-1.fc27.x86_64                             8/8&#x000A;Failed to connect to bus: No such file or directory&#x000A;  Verifying        : httpd-2.4.29-1.fc27.x86_64                             1/8&#x000A;  Verifying        : httpd-filesystem-2.4.29-1.fc27.noarch                  2/8&#x000A;  Verifying        : httpd-tools-2.4.29-1.fc27.x86_64                       3/8&#x000A;  Verifying        : mailcap-2.1.48-2.fc27.noarch                           4/8&#x000A;  Verifying        : apr-1.6.3-1.fc27.x86_64                                5/8&#x000A;  Verifying        : apr-util-1.6.1-2.fc27.x86_64                           6/8&#x000A;  Verifying        : mod_http2-1.10.13-1.fc27.x86_64                        7/8&#x000A;  Verifying        : fedora-logos-httpd-28.0.2-1.fc27.noarch                8/8&#x000A;&#x000A;Installed:&#x000A;  httpd.x86_64 2.4.29-1.fc27            apr.x86_64 1.6.3-1.fc27&#x000A;  apr-util.x86_64 1.6.1-2.fc27          fedora-logos-httpd.noarch 28.0.2-1.fc27&#x000A;  httpd-filesystem.noarch 2.4.29-1.fc27 httpd-tools.x86_64 2.4.29-1.fc27&#x000A;  mailcap.noarch 2.1.48-2.fc27          mod_http2.x86_64 1.10.13-1.fc27&#x000A;&#x000A;Complete!&#x000A;18 files removed&#x000A;STEP 6: EXPOSE 80&#x000A;STEP 7: ENTRYPOINT [ "/usr/sbin/httpd" ]&#x000A;STEP 8: CMD [ "-D", "FOREGROUND" ]&#x000A;STEP 9: COMMIT containers-storage:[overlay@/var/lib/containers/storage+/var/run/containers/storage:overlay.override_kernel_check=true]docker.io/library/fedora27_httpd:buildah&#x000A;[root@fedora27cloud-dev ~]# buildah images&#x000A;IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE&#x000A;99b71991af6e         registry.fedoraproject.org/fedora:27                     Mar 1, 2018 07:48      234.9 MB&#x000A;c3fddc394f81         docker.io/library/fedora27_httpd:buildah                 Mar 5, 2018 16:03      252 MB&#x000A;&#x000A;</code></pre>
+
+<p>On my Fedora 27 host, I just needed two commands to install <code>buildah</code> and
+build the container image!  When you pair <code>buildah</code> with <code>atomic</code>, you have
+a powerful combination of tools that will allow you to build, manage, and run
+your container images without ever having to run the Docker daemon.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/buildah/">buildah</a></li>
+<li><a href="/blog/tag/containers/">containers</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/oci/">oci</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+<li><a href="/blog/tag/skopeo/">skopeo</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Micah Abbott
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/b582aa830fe6ffcd445ff2d4f2ed4bcf" /></div>
+<div class='author-blurb with-photo'>
+<p>Quality Enginer for Red Hat focused on Atomic Host.</p>
+
+<div class='more-link'>
+<a href="/blog/author/miabbott/">View all posts by Micah Abbott &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

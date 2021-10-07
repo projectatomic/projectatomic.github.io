@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Test Day</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/test_day.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Test Day for Fedora 28 Atomic/Cloud April 11th</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/04/test-day-for-fedora-28-atomic-cloud-april-11th/"/>
+    <id>http://www.projectatomic.io/blog/2018/04/test-day-for-fedora-28-atomic-cloud-april-11th/</id>
+    <published>2018-04-09T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Sinny Kumari</name>
+    </author>
+    <content type="html">&lt;p&gt;With the Fedora 28 Beta &lt;a href="https://fedoramagazine.org/announcing-fedora-28-beta/"&gt;official release announcement&lt;/a&gt;, the &lt;a href="https://fedoraproject.org/wiki/Atomic_WG"&gt;Fedora Atomic Working Group&lt;/a&gt; and &lt;a href="https://fedoraproject.org/wiki/Cloud_SIG"&gt;Fedora Cloud SIG&lt;/a&gt; would like to invite members of the community to join us in finding and squashing bugs. We are organizing a Test Day on Wednesday, April 11th 2018.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;In this Test Day, you can test Fedora Atomic Host, Fedora Atomic Workstation and Fedora Cloud Base content. See the &lt;a href="https://getfedora.org/en/atomic/prerelease/"&gt;Fedora Atomic Host Pre-Release Page&lt;/a&gt; for links to the artifacts for Fedora Atomic Host, &lt;a href="https://download.fedoraproject.org/pub/fedora/linux/releases/test/28_Beta/AtomicWorkstation/x86_64/iso/Fedora-AtomicWorkstation-ostree-x86_64-28_Beta-1.3.iso"&gt;here&lt;/a&gt; for Atomic Workstation ISO link and the &lt;a href="https://alt.fedoraproject.org/prerelease/index.html"&gt;Alternative Downloads Beta Page&lt;/a&gt; for links to Cloud Base Beta images. We have qcow, AMI and ISO images ready for testing.  Additionally, Vagrant Boxes will be available for testing as well.&lt;/p&gt;
+
+&lt;h3&gt;How do test days work?&lt;/h3&gt;
+
+&lt;p&gt;A test day is an event where anyone can help make sure that changes in Fedora are working well in the upcoming release. Fedora community members often participate, but the public is welcome also. You only need to be able to download materials (including some large files), and read and follow technical directions step by step, to contribute.&lt;/p&gt;
+
+&lt;p&gt;Need some help on what to test and how to test? Checkout &lt;a href="https://fedoraproject.org/wiki/Test_Day:2018-04-11_Cloud-Atomic_Testday"&gt;wiki page&lt;/a&gt; page which provides detailed information about the Atomic/Cloud test day. If you’re available on or around the day of the event, please do some testing . Once you’ve done the testing, make sure to log your test results in the &lt;a href="http://testdays.fedorainfracloud.org/events/39"&gt;test day web application&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Happy testing, and we hope to see you on test day!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

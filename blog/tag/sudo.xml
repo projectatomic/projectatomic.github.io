@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Sudo</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/sudo.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Why we don't let non-root users run Docker in CentOS, Fedora, or RHEL</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/"/>
+    <id>http://www.projectatomic.io/blog/2015/08/why-we-dont-let-non-root-users-run-docker-in-centos-fedora-or-rhel/</id>
+    <published>2015-08-10T14:53:25+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Dan Walsh</name>
+    </author>
+    <content type="html">&lt;p&gt;I often get bug reports from users asking &lt;em&gt;&lt;q&gt;why can&amp;rsquo;t I use `docker` as a non root user, by default?&lt;/q&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Docker has the ability to change the group ownership of the /run/docker.socket to have group permission of 660, with the &lt;code&gt;group&lt;/code&gt; ownership the docker group.  This would allow users added to the docker group to be able to run docker containers without having to execute &lt;code&gt;sudo&lt;/code&gt; or &lt;code&gt;su&lt;/code&gt; to become root. Sounds great&amp;hellip;&lt;br&gt;
+&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ls -l /var/run/docker.sock 
+srw-rw----. 1 root docker 0 Aug  3 13:02 /var/run/docker.sock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;But&lt;/strong&gt; on Red Hat Enterprise Linux (RHEL), Fedora, and CentOS we prefer to have the docker.socket set to:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ls -l /var/run/docker.sock 
+srw-rw----. 1 root root 0 Aug  3 13:02 /var/run/docker.sock
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Why is that? Simple: if a user can talk to the &lt;code&gt;docker&lt;/code&gt; socket, they can execute the following command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -ti --privileged -v /:/host fedora chroot /host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Giving them full root access to the host system. This is similar to giving them the following in sudo.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;grep dwalsh /etc/sudoers
+dwalsh  ALL=(ALL)   NOPASSWD: ALL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which would allow them to run &lt;code&gt;sudo sh&lt;/code&gt; and get the same access. But there is one big flaw with this. Docker has no auditing or logging built in, while &lt;code&gt;sudo&lt;/code&gt; does.  &lt;/p&gt;
+
+&lt;p&gt;Docker currently records events but the events disappear when the docker daemon is restarted. Docker does not currently do any auditing.&lt;/p&gt;
+
+&lt;p&gt;From a security perspective, Red Hat has expressed concerns with enabling access to the docker daemon from non-root users, absent auditing and proper logging.  We&amp;rsquo;ve implemented those controls in &lt;a href="https://github.com/docker/docker/pull/14446"&gt;PR14446&lt;/a&gt; though it depends on an authentication framework which is still being discussed. Until we can implement proper auditing and logging, we recommend implementing sudo rules to permit access to the docker daemon. That allows &lt;code&gt;sudo&lt;/code&gt; to provide logging and audit.&lt;/p&gt;
+
+&lt;h3&gt;Setting up sudo&lt;/h3&gt;
+
+&lt;p&gt;If you want to give &lt;code&gt;docker&lt;/code&gt; access to non-root users we recommend setting up sudo.  Here is a short guide on how to do this.&lt;/p&gt;
+
+&lt;p&gt;Add an entry like the following to &lt;code&gt;/etc/sudoers&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;grep dwalsh /etc/sudoers
+dwalsh        ALL=(ALL)       NOPASSWD: /usr/bin/docker
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will allow the specified user to run docker as root, without a password.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; I do &lt;em&gt;not&lt;/em&gt; recommend using &lt;code&gt;NOPASSWD&lt;/code&gt;, this would allow any process on your system to become root. If you require the password, the user needs to specify his password when running the docker command, making the system a bit more secure. If a password is required, &lt;code&gt;sudo&lt;/code&gt; gives you a five minute grace period to run docker again without entering the password.&lt;/p&gt;
+
+&lt;p&gt;Now, set up an alias for running the &lt;code&gt;docker&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;alias docker="sudo /usr/bin/docker"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now when the user executes the &lt;code&gt;docker&lt;/code&gt; command as non-root it will be allowed and get proper logging.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;docker run -ti --privileged -v /:/host fedora chroot /host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Look at the journal or &lt;code&gt;/var/log/messages&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;journalctl -b | grep docker.*privileged
+Aug 04 09:02:56 dhcp-10-19-62-196.boston.devel.redhat.com sudo[23422]:   dwalsh : TTY=pts/3 ; PWD=/home/dwalsh/docker/src/github.com/docker/docker ; USER=root ; COMMAND=/usr/bin/docker run -ti --privileged -v /:/host fedora chroot /host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Look at the audit log:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ausearch -m USER_ROLE_CHANGE -i
+type=USER_ROLE_CHANGE msg=audit(08/04/2015 09:02:56.514:1460) : pid=23423 uid=root auid=dwalsh ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='newrole: old-context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+new-context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 exe=/usr/bin/sudo hostname=? addr=? terminal=/dev/pts/3 res=success'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Better Security&lt;/h4&gt;
+
+&lt;p&gt;Better yet, if you wanted to only allow a user to access a particular container, you could write a simple script:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;cat /usr/bin/docker-fedora
+#!/bin/sh
+docker run -ti --rm fedora /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After writing the script, configure sudoers to run it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;grep dwalsh /etc/sudoers
+dwalsh        ALL=(ALL)       NOPASSWD: /usr/bin/docker-fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This user would only be able to run the fedora container, without privileges.&lt;/p&gt;
+
+&lt;h3&gt;Authentication&lt;/h3&gt;
+
+&lt;p&gt;We have other patches that we are working on to make the docker daemon more secure, including authentication. We have an ongoing discussion &lt;a href="https://github.com/docker/docker/issues/13697"&gt;in issue #13697 &amp;ldquo;Adding Kerberos support to Docker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Authorization&lt;/h3&gt;
+
+&lt;p&gt;We are also developing a proposal to add Authorization/RBAC (Roles Based Access Control) to docker, to allow administrators to specify which users are allowed to do which activity on which containers/images.&lt;/p&gt;
+
+&lt;p&gt;That proposal is &lt;a href="https://github.com/rhatdan/docker-rbac"&gt;on GitHub&lt;/a&gt; if you&amp;rsquo;d like to review it, add comments, or suggestions. &lt;/p&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;We believe the security of managing the docker daemon needs a lot of improvement, before we can think of opening up access to non-privileged users directly. Until these fixes are made &lt;code&gt;sudo&lt;/code&gt; is the best option. We&amp;rsquo;re working on better options, but for the time being we strongly recommend using &lt;code&gt;sudo&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

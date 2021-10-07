@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Libpod</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/libpod.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Building Kernel Modules with Podman</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/</id>
+    <published>2018-06-06T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Doss</name>
+    </author>
+    <content type="html">&lt;h3&gt;Building Kernel Modules on Atomic with Podman&lt;/h3&gt;
+
+&lt;p&gt;The goal of this post is to explain how to build and load a kernel module inside a container using Podman.&lt;/p&gt;
+
+&lt;p&gt;Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.&lt;/p&gt;
+
+&lt;p&gt;Using &lt;a href="https://github.com/dell/dkms"&gt;DKMS&lt;/a&gt; on Atomic does not work as &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/1091"&gt;expected&lt;/a&gt;. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;Fedora Atomic and Kernel Modules&lt;/h4&gt;
+
+&lt;p&gt;There are a few technical reasons on why building a kernel module inside of a container is a quick path for getting a third party kernel module built and loaded on Fedora Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;The first is all kernel modules must be built to match the version of the current running kernel,  meaning we have to ensure that the kernel module is built consistently for every new kernel for it to work correctly.&lt;/p&gt;
+
+&lt;p&gt;The second is the fact that most of the file system on Atomic is read only.  Most third party kernel modules have their source stored in &lt;code&gt;/usr/src&lt;/code&gt; and once they are built, they are stored in &lt;code&gt;/usr/lib/modules&lt;/code&gt;. Since both paths are immutable, this makes using a container ideal to build and store the kernel module.&lt;/p&gt;
+
+&lt;p&gt;The last surrounds how packages are created in the bi-weekly Fedora Atomic Host composes. The &lt;code&gt;kernel-devel&lt;/code&gt; packages sometimes do not match up with the kernel that is being shipped in these bi-weekly updates. This means consistently getting the correct &lt;code&gt;kernel-devel&lt;/code&gt; packages can be challenging. If we build the kernel module inside a container, we can pull in the correct &lt;code&gt;kernel-devel&lt;/code&gt; packages from &lt;a href="https://koji.fedoraproject.org/koji/packageinfo?packageID=8"&gt;Koji&lt;/a&gt; for the booted kernel to build the module.&lt;/p&gt;
+
+&lt;h4&gt;Building a Kernel Module with Podman&lt;/h4&gt;
+
+&lt;p&gt;In this example we are building the &lt;a href="https://www.wireguard.com"&gt;WireGuard&lt;/a&gt; kernel module, which is an extremely simple yet fast and modern VPN. For non-Atomic Fedora/CentOS/RHEL based installs, you can use the &lt;code&gt;wireguard-dkms&lt;/code&gt; &lt;a href="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/"&gt;RPM&lt;/a&gt;. It uses DKMS to build and load the kernel module on boot. This doesn&amp;rsquo;t help us get WireGuard running on Atomic as it will only result in failure. This leads us to building the kernel module inside of a container.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s check out the Dockerfile below:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora as builder
+MAINTAINER "Joe Doss" &amp;lt;joe@solidadmin.com&amp;gt;
+
+ARG WIREGUARD_VERSION
+ARG WIREGUARD_KERNEL_VERSION
+ARG WIREGUARD_SHA256
+
+WORKDIR /tmp
+
+RUN dnf update -y &amp;amp;&amp;amp; dnf install \
+        libmnl-devel elfutils-libelf-devel findutils binutils boost-atomic boost-chrono \
+        boost-date-time boost-system boost-thread cpp dyninst efivar-libs gc \
+        gcc glibc-devel glibc-headers guile koji isl libatomic_ops libdwarf libmpc \
+        libpkgconf libtool-ltdl libxcrypt-devel make mokutil pkgconf pkgconf-m4 \
+        pkgconf-pkg-config unzip zip /usr/bin/pkg-config xz -y &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-devel-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        dnf install kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;amp;&amp;amp; \
+        dnf clean all &amp;amp;&amp;amp; \
+        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
+        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat &amp;gt;| "$t"; sha256sum --quiet -c &amp;lt;&amp;lt;&amp;lt;"${WIREGUARD_SHA256} $t" \
+        || exit 1; cat "$t"; } | tar xJf -
+
+WORKDIR /tmp/WireGuard-${WIREGUARD_VERSION}/src
+
+RUN KERNELDIR=/usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/build make -j$(nproc) &amp;amp;&amp;amp; make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Stepping through the above, we are going to point out the key aspects. At the very start, we pass in three &lt;code&gt;ARG&lt;/code&gt; directives. These are &lt;code&gt;WIREGUARD_VERSION&lt;/code&gt;, &lt;code&gt;WIREGUARD_KERNEL_VERSION&lt;/code&gt; and &lt;code&gt;WIREGUARD_SHA256&lt;/code&gt;. We use these to pass in three variables: the booted kernel version of the Fedora 28 Atomic Host node, the version of WireGuard to build, and the SHA265 sum of the WireGuard source tarball.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;RUN&lt;/code&gt; directive installs all of the packages required to build the WireGuard kernel module. It also uses &lt;code&gt;koji&lt;/code&gt; to download the correct package versions of &lt;code&gt;kernel-core&lt;/code&gt;, &lt;code&gt;kernel-devel&lt;/code&gt;, and &lt;code&gt;kernel-modules&lt;/code&gt; and it then installs them so it matches the current booted kernel of the Fedora Atomic Host node. From there it checks the SHA256 on the WireGuard source archive and extracts the it to &lt;code&gt;/usr/src&lt;/code&gt;. Finally, it builds and installs the kernel module inside the container.&lt;/p&gt;
+
+&lt;p&gt;Since Podman supports multi-stage Dockerfiles, we use a second stage without all of the extra installed packages that were required to build the kernel module and we copy over the &lt;code&gt;wireguard.ko&lt;/code&gt; file and the &lt;code&gt;wg&lt;/code&gt; binary to be used in the final container image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora
+MAINTAINER "Joe Doss" &amp;lt;joe@solidadmin.com&amp;gt;
+
+ARG WIREGUARD_KERNEL_VERSION
+
+WORKDIR /tmp
+
+RUN dnf update -y &amp;amp;&amp;amp; dnf install kmod koji -y &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        dnf install /tmp/kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;amp;&amp;amp; \
+        dnf clean all &amp;amp;&amp;amp; rm -f /tmp/*.rpm
+
+COPY --from=builder /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko \
+                    /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko
+
+COPY --from=builder /usr/bin/wg /usr/bin/wg
+
+CMD /usr/bin/wg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using &lt;code&gt;podman build&lt;/code&gt; we can pass in the required variables using &lt;code&gt;--build-arg&lt;/code&gt; to build the container and tag it with the &lt;code&gt;WIREGUARD_VERSION&lt;/code&gt;. To save time, we are using the &lt;code&gt;podman build&lt;/code&gt; feature to pull the Dockerfile from a &lt;a href="https://github.com/projectatomic/libpod/blob/master/docs/podman-build.1.md#building-an-image-using-a-git-repository"&gt;git repository&lt;/a&gt;. This will checkout the git repo to a temporary location and use the Dockerfile in the project root for the build context.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+export WIREGUARD_SHA256=ff653095cc0e4c491ab6cd095ddf5d1db207f48f947fb92873a73220363f423c
+
+sudo podman build --build-arg WIREGUARD_VERSION=${WIREGUARD_VERSION} \
+    --build-arg WIREGUARD_SHA256=${WIREGUARD_SHA256} \
+    --build-arg WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION} \
+    -t wireguard:${WIREGUARD_VERSION} git://github.com/jdoss/atomic-wireguard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the kernel module is done building you can view the container using &lt;code&gt;podman images&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman images
+REPOSITORY                 TAG            IMAGE ID       CREATED              SIZE
+docker.io/library/fedora   latest         cc510acfcd70   4 weeks ago          263MB
+localhost/wireguard        0.0.20180531   c035e1bd76da   About a minute ago   741MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can now load the kernel module on Fedora Atomic Host using the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} modprobe udp_tunnel
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} modprobe ip6_udp_tunnel
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} \
+     insmod /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and then we can verify that it is loaded:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ lsmod |grep wireguard
+wireguard             229376  0
+ip6_udp_tunnel         16384  1 wireguard
+udp_tunnel             16384  1 wireguard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From there you can use the built container to call the WireGuard &lt;code&gt;wg&lt;/code&gt; binary to setup your WireGuard VPN on Fedora Atomic Host.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+-e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+wireguard:${WIREGUARD_VERSION} /usr/bin/wg --help
+Usage: /usr/bin/wg &amp;lt;cmd&amp;gt; [&amp;lt;args&amp;gt;]
+
+Available subcommands:
+  show: Shows the current configuration and device information
+  showconf: Shows the current configuration of a given WireGuard interface, for use with `setconf'
+  set: Change the current configuration, add peers, remove peers, or change peers
+  setconf: Applies a configuration file to a WireGuard interface
+  addconf: Appends a configuration file to a WireGuard interface
+  genkey: Generates a new private key and writes it to stdout
+  genpsk: Generates a new preshared key and writes it to stdout
+  pubkey: Reads a private key from stdin and writes a public key to stdout
+You may pass `--help' to any of these subcommands to view usage.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of the above is an example of a manual process for building a kernel module on Atomic. In order to provide an automated DKMS-like experience you can check out the &lt;a href="https://github.com/jdoss/atomic-wireguard"&gt;atomic-wireguard&lt;/a&gt; project on GitHub and &lt;a href="https://https//copr.fedorainfracloud.org/coprs/jdoss/atomic-wireguard/"&gt;Copr&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The goal of the &lt;code&gt;atomic-wireguard&lt;/code&gt; project is to automate the process of building the WireGuard kernel module with Podman on boot by using a build script called via systemd unit. It hopefully can be used as a stopgap to help support third party kernel modules on Atomic until official kernel module support is figured out. If you have any questions, please feel free to reach out to me (&lt;code&gt;jdoss&lt;/code&gt;) on Freenode in either the &lt;code&gt;#atomic&lt;/code&gt; or &lt;code&gt;#wireguard&lt;/code&gt; channels or on Twitter &lt;a href="https://twitter.com/jdoss"&gt;@jdoss&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Special thanks to the Project Atomic and libpod teams. Especially Dan Walsh, Dusty Mabe, Tom Sweeney, Matthew Heon, and Colin Walters for their patient help and guidance on this endeavor.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Podman and insecure registries</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/podman-tls/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/podman-tls/</id>
+    <published>2018-05-07T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brent Baude</name>
+    </author>
+    <content type="html">&lt;h3&gt;Podman and insecure registries&lt;/h3&gt;
+
+&lt;p&gt;The last few weeks, we have had a number of bugs and questions about how to pull from an insecure registry. The obvious advice here is that you should always be using a registry which implements &lt;em&gt;tls-verify&lt;/em&gt;. But if you are a container or image developer or you are just plain breaking new ground, your registry may not use &lt;em&gt;tls-verify&lt;/em&gt;. And &lt;a href="https://github.com/projectatomic/libpod/"&gt;Podman&lt;/a&gt; can handle this; and I wanted to spend a minute or two explaining how it does and the logic behind it.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;Podman pull&lt;/h4&gt;
+
+&lt;p&gt;We first need to talk about the various components in play here. To start with, lets use an example of the &lt;code&gt;podman pull&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman pull --help
+NAME:
+   podman pull - pull an image from a registry
+
+USAGE:
+   podman pull [command options] [arguments...]
+
+DESCRIPTION:
+   Pulls an image from a registry and stores it locally.
+An image can be pulled using its tag or digest. If a tag is not
+specified, the image with the 'latest' tag (if it exists) is pulled.
+
+OPTIONS:
+   --authfile value             Path of the authentication file. Default is ${XDG_RUNTIME_DIR}/containers/auth.json
+   --cert-dir pathname          pathname of a directory containing TLS certificates and keys
+   --creds credentials          credentials (USERNAME:PASSWORD) to use for authenticating to a registry
+   --quiet, -q                  Suppress output information when pulling images
+   --signature-policy pathname  pathname of signature policy file (not usually used)
+   --tls-verify                 require HTTPS and verify certificates when contacting registries (default: true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Most noteworthy, the podman pull command has a &lt;em&gt;tls-verify&lt;/em&gt; command line switch. It can accept a booleon (true/false) argument and you will notice it is set to true by default.&lt;/p&gt;
+
+&lt;h4&gt;System-wide registries configuration file&lt;/h4&gt;
+
+&lt;p&gt;The next component to look at is the system-wide registries configuration file. On my system, that file resides at &lt;em&gt;/etc/containers/registries.conf&lt;/em&gt;. And I will show a somewhat redacted version of mine as an example:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# This is a system-wide configuration file used to
+# keep track of registries for various container backends.
+# It adheres to TOML format and does not support recursive
+# lists of registries.
+
+[registries.search]
+registries = ['docker.io', 'registry.fedoraproject.org', 'registry.access.redhat.com']
+
+# If you need to access insecure registries, add the registry's fully-qualified name.
+# An insecure registry is one that does not have a valid SSL certificate or only does HTTP.
+[registries.insecure]
+registries = ['localhost:5000']
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here you can see I have three registries defined under the search header and a single registry defined as an insecure registry. The registries under the search header are registries that Podman will search when you try to find an image that is not fully-qualified.&lt;/p&gt;
+
+&lt;p&gt;I also have a development registry defined under the insecure header as &lt;em&gt;localhost:5000&lt;/em&gt;. It was not pragmatic for me to setup certificates for a registry I might delete and rerun 10 times a day so I simply access it without &lt;em&gt;tls-verify&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also quickly see what registries Podman is aware of by issuing the &lt;code&gt;podman info&lt;/code&gt; command. Both searchable and insecure registries are listed there.&lt;/p&gt;
+
+&lt;h4&gt;Applying system-wide registries to Podman pull&lt;/h4&gt;
+
+&lt;p&gt;When you run Podman, it reads and parses your system-wide registries configuration file. When it pulls an image, it will use the searchable registries to find the image in question. And when the image is actually pulled, it will see if the registry it is pulling from is listed as insecure. If the registry is listed as insecure and you did not specifically set the &lt;em&gt;tls-verify=true&lt;/em&gt; option, Podman will pull the image with &lt;em&gt;tls=verify=false&lt;/em&gt;. This is a convenience function for users so they do not have to remember the security protocols of their registries.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman pull localhost:5000/bb:latest
+Trying to pull localhost:5000/bb:latest...Getting image source signatures
+Copying blob sha256:f70adabe43c0cccffbae8785406d490e26855b8748fc982d14bc2b20c778b929
+ 706.22 KB / 706.22 KB [====================================================] 0s
+Copying config sha256:8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+ 1.46 KB / 1.46 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To review, the rules are as follows.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you pull from a registry not in the configuration file, &lt;em&gt;tls-verify&lt;/em&gt; is assumed true unless you override it.&lt;/li&gt;
+&lt;li&gt;If you pull from a registry defined as a searchable registry (only) in your configuration file, &lt;em&gt;tls-verify&lt;/em&gt; is assumed true unless you override it.&lt;/li&gt;
+&lt;li&gt;If you pull from a registry that is defined as insecure, &lt;em&gt;tls-verify&lt;/em&gt; will be false unless you specifically call out &lt;em&gt;tls-verify=true&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Insecure registries can be searchable too&lt;/h4&gt;
+
+&lt;p&gt;A follow up question I often get is if a searchable registry can be insecure as well? Yes, you can list a registry as both searchable and insecure. Notice how I pulled the previous bb:latest image by a fully-qualified name. If &lt;em&gt;localhost:5000&lt;/em&gt; is a searchable registry, I can pull it by short name — bb.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman pull bb
+Trying to pull docker.io/bb:latest...Failed
+Trying to pull registry.fedoraproject.org/bb:latest...Failed
+Trying to pull registry.access.redhat.com/bb:latest...Failed
+Trying to pull localhost:5000/bb:latest...Getting image source signatures
+Copying blob sha256:f70adabe43c0cccffbae8785406d490e26855b8748fc982d14bc2b20c778b929
+ 706.22 KB / 706.22 KB [====================================================] 0s
+Copying config sha256:8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+ 1.46 KB / 1.46 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+8ac48589692a53a9b8c2d1ceaa6b402665aa7fe667ba51ccc03002300856d8c7
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  <entry>
+    <title>A remote API for Podman</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/05/podman-varlink/"/>
+    <id>http://www.projectatomic.io/blog/2018/05/podman-varlink/</id>
+    <published>2018-05-01T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brent Baude</name>
+    </author>
+    <content type="html">&lt;h3&gt;Podman grows a remote API using Varlink&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/projectatomic/libpod"&gt;Podman&lt;/a&gt; up to now has been a simple CLI for managing pods and containers. But I wanted to allow other tools like Atomic CLI and Cockpit to interact with the pods/containers created by Podman and other tools.  Execing a CLI tool to do this and screen scraping the output never quite works, so we wanted to add an API.  But I did not want to add a daemon to implement a restAPI.  #nobigfatdaemons.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Someone pointed out a new technology that seemed meet most of our needs called &lt;a href="https://github.com/varlink"&gt;varlink&lt;/a&gt;.  After reviewing the project and talking with the upstream owners, I decided to build the Podman API based on varlink so users and developers can interact with Podman programmatically.&lt;/p&gt;
+
+&lt;p&gt;Varlink describes itself as an “interface description format and protocol that aims to make services accessible to both humans and machines in the simplest feasible way.” On their wiki, they document the &lt;a href="https://github.com/varlink/documentation/wiki/Ideals"&gt;ideals&lt;/a&gt; that lead to its development. The bottom line for Podman is that varlink has proved to be an effective way to create, publish, and implement a “remote” API over such technologies as REST.&lt;/p&gt;
+
+&lt;h4&gt;Installation&lt;/h4&gt;
+
+&lt;p&gt;First we need to install the Podman and varlink packages.  You will need a minimal version of podman-0.4.4-2 to work with the varlink backend.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo dnf --enablerepo=updates-testing install podman libvarlink-util libvarlink
+Last metadata expiration check: 0:00:14 ago on Tue 01 May 2018 07:08:49 PM UTC.
+Dependencies resolved.
+=============================================================================================================================================================
+ Package                                       Arch                    Version                                        Repository                        Size
+=============================================================================================================================================================
+Installing:
+ libvarlink                                    x86_64                  9-1.fc28                                       updates                           43 k
+ libvarlink-util                               x86_64                  9-1.fc28                                       updates                           46 k
+ podman                                        x86_64                  0.4.4-2.git9924956.fc28                        updates-testing                  5.7 M
+Installing dependencies:
+ atomic-registries                             x86_64                  1.22.1-2.fc28                                  updates-testing                   39 k
+ container-selinux                             noarch                  2:2.55-1.fc28                                  updates-testing                   39 k
+ containernetworking-cni                       x86_64                  0.6.0-4.fc28                                   updates-testing                  9.7 M
+
+... omitted for brevity
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Start the Podman socket&lt;/h4&gt;
+
+&lt;p&gt;Podman relies on a Systemd feature called &lt;a href="http://0pointer.de/blog/projects/socket-activation.html"&gt;socket activation&lt;/a&gt;.  Systemd allows developers to create socket unit files that tells systemd to listen on a particular socket like the unix domain socket /run/io.projectatomic.podman.  When a process connects to this socket, systemd will launch the command specified in the service file with the same name.  The launched command then handles the socket communications.&lt;/p&gt;
+
+&lt;p&gt;Podman ships a systemd socket file &lt;code&gt;io.projectatomic.podman.socket&lt;/code&gt; that will listen for requests.  It must be started for the varlink backend to work.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat /usr/lib/systemd/system/io.projectatomic.podman.socket
+[Unit]
+Description=Pod Manager Socket
+
+[Socket]
+ListenStream=/run/io.projectatomic.podman
+
+[Install]
+WantedBy=sockets.target
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Podman also ships a service file &lt;code&gt;io.projectatomic.podman.service&lt;/code&gt;, which systemd activates when connections come into the socket.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat /usr/lib/systemd/system/io.projectatomic.podman.service
+[Unit]
+Description=Pod Manager
+Requires=io.projectatomic.podman.socket
+After=io.projectatomic.podman.socket
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman --varlink=unix:/run/io.projectatomic.podman
+
+[Install]
+WantedBy=multi-user.target
+Also=io.projectatomic.podman.socket
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice the ExecStart line, this is the command that systemd executes when the connection comes in.  You enable the service with the following commands.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo systemctl enable io.projectatomic.podman.socket
+Created symlink /etc/systemd/system/multi-user.target.wants/io.projectatomic.podman.service → /usr/lib/systemd/system/io.projectatomic.podman.service.
+Created symlink /etc/systemd/system/sockets.target.wants/io.projectatomic.podman.socket → /usr/lib/systemd/system/io.projectatomic.podman.socket.
+
+$ sudo systemctl start io.projectatomic.podman.socket
+$ sudo systemctl status io.projectatomic.podman.socket
+Failed to dump process list, ignoring: No such file or directory
+● io.projectatomic.podman.socket - Pod Manager Socket
+  Loaded: loaded (/usr/lib/systemd/system/io.projectatomic.podman.socket; disabled; vendor preset: disabled)
+  Active: active (listening) since Sat 2018-04-28 16:00:34 UTC; 9s ago
+  Listen: /run/io.projectatomic.podman (Stream)
+  CGroup: /system.slice/io.projectatomic.podman.socket
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, the socket is now active and located at &lt;em&gt;/run/io.projectatomic.podman&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Is it alive?&lt;/h4&gt;
+
+&lt;p&gt;We can check if the service is alive and responding using the the varlink utility and an endpoint called Ping.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.Ping
+{
+ "ping": {
+   "message": "OK"
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The path beginning with “unix://” is considered to be a varlink URI of sorts. The “/run/io.projectatomic.podman” portion refers to the listening socket. And the latter parts refer to the path of the endpoint (or function if you prefer).&lt;/p&gt;
+
+&lt;h4&gt;Varlink info and help&lt;/h4&gt;
+
+&lt;p&gt;One unique design point of the varlink implementation is that it has the ability to help you discover its interfaces and endpoints. The &lt;em&gt;info&lt;/em&gt; subcommand will show basic information about the setup.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink info unix:/run/io.projectatomic.podman
+Vendor: Atomic
+Product: podman
+Version: 0.4.4
+URL: https://github.com/projectatomic/libpod
+Interfaces:
+ org.varlink.service
+ io.projectatomic.podman
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice the URI for that call is to the socket itself. Using the &lt;em&gt;help&lt;/em&gt; subcommand, we can discover more about the implemented API.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink help unix:/run/io.projectatomic.podman/io.projectatomic.podman
+# Podman Service Interface
+interface io.projectatomic.podman
+# Version is the structure returned by GetVersion
+type Version (
+ version: string,
+ go_version: string,
+ git_commit: string,
+ built: int,
+ os_arch: string
+)
+... omitted for brevity
+# System
+method Ping() -&amp;gt; (ping: StringResponse)
+method GetVersion() -&amp;gt; (version: Version)
+... omitted for brevity
+# Images
+method ListImages() -&amp;gt; (images: []ImageInList)
+method TagImage(name: string, tagged: string) -&amp;gt; ()
+... omitted for brevity
+error ImageNotFound (imagename: string)
+error ErrorOccurred (reason: string)
+error RuntimeError (reason: string)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here we can see the interface that is implemented called “io.projectatomic.podman” following by a type definition for &lt;em&gt;Version&lt;/em&gt;. It describes the construct that &lt;em&gt;GetVersion&lt;/em&gt; will return. Following the type definitions, we can also see a series of method declarations. The syntax of the method definition is:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;method MethodName(input param:input type) -&amp;gt; (return name: return type)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;And finally, you can see the declaration of known errors that can be returned. In languages such as Python, these are handy because you can “catch” them.&lt;/p&gt;
+
+&lt;p&gt;Lets see what GetVersion returns.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.GetVersion
+{
+ "version": {
+   "built": 0,
+   "git_commit": "",
+   "go_version": "go1.10.1",
+   "os_arch": "linux/amd64",
+   "version": "0.4.4"
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Cool, I want more&lt;/h4&gt;
+
+&lt;p&gt;When working with a container runtime, one of the first things users do is see what images have been pulled locally.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.ListImages
+{
+ "images": [
+   {
+     "containers": 0,
+     "created": "2018-04-19 13:03:59 +0000 UTC",
+     "id": "388e3e5f0e20ab4cfe89431697e3b1f4ca2e08437e5a33ee1ba3f44bc2cebac7",
+     "labels": {
+       "license": "MIT",
+       "name": "fedora",
+       "vendor": "Fedora Project",
+       "version": "28"
+     },
+     "parentId": "",
+     "repoDigests": [
+       "registry.fedoraproject.org/fedora@sha256:1d2e941e1387a86d95070635f6e843f2d81a414b3e77f81ef4d78f2eb6d1e983"
+     ],
+     "repoTags": [
+       "registry.fedoraproject.org/fedora:28"
+     ],
+     "size": 0,
+     "virtualSize": 0
+   }
+ ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here you can see the Fedora 28 image is local. We also provide some basic information about the image (similar to podman ps) but nothing compared to an image inspection. Suppose we want to create a shorthand name for the Fedora image. We can use the &lt;em&gt;TagImage&lt;/em&gt; endpoint for that.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.TagImage '{"name": "388e3e5f0e20ab4cf", "tagged": "f28:latest"}'
+{}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For simplicity, we can verify the tag with podman.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman images
+REPOSITORY                          TAG      IMAGE ID       CREATED      SIZE
+registry.fedoraproject.org/fedora   28       388e3e5f0e20   9 days ago   263MB
+f28                                 latest   388e3e5f0e20   9 days ago   263MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Python bindings are coming&lt;/h4&gt;
+
+&lt;p&gt;The varlink command line utility was meant for simple varlink interactions, API debugging, and API discovery. As you saw in the TagImage example, input parameters are done with JSON and that can be tedious on the command line. We are developing python bindings for our API implementation. These bindings will simplify the consumption of our eventual API definitions.  We hope to eventually make this work with javascript and possibly other languages as well.&lt;/p&gt;
+
+&lt;h4&gt;Upcoming&lt;/h4&gt;
+
+&lt;p&gt;If you do test our the varlink setup, you will notice that we have implemented most of the image related methods. I just began to implement the container related functions recently and will likely implement most of those within the upcoming week. The Python bindings will trail these slightly.&lt;/p&gt;
+
+&lt;p&gt;We are always looking for help. Testing? Documentation? Additional Language Bindings?  Additional Interfaces.  Lots of work to be done&amp;hellip;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

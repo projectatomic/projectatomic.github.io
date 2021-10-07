@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic App 0.5.0 Released! &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Charlie Drage' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic App 0.5.0 Released!' property='og:title'>
+<meta content='This is a major release of Atomic App where we introduce a new CLI command as well as the renaming of multiple provider configuration parameters.&#x000A;&#x000A;The main features of this release are:&#x000A;&#x000A;&#x000A;Introduction of the atomicapp init CLI command&#x000A;Renaming of provider configuration related parameters&#x000A;–provider-auth added as a CLI command' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/04/atomic-app-0-5-0-release/' property='og:url'>
+<meta content='2016-04-14T12:15:00Z' property='article:published_time'>
+<meta content='cdrage' property='article:author:username'>
+<meta content='atomicapp' property='article:tag'>
+<link href='/blog/tag/atomicapp.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Nulecule' property='article:tag'>
+<link href='/blog/tag/nulecule.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='releases' property='article:tag'>
+<link href='/blog/tag/releases.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic App 0.5.0 Released!' name='twitter:title'>
+<meta content='This is a major release of Atomic App where we introduce a new CLI command as well as the renaming of multiple provider configuration parameters.&#x000A;&#x000A;The main features of this release are:&#x000A;&#x000A;&#x000A;Introduction of the atomicapp init CLI command&#x000A;Renaming of provider configuration related parameters&#x000A;–provider-auth added as a CLI command' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_04 blog_2016_04_atomic-app-0-5-0-release blog_2016_04_atomic-app-0-5-0-release_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic App 0.5.0 Released!
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-04-14T12:15:00Z'>
+Thursday 14 April 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>This is a major release of Atomic App where we introduce a new CLI command as well as the renaming of multiple provider configuration parameters.</p>
+
+<p>The main features of this release are:</p>
+
+<ul>
+<li>Introduction of the <code>atomicapp init</code> CLI command</li>
+<li>Renaming of provider configuration related parameters</li>
+<li>&ndash;provider-auth added as a CLI command</li>
+</ul>
+
+<p></p>
+
+<p>Other:</p>
+
+<ul>
+<li>Updated legal information</li>
+<li>Bug fix on persistent storage initialization</li>
+<li>Utility method to gather sudo user path and information</li>
+<li>Improved detection if we&rsquo;re inside a Docker container</li>
+<li>Improved readability on provider failed exceptions</li>
+<li>docker inspect bugfix</li>
+</ul>
+
+<h3>Atomic App Initialization</h3>
+
+<p>We&rsquo;ve included support for initializing a basic Atomic App via the <code>atomicapp init</code> command. This creates a basic example that can be used on Docker and Kubernetes providers based on the <a href="https://hub.docker.com/r/centos/httpd/">centos/httpd</a> docker image.</p>
+<pre class="highlight shell"><code>▶ atomicapp init helloworld&#x000A;<span class="o">[</span>INFO] - main.py - Action/Mode Selected is: init&#x000A;&#x000A;Atomic App: helloworld initialized at ./helloworld&#x000A;&#x000A;▶ vim ./helloworld/Nulecule <span class="c"># Make changes to the Nulecule file</span>&#x000A;&#x000A;▶ atomicapp run ./helloworld&#x000A;<span class="o">[</span>INFO] - main.py - Action/Mode Selected is: run&#x000A;<span class="o">[</span>INFO] - base.py - Provider not specified, using default provider - kubernetes&#x000A;<span class="o">[</span>WARNING] - plugin.py - Configuration option <span class="s1">'provider-config'</span> not found&#x000A;<span class="o">[</span>WARNING] - plugin.py - Configuration option <span class="s1">'provider-config'</span> not found&#x000A;<span class="o">[</span>INFO] - kubernetes.py - Using namespace default&#x000A;<span class="o">[</span>INFO] - kubernetes.py - trying kubectl at /usr/bin/kubectl&#x000A;<span class="o">[</span>INFO] - kubernetes.py - trying kubectl at /usr/local/bin/kubectl&#x000A;<span class="o">[</span>INFO] - kubernetes.py - found kubectl at /usr/local/bin/kubectl&#x000A;<span class="o">[</span>INFO] - kubernetes.py - Deploying to Kubernetes&#x000A;&#x000A;Your application resides <span class="k">in</span> ./helloworld&#x000A;Please use this directory <span class="k">for </span>managing your application&#x000A;</code></pre>
+
+<h3>New Provider Configuration Parameter Names</h3>
+
+<p>We&rsquo;ve renamed the provider-specific parameters for better clarity by adding dashes in-between &lsquo;provider&rsquo; and the specified function.</p>
+
+<p>Major changes include the renaming of accesstoken to provider-auth.</p>
+<pre class="highlight plaintext"><code>providerapi --&gt; provider-api&#x000A;accesstoken --&gt; provider-auth&#x000A;providertlsverify --&gt; provider-tlsverify&#x000A;providercafile --&gt; provider-cafile&#x000A;</code></pre>
+<pre class="highlight ini"><code><span class="nn">[general]</span>&#x000A;<span class="py">provider</span> <span class="p">=</span> <span class="s">openshift</span>&#x000A;<span class="py">namespace</span> <span class="p">=</span> <span class="s">mynamespace</span>&#x000A;<span class="err">provider-</span><span class="py">api</span> <span class="p">=</span> <span class="s">https://127.0.0.1:8443</span>&#x000A;<span class="err">provider-</span><span class="py">auth</span> <span class="p">=</span> <span class="s">sadfasdfasfasfdasfasfasdfsafasfd</span>&#x000A;<span class="err">provider-</span><span class="py">tlsverify</span> <span class="p">=</span> <span class="s">True</span>&#x000A;<span class="err">provider-</span><span class="py">cafile</span> <span class="p">=</span> <span class="s">/etc/myca/ca.pem</span>&#x000A;</code></pre>
+<pre class="highlight shell"><code>atomicapp run projectatomic/etherpad-centos7-atomicapp --provider openshift --provider-tlsverify False --provider-auth foo --provider-api <span class="s2">"https://localhost:8443"</span>&#x000A;</code></pre>
+
+<p>Want to get started using Atomic App? Have a look at our extensive <a href="https://github.com/projectatomic/atomicapp/blob/master/docs/start_guide.md">start guide</a>, or use Atomic App as part of the Atomic CLI on an <a href="http://www.projectatomic.io/download/">Atomic Host</a>.</p>
+
+<p>For a full list of changes between 0.4.5 and 0.4.5 please see <a href="https://github.com/projectatomic/atomicapp/commits/0.4.5">the commit log</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomicapp/">atomicapp</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+<li><a href="/blog/tag/releases/">releases</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/04/atomic-app-0-5-0-release/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/04/atomic-app-0-5-0-release/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/04/atomic-app-0-5-0-release/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

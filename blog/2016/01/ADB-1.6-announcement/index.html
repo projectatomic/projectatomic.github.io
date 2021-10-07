@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Atomic Developer Bundle v1.6 Released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brian (bex) Exelbierd' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Atomic Developer Bundle v1.6 Released' property='og:title'>
+<meta content='Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.6, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple’s OS X and GNU/Linux distributions.&#x000A;&#x000A;The 1.6 release adds several new features, including:&#x000A;&#x000A;&#x000A;Mesos Marathon as a supported container orchestrator&#x000A;A new delivery location in HashiCorp’s Atlas box catalog, projectatomic/adb&#x000A;ADB descriptive details now reported in /etc/os-release:&#x000A;&#x000A;&#x000A;VARIANT="Atomic Developer Bundle (ADB)"&#x000A;VARIANT_ID="adb"&#x000A;VARIANT_VERSION="1.6.0"&#x000A;&#x000A;Updated Documentation, a new Maintainer and more&#x000A;&#x000A;&#x000A;The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/01/ADB-1.6-announcement/' property='og:url'>
+<meta content='2016-01-25T16:34:00Z' property='article:published_time'>
+<meta content='bexelbie' property='article:author:username'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Developer tools' property='article:tag'>
+<link href='/blog/tag/developer tools.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Atomic Developer Bundle v1.6 Released' name='twitter:title'>
+<meta content='Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.6, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple’s OS X and GNU/Linux distributions.&#x000A;&#x000A;The 1.6 release adds several new features, including:&#x000A;&#x000A;&#x000A;Mesos Marathon as a supported container orchestrator&#x000A;A new delivery location in HashiCorp’s Atlas box catalog, projectatomic/adb&#x000A;ADB descriptive details now reported in /etc/os-release:&#x000A;&#x000A;&#x000A;VARIANT="Atomic Developer Bundle (ADB)"&#x000A;VARIANT_ID="adb"&#x000A;VARIANT_VERSION="1.6.0"&#x000A;&#x000A;Updated Documentation, a new Maintainer and more&#x000A;&#x000A;&#x000A;The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_01 blog_2016_01_ADB-1 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Atomic Developer Bundle v1.6 Released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bexelbie/">Brian (bex) Exelbierd</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-01-25T16:34:00Z'>
+Monday 25 January 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.6, a Vagrant box that provides a ready-to-use development environment for container applications. With the ADB, developers can dive right into producing complex, multi-container applications. The ADB is useful on Microsoft Windows, Apple&rsquo;s OS X and GNU/Linux distributions.</p>
+
+<p>The 1.6 release adds several new features, including:</p>
+
+<ul>
+<li><a href="https://mesosphere.github.io/marathon/">Mesos Marathon</a> as a supported container orchestrator</li>
+<li>A new delivery location in HashiCorp&rsquo;s Atlas box catalog, <a href="https://atlas.hashicorp.com/projectatomic/boxes/adb">projectatomic/adb</a></li>
+<li>ADB descriptive details now reported in /etc/os-release:
+
+<ul>
+<li><code>VARIANT=&quot;Atomic Developer Bundle (ADB)&quot;</code></li>
+<li><code>VARIANT_ID=&quot;adb&quot;</code></li>
+<li><code>VARIANT_VERSION=&quot;1.6.0&quot;</code></li>
+</ul></li>
+<li>Updated Documentation, a new Maintainer and <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/releases/tag/v1.6.0">more</a></li>
+</ul>
+
+<p>The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.</p>
+
+<p></p>
+
+<p>The ADB provides a quick and easy way to setup multi-container applications that take advantage of management and/or orchestration solutions, such as <a href="https://www.openshift.org/">OpenShift</a> or <a href="http://kubernetes.io/">Kubernetes</a>. The ADB also supports <a href="http://www.projectatomic.io/docs/nulecule/">Nulecule</a> and <a href="http://www.projectatomic.io/docs/atomicapp/">Atomic App</a>. These projects provide a structure for packaging, distributing, and deploying multi-container applications.</p>
+
+<h3>Additional Resources and Download Locations</h3>
+
+<p>Project Atomic integrates the tools and patterns of container-based application and service deployment with trusted operating system platforms to deliver an end-to-end hosting architecture that&rsquo;s modern, reliable and secure.</p>
+
+<p>Interested in learning more about the ADB, or Project Atomic?</p>
+
+<ul>
+<li>Read more about the Atomic Developer Bundle (ADB) at the project&rsquo;s <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">github.com page</a>, including a quick start guide.</li>
+<li>The ADB can be downloaded in <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst#3-download-the-adb">multiple ways</a></li>
+<li><a href="https://github.com/projectatomic/adb-atomic-developer-bundle#documentation">Project Documentation</a> and <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst">Installation Guide</a></li>
+<li>Get more Project Atomic updates on Twitter <a href="https://twitter.com/projectatomic">@ProjectAtomic</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/developer-tools/">Developer tools</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/01/ADB-1.6-announcement/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/01/ADB-1.6-announcement/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/01/ADB-1.6-announcement/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Brian (bex) Exelbierd
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/1cf7d9ab78ad3683bca03ab4cad8edf0" /></div>
+<div class='author-blurb with-photo'>
+<p>Software Engineer, Writer and all around really hoopy frood with Red Hat&rsquo;s Open Source and Standards team.</p>
+
+<div class='more-link'>
+<a href="/blog/author/bexelbie/">View all posts by Brian (bex) Exelbierd &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

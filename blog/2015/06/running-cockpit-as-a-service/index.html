@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Running Cockpit as a service in Fedora 22 Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Matthew Micene' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Running Cockpit as a service in Fedora 22 Atomic Host' property='og:title'>
+<meta content='With the release of Fedora 22 Atomic host, the Cockpit Project team changed the way cockpit was delivered.  You can read more about the change on the Cockpit Project wiki page.  The team is currently uploading the cockpit container to the Fedora repo on the Docker Hub, but Fedora Release Engineering is working on publishing layered images.  We now have a super-privileged container (SPC) for the web service (cockpit-ws) with the bridge, shell, and docker components installed by default on the Atomic host.  &#x000A;cockpit-shell-0.55-1.fc22.noarch&#x000A;cockpit-docker-0.55-1.fc22.x86_64&#x000A;cockpit-bridge-0.55-1.fc22.x86_64' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/06/running-cockpit-as-a-service/' property='og:url'>
+<meta content='2015-06-05T04:00:00Z' property='article:published_time'>
+<meta content='mmicene' property='article:author:username'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Running Cockpit as a service in Fedora 22 Atomic Host' name='twitter:title'>
+<meta content='With the release of Fedora 22 Atomic host, the Cockpit Project team changed the way cockpit was delivered.  You can read more about the change on the Cockpit Project wiki page.  The team is currently uploading the cockpit container to the Fedora repo on the Docker Hub, but Fedora Release Engineering is working on publishing layered images.  We now have a super-privileged container (SPC) for the web service (cockpit-ws) with the bridge, shell, and docker components installed by default on the Atomic host.  &#x000A;cockpit-shell-0.55-1.fc22.noarch&#x000A;cockpit-docker-0.55-1.fc22.x86_64&#x000A;cockpit-bridge-0.55-1.fc22.x86_64' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_06 blog_2015_06_running-cockpit-as-a-service blog_2015_06_running-cockpit-as-a-service_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Running Cockpit as a service in Fedora 22 Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/mmicene/">Matthew Micene</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-06-05T04:00:00Z'>
+Friday  5 June 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With the release of Fedora 22 Atomic host, the Cockpit Project team changed the way cockpit was delivered.  You can read more about the change on the <a href="https://github.com/cockpit-project/cockpit/wiki/Atomic">Cockpit Project wiki page</a>.  The team is currently uploading the cockpit container to the Fedora repo on the Docker Hub, but Fedora Release Engineering is working on publishing layered images.  We now have a super-privileged container (SPC) for the web service (cockpit-ws) with the bridge, shell, and docker components installed by default on the Atomic host.  </p>
+<pre class="highlight plaintext"><code>cockpit-shell-0.55-1.fc22.noarch&#x000A;cockpit-docker-0.55-1.fc22.x86_64&#x000A;cockpit-bridge-0.55-1.fc22.x86_64&#x000A;</code></pre>
+
+<p></p>
+
+<p>This means you can simply run <code>atomic run fedora/cockpitws</code> as root or with sudo and cockpit will be running on port 9090.  </p>
+
+<h3>Inspecting the new SPC</h3>
+
+<p>Very simple, but that means you&rsquo;ll need to manually restart cockpit after a reboot.  To make the cockpitws container start and stop with the system, we need a systemd unit file.</p>
+
+<p>Using <code>atomic info</code>, look at the LABELs the Cockpit Project team used in the Dockerfile for the SPC.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-cockpit ~]$ sudo atomic info fedora/cockpitws&#x000A;RUN          : /usr/bin/docker run -d --privileged --pid=host -v /:/host IMAGE /container/atomic-run --local-ssh&#x000A;INSTALL      : /usr/bin/docker run -ti --rm --privileged -v /:/host IMAGE /container/atomic-install&#x000A;UNINSTALL    : /usr/bin/docker run -ti --rm --privileged -v /:/host IMAGE /cockpit/atomic-uninstall&#x000A;</code></pre>
+
+<p>These LABELs are used by <code>atomic</code> to determine what docker command line to build when <code>atomic run</code>, <code>atomic install</code>, or <code>atomic uninstall</code> are issued.  In order to make the systemd unit file behavior match the <code>atomic run</code> behavior, we&rsquo;ll the RUN label as our model.</p>
+
+<h3>Install the container</h3>
+
+<p>Install the cockpitws container using <code>atomic</code>.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-cockpit ~]$ sudo atomic install fedora/cockpitws&#x000A;/usr/bin/docker run -ti --rm --privileged -v /:/host fedora/cockpitws /container/atomic-install&#x000A;+ sed -e /pam_selinux/d -e /pam_sepermit/d /etc/pam.d/cockpit&#x000A;+ mkdir -p /host/etc/cockpit/ws-certs.d&#x000A;+ chmod 755 /host/etc/cockpit/ws-certs.d&#x000A;+ chown root:root /host/etc/cockpit/ws-certs.d&#x000A;+ mkdir -p /host/var/lib/cockpit&#x000A;+ chmod 775 /host/var/lib/cockpit&#x000A;+ chown root:wheel /host/var/lib/cockpit&#x000A;+ /bin/mount --bind /host/etc/cockpit /etc/cockpit&#x000A;+ /usr/sbin/remotectl certificate --ensure&#x000A;</code></pre>
+
+<p>There&rsquo;s a few things going on here in the install method.  </p>
+
+<p>Note that we&rsquo;re exposing the Atomic host root directory to the container at <code>/host</code>.  As a SPC, this allows the container to access the host filesystem and make changes. The install method creates a set of directories in <code>/etc</code> and <code>/var</code> to persist configs.  This means that we don&rsquo;t need any particular cockpitws container to stick around, any cockpitws container will be able to read the appropriate state from the host.  We can upgrade the cockpit image and not worry about losing data.  Since <code>/etc</code> and <code>/var</code> are writable on an Atomic host, and <code>/etc</code> content will be appropriately merged on a tree change, cockpit data will also survive an <code>atomic host upgrade</code> as well.</p>
+
+<h3>Set up the systemd unit</h3>
+
+<p>With the container available to docker, we&rsquo;ll build the systemd unit file next.  For local systemd unit files, we want them to reside in /etc/systemd/system.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-cockpit ~]$ sudo vi /etc/systemd/system/cockpitws.service&#x000A;&#x000A;[Unit]&#x000A;Description=Cockpit Web Interface&#x000A;Requires=docker.service&#x000A;After=docker.service&#x000A;&#x000A;[Service]&#x000A;Restart=on-failure&#x000A;RestartSec=10&#x000A;ExecStart=/usr/bin/docker run --rm --privileged --pid host -v /:/host --name %p fedora/cockpitws /container/atomic-run --local-ssh&#x000A;ExecStop=-/usr/bin/docker stop -t 2 %p&#x000A;&#x000A;[Install]&#x000A;WantedBy=multi-user.target&#x000A;</code></pre>
+
+<p>The <code>ExecStart</code> line in the unit file looks nearly identical to the RUN label, with one change.  When running containers from systemd, we don&rsquo;t want to use <code>docker -d</code>, instead we want either <code>docker -a</code> or <code>docker --rm</code>.  We&rsquo;re using <code>docker --rm</code> here since we don&rsquo;t need this particular container instance to survice a restart.  We are going to name container using the <code>%p</code> tag to pick up the systemd service name, just to make it easier to find in <code>docker ps</code>.</p>
+
+<p>Now we can reload systemd to read the new unit file, enable the service to start on reboot, and then start the new cockpitws service.</p>
+<pre class="highlight plaintext"><code>[fedora@atomic-cockpit ~]$ sudo systemctl daemon-reload&#x000A;&#x000A;[fedora@atomic-cockpit ~]$ sudo systemctl enable cockpitws.service &#x000A;Created symlink from /etc/systemd/system/multi-user.target.wants/cockpitws.service to /etc/systemd/system/cockpitws.service.&#x000A;&#x000A;[fedora@atomic-cockpit ~]$ sudo systemctl start cockpitws.service &#x000A;&#x000A;[fedora@atomic-cockpit ~]$ sudo systemctl status cockpitws.service &#x000A;● cockpitws.service - Cockpit Web Interface&#x000A;   Loaded: loaded (/etc/systemd/system/cockpitws.service; enabled; vendor preset: disabled)&#x000A;   Active: active (running) since Fri 2015-06-05 14:56:17 UTC; 9s ago&#x000A; Main PID: 1595 (docker)&#x000A;   Memory: 0B&#x000A;   CGroup: /system.slice/cockpitws.service&#x000A;           └─1595 /usr/bin/docker run --rm --privileged --pid host -v /:/host...&#x000A;&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain systemd[1]: Starting Cockpit Web I...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + sed -e /pam_selinu...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + mkdir -p /host/etc...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + chmod 755 /host/et...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + chown root:root /h...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + mkdir -p /host/var...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + chmod 775 /host/va...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + chown root:wheel /...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + /bin/mount --bind ...&#x000A;Jun 05 14:56:17 atomic-cockpit.localdomain docker[1595]: + /usr/sbin/remotect...&#x000A;Hint: Some lines were ellipsized, use -l to show in full.&#x000A;</code></pre>
+
+<p>Now that the service is up and running, point your web brower at port 9090 on the Atomic host and you should see the Cockpit login page.  You&rsquo;ll need to log in with a user in the <code>wheel</code> group in order to administrate the system, but you can log in as any user to view the local host.  For the published Fedora 22 Atomic cloud image, log in with the <code>fedora</code> credentials and you should be ready to go.  You can add other hosts to this Cockpit instance, with the knowledge that reboots and upgrades to the host or the container won&rsquo;t affect the configuration.</p>
+
+</section>
+<footer class='post-meta'>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/06/running-cockpit-as-a-service/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/06/running-cockpit-as-a-service/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/06/running-cockpit-as-a-service/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

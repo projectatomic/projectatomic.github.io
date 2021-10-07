@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Creating OCI configurations with the ocitools generate library &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Haiyan Meng' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Creating OCI configurations with the ocitools generate library' property='og:title'>
+<meta content='OCI runc is a cool new tool for running containers on Linux machines. It follows the OCI container runtime specification. As of docker-1.11 it is the main mechanism that docker uses for launching containers.&#x000A;&#x000A;The really cool thing is that you can use runc without even using docker. First you create a rootfs on your disk: a directory that includes all of your software and usually follows the basic layout of /. There are several tools that can create a rootfs, including dnf or the atomic command. Once you have a rootfs, you need to create a config.json file which runc will read. config.json has all of the specifications for running a container, things like which namespaces to use, which capabilities to use in your container, and what is the pid 1 of your container. It is somewhat similar to the output of docker inspect.&#x000A;&#x000A;Creating and editing the config.json is not for the faint of heart, so we developed a command line tool called ocitools generate that can do the hard work of creating the config.json file.&#x000A;&#x000A;Creating OCI Configurations&#x000A;&#x000A;This post will guide you through the steps of creating OCI configurations&#x000A;using the ocitools generate library&#x000A;for the go programming language.&#x000A;&#x000A;There are four steps to create an OCI configuration using the ocitools generate library:&#x000A;&#x000A;&#x000A;Import the ocitools generate library into your project;&#x000A;Create an OCI specification generator;&#x000A;Modify the specification by calling different methods of the specification generator;&#x000A;Save the specification.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/08/ocitools-libgen/' property='og:url'>
+<meta content='2016-08-09T14:00:00Z' property='article:published_time'>
+<meta content='Haiyan Meng' property='article:author:username'>
+<meta content='OCI' property='article:tag'>
+<link href='/blog/tag/oci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ocitools' property='article:tag'>
+<link href='/blog/tag/ocitools.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='runc' property='article:tag'>
+<link href='/blog/tag/runc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Creating OCI configurations with the ocitools generate library' name='twitter:title'>
+<meta content='OCI runc is a cool new tool for running containers on Linux machines. It follows the OCI container runtime specification. As of docker-1.11 it is the main mechanism that docker uses for launching containers.&#x000A;&#x000A;The really cool thing is that you can use runc without even using docker. First you create a rootfs on your disk: a directory that includes all of your software and usually follows the basic layout of /. There are several tools that can create a rootfs, including dnf or the atomic command. Once you have a rootfs, you need to create a config.json file which runc will read. config.json has all of the specifications for running a container, things like which namespaces to use, which capabilities to use in your container, and what is the pid 1 of your container. It is somewhat similar to the output of docker inspect.&#x000A;&#x000A;Creating and editing the config.json is not for the faint of heart, so we developed a command line tool called ocitools generate that can do the hard work of creating the config.json file.&#x000A;&#x000A;Creating OCI Configurations&#x000A;&#x000A;This post will guide you through the steps of creating OCI configurations&#x000A;using the ocitools generate library&#x000A;for the go programming language.&#x000A;&#x000A;There are four steps to create an OCI configuration using the ocitools generate library:&#x000A;&#x000A;&#x000A;Import the ocitools generate library into your project;&#x000A;Create an OCI specification generator;&#x000A;Modify the specification by calling different methods of the specification generator;&#x000A;Save the specification.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_08 blog_2016_08_ocitools-libgen blog_2016_08_ocitools-libgen_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Creating OCI configurations with the ocitools generate library
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/haiyan-meng/">Haiyan Meng</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-08-09T14:00:00Z'>
+Tuesday  9 August 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://github.com/opencontainers/runc">OCI runc</a> is a cool new tool for running containers on Linux machines. It follows the OCI container runtime specification. As of docker-1.11 it is the main mechanism that docker uses for launching containers.</p>
+
+<p>The really cool thing is that you can use runc without even using docker. First you create a rootfs on your disk: a directory that includes all of your software and usually follows the basic layout of <code>/</code>. There are several tools that can create a rootfs, including dnf or the <code>atomic</code> command. Once you have a rootfs, you need to create a <code>config.json</code> file which runc will read. <code>config.json</code> has all of the specifications for running a container, things like which namespaces to use, which capabilities to use in your container, and what is the pid 1 of your container. It is somewhat similar to the output of <code>docker inspect</code>.</p>
+
+<p>Creating and editing the config.json is not for the faint of heart, so we developed a command line tool called <code>ocitools generate</code> that can do the hard work of creating the config.json file.</p>
+
+<h3>Creating OCI Configurations</h3>
+
+<p>This post will guide you through the steps of creating <a href="https://github.com/opencontainers/runtime-spec/">OCI</a> configurations
+using the <a href="https://github.com/opencontainers/ocitools/tree/master/generate">ocitools generate library</a>
+for the go programming language.</p>
+
+<p>There are four steps to create an OCI configuration using the ocitools generate library:</p>
+
+<ol>
+<li>Import the ocitools generate library into your project;</li>
+<li>Create an OCI specification generator;</li>
+<li>Modify the specification by calling different methods of the specification generator;</li>
+<li>Save the specification.</li>
+</ol>
+
+<p></p>
+
+<h3>Overview</h3>
+
+<p>The ocitools generate library defines a struct type, <em>Generator</em>, to enclose a
+pointer to an <a href="https://github.com/opencontainers/runtime-spec/blob/master/specs-go/config.go">OCI
+Spec</a>.
+Different methods are defined on the <em>Generator</em> type to allow the user to
+customize the specification pointed by the Generator.  Once a Generator object
+is created, different fields of the specification can be modified by calling
+the corresponding methods of Generator.  After finishing modifying the
+specification, <em>Generator.Save</em> can be called to save the specification into a
+local file.</p>
+
+<h3>Create an OCI configurations using the ocitools generate library</h3>
+
+<p><strong>Step 1: import the ocitools generate library in your go project:</strong></p>
+<pre class="highlight plaintext"><code>import "github.com/opencontainers/ocitools/generate"&#x000A;</code></pre>
+
+<p><strong>Step 2: create a specification Generator:</strong></p>
+<pre class="highlight plaintext"><code>specgen := generate.New()&#x000A;</code></pre>
+
+<p><em>generate.New</em> creates a spec Generator with the default spec.
+You can also create a spec Generator with the spec from a local file using <em>generate.NewFromFile</em>:</p>
+<pre class="highlight plaintext"><code>specgen := generate.NewFromFile("/data/myspec.json")&#x000A;</code></pre>
+
+<p><strong>Step 3: modify the specification:</strong></p>
+<pre class="highlight plaintext"><code>specgen.SetRootPath("rootfs")&#x000A;specgen.SetProcessGID(1000)&#x000A;specgen.SetProcessTerminal(true)&#x000A;specgen.SetLinuxResourcesCPUShares(512)&#x000A;specgen.SetupPrivileged(false)&#x000A;&#x000A;specgen.ClearAnnotations()&#x000A;specgen.AddAnnotation("owner", "hmeng")&#x000A;specgen.RemoveAnnotation("createdat")&#x000A;&#x000A;specgen.AddLinuxUIDMapping(0, 1000, 50)&#x000A;specgen.AddPreStartHook("/tmp/install.sh", []string{"--mode", "silent"})&#x000A;specgen.AddTmpfsMount("/tmp", "ro")&#x000A;specgen.AddCgroupsMount("rw")&#x000A;specgen.AddBindMount("/home/test/file1", "/file2", "rw")&#x000A;specgen.DropProcessCapability("audit_read")&#x000A;&#x000A;specgen.AddOrReplaceLinuxNamespace("pid", "/proc/28341/ns/pid")&#x000A;</code></pre>
+
+<p>For the fields of the OCI spec which have basic types, such as numbers, strings, and booleans, the methods modifying them are
+named in the format of <em>SetFieldName</em>.
+A good example is <em>SetRootPath</em>.</p>
+
+<p>For the fields whose types are slices and maps, the library provides the following three categories of methods:
+<em>ClearFieldName</em> clears the fields,
+<em>AddFieldName</em> adds a new data object into the field,
+and <em>RemoveFieldName</em> removes an existing data object from the field.
+A good example is <em>ClearAnnotations</em>, <em>AddAnnotation</em>, and <em>RemoveAnnotation</em>.</p>
+
+<p>There are exceptions. For example, <em>Spec.Process.Args</em> is a slice of string, however, the library only provides a single method <em>SetProcessArgs</em>
+to set the process args, because it makes more sense to set the process args in a bundle than adding each argument incrementally.</p>
+
+<p><strong>Step 4: save the specification:</strong></p>
+<pre class="highlight plaintext"><code>specgen.SaveToFile("/data/runc/busybox/config.json")&#x000A;</code></pre>
+
+<p>And you&rsquo;re done!  You now have a generator for creating spec files for your runc containers.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/oci/">OCI</a></li>
+<li><a href="/blog/tag/ocitools/">ocitools</a></li>
+<li><a href="/blog/tag/runc/">runc</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/08/ocitools-libgen/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/08/ocitools-libgen/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/08/ocitools-libgen/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

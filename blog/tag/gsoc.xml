@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Gsoc</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/gsoc.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>GSOC Atomic, Cockpit Students Selected</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/04/gsoc-projects-accepted/"/>
+    <id>http://www.projectatomic.io/blog/2016/04/gsoc-projects-accepted/</id>
+    <published>2016-04-28T15:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;The students have been selected for Google Summer of Code 2016.  &lt;a href="https://communityblog.fedoraproject.org/fedora-google-summer-of-code-2016/"&gt;Through the Fedora Project&lt;/a&gt;, Project Atomic has three students who will be working on projects this summer:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Allan E. Gardner, in RPM-OSTree: &lt;a href="https://fedoraproject.org/wiki/Summer_coding_ideas_for_2016#Drop_privileges_for_HTTP_fetches"&gt;Drop privileges for HTTP fetches&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Amila Sampath, in Atomic Host, &lt;a href="https://fedoraproject.org/wiki/Summer_coding_ideas_for_2016#Automatic_Atomic_Host_Updates"&gt;Automatic Atomic Host Updates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Harish Anand, in Cockpit, &lt;a href="https://fedoraproject.org/wiki/Summer_coding_ideas_for_2016#Cockpit_support_for_systemd_timers"&gt;Support For Systemd Timers&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We are very excited to be participating in GSOC with Fedora, and are looking forward to the amazing things these students will do.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Project Atomic in GSOC 2016</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/project-atomic-gsoc-2016/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/project-atomic-gsoc-2016/</id>
+    <published>2016-03-01T12:51:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic will be participating in &lt;a href="https://summerofcode.withgoogle.com/organizations/"&gt;Google Summer of Code&lt;/a&gt; for the first time this year.
+So if you are a student, consider spending your summer (or winter in the Southern hemisphere)
+hacking on container technology.  If you know a student, encourage them to apply.&lt;/p&gt;
+
+&lt;p&gt;We are participating as part of Fedora, so specifically we&amp;rsquo;re looking for work on
+any or all of the projects which are part of Fedora Atomic Host.  We have a list of
+ideas on &lt;a href="/community/gsoc"&gt;our GSOC Page&lt;/a&gt;, and more detail on the
+&lt;a href="https://fedoraproject.org/wiki/Summer_coding_ideas_for_2016"&gt;Fedora GSOC Ideas wiki page&lt;/a&gt;.
+But, of course, you may have even better ideas for an interesting project!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Applications will &lt;a href="https://developers.google.com/open-source/gsoc/timeline"&gt;open on March 14th, and are due by March
+25th&lt;/a&gt;. But you can
+get started now! Get to know us by joining the &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;atomic-devel mailing list&lt;/a&gt;
+and pitching your GSOC project idea, or meet our mentors and contributor
+on #atomic or #fedora-cloud on IRC.freenode.net.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

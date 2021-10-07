@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+A remote API for Podman &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brent Baude' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='A remote API for Podman' property='og:title'>
+<meta content='Podman grows a remote API using Varlink&#x000A;&#x000A;Podman up to now has been a simple CLI for managing pods and containers. But I wanted to allow other tools like Atomic CLI and Cockpit to interact with the pods/containers created by Podman and other tools.  Execing a CLI tool to do this and screen scraping the output never quite works, so we wanted to add an API.  But I did not want to add a daemon to implement a restAPI.  #nobigfatdaemons.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/05/podman-varlink/' property='og:url'>
+<meta content='2018-05-01T00:00:00Z' property='article:published_time'>
+<meta content='baude' property='article:author:username'>
+<meta content='crio' property='article:tag'>
+<link href='/blog/tag/crio.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='libpod' property='article:tag'>
+<link href='/blog/tag/libpod.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='podman' property='article:tag'>
+<link href='/blog/tag/podman.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='A remote API for Podman' name='twitter:title'>
+<meta content='Podman grows a remote API using Varlink&#x000A;&#x000A;Podman up to now has been a simple CLI for managing pods and containers. But I wanted to allow other tools like Atomic CLI and Cockpit to interact with the pods/containers created by Podman and other tools.  Execing a CLI tool to do this and screen scraping the output never quite works, so we wanted to add an API.  But I did not want to add a daemon to implement a restAPI.  #nobigfatdaemons.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_05 blog_2018_05_podman-varlink blog_2018_05_podman-varlink_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+A remote API for Podman
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/baude/">Brent Baude</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-05-01T00:00:00Z'>
+Tuesday  1 May 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Podman grows a remote API using Varlink</h3>
+
+<p><a href="https://github.com/projectatomic/libpod">Podman</a> up to now has been a simple CLI for managing pods and containers. But I wanted to allow other tools like Atomic CLI and Cockpit to interact with the pods/containers created by Podman and other tools.  Execing a CLI tool to do this and screen scraping the output never quite works, so we wanted to add an API.  But I did not want to add a daemon to implement a restAPI.  #nobigfatdaemons.</p>
+
+<p></p>
+
+<p>Someone pointed out a new technology that seemed meet most of our needs called <a href="https://github.com/varlink">varlink</a>.  After reviewing the project and talking with the upstream owners, I decided to build the Podman API based on varlink so users and developers can interact with Podman programmatically.</p>
+
+<p>Varlink describes itself as an “interface description format and protocol that aims to make services accessible to both humans and machines in the simplest feasible way.” On their wiki, they document the <a href="https://github.com/varlink/documentation/wiki/Ideals">ideals</a> that lead to its development. The bottom line for Podman is that varlink has proved to be an effective way to create, publish, and implement a “remote” API over such technologies as REST.</p>
+
+<h4>Installation</h4>
+
+<p>First we need to install the Podman and varlink packages.  You will need a minimal version of podman-0.4.4-2 to work with the varlink backend.</p>
+<pre class="highlight plaintext"><code>$ sudo dnf --enablerepo=updates-testing install podman libvarlink-util libvarlink&#x000A;Last metadata expiration check: 0:00:14 ago on Tue 01 May 2018 07:08:49 PM UTC.&#x000A;Dependencies resolved.&#x000A;=============================================================================================================================================================&#x000A; Package                                       Arch                    Version                                        Repository                        Size&#x000A;=============================================================================================================================================================&#x000A;Installing:&#x000A; libvarlink                                    x86_64                  9-1.fc28                                       updates                           43 k&#x000A; libvarlink-util                               x86_64                  9-1.fc28                                       updates                           46 k&#x000A; podman                                        x86_64                  0.4.4-2.git9924956.fc28                        updates-testing                  5.7 M&#x000A;Installing dependencies:&#x000A; atomic-registries                             x86_64                  1.22.1-2.fc28                                  updates-testing                   39 k&#x000A; container-selinux                             noarch                  2:2.55-1.fc28                                  updates-testing                   39 k&#x000A; containernetworking-cni                       x86_64                  0.6.0-4.fc28                                   updates-testing                  9.7 M&#x000A;&#x000A;... omitted for brevity&#x000A;</code></pre>
+
+<h4>Start the Podman socket</h4>
+
+<p>Podman relies on a Systemd feature called <a href="http://0pointer.de/blog/projects/socket-activation.html">socket activation</a>.  Systemd allows developers to create socket unit files that tells systemd to listen on a particular socket like the unix domain socket /run/io.projectatomic.podman.  When a process connects to this socket, systemd will launch the command specified in the service file with the same name.  The launched command then handles the socket communications.</p>
+
+<p>Podman ships a systemd socket file <code>io.projectatomic.podman.socket</code> that will listen for requests.  It must be started for the varlink backend to work.</p>
+<pre class="highlight plaintext"><code>$ cat /usr/lib/systemd/system/io.projectatomic.podman.socket&#x000A;[Unit]&#x000A;Description=Pod Manager Socket&#x000A;&#x000A;[Socket]&#x000A;ListenStream=/run/io.projectatomic.podman&#x000A;&#x000A;[Install]&#x000A;WantedBy=sockets.target&#x000A;</code></pre>
+
+<p>Podman also ships a service file <code>io.projectatomic.podman.service</code>, which systemd activates when connections come into the socket.</p>
+<pre class="highlight plaintext"><code>$ cat /usr/lib/systemd/system/io.projectatomic.podman.service&#x000A;[Unit]&#x000A;Description=Pod Manager&#x000A;Requires=io.projectatomic.podman.socket&#x000A;After=io.projectatomic.podman.socket&#x000A;&#x000A;[Service]&#x000A;Type=simple&#x000A;ExecStart=/usr/bin/podman --varlink=unix:/run/io.projectatomic.podman&#x000A;&#x000A;[Install]&#x000A;WantedBy=multi-user.target&#x000A;Also=io.projectatomic.podman.socket&#x000A;</code></pre>
+
+<p>Notice the ExecStart line, this is the command that systemd executes when the connection comes in.  You enable the service with the following commands.</p>
+<pre class="highlight plaintext"><code>$ sudo systemctl enable io.projectatomic.podman.socket&#x000A;Created symlink /etc/systemd/system/multi-user.target.wants/io.projectatomic.podman.service → /usr/lib/systemd/system/io.projectatomic.podman.service.&#x000A;Created symlink /etc/systemd/system/sockets.target.wants/io.projectatomic.podman.socket → /usr/lib/systemd/system/io.projectatomic.podman.socket.&#x000A;&#x000A;$ sudo systemctl start io.projectatomic.podman.socket&#x000A;$ sudo systemctl status io.projectatomic.podman.socket&#x000A;Failed to dump process list, ignoring: No such file or directory&#x000A;● io.projectatomic.podman.socket - Pod Manager Socket&#x000A;  Loaded: loaded (/usr/lib/systemd/system/io.projectatomic.podman.socket; disabled; vendor preset: disabled)&#x000A;  Active: active (listening) since Sat 2018-04-28 16:00:34 UTC; 9s ago&#x000A;  Listen: /run/io.projectatomic.podman (Stream)&#x000A;  CGroup: /system.slice/io.projectatomic.podman.socket&#x000A;</code></pre>
+
+<p>As you can see, the socket is now active and located at <em>/run/io.projectatomic.podman</em>.</p>
+
+<h4>Is it alive?</h4>
+
+<p>We can check if the service is alive and responding using the the varlink utility and an endpoint called Ping.</p>
+<pre class="highlight plaintext"><code>$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.Ping&#x000A;{&#x000A; "ping": {&#x000A;   "message": "OK"&#x000A; }&#x000A;}&#x000A;</code></pre>
+
+<p>The path beginning with “unix://” is considered to be a varlink URI of sorts. The “/run/io.projectatomic.podman” portion refers to the listening socket. And the latter parts refer to the path of the endpoint (or function if you prefer).</p>
+
+<h4>Varlink info and help</h4>
+
+<p>One unique design point of the varlink implementation is that it has the ability to help you discover its interfaces and endpoints. The <em>info</em> subcommand will show basic information about the setup.</p>
+<pre class="highlight plaintext"><code>$ varlink info unix:/run/io.projectatomic.podman&#x000A;Vendor: Atomic&#x000A;Product: podman&#x000A;Version: 0.4.4&#x000A;URL: https://github.com/projectatomic/libpod&#x000A;Interfaces:&#x000A; org.varlink.service&#x000A; io.projectatomic.podman&#x000A;</code></pre>
+
+<p>Notice the URI for that call is to the socket itself. Using the <em>help</em> subcommand, we can discover more about the implemented API.</p>
+<pre class="highlight plaintext"><code>$ varlink help unix:/run/io.projectatomic.podman/io.projectatomic.podman&#x000A;# Podman Service Interface&#x000A;interface io.projectatomic.podman&#x000A;# Version is the structure returned by GetVersion&#x000A;type Version (&#x000A; version: string,&#x000A; go_version: string,&#x000A; git_commit: string,&#x000A; built: int,&#x000A; os_arch: string&#x000A;)&#x000A;... omitted for brevity&#x000A;# System&#x000A;method Ping() -&gt; (ping: StringResponse)&#x000A;method GetVersion() -&gt; (version: Version)&#x000A;... omitted for brevity&#x000A;# Images&#x000A;method ListImages() -&gt; (images: []ImageInList)&#x000A;method TagImage(name: string, tagged: string) -&gt; ()&#x000A;... omitted for brevity&#x000A;error ImageNotFound (imagename: string)&#x000A;error ErrorOccurred (reason: string)&#x000A;error RuntimeError (reason: string)&#x000A;</code></pre>
+
+<p>Here we can see the interface that is implemented called “io.projectatomic.podman” following by a type definition for <em>Version</em>. It describes the construct that <em>GetVersion</em> will return. Following the type definitions, we can also see a series of method declarations. The syntax of the method definition is:</p>
+
+<p><em>method MethodName(input param:input type) -&gt; (return name: return type)</em></p>
+
+<p>And finally, you can see the declaration of known errors that can be returned. In languages such as Python, these are handy because you can “catch” them.</p>
+
+<p>Lets see what GetVersion returns.</p>
+<pre class="highlight plaintext"><code>$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.GetVersion&#x000A;{&#x000A; "version": {&#x000A;   "built": 0,&#x000A;   "git_commit": "",&#x000A;   "go_version": "go1.10.1",&#x000A;   "os_arch": "linux/amd64",&#x000A;   "version": "0.4.4"&#x000A; }&#x000A;}&#x000A;</code></pre>
+
+<h4>Cool, I want more</h4>
+
+<p>When working with a container runtime, one of the first things users do is see what images have been pulled locally.</p>
+<pre class="highlight plaintext"><code>$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.ListImages&#x000A;{&#x000A; "images": [&#x000A;   {&#x000A;     "containers": 0,&#x000A;     "created": "2018-04-19 13:03:59 +0000 UTC",&#x000A;     "id": "388e3e5f0e20ab4cfe89431697e3b1f4ca2e08437e5a33ee1ba3f44bc2cebac7",&#x000A;     "labels": {&#x000A;       "license": "MIT",&#x000A;       "name": "fedora",&#x000A;       "vendor": "Fedora Project",&#x000A;       "version": "28"&#x000A;     },&#x000A;     "parentId": "",&#x000A;     "repoDigests": [&#x000A;       "registry.fedoraproject.org/fedora@sha256:1d2e941e1387a86d95070635f6e843f2d81a414b3e77f81ef4d78f2eb6d1e983"&#x000A;     ],&#x000A;     "repoTags": [&#x000A;       "registry.fedoraproject.org/fedora:28"&#x000A;     ],&#x000A;     "size": 0,&#x000A;     "virtualSize": 0&#x000A;   }&#x000A; ]&#x000A;}&#x000A;</code></pre>
+
+<p>Here you can see the Fedora 28 image is local. We also provide some basic information about the image (similar to podman ps) but nothing compared to an image inspection. Suppose we want to create a shorthand name for the Fedora image. We can use the <em>TagImage</em> endpoint for that.</p>
+<pre class="highlight plaintext"><code>$ varlink call unix:/run/io.projectatomic.podman/io.projectatomic.podman.TagImage '{"name": "388e3e5f0e20ab4cf", "tagged": "f28:latest"}'&#x000A;{}&#x000A;</code></pre>
+
+<p>For simplicity, we can verify the tag with podman.</p>
+<pre class="highlight plaintext"><code>$ sudo podman images&#x000A;REPOSITORY                          TAG      IMAGE ID       CREATED      SIZE&#x000A;registry.fedoraproject.org/fedora   28       388e3e5f0e20   9 days ago   263MB&#x000A;f28                                 latest   388e3e5f0e20   9 days ago   263MB&#x000A;</code></pre>
+
+<h4>Python bindings are coming</h4>
+
+<p>The varlink command line utility was meant for simple varlink interactions, API debugging, and API discovery. As you saw in the TagImage example, input parameters are done with JSON and that can be tedious on the command line. We are developing python bindings for our API implementation. These bindings will simplify the consumption of our eventual API definitions.  We hope to eventually make this work with javascript and possibly other languages as well.</p>
+
+<h4>Upcoming</h4>
+
+<p>If you do test our the varlink setup, you will notice that we have implemented most of the image related methods. I just began to implement the container related functions recently and will likely implement most of those within the upcoming week. The Python bindings will trail these slightly.</p>
+
+<p>We are always looking for help. Testing? Documentation? Additional Language Bindings?  Additional Interfaces.  Lots of work to be done&hellip;</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/crio/">crio</a></li>
+<li><a href="/blog/tag/libpod/">libpod</a></li>
+<li><a href="/blog/tag/podman/">podman</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/05/podman-varlink/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/05/podman-varlink/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/05/podman-varlink/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

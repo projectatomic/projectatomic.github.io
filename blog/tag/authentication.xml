@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Authentication</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/authentication.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>External authentication for Fedora Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/12/fedora-atomic-sssd-container/"/>
+    <id>http://www.projectatomic.io/blog/2015/12/fedora-atomic-sssd-container/</id>
+    <published>2015-12-08T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jan Pazdziora</name>
+    </author>
+    <content type="html">&lt;p&gt;By default, Fedora Atomic images come with cloud-init, which supports customization of various aspects of the running instance, including password for the default user. However, if many users in an organization should have access to the Atomic Host, the local configuration of the instance will not scale and user identities, authentication, and authorization need to be based on external identity management solution. &lt;/p&gt;
+
+&lt;p&gt;For IPA (FreeIPA/IdM), Active Directory, or generic LDAP servers, SSSD can serve as an agent providing these services, from user identity lookups and user group membership resolution to access control. With an SSSD container now available, Fedora Atomic Hosts can be deployed in very similar way to normal Fedora.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;SSSD overview&lt;/h3&gt;
+
+&lt;p&gt;The System Security Services Daemon (SSSD) is a daemon that provides identity, authentication, and authorization services to the operating system and applications. It provides modules and/or plugins for multiple subsystems of the operating system, including NSS, PAM, or sudo. It can cache multiple types of information to speed-up subsequent lookup or authentication operations, and it can use various remote backend types, including FreeIPA, Active Directory, or LDAP.&lt;/p&gt;
+
+&lt;p&gt;SSSD can be configured by editing &lt;code&gt;/etc/sssd/sssd.conf&lt;/code&gt; directly but due to overlap to other subsystems, those subsystems typically need to be configured as well to make use of SSSD, like &lt;code&gt;pam_sss.so&lt;/code&gt; for PAM, or &lt;code&gt;/etc/krb5.*&lt;/code&gt; for Kerberos operations. For two use cases, setups against FreeIPA and Active Directory, setup tools can be used to configure SSSD and other components of the operating system in automated fashion.&lt;/p&gt;
+
+&lt;h3&gt;Working with SSSD container&lt;/h3&gt;
+
+&lt;p&gt;The general steps in deploying the SSSD container include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Edit config file with options and parameters, or configure SSSD manually.&lt;/li&gt;
+&lt;li&gt;Call &lt;code&gt;atomic install fedora/sssd [various options]&lt;/code&gt; to invoke setup tool(s) to configure SSSD and other parts of the system.&lt;/li&gt;
+&lt;li&gt;Call &lt;code&gt;atomic run fedora/sssd&lt;/code&gt; or &lt;code&gt;systemctl start sssd.service&lt;/code&gt; to start the container.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What config files to use and what options to pass depend on the setup you want to achieve. The three most common use-cases will be:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;IPA-enrollment, for configuring the machine against FreeIPA/IdM, using &lt;code&gt;ipa-client-install&lt;/code&gt; in the container.&lt;/li&gt;
+&lt;li&gt;Joining the machine to Active Directory using &lt;code&gt;realm join&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Configuring SSSD manually on the host and telling the SSSD container to just use that configuration, without any setup tool invoked. &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let us explore the possibilities in more detail.&lt;/p&gt;
+
+&lt;h3&gt;IPA-enrolling Fedora Atomic&lt;/h3&gt;
+
+&lt;p&gt;To IPA-enroll machine to FreeIPA or IdM server, you will want to either specify the parameters for &lt;code&gt;ipa-client-install&lt;/code&gt; in &lt;code&gt;/etc/sssd/ipa-client-install-options&lt;/code&gt; on the host before running &lt;code&gt;atomic install&lt;/code&gt;, or you can pass the parameters as arguments to &lt;code&gt;atomic install fedora/sssd&lt;/code&gt; directly.&lt;/p&gt;
+
+&lt;p&gt;For example, if you&amp;rsquo;ve pre-created the host record in IPA with&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ipa$ ipa host-add --random host.example.com
+[...]
+  Random password: Fk96SdaP99wV
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and obtained a one-time password for the IPA-enrollment, you can either use the &lt;code&gt;-w&lt;/code&gt; and the password directly when calling &lt;code&gt;atomic install&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host# atomic install fedora/sssd -w Fk96SdaP99wV
+[...]
+Client configuration complete.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, you can store the option and the password in &lt;code&gt;/etc/sssd/ipa-client-install-options&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;-w Fk96SdaP99wV
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You then do not need to pass the arguments to &lt;code&gt;atomic install&lt;/code&gt; on the command line:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host# atomic install fedora/sssd
+[...]
+Client configuration complete.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Virtually any option to &lt;code&gt;ipa-client-install&lt;/code&gt; can be used, and specified either as argument to &lt;code&gt;atomic install&lt;/code&gt;, or in the &lt;code&gt;-options&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h3&gt;Joining Fedora Atomic to Active Directory&lt;/h3&gt;
+
+&lt;p&gt;To join the machine to Active Directory, specify parameters to realm join in &lt;code&gt;/etc/sssd/realm-join-options,&lt;/code&gt; for example:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ADDOMAIN.COM
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When that file exists, plain&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host# atomic install fedora/sssd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will call &lt;code&gt;realm join&lt;/code&gt; instead of &lt;code&gt;ipa-client-install&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also use &lt;code&gt;realm join&lt;/code&gt; and the parameters on the command line directly:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host# atomic install fedora/sssd realm join ADDOMAIN.TEST
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In either case, since &lt;code&gt;realm join&lt;/code&gt; does not accept the AD credentials on the command line, you have to put the password to &lt;code&gt;/etc/sssd/realm-join-password&lt;/code&gt; before calling &lt;code&gt;atomic install&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Using existing SSSD configuration&lt;/h3&gt;
+
+&lt;p&gt;If you have configured SSSD on the Fedora Atomic Host manually or via some other mechanism, you can just enable the SSSD container and tell it to observe the existing configuration:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host# atomic install fedora/sssd --migrate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Further reading&lt;/h3&gt;
+
+&lt;p&gt;For more information about the SSSD container and the solution used, check &lt;a href="http://www.adelton.com/docs/docker/fedora-atomic-sssd-container"&gt;SSSD in container on Fedora Atomic Host&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

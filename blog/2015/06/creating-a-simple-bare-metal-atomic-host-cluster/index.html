@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Creating a Simple Bare Metal Atomic Host Cluster &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Waldemar Augustyn' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Creating a Simple Bare Metal Atomic Host Cluster' property='og:title'>
+<meta content='Atomic host is a great technology for containerized applications. I like it especially on bare metal machines. In this post I will describe how to setup a simple Do-It-Yourself cluster consisting of three netbooted machines running docker over flannel. Flannel provides a NAT-less private network overlay. Through that network, application containers can easily reach any other containers within the cluster regardless of which machine they run on.&#x000A;&#x000A;We use three machines called a1, a2, and a3. Let’s designate static IP addresses to them.&#x000A;&#x000A;&#x000A;a1: 192.168.99.51&#x000A;a2: 192.168.99.52&#x000A;a3: 192.168.99.53&#x000A;&#x000A;&#x000A;We install atomic host OS on these machines via netboot from another host. Let’s call that host boothost. It holds all installation and configuration files. We set up an unattended installation and configuration using kickstart and cloud-init.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/' property='og:url'>
+<meta content='2015-06-30T18:21:45Z' property='article:published_time'>
+<meta content='waugustyn' property='article:author:username'>
+<meta content='bare metal' property='article:tag'>
+<link href='/blog/tag/bare metal.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='cluster' property='article:tag'>
+<link href='/blog/tag/cluster.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='etcd' property='article:tag'>
+<link href='/blog/tag/etcd.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Flannel' property='article:tag'>
+<link href='/blog/tag/flannel.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Creating a Simple Bare Metal Atomic Host Cluster' name='twitter:title'>
+<meta content='Atomic host is a great technology for containerized applications. I like it especially on bare metal machines. In this post I will describe how to setup a simple Do-It-Yourself cluster consisting of three netbooted machines running docker over flannel. Flannel provides a NAT-less private network overlay. Through that network, application containers can easily reach any other containers within the cluster regardless of which machine they run on.&#x000A;&#x000A;We use three machines called a1, a2, and a3. Let’s designate static IP addresses to them.&#x000A;&#x000A;&#x000A;a1: 192.168.99.51&#x000A;a2: 192.168.99.52&#x000A;a3: 192.168.99.53&#x000A;&#x000A;&#x000A;We install atomic host OS on these machines via netboot from another host. Let’s call that host boothost. It holds all installation and configuration files. We set up an unattended installation and configuration using kickstart and cloud-init.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_06 blog_2015_06_creating-a-simple-bare-metal-atomic-host-cluster blog_2015_06_creating-a-simple-bare-metal-atomic-host-cluster_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Creating a Simple Bare Metal Atomic Host Cluster
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/waugustyn/">Waldemar Augustyn</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-06-30T18:21:45Z'>
+Tuesday 30 June 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Atomic host is a great technology for containerized applications. I like it especially on bare metal machines. In this post I will describe how to setup a simple Do-It-Yourself cluster consisting of three netbooted machines running docker over flannel. Flannel provides a NAT-less private network overlay. Through that network, application containers can easily reach any other containers within the cluster regardless of which machine they run on.</p>
+
+<p>We use three machines called <em>a1</em>, <em>a2</em>, and <em>a3</em>. Let&rsquo;s designate static IP addresses to them.</p>
+
+<ul>
+<li>a1: 192.168.99.51</li>
+<li>a2: 192.168.99.52</li>
+<li>a3: 192.168.99.53</li>
+</ul>
+
+<p>We install atomic host OS on these machines via netboot from another host. Let&rsquo;s call that host <em>boothost</em>. It holds all installation and configuration files. We set up an unattended installation and configuration using kickstart and cloud-init.</p>
+
+<p></p>
+
+<h3>Kickstart</h3>
+
+<p>Thanks to ostree and cloud-init, we can simplify <code>kickstart.cfg</code> immensely. We need to tell it how to partition disks, where the ostree repository is, and where cloud-init files reside.  Sometimes I wonder if the entire kickstart can be reduced to nil by writing appropriate cloud-init modules but for now we go with the tradition.</p>
+
+<p>Most items in the kickstart file are selected according to local preference. Here we list those that relate to setting up the cluster. Line continuations are used for readability only, they don&rsquo;t appear in the scripts.</p>
+<pre class="highlight plaintext"><code>text&#x000A;ostreesetup --osname="Fedora-Cloud_Atomic" \&#x000A;            --remote="Fedora-Cloud_Atomic" \&#x000A;            --url="http://boothost/f22-atomic/content/repo" \&#x000A;            --ref="fedora-atomic/f22/x86_64/docker-host" --nogpg&#x000A;services --enabled=cloud-init,cloud-config,cloud-final,cloud-init-local&#x000A;bootloader --location=mbr --append="ds=nocloud\;seedfrom=/var/cloud-init/"&#x000A;part /boot --fstype=ext4 --asprimary --size=512 --ondrive=sda&#x000A;part pv.01 --fstype=ext4 --asprimary --grow --ondrive=sda&#x000A;volgroup fedora pv.01&#x000A;logvol swap --vgname=fedora --fstype=swap --name=swap --recommended&#x000A;logvol none --vgname=fedora --thinpool --name=docker-pool --size=100000&#x000A;logvol / --vgname=fedora --fstype=ext4 --name=root --grow --percent=95&#x000A;clearpart --all --initlabel --drives=sda&#x000A;reboot&#x000A;%post&#x000A;ostree remote add --set=gpg-verify=false \&#x000A;       Fedora-Cloud_Atomic \&#x000A;       'https://dl.fedoraproject.org/pub/fedora/linux/atomic/22/'&#x000A;mkdir /var/cloud-init&#x000A;curl http://boothost/f22-atomic/meta-data.a1 &gt; /var/cloud-init/meta-data&#x000A;curl http://boothost/f22-atomic/user-data &gt; /var/cloud-init/user-data&#x000A;curl http://boothost/f22-atomic/bootcmd &gt; /var/cloud-init/bootcmd&#x000A;chmod a+x /var/cloud-init/bootcmd&#x000A;%end&#x000A;</code></pre>
+
+<p>Items <em>text</em> and <em>ostreesetup</em> are boilerplate, nothing special about them. I prefer text because sometimes only a serial console is available. <em>ostreesetup</em>  gives the opportunity to install some other system, such as centos atomic for example. In this exercise, we take the default fedora tree.</p>
+
+<p>Since by default cloud-init is disabled we need to enable those services in <em>services</em>.</p>
+
+<p>For bare metal installations, I prefer cloud-init datasource located directly on the local disk. This selection is made by setting &lsquo;ds=nocloud&rsquo; in <em>bootloader</em>. It can also be configured to fetch from a URL using nocloud-net if that&rsquo;s more suitable. Notice that semicolon must be escaped. Otherwise grub might fail because the bootline is truncated.</p>
+
+<p>Disk partitioning is largely a local preference. Here, LVM is used only because docker with devmapper works best with dedicated thin pool partition. The rest of the disk goes to / partition for simplicity.  Note that even with a thin pool, docker volumes still go to local disk under <code>/var/lib/docker</code>. Ideally, we&rsquo;d forego LVM and allocate a single / ext4 partition. This is possible with overlayfs for example.</p>
+
+<p>In the %post section, we point to a live ostree repository and we also install cloud-init configuration. The installation amounts to copying three files. Two of them are the standard cloud-init files: meta-data and user data. The third one is the script that sets up the cluster. Note that meta-data sets hostname. We need to supply different meta-data for each machine.</p>
+
+<h3>cloud-init</h3>
+
+<p>There are many ways cloud-init configuration can be structured and applied during the boot process. Here, we go with simplicity keeping DIY cluster installations in mind. We use generic options in meta-data and user-data delegating most of the work to a single script.</p>
+
+<p><strong>meta-data</strong></p>
+<pre class="highlight plaintext"><code>instance-id: iid-local01&#x000A;local-hostname: a1&#x000A;</code></pre>
+
+<p>We set hostname as <em>a1</em>, <em>a2</em>, <em>a3</em> respectively for each machine.</p>
+
+<p><strong>user-data</strong></p>
+<pre class="highlight plaintext"><code>#cloud-config&#x000A;password: letmein&#x000A;ssh_pwauth: True&#x000A;chpasswd: { expire: False }&#x000A;&#x000A;ssh_authorized_keys:&#x000A;  - ssh-dss AAAAB3...pbLwNOo= me@diycluster&#x000A;&#x000A;users:&#x000A;  - name: fedora&#x000A;  - groups: docker&#x000A;&#x000A;bootcmd:&#x000A;  - /var/cloud-init/bootcmd&#x000A;</code></pre>
+
+<p>The first line is not a comment, it is required for the file to be recognized as a cloud-init configuration. We set password for user <em>fedora</em>. This user is hardcoded into the image. We also setup an ssh key for a more secure access.  Sometimes things don&rsquo;t go as planned so a password comes in handy if all we get is a serial console. We add user <em>fedora</em> to group <em>docker</em> to gain direct access to docker.</p>
+
+<p>The last item, <em>bootcmd</em>, instructs cloud-init to run a script on the earliest opportunity. The script runs before docker starts and before network is configured. This gives us a perfect opportunity to configure the cluster before any defaults interfere with the intentions.</p>
+
+<p><strong>bootcmd</strong></p>
+<pre class="highlight shell"><code><span class="c">#!/bin/bash</span>&#x000A;<span class="c"># Run on boot once</span>&#x000A;&#x000A;<span class="nb">set</span> -eux&#x000A;<span class="k">if</span> <span class="o">[</span> -f /etc/systemd/system/etcd.service.d/restart.conf <span class="o">]</span>; <span class="k">then&#x000A;    </span><span class="nb">exit </span>0&#x000A;<span class="k">fi&#x000A;&#x000A;</span>groupadd -r docker&#x000A;&#x000A;<span class="c"># Setup etcd</span>&#x000A;&#x000A;<span class="nv">cluster</span><span class="o">=</span><span class="nv">a1</span><span class="o">=</span>http://192.168.99.51:2380,<span class="se">\</span>&#x000A;        <span class="nv">a2</span><span class="o">=</span>http://192.168.99.52:2380,<span class="se">\</span>&#x000A;        <span class="nv">a3</span><span class="o">=</span>http://192.168.99.53:2380&#x000A;&#x000A;<span class="nv">host</span><span class="o">=</span><span class="k">$(</span>grep <span class="nb">local</span>-hostname /var/cloud-init/meta-data | cut -d: -f2 | tr -d <span class="o">[</span>:space:]<span class="k">)</span>&#x000A;<span class="nv">host</span><span class="o">=</span><span class="k">${</span><span class="nv">host</span><span class="p">%%.*</span><span class="k">}</span>&#x000A;&#x000A;<span class="nv">ip</span><span class="o">=</span><span class="k">${</span><span class="nv">cluster</span><span class="p">#*</span><span class="nv">$host</span><span class="p">=</span><span class="k">}</span>&#x000A;<span class="nv">ip</span><span class="o">=</span><span class="k">${</span><span class="nv">ip</span><span class="p">%%</span>:2380<span class="p">*</span><span class="k">}</span>&#x000A;<span class="nv">ip</span><span class="o">=</span><span class="k">${</span><span class="nv">ip</span><span class="p">#*//</span><span class="k">}</span>&#x000A;&#x000A;mv /etc/etcd/etcd.conf /etc/etcd/etcd.conf.save&#x000A;cat <span class="sh">&lt;&lt;EOF &gt;/etc/etcd/etcd.conf&#x000A;# [member]&#x000A;ETCD_NAME=$host&#x000A;ETCD_DATA_DIR="/var/lib/etcd/$host.etcd"&#x000A;ETCD_LISTEN_PEER_URLS="http://$ip:2380"&#x000A;ETCD_LISTEN_CLIENT_URLS="http://localhost:2379,http://$ip:2379"&#x000A;#[cluster]&#x000A;ETCD_INITIAL_ADVERTISE_PEER_URLS="http://$ip:2380"&#x000A;ETCD_INITIAL_CLUSTER="$cluster"&#x000A;ETCD_INITIAL_CLUSTER_STATE="new"&#x000A;ETCD_INITIAL_CLUSTER_TOKEN="diy-cluster"&#x000A;ETCD_ADVERTISE_CLIENT_URLS="http://$ip:2379"&#x000A;EOF&#x000A;&#x000A;</span>mkdir /etc/systemd/system/etcd.service.d&#x000A;cat <span class="sh">&lt;&lt;EOF &gt;/etc/systemd/system/etcd.service.d/restart.conf&#x000A;[Service]&#x000A;Restart=on-failure&#x000A;RestartSec=1&#x000A;EOF&#x000A;&#x000A;</span><span class="c"># Setup flannel</span>&#x000A;&#x000A;mv /etc/sysconfig/flanneld /etc/sysconfig/flanneld.save&#x000A;cat <span class="sh">&lt;&lt;EOF &gt;/etc/sysconfig/flanneld&#x000A;FLANNEL_ETCD=http://127.0.0.1:2379&#x000A;FLANNEL_ETCD_KEY=/admin/flannel&#x000A;EOF&#x000A;&#x000A;</span>mkdir /etc/systemd/system/flanneld.service.d&#x000A;cat <span class="sh">&lt;&lt;EOF &gt;/etc/systemd/system/flanneld.service.d/init.conf&#x000A;[Service]&#x000A;ExecStartPre=/usr/bin/etcdctl set /admin/flannel/config \&#x000A;            {\"Network\":\"172.18.0.0/16\"}&#x000A;Restart=on-failure&#x000A;RestartSec=1&#x000A;EOF&#x000A;&#x000A;</span><span class="c"># Restart</span>&#x000A;&#x000A;systemctl daemon-reload&#x000A;systemctl <span class="nb">enable </span>etcd.service&#x000A;systemctl <span class="nb">enable </span>flanneld.service&#x000A;systemctl reboot&#x000A;</code></pre>
+
+<p>The <em>if</em> statement makes sure the script runs only once after installation. We add group <code>docker</code> to give user <code>fedora</code> access to docker.</p>
+
+<p>The etcd setup uses bash string processing to deduce the host&rsquo;s name and its assigned ip address. The name of the host is set in the meta-data file. Cluster configuration is set in the <em>cluster</em> variable. This setting relies on dhcp always allocating listed IP addresses to the named hosts. Once <em>host</em> and <em>ip</em> are computed we setup standard etcd bootstrap.  We setup a restart in case of failures using a systemd unit drop-in. It is not necessary but etcd is sometimes confused during boot which causes it to give up. A simple restart brings it back to operation.</p>
+
+<p>Flannel needs to know what network to use as an overlay. We convey that information in an etcd key which is set before flannel starts. The setting of the key will block until the cluster comes up.  This may take several minutes depending on the initial boot sequence.  In case of flannel, we add a restart as well. As with etcd, it is not necessary but sometimes allows flannel to recover from weird etcd states.</p>
+
+<p>Finally, we enable etcd and flannel services before rebooting. I prefer to go through a reboot, rather than continue, because this gives me a better idea what will happen on any subsequent restart whether due to maintenance, power down, or any other reason.</p>
+
+<h3>Start the Cluster</h3>
+
+<p>With this configuration, we can now netboot the three machines and they will come up forming an operational atomic host cluster.  We login and run hostname command for a simple check if everything is alright.</p>
+<pre class="highlight plaintext"><code>fedora@a1 ~ $ hostname -I&#x000A;192.168.99.51 172.18.66.0 172.18.66.1 &#x000A;</code></pre>
+
+<p>We can see the IP addresses from the flannel range which is an indication that docker started over flannel network thus implying that all components performed as intended: netboot, kickstart, cloud-init, etcd, flannel, and docker.</p>
+
+<p>To be doubly sure, we run a container and see if we can ping the other hosts.</p>
+<pre class="highlight plaintext"><code>fedora@a1 ~ $ etcdctl ls admin/flannel/subnets&#x000A;/admin/flannel/subnets/172.18.18.0-24&#x000A;/admin/flannel/subnets/172.18.66.0-24&#x000A;/admin/flannel/subnets/172.18.13.0-24&#x000A;&#x000A;fedora@a1 ~ $ docker run -it --rm centos:7 /bin/bash&#x000A;[root@080a4f9e60a2 /]# ping 172.18.18.1&#x000A;PING 172.18.18.1 (172.18.18.1) 56(84) bytes of data.&#x000A;64 bytes from 172.18.18.1: icmp_seq=1 ttl=61 time=0.955 ms&#x000A;64 bytes from 172.18.18.1: icmp_seq=2 ttl=61 time=2.23 ms&#x000A;64 bytes from 172.18.18.1: icmp_seq=3 ttl=61 time=1.01 ms&#x000A;^C&#x000A;--- 172.18.18.1 ping statistics ---&#x000A;3 packets transmitted, 3 received, 0% packet loss, time 2003ms&#x000A;rtt min/avg/max/mdev = 0.955/1.400/2.230/0.587 ms&#x000A;[root@080a4f9e60a2 /]# exit&#x000A;</code></pre>
+
+<p>First we find out which flannel subnets have been allocated, then we start a container and run a ping targeting flannel end points on the other machines.</p>
+
+<p>Assuming everything has gone according to plan, it works! Now you should have a simple bare metal Atomic Host cluster to work with. </p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/bare-metal/">bare metal</a></li>
+<li><a href="/blog/tag/cluster/">cluster</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/etcd/">etcd</a></li>
+<li><a href="/blog/tag/flannel/">Flannel</a></li>
+<li><a href="/blog/tag/kubernetes/">Kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/06/creating-a-simple-bare-metal-atomic-host-cluster/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

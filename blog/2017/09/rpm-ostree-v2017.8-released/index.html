@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+rpm-ostree v2017.8 released &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jonathan Lebon' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='rpm-ostree v2017.8 released' property='og:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version&#x000A;v2017.8,&#x000A;including better PolicyKit integration and support for RPM file triggers.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/09/rpm-ostree-v2017.8-released/' property='og:url'>
+<meta content='2017-09-13T17:00:00Z' property='article:published_time'>
+<meta content='jlebon' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ostree' property='article:tag'>
+<link href='/blog/tag/ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm' property='article:tag'>
+<link href='/blog/tag/rpm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='rpm-ostree' property='article:tag'>
+<link href='/blog/tag/rpm-ostree.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='rpm-ostree v2017.8 released' name='twitter:title'>
+<meta content='rpm-ostree is the&#x000A;hybrid image/package system that provides transactional&#x000A;upgrades on Atomic Host. Here are some highlights from&#x000A;version&#x000A;v2017.8,&#x000A;including better PolicyKit integration and support for RPM file triggers.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_09 blog_2017_09_rpm-ostree-v2017 source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+rpm-ostree v2017.8 released
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jlebon/">Jonathan Lebon</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-09-13T17:00:00Z'>
+Wednesday 13 September 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://rpm-ostree.readthedocs.org/">rpm-ostree</a> is the
+hybrid image/package system that provides transactional
+upgrades on Atomic Host. Here are some highlights from
+version
+<a href="https://github.com/projectatomic/rpm-ostree/releases/tag/v2017.8">v2017.8</a>,
+including better PolicyKit integration and support for RPM file triggers.</p>
+
+<p></p>
+
+<p>You can test it out by rebasing to the
+<a href="http://www.projectatomic.io/blog/2017/09/fedora-atomic-26-120/">latest Fedora Atomic Host release</a>
+or <a href="https://getfedora.org/en/atomic/download/">downloading it</a>.</p>
+
+<h3>Better PolicyKit integration</h3>
+
+<p>In this release, we built upon the PolicyKit support added
+in the previous release to allow authentication directly
+from the terminal. This means that users can now run
+rpm-ostree operations as non-root and only authenticate for
+the operation requested instead of resorting to <code>sudo</code>:</p>
+<pre class="highlight plaintext"><code>[cloud-user@f26-tmp ~]$ rpm-ostree status&#x000A;State: idle&#x000A;Deployments:&#x000A;* fedora-atomic:fedora/26/x86_64/atomic-host&#x000A;                   Version: 26.120 (2017-09-05 00:05:09)&#x000A;                    Commit: 0b0127864022dd6ffad1a183241fbd5482ef5a1642ff3c8751c2e6cae6070b1a&#x000A;              GPGSignature: Valid signature by E641850B77DF435378D1D7E2812A6B4B64DAB85D&#x000A;[cloud-user@f26-tmp ~]$ rpm-ostree install cowsay&#x000A;==== AUTHENTICATING FOR org.projectatomic.rpmostree1.install-uninstall-packages ===&#x000A;Authentication is required to install and remove software&#x000A;Authenticating as: Fedora (cloud-user)&#x000A;Password:&#x000A;==== AUTHENTICATION COMPLETE ===&#x000A;Checking out tree 0b01278... done&#x000A;...&#x000A;&#x000A;</code></pre>
+
+<p>Upstream patches: <a href="https://github.com/projectatomic/rpm-ostree/pull/894">https://github.com/projectatomic/rpm-ostree/pull/894</a>.</p>
+
+<h3>Support for RPM file triggers</h3>
+
+<p>When layering packages, rpm-ostree essentially re-implements
+parts of the functionality of <code>rpm</code>. For example, RPM
+scriptlets are run in a locked down environment to ensure
+minimal exposure. In this release, rpm-ostree added support
+for running <a href="http://rpm.org/user_doc/file_triggers.html">file trigger scriptlets</a>.
+This is necessary for successfully layering some packages,
+such as <code>vagrant</code>.</p>
+
+<p>Upstream patches: <a href="https://github.com/projectatomic/rpm-ostree/pull/869">https://github.com/projectatomic/rpm-ostree/pull/869</a>.</p>
+
+<h3>Upgrade command also upgrades layered packages</h3>
+
+<p>Previously, the <code>upgrade</code> command only layered a new
+deployment if a new ostree commit was available, regardless
+of whether new versions were available for layered packages.
+This was fixed in this release so that <code>upgrade</code> always
+checks for outdated layered packages even if there are no
+new commits.</p>
+
+<p>Upstream issue: <a href="https://github.com/projectatomic/rpm-ostree/issues/391">https://github.com/projectatomic/rpm-ostree/issues/391</a></p>
+
+<h3>Better help output</h3>
+
+<p>For commands that take subcommands, the help output now
+outputs a description of each subcommand. This is especially
+useful on Atomic Host, where man pages are not readily
+available.</p>
+<pre class="highlight plaintext"><code>[cloud-user@f26-tmp ~]$ rpm-ostree --help&#x000A;Usage:&#x000A;  rpm-ostree [OPTION?] COMMAND&#x000A;&#x000A;Builtin Commands:&#x000A;  compose          Commands to compose a tree&#x000A;  cleanup          Clear cached/pending data&#x000A;  db               Commands to query the RPM database&#x000A;  deploy           Deploy a specific commit&#x000A;  rebase           Switch to a different tree&#x000A;  rollback         Revert to the previously booted tree&#x000A;  status           Get the version of the booted system&#x000A;  upgrade          Perform a system upgrade&#x000A;  reload           Reload configuration&#x000A;  initramfs        Enable or disable local initramfs regeneration&#x000A;  install          Download and install layered RPM packages&#x000A;  uninstall        Remove one or more overlay packages&#x000A;&#x000A;Help Options:&#x000A;  -h, --help       Show help options&#x000A;&#x000A;Application Options:&#x000A;  --version        Print version information and exit&#x000A;</code></pre>
+
+<p>Upstream issue: <a href="https://github.com/projectatomic/rpm-ostree/issues/806">https://github.com/projectatomic/rpm-ostree/issues/806</a></p>
+
+<h3>Other minor fixes and improvements</h3>
+
+<p>There are many other small improvements, here are a few:</p>
+
+<ul>
+<li>rpm-ostree learned about the <code>ostree.endoflife</code> metadata
+key, which displays an informative message when an OS
+stream (branch) reaches end-of-life. This will likely be
+used for Fedora Atomic Host.</li>
+</ul>
+
+<p>Upstream patches: <a href="https://github.com/projectatomic/rpm-ostree/pull/889">https://github.com/projectatomic/rpm-ostree/pull/889</a></p>
+
+<ul>
+<li>rpm-ostree was submitted to
+<a href="https://scan.coverity.com/">Coverity</a> and received many
+fixes detected in the scan. No major issues were
+uncovered.</li>
+</ul>
+
+<p>Upstream patches: <a href="https://github.com/projectatomic/rpm-ostree/pull/918">https://github.com/projectatomic/rpm-ostree/pull/918</a></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/ostree/">ostree</a></li>
+<li><a href="/blog/tag/rpm/">rpm</a></li>
+<li><a href="/blog/tag/rpm-ostree/">rpm-ostree</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/09/rpm-ostree-v2017.8-released/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/09/rpm-ostree-v2017.8-released/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/09/rpm-ostree-v2017.8-released/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

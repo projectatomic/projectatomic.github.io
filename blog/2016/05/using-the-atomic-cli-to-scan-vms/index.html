@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using the Atomic CLI to Scan Virtual Machines &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brent Baude' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Using the Atomic CLI to Scan Virtual Machines' property='og:title'>
+<meta content='Recently on the Red Hat Developers blog, I wrote about the re-architecture of the atomic vulnerability scan feature.   The primary function of atomic scan is to detect vulnerabilities in your images and containers using a plug-in enabled architecture.&#x000A;&#x000A;Building upon that concept, we added an additional feature to atomic scan where you can now pass a chroot to it for the purposes of scanning.  One immediate benefit from this change was that we can now use the same scanner for our images and containers to scan a virtual machine (VM) that has been mounted onto the host’s filesystem.&#x000A;&#x000A;In this blog, I will show you how to scan a live VM with atomic scan.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/05/using-the-atomic-cli-to-scan-vms/' property='og:url'>
+<meta content='2016-05-13T12:00:00Z' property='article:published_time'>
+<meta content='baude' property='article:author:username'>
+<meta content='atomic CLI' property='article:tag'>
+<link href='/blog/tag/atomic cli.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='atomic scan' property='article:tag'>
+<link href='/blog/tag/atomic scan.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='security' property='article:tag'>
+<link href='/blog/tag/security.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Using the Atomic CLI to Scan Virtual Machines' name='twitter:title'>
+<meta content='Recently on the Red Hat Developers blog, I wrote about the re-architecture of the atomic vulnerability scan feature.   The primary function of atomic scan is to detect vulnerabilities in your images and containers using a plug-in enabled architecture.&#x000A;&#x000A;Building upon that concept, we added an additional feature to atomic scan where you can now pass a chroot to it for the purposes of scanning.  One immediate benefit from this change was that we can now use the same scanner for our images and containers to scan a virtual machine (VM) that has been mounted onto the host’s filesystem.&#x000A;&#x000A;In this blog, I will show you how to scan a live VM with atomic scan.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_05 blog_2016_05_using-the-atomic-cli-to-scan-vms blog_2016_05_using-the-atomic-cli-to-scan-vms_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Using the Atomic CLI to Scan Virtual Machines
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/baude/">Brent Baude</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-05-13T12:00:00Z'>
+Friday 13 May 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Recently on the Red Hat Developers blog, I wrote about the re-architecture of the <a href="http://developers.redhat.com/blog/2016/05/02/introducing-atomic-scan-container-vulnerability-detection/">atomic vulnerability scan feature</a>.   The primary function of <em><a href="https://github.com/projectatomic/atomic">atomic</a> scan</em> is to detect vulnerabilities in your images and containers using a plug-in enabled architecture.</p>
+
+<p>Building upon that concept, we added an additional feature to <em>atomic scan</em> where you can now pass a chroot to it for the purposes of scanning.  One immediate benefit from this change was that we can now use the same scanner for our images and containers to scan a virtual machine (VM) that has been mounted onto the host&rsquo;s filesystem.</p>
+
+<p>In this blog, I will show you how to scan a live VM with <em>atomic scan</em>.</p>
+
+<p></p>
+
+<h3>Check for a Running VM</h3>
+
+<p>The first step is to see what VMs are on your system.  In my case, I have two VMs running; one of which was created for this purpose based on a RHEL 7.2 stock install with no updates.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo virsh list&#x000A; Id    Name                           State&#x000A;----------------------------------------------------&#x000A; 4     rhel7-scan                     running&#x000A; 5     centos                         running&#x000A;&#x000A;</code></pre>
+
+<p>The VM I want to work with is called <em>rhel7-scan</em>.</p>
+
+<h3>Check the Filesystems in the VM</h3>
+
+<p>To mount a live VM to our filesystem, I plan to use a couple of applications from the libguestfs package.  While we do know which VM (sometimes referred to as a virtual domain) we want to work with, mounting VMs requires some basic knowledge of the VM&rsquo;s fileystems; specifically, we want to know more about the VM&rsquo;s root filesystem.  We can use <em>virt-filesystems</em> to probe the VM&rsquo;s filesystems.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo virt-filesystems -d rhel7-scan&#x000A;/dev/sda1&#x000A;/dev/rhel/root&#x000A;[bbaude@localhost ~]$&#x000A;</code></pre>
+
+<p>We now know the device associated with the root filesystem is <em>/dev/rhel/root</em>.  This is a required piece of information for mounting VMs.</p>
+
+<h3>Mount the VM&rsquo;s Root Filesystem</h3>
+
+<p>The first step is to create a directory where the VM&rsquo;s root filesystem will reside after mounting.  In this case, I am going to simply create a directory called <em>/tmp/rhel</em>.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ mkdir /tmp/rhel&#x000A;</code></pre>
+
+<p>Now, armed with the VM&rsquo;s name (or domain) and the root filesystem&rsquo;s device, we can use <em>guestmount</em> to actually perform the mount.  Note here because the VM is live, I have choosen to mount the filesystem as read-only.  I also happen to know that the scanner does not need to write any files to the VM filesystem so read-only is appropriate.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo guestmount  -d rhel7-scan -m /dev/rhel/root --ro /tmp/rhel&#x000A;</code></pre>
+
+<p>The VM&rsquo;s root filesystem is now mounted and we can use <em>ls</em> to take a peek at the chroot.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo ls -l /tmp/rhel&#x000A;total 28&#x000A;lrwxrwxrwx.  1 root root    7 May 11  2016 bin -&gt; usr/bin&#x000A;drwxr-xr-x.  2 root root    6 May 11  2016 boot&#x000A;drwxr-xr-x.  2 root root    6 May 11  2016 dev&#x000A;drwxr-xr-x. 77 root root 8192 May 11  2016 etc&#x000A;drwxr-xr-x.  3 root root   18 May 11 13:48 home&#x000A;lrwxrwxrwx.  1 root root    7 May 11  2016 lib -&gt; usr/lib&#x000A;lrwxrwxrwx.  1 root root    9 May 11  2016 lib64 -&gt; usr/lib64&#x000A;drwxr-xr-x.  2 root root    6 May 25  2015 media&#x000A;drwxr-xr-x.  2 root root    6 May 25  2015 mnt&#x000A;drwxr-xr-x.  2 root root    6 May 25  2015 opt&#x000A;drwxr-xr-x.  2 root root    6 May 11  2016 proc&#x000A;dr-xr-x---.  2 root root 4096 May 11 13:49 root&#x000A;drwxr-xr-x.  2 root root    6 May 11  2016 run&#x000A;lrwxrwxrwx.  1 root root    8 May 11  2016 sbin -&gt; usr/sbin&#x000A;drwxr-xr-x.  2 root root    6 May 25  2015 srv&#x000A;drwxr-xr-x.  2 root root    6 May 11  2016 sys&#x000A;drwxrwxrwt.  7 root root 4096 May 11  2016 tmp&#x000A;drwxr-xr-x. 13 root root 4096 May 11  2016 usr&#x000A;drwxr-xr-x. 19 root root 4096 May 11  2016 var&#x000A;</code></pre>
+
+<h3>Prepare to Scan the Mounted Filesystem</h3>
+
+<p>Before we jump into scanning the filesystem, you should verify what scanners (plug-ins) are installed for atomic.  As my previous blog has shown, you can simply use <em>atomic scan &ndash;list</em> to see what scanners are currently configured for you.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo atomic scan --list&#x000A;Scanner: openscap *&#x000A;  Image Name: openscap&#x000A;     Scan type: cve *&#x000A;     Description: Performs a CVE scan based on known CVE data&#x000A;&#x000A;     Scan type: standards_compliance&#x000A;     Description: Performs a standard scan&#x000A;&#x000A;&#x000A;* denotes defaults&#x000A;</code></pre>
+
+<p>Based on this output, there is only one scanner available.  It is called <em>openscap</em> and has two different scans avilable: <em>cve</em> and <em>standards_compliance</em>.  The <em>cve</em> scan is the noted as the default.  </p>
+
+<p>If you are not familiar with the <em>atomic scan</em> function, you can simply learn more with the <em>&ndash;help</em> switch or read the man page.  The key item we need to know about is the <em>&ndash;rootfs</em> command line switch.  This switch requires a filesystem path as a value.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo atomic scan --help&#x000A;usage: atomic scan [-h] [--scanner {openscap}] [--scan_type SCAN_TYPE]&#x000A;                   [--list] [--verbose] [--rootfs [ROOTFS] | --all | --images&#x000A;                   | --containers]&#x000A;                   [scan_targets [scan_targets ...]]&#x000A;&#x000A;positional arguments:&#x000A;  scan_targets          container image&#x000A;&#x000A;optional arguments:&#x000A;  -h, --help            show this help message and exit&#x000A;  --scanner {openscap}  define the intended scanner&#x000A;  --scan_type SCAN_TYPE&#x000A;                        define the intended scanner&#x000A;  --list                List available scanners&#x000A;  --verbose             Show more output from scanning container&#x000A;  --rootfs [ROOTFS]     Rootfs path to scan&#x000A;  --all                 scan all images (excluding intermediate layers) and&#x000A;                        containers&#x000A;  --images              scan all images (excluding intermediate layers)&#x000A;  --containers          scan all containers&#x000A;&#x000A;atomic scan &lt;input&gt; scans a container or image for CVEs&#x000A;</code></pre>
+
+<h3>Scan the Filesystem Using Atomic Scan</h3>
+
+<p>At this point, we have all the information we need to perform the scan.  It is now only a matter of executing the command properly.  The command syntax is simply <em>atomic scan &ndash;rootfs <path_to_rootfs></em>.  You can also enable the <em>&ndash;verbose</em> command line switch to see more output, which is good for debug purposes.</p>
+
+<p><strong>Note</strong>:  Because I already have the openscap image pulled locally, you will not see it being pulled.  Of course, if you do not have the image local, your output will vary slightly.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo atomic scan --rootfs /tmp/rhel&#x000A;docker run -it --rm -v /etc/localtime:/etc/localtime -v /run/atomic/2016-05-11-13-54-05-804238:/scanin -v /var/lib/atomic/openscap/2016-05-11-13-54-05-804238:/scanout:rw,Z --security-opt label:disable openscap oscapd-evaluate scan --no-standard-compliance --targets chroots-in-dir:///scanin --output /scanout&#x000A;&#x000A;/tmp/rhel (/tmp/rhel)&#x000A;&#x000A;The following issues were found:&#x000A;&#x000A;     RHSA-2016:1025: pcre security update (Important)&#x000A;     Severity: Important&#x000A;       RHSA URL: https://rhn.redhat.com/errata/RHSA-2016-1025.html&#x000A;       RHSA ID: RHSA-2016:1025-00&#x000A;       Associated CVEs:&#x000A;           CVE ID: CVE-2015-2328&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-2328&#x000A;           CVE ID: CVE-2015-3217&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-3217&#x000A;           CVE ID: CVE-2015-5073&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-5073&#x000A;           CVE ID: CVE-2015-8385&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-8385&#x000A;           CVE ID: CVE-2015-8386&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-8386&#x000A;           CVE ID: CVE-2015-8388&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-8388&#x000A;           CVE ID: CVE-2015-8391&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2015-8391&#x000A;           CVE ID: CVE-2016-3191&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-3191&#x000A;&#x000A;     RHSA-2016:0722: openssl security update (Important)&#x000A;     Severity: Important&#x000A;       RHSA URL: https://rhn.redhat.com/errata/RHSA-2016-0722.html&#x000A;       RHSA ID: RHSA-2016:0722-00&#x000A;       Associated CVEs:&#x000A;           CVE ID: CVE-2016-0799&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-0799&#x000A;           CVE ID: CVE-2016-2105&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-2105&#x000A;           CVE ID: CVE-2016-2106&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-2106&#x000A;           CVE ID: CVE-2016-2107&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-2107&#x000A;           CVE ID: CVE-2016-2108&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-2108&#x000A;           CVE ID: CVE-2016-2109&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-2109&#x000A;           CVE ID: CVE-2016-2842&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-2842&#x000A;&#x000A;     RHSA-2016:0685: nss, nspr, nss-softokn, and nss-util security, bug fix, and enhancement update (Moderate)&#x000A;     Severity: Moderate&#x000A;       RHSA URL: https://rhn.redhat.com/errata/RHSA-2016-0685.html&#x000A;       RHSA ID: RHSA-2016:0685-00&#x000A;       Associated CVEs:&#x000A;           CVE ID: CVE-2016-1978&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-1978&#x000A;           CVE ID: CVE-2016-1979&#x000A;           CVE URL: https://access.redhat.com/security/cve/CVE-2016-1979&#x000A;&#x000A;...&#x000A;Content removed due to length&#x000A;...&#x000A;&#x000A;Files associated with this scan are in /var/lib/atomic/openscap/2016-05-11-13-54-05-804238.&#x000A;</code></pre>
+
+<p>As you can see, there are least three vulnerabilities caught here.  The rest were clipped in the interest of space.</p>
+
+<h3>Unmount the VM&rsquo;s Filesystem</h3>
+
+<p>Don&rsquo;t forget to unmount the VM&rsquo;s filesystem when your scan is complete.  In my case, I want to remediate the VM to shore up the vulnerabilties.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo guestunmount /tmp/rhel&#x000A;</code></pre>
+
+<h3>Remediate the Vulnerabilties and Rescan</h3>
+
+<p>As I said earlier, this VM we scanned was based on a stock RHEL7.2 install without any updates.  This was obviously done on purpose to demonstrate the scan first.  I then logged into the VM and updated the system entirely and will now remount the VM filesystem and rescan.</p>
+<pre class="highlight plaintext"><code>[bbaude@localhost ~]$ sudo guestmount  -d rhel7-scan -m /dev/rhel/root --ro /tmp/rhel&#x000A;[bbaude@localhost ~]$ sudo atomic scan --rootfs /tmp/rhel&#x000A;docker run -it --rm -v /etc/localtime:/etc/localtime -v /run/atomic/2016-05-12-10-55-44-763361:/scanin -v /var/lib/atomic/openscap/2016-05-12-10-55-44-763361:/scanout:rw,Z --security-opt label:disable openscap oscapd-evaluate scan --no-standard-compliance --targets chroots-in-dir:///scanin --output /scanout&#x000A;&#x000A;/tmp/rhel (/tmp/rhel)&#x000A;&#x000A;/tmp/rhel passed the scan&#x000A;&#x000A;Files associated with this scan are in /var/lib/atomic/openscap/2016-05-12-10-55-44-763361.&#x000A;&#x000A;[bbaude@localhost ~]$ sudo guestunmount /tmp/rhel&#x000A;[bbaude@localhost ~]$  &#x000A;</code></pre>
+
+<p>The scan is clean and no vulnerabilities are found.</p>
+
+<p>Using the <em>atomic scan</em> function with the openSCAP project is not only an easy way to find vulnerabilities in your RHEL based images and containers, but it can basically scan and chroot filesystem that is RHEL including read-only mounts of VM root filesystems.  It is a quick, singular way to perform the scan.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-cli/">atomic CLI</a></li>
+<li><a href="/blog/tag/atomic-scan/">atomic scan</a></li>
+<li><a href="/blog/tag/security/">security</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/05/using-the-atomic-cli-to-scan-vms/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/05/using-the-atomic-cli-to-scan-vms/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/05/using-the-atomic-cli-to-scan-vms/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

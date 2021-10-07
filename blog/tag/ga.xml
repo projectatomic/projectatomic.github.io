@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Ga</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/ga.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Red Hat Enterprise Linux Atomic Host released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/03/red-hat-enterprise-linux-atomic-host-released/"/>
+    <id>http://www.projectatomic.io/blog/2015/03/red-hat-enterprise-linux-atomic-host-released/</id>
+    <published>2015-03-05T14:15:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Red Hat &lt;a href="http://developerblog.redhat.com/2015/03/05/announcement-rhel-atomic-host-ga/"&gt;announced&lt;/a&gt; the general availability of Red Hat Linux Enterprise Atomic Host earlier today. This pulls together work from Project Atomic and makes it ready for organizations that are looking to package and run applications based on Red Hat Enterprise Linux (RHEL) 6 and 7 as containers. &lt;/p&gt;
+
+&lt;p&gt;This release includes all the components (Docker, Kubernetes, Flannel, systemd, etc.) that you need to &lt;a href="http://rhelblog.redhat.com/2014/12/04/top-7-reasons-to-use-red-hat-enterprise-linux-atomic-host/"&gt;deploy a container-based architecture&lt;/a&gt; in an environment based on RHEL. &lt;/p&gt;
+
+&lt;p&gt;Not quite sure about the benefits of containers? The RHEL folks are hosting a &lt;a href="http://www.redhat.com/en/about/events/transform-application-delivery-containers-red-hat-virtual-event"&gt;virtual event on March 12th&lt;/a&gt;. This features Tim Yeaton and Lars Herrman from Red Hat, and principal analyst Dave Bartoletti from Forrester. Odds are if you&amp;rsquo;re following Project Atomic you&amp;rsquo;re &lt;em&gt;already&lt;/em&gt; pretty hip to the benefits fo containers, but if not &amp;ndash; this should answer many of your questions.&lt;/p&gt;
+
+&lt;h3&gt;Getting RHEL Atomic Host&lt;/h3&gt;
+
+&lt;p&gt;Interested in trying RHEL Atomic Host? Head over to the Red Hat &lt;a href="https://access.redhat.com/products/red-hat-enterprise-linux/atomic-host"&gt;Customer Portal&lt;/a&gt; and grab the installation media and &lt;a href="https://www.redhat.com/en/resources/red-hat-enterprise-linux-atomic-host"&gt;read up&lt;/a&gt; on the offering. You can download installation media and test it out with out a RHEL subscription.&lt;/p&gt;
+
+&lt;h3&gt;More Fun Ahead&lt;/h3&gt;
+
+&lt;p&gt;The fun doesn&amp;rsquo;t stop with the RHEL Atomic Host release, of course. We are still working on getting Fedora Atomic Host ready for the Fedora 22 release, and the &lt;a href="http://wiki.centos.org/SpecialInterestGroup/Atomic"&gt;CentOS SIG&lt;/a&gt; is continuing to work on CentOS Atomic Host as well. Naturally, the work in Fedora and CentOS will benefit future RHEL Atomic Host releases. &lt;/p&gt;
+
+&lt;p&gt;The alpha for the Fedora 22 Cloud edition, including Atomic, should be released in the next week or two (the schedule currently calls for 10 March). A new CentOS image should be out in the next day or two, including some additional image types! &lt;/p&gt;
+
+&lt;p&gt;Have questions, or want to get involved in Project Atomic? Here&amp;rsquo;s where to find us:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic"&gt;Atomic&lt;/a&gt; mailing list is for discussions around using Atomic Hosts or containers on Atomic.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel"&gt;Atomic-Devel&lt;/a&gt; mailing list is for discussions around building Atomic Hosts and the Atomic Host Definition.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;CentOS-Devel&lt;/a&gt; mailing list is where CentOS-specific discussions happen.&lt;/li&gt;
+&lt;li&gt;The &lt;a href="https://admin.fedoraproject.org/mailman/listinfo/cloud"&gt;Fedora Cloud&lt;/a&gt; mailing list is where Fedora-specific discussions happen.&lt;/li&gt;
+&lt;li&gt;Chat with us real-time in #atomic on Freenode.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And, as always, ping me directly (jzb, at RedHat.com) if you can&amp;rsquo;t find what you need elsewhere! &lt;/p&gt;
+</content>
+  </entry>
+</feed>

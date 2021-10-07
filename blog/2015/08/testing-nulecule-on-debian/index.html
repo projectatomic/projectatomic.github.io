@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Testing Nulecule on Debian &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Brian (bex) Exelbierd' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Testing Nulecule on Debian' property='og:title'>
+<meta content='Testing Nulecule on Debian&#x000A;&#x000A; Unless you’ve recently returned from a sabbatical year in a remote monastery with no internet, you know that Containers have arrived, and it’s a whole new world.&#x000A;&#x000A;I’ll save you five minutes of reading, and 90 minutes of watching Disney’s Alladin and assume you know about containers.  If not, take a look at Docker, rkt and the Open Container Project.  For bonus points, watch How Docker Didn’t Invent Containers from the First Docker Meetup in my adopted hometown of Brno, Czech Republic.  When you’re done singing the fantastic Disney songs, come back.  I’ll wait.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/08/testing-nulecule-on-debian/' property='og:url'>
+<meta content='2015-08-05T04:00:00Z' property='article:published_time'>
+<meta content='bexelbie' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Nulecule' property='article:tag'>
+<link href='/blog/tag/nulecule.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Testing Nulecule on Debian' name='twitter:title'>
+<meta content='Testing Nulecule on Debian&#x000A;&#x000A; Unless you’ve recently returned from a sabbatical year in a remote monastery with no internet, you know that Containers have arrived, and it’s a whole new world.&#x000A;&#x000A;I’ll save you five minutes of reading, and 90 minutes of watching Disney’s Alladin and assume you know about containers.  If not, take a look at Docker, rkt and the Open Container Project.  For bonus points, watch How Docker Didn’t Invent Containers from the First Docker Meetup in my adopted hometown of Brno, Czech Republic.  When you’re done singing the fantastic Disney songs, come back.  I’ll wait.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_08 blog_2015_08_testing-nulecule-on-debian blog_2015_08_testing-nulecule-on-debian_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Testing Nulecule on Debian
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/bexelbie/">Brian (bex) Exelbierd</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-08-05T04:00:00Z'>
+Wednesday  5 August 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Testing Nulecule on Debian</h3>
+
+<p><img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fglobal3.memecdn.com%2Fa-whole-new-world_o_941765.jpg&f=1"> Unless you&rsquo;ve recently returned from a sabbatical year in a remote monastery with no internet, you know that Containers have arrived, and it&rsquo;s a whole new world.</p>
+
+<p>I&rsquo;ll save you five minutes of reading, and 90 minutes of watching Disney&rsquo;s Alladin and assume you know about containers.  If not, take a look at <a href="https://github.com/docker">Docker</a>, <a href="https://github.com/coreos/rkt">rkt</a> and the <a href="http://www.opencontainers.org/">Open Container Project</a>.  For bonus points, watch <a href="http://www.motivp.com/shop/video/How_Docker_did_not_invent_the_containers">How Docker Didn&rsquo;t Invent Containers</a> from the <a href="http://www.projectatomic.io/blog/2015/05/docker-meetup-brno/">First Docker Meetup</a> in my adopted hometown of Brno, Czech Republic.  When you&rsquo;re done singing the fantastic Disney songs, come back.  I&rsquo;ll wait.</p>
+
+<p></p>
+
+<p>While there is a lot of <q>shaking out</q> still going on around containers, one thing is for sure.  Applications are definitely starting to be delivered this way.  Currently, honestly, most folks ae not using containers in production, and most deliverables are for internal use only.  Even in these few cases though, the applications being delivered are typically simple.  Maybe 2-3 containers. i.e. a web server container, a database container, and a caching server container. But something like <a href="https://www.youtube.com/watch?v=NGOnG8czBk0">OpenStack on Docker</a>  is 12 containers.  12 containers that need to be linked, networked, and  orchestrated with various configuration changes for your environment.</p>
+
+<p>Complex applications are &hellip; complex, in the sense that they require multiple processes to interact. No significant ISVs or OpenSource projects have delivered complex applications using containers.  The <a href="http://www.projectatomic.io/blog/2015/05/announcing-the-nulecule-specification-for-composite-applications/">Nulecule Specification</a> was created to solve the problem of complex application delivery.</p>
+
+<p>But does it work?  Well yes, it does.  There are a bunch of great <a href="https://github.com/projectatomic/nulecule/tree/master/examples">examples</a> in the specification and a reference implementation that uses <a href="https://github.com/projectatomic/atomicapp">atomicapp</a> for driving the packaging and parameterization, and the fancy <a href="https://github.com/projectatomic/atomic">atomic</a> command to make launching those 12 containers in a fully orchestrated environment a one-command operation.</p>
+
+<p>Recently a friend asked me, <q>This is all nice and stuff, but what if I don&rsquo;t use Fedora/CentOS/RHEL.  Can I still use Nulecule?</q>  I decided to find out.</p>
+
+<p>To test this, I installed Debian 8.1 <q>Jessie</q> in a VM.  I followed the directions for installating docker.  Since the atomic command is not yet packaged for Debian, I downloaded the source and ran the customary <code>sudo make install</code>.  Next I discovered that Kubernetes is also not packaged for Debian, so I installed it using a set of prebuilt docker containers.  At this point I tried not to slip into an Inception induced coma at the thought of orchestrating docker containers using an orchestrator running inside of those same docker containers.</p>
+
+<p>Lastly, for the big moment, I ran one command:</p>
+<pre class="highlight plaintext"><code>atomic run projectatomic/helloapache&#x000A;</code></pre>
+
+<p>I am happy to say, Apache immediately told me <q>hello</q> in response to a <code>curl</code> command.</p>
+
+<p>I was really expecting a slog to get all the parts working and to have to expend some effort to cajole the reference implementation of the specification into functioning, but it was really quite simple.  For those of you interested in the gory details, my specific steps are below.</p>
+
+<p>If you are interested in packaging some of these tools for Debian, let me know if I can be of help.  If you want to help us make Nulecule better, give us a shout out in #<a href="mailto:nulecule@irc.freenode.net">nulecule@irc.freenode.net</a> or on our mailng list.</p>
+
+<h3>Nulecule Testing on Debian</h3>
+
+<h4>Installed Debian 8.1 Jessie in a VM</h4>
+
+<ul>
+<li>Text based install</li>
+<li>single partition</li>
+<li>Only loaded SSH Server and Standard tools</li>
+<li>apt-get install sudo</li>
+<li>usermod -a -G sudo bexelbie</li>
+<li>apt-get update</li>
+<li>reboot</li>
+</ul>
+
+<h4>Install Docker</h4>
+
+<ul>
+<li>From: <a href="http://docs.docker.com/installation/debian/">http://docs.docker.com/installation/debian/</a>
+
+<ul>
+<li>Add &lsquo;deb <a href="http://http.debian.net/debian">http://http.debian.net/debian</a> jessie-backports main&rsquo; to /etc/apt/sources.list</li>
+<li>sudo apt-get update</li>
+<li>sudo apt-get -t jessie-backports install docker.io</li>
+<li>sudo usermod -a -G docker bexelbie</li>
+</ul></li>
+</ul>
+
+<h4>Install atomic</h4>
+
+<ul>
+<li>sudo apt-get install make pylint python-docker python-selinux go-md2man</li>
+<li>git clone <a href="https://github.com/projectatomic/atomic.git">https://github.com/projectatomic/atomic.git</a></li>
+<li>sudo make install</li>
+</ul>
+
+<h4>Install Kubernetes using the via Docker instructions (it is not packaged for Debian)</h4>
+
+<ul>
+<li>From: <a href="https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/docker.md">https://github.com/GoogleCloudPlatform/kubernetes/blob/master/docs/getting-started-guides/docker.md</a>
+
+<ul>
+<li>Run the three docker commands to get things running - get kubectl below</li>
+<li>docker run &ndash;net=host -d gcr.io/google_containers/etcd:2.0.9 /usr/local/bin/etcd &ndash;addr=127.0.0.1:4001 &ndash;bind-addr=0.0.0.0:4001 &ndash;data-dir=/var/etcd/data</li>
+<li>docker run &ndash;net=host -d -v /var/run/docker.sock:/var/run/docker.sock  gcr.io/google_containers/hyperkube:v0.18.2 /hyperkube kubelet &ndash;api_servers=<a href="http://localhost:8080">http://localhost:8080</a> &ndash;v=2 &ndash;address=0.0.0.0 &ndash;enable_server &ndash;hostname_override=127.0.0.1 &ndash;config=/etc/kubernetes/manifests</li>
+<li>docker run -d &ndash;net=host &ndash;privileged gcr.io/google_containers/hyperkube:v0.18.2 /hyperkube proxy &ndash;master=<a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> &ndash;v=2</li>
+</ul></li>
+<li>Get kubectl from the same release (0.18.2): <a href="https://github.com/GoogleCloudPlatform/kubernetes/releases">https://github.com/GoogleCloudPlatform/kubernetes/releases</a>
+
+<ul>
+<li>wget <a href="https://github.com/GoogleCloudPlatform/kubernetes/releases/download/v0.18.2/kubernetes.tar.gz">https://github.com/GoogleCloudPlatform/kubernetes/releases/download/v0.18.2/kubernetes.tar.gz</a></li>
+<li>tar -xvf kubernetes.tar.gz</li>
+<li>sudo cp kubernetes/platforms/linux/amd64/kubectl /usr/bin</li>
+</ul></li>
+</ul>
+
+<h4>Run helloapache</h4>
+
+<ul>
+<li>atomic run projectatomic/helloapache</li>
+<li>kubectl get pods</li>
+<li>once running</li>
+<li>sudo apt-get install curl</li>
+<li>curl localhost and see the default CentOS apache page</li>
+<li>kubectl delete pod helloapache</li>
+<li>curl localhost and get nothing</li>
+</ul>
+
+<h4>Build our own using a stock example</h4>
+
+<ul>
+<li>First install atomicapp - latest version
+
+<ul>
+<li>git clone <a href="https://github.com/projectatomic/atomicapp.git">https://github.com/projectatomic/atomicapp.git</a></li>
+<li>cd atomicapp</li>
+<li>git checkout 0.1.1</li>
+<li>sudo apt-get install python-pip</li>
+<li>sudo pip install .</li>
+</ul></li>
+<li>Try building our own helloapache
+
+<ul>
+<li>git clone <a href="https://github.com/projectatomic/nulecule.git">https://github.com/projectatomic/nulecule.git</a></li>
+<li>cd nulecule/examples/helloapache</li>
+<li>docker build -t <tag> .</li>
+<li>atomic run <tag></li>
+<li>curl localhost and see the default CentOS apache page</li>
+<li>kubectl delete pod helloapache</li>
+<li>curl localhost and get nothing</li>
+</ul></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/nulecule/">Nulecule</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/08/testing-nulecule-on-debian/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/08/testing-nulecule-on-debian/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/08/testing-nulecule-on-debian/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Brian (bex) Exelbierd
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/1cf7d9ab78ad3683bca03ab4cad8edf0" /></div>
+<div class='author-blurb with-photo'>
+<p>Software Engineer, Writer and all around really hoopy frood with Red Hat&rsquo;s Open Source and Standards team.</p>
+
+<div class='more-link'>
+<a href="/blog/author/bexelbie/">View all posts by Brian (bex) Exelbierd &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

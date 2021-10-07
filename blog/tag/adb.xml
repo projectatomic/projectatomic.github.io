@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Adb</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/adb.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>App Development on OpenShift using ADB</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/05/App-Development-on-OpenShift-using-ADB/"/>
+    <id>http://www.projectatomic.io/blog/2016/05/App-Development-on-OpenShift-using-ADB/</id>
+    <published>2016-05-03T14:14:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Praveen Kumar</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle"&gt;The Atomic Developer Bundle (ADB)&lt;/a&gt; is a prepackaged development environment filled production-grade pre-configured tools that also include &lt;a href="https://github.com/openshift/origin"&gt;OpenShift origin&lt;/a&gt;. Using ADB app-developers can easily start building and developing their application on OpenShift platform.&lt;/p&gt;
+
+&lt;p&gt;In this blog post, we are going to learn step by step to create an application on OpenShift platform and deploy. Before we proceed any further, I highly recommend you to go through &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst"&gt;prerequisites guide&lt;/a&gt;. ADB provide a custom Vagrantfile to setup and provision OpenShift platform.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Guideline for App Creation&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1. Get ADB custom Vagrantfile for OpenShift&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/projectatomic/adb-atomic-developer-bundle
+$ cd adb-atomic-developer-bundle/components/centos/centos-openshift-setup
+$ vagrant up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 2. Download OpenShift origin client for your host&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/openshift/origin/releases/download/v1.1.1/openshift-origin-client-tools-v1.1.1-e1d9873-windows.zip"&gt;Windows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/openshift/origin/releases/download/v1.1.1/openshift-origin-client-tools-v1.1.1-e1d9873-mac.zip"&gt;Mac&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/openshift/origin/releases/download/v1.1.1/openshift-origin-client-tools-v1.1.1-e1d9873-linux-64bit.tar.gz"&gt;Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 3. Get OpenShift CLI details using &lt;code&gt;vagrant-service-manager&lt;/code&gt; plugin&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant service-manager env openshift
+You can access the OpenShift console on: https://10.1.2.2:8443/console
+To use OpenShift CLI, run: oc login https://10.1.2.2:8443
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 4. Login to OpenShift using client tool (&lt;em&gt;Make sure you use relative/absolute path for client binary&lt;/em&gt;)&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ./oc login https://10.1.2.2:8443
+The server uses a certificate signed by an unknown authority.
+You can bypass the certificate check, but any data you send to the server could be intercepted by others.
+Use insecure connections? (y/n): y
+
+Authentication required for https://10.1.2.2:8443 (openshift)
+Username: openshift-dev
+Password: devel
+Login successful.
+
+Using project "sample-project".
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 5. Sample templates provided to give an idea how you can create your application&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ./oc get templates -n openshift
+NAME                                 DESCRIPTION                                                                        PARAMETERS      OBJECTS
+cakephp-example                      An example CakePHP application with no database                                    15 (8 blank)    5
+cakephp-mysql-example                An example CakePHP application with a MySQL database                               16 (3 blank)    7
+eap64-basic-s2i                      Application template for EAP 6 applications built using S2I.                       12 (3 blank)    5
+eap64-mysql-persistent-s2i           Application template for EAP 6 MySQL applications with persistent storage bui...   34 (16 blank)   10
+jws30-tomcat7-mysql-persistent-s2i   Application template for JWS MySQL applications with persistent storage built...   28 (11 blank)   10
+nodejs-example                       An example Node.js application with no database                                    12 (8 blank)    5
+nodejs-mongodb-example               An example Node.js application with a MongoDB database                             13 (3 blank)    7
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 6. Let we go ahead and deploy our first app &lt;a href="https://github.com/openshift/nodejs-ex"&gt;nodejs-example&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ./oc new-app nodejs-example
+--&amp;gt; Deploying template "nodejs-example" in project "openshift" for "nodejs-example"
+     With parameters:
+      Memory Limit=512Mi
+      Git Repository URL=https://github.com/openshift/nodejs-ex.git
+      Git Reference=
+      Context Directory=
+      Application Hostname=
+      GitHub Webhook Secret=diq3I7lgSY4IQe5IMgmA7QJB77A6SSCJBjicXd6G # generated
+      Generic Webhook Secret=ICtFb7HtU0vBKU5OxFXMR8UKxIdhAG8eiT2AYlYc # generated
+      Database Service Name=
+      MongoDB Username=
+      MongoDB Password=
+      Database Name=
+      Database Administrator Password=
+--&amp;gt; Creating resources with label app=nodejs-example ...
+    service "nodejs-example" created
+    route "nodejs-example" created
+    imagestream "nodejs-example" created
+    buildconfig "nodejs-example" created
+    deploymentconfig "nodejs-example" created
+--&amp;gt; Success
+    Build scheduled for "nodejs-example", use 'oc logs' to track its progress.
+    Run 'oc status' to view your app.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 7. Check status of your deployed application&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ./oc status
+In project OpenShift sample project (sample-project) on server https://10.1.2.2:8443
+
+svc/nodejs-example - 172.30.252.169:8080
+  dc/nodejs-example deploys istag/nodejs-example:latest &amp;lt;-
+    bc/nodejs-example builds https://github.com/openshift/nodejs-ex.git with openshift/nodejs:0.10
+    #1 deployed 3 minutes ago - 1 pod
+  exposed by route/nodejs-example
+
+View details with 'oc describe &amp;lt;resource&amp;gt;/&amp;lt;name&amp;gt;' or list everything with 'oc get all'.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 8. Get your application route to access from browser (&lt;em&gt;nodejs-example-sample-project.centos7-adb.10.1.2.7.xip.io&lt;/em&gt;)&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ./oc get routes
+NAME             HOST/PORT                                                       PATH      SERVICE          TERMINATION   LABELS
+nodejs-example   nodejs-example-sample-project.centos7-adb.10.1.2.7.xip.io            nodejs-example                 app=nodejs-example,template=nodejs-example
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So now you have a sample app running on OpenShift platform. You can do lot of experiments using &lt;a href="https://docs.openshift.org/latest/cli_reference/index.html"&gt;client binary&lt;/a&gt; or from the &lt;a href="https://docs.openshift.org/latest/getting_started/developers/developers_console.html"&gt;browser&lt;/a&gt;. Give it a try and let us know your feedback/concern/issues.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>vagrant-service-manager Plugin Version 0.0.3 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/03/vagrant-service-manager-0.0.3/"/>
+    <id>http://www.projectatomic.io/blog/2016/03/vagrant-service-manager-0.0.3/</id>
+    <published>2016-03-01T17:35:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian (bex) Exelbierd</name>
+    </author>
+    <content type="html">&lt;p&gt;Version 0.0.3 of the &lt;a href="https://github.com/projectatomic/vagrant-service-manager"&gt;vagrant-service-manager
+plugin&lt;/a&gt; has
+been released by Project Atomic.&lt;/p&gt;
+
+&lt;p&gt;The vagrant-service-manager plugin works
+in conjunction with the &lt;a href="https://github.com/projectatomic/adb-atomic-developer-bundle/"&gt;Atomic Developer Bundle
+(ADB)&lt;/a&gt;
+to provide a Linux container development environment. The plugin is used
+to display the configuration information of services present in ADB.
+This plugin replaces the previously released vagrant-adbinfo plugin.&lt;/p&gt;
+
+&lt;p&gt;The plugin displays the configuration details for the Docker and other
+container-related services running inside of the ADB. This information can
+be used by a CLI client, such as &lt;code&gt;docker&lt;/code&gt; or &lt;code&gt;oc&lt;/code&gt;, or by an IDE, such as
+&lt;a href="http://www.eclipse.org/community/eclipse_newsletter/2015/june/article3.php"&gt;Eclipse&lt;/a&gt;,
+to interact with the ADB.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Notable changes in this release include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;New sub-command for displaying OpenShift provider information&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ vagrant service-manager env openshift&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;New sub-command for displaying the version information of the ADB box
+and services&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ vagrant service-manager box version&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;New option to display the version information in &lt;code&gt;--script-readable&lt;/code&gt; form&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Adds exit codes as per status of the executed command for better
+integration with tools consuming the plugin&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Example Execution&lt;/h3&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ curl https://raw.githubusercontent.com/projectatomic/vagrant-service-manager/master/Vagrantfile &amp;gt; Vagrantfile
+$ vagrant up
+
+# Obtain docker configuration information:
+
+$ vagrant service-manager env docker
+# Copying TLS certificates to /home/bexelbie/Repositories/vagrant-service-manager/.vagrant/machines/default/virtualbox/docker
+# Set the following environment variables to enable access to the
+# docker daemon running inside of the vagrant virtual machine:
+export DOCKER_HOST=tcp://172.28.128.3:2376
+export DOCKER_CERT_PATH=/home/bexelbie/Repositories/vagrant-service-manager/.vagrant/machines/default/virtualbox/docker
+export DOCKER_TLS_VERIFY=1
+export DOCKER_MACHINE_NAME=3cd8ff6
+# run following command to configure your shell:
+# eval "$(vagrant service-manager env docker)"
+
+# Printing the version of the vagrant box
+$ vagrant service-manager box version
+Atomic Developer Bundle (ADB) 1.7.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Additionally, the information for contributors has been expanded to make
+it even easier to become a contributor.&lt;/p&gt;
+
+&lt;p&gt;Users of the previous plugin, vagrant-adbinfo, should know of the
+following significant changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The docker certificate directory was renamed from &lt;code&gt;.docker&lt;/code&gt; to &lt;code&gt;docker&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There is now a sub-command structure in place.  The functionality of
+vagrant-adbinfo is now accessed as follows:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;vagrant service-manager env docker&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;vagrant-service-manager is available via the standard
+method of plugin installation, &lt;code&gt;vagrant plugin install
+vagrant-service-manager&lt;/code&gt;.  You may upgrade from previous versions
+with &lt;code&gt;vagrant plugin update vagrant-service-manager&lt;/code&gt;. It
+is also is packaged for Fedora and available from &lt;a href="https://copr.fedorainfracloud.org/coprs/nshaikh/vagrant-service-manager/"&gt;COPR&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Please join us by using, testing, and contributing to the
+vagrant-service-manager plugin.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

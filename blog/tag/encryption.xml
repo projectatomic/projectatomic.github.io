@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Encryption</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/encryption.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 125 Now Available</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/11/cockpit-125-released/"/>
+    <id>http://www.projectatomic.io/blog/2016/11/cockpit-125-released/</id>
+    <published>2016-11-28T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit&amp;rsquo;s &lt;a href="http://cockpit-project.org/blog/cockpit-125.html"&gt;build 125 has been released&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cockpit is the modern Linux admin interface. We release regularly. Here
+are the release notes from version 123, 124 and 125.&lt;/p&gt;
+
+&lt;h3&gt;Cockpit is now properly translatable&lt;/h3&gt;
+
+&lt;p&gt;Cockpit is now properly translatable. It was a big task to extract
+all the translatable strings and make translations work consistently
+between the browser and installed tools like the bridge.&lt;/p&gt;
+
+&lt;p&gt;We now start also run the login user session with a proper locale and
+LANG environment variables.&lt;/p&gt;
+
+&lt;p&gt;You can help &lt;a href="https://fedora.zanata.org/iteration/view/cockpit/master"&gt;translate cockpit in Zanata&lt;/a&gt;, or if you find text in the
+front end that isn&amp;rsquo;t translatable, then please do report it.&lt;/p&gt;
+
+&lt;p&gt;Changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5362"&gt;pull 5362&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5418"&gt;pull 5418&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5418"&gt;pull 5418&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5420"&gt;pull 5420&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/1728"&gt;pull 1728&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5442"&gt;pull 5442&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5444"&gt;pull 5444&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5443"&gt;pull 5443&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5461"&gt;pull 5461&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Display OSTree signatures&lt;/h3&gt;
+
+&lt;p&gt;Peter implement displaying OSTree tree signatures. You can tell where
+a certain update tree came from and who signed it.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; &lt;a href="http://cockpit-project.org/blog/images/ostree-signatures.png"&gt;Screenshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5433"&gt;Changes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;New expandable views for storage partitions&lt;/h3&gt;
+
+&lt;p&gt;Marius implemented expandable views in the &lt;em&gt;Storage&lt;/em&gt; pages. These let
+you dive into the details of a particular partition without having
+to navigate away from the page describing where it lives.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; &lt;a href="http://cockpit-project.org/blog/images/storage-listing.png"&gt;Screenshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt; &lt;a href="https://github.com/cockpit-project/cockpit/pull/5097"&gt;Changes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Other storage fixes&lt;/h3&gt;
+
+&lt;p&gt;Marius did work to fix many other storage related bugs. In particular
+Cockpit now deals properly with passphrases stored for LUKS encrypted
+devices, and also no longer offers to format read-only block devices.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5343"&gt;Changes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5097"&gt;more&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Full testing on RHEL 7.3, Ubuntu 16.04 and Debian 8 Jessie&lt;/h3&gt;
+
+&lt;p&gt;The Cockpit project started testing on Cockpit on RHEL 7.3, Ubuntu 16.04
+and Debian 8 Jessie along the operating systems we tested earlier. These
+will be part of our usual continuous integration, where we boot
+thousands or tens of thousands of instances per day to test changes and
+contributions.&lt;/p&gt;
+
+&lt;p&gt;Marius fixed many bugs we found, and filed operating system bugs in
+the issue trackers for those operating systems.&lt;/p&gt;
+
+&lt;p&gt;You can see the which operating systems we test Cockpit on:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; &lt;a href="http://cockpit-project.org/running.html"&gt;pull 5445&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There&amp;rsquo;s no Debian Jessie repository yet, but hopefully we can have that
+ready as time permits.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5445"&gt;Changes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5285"&gt;more&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;System shutdown can be scheduled by date&lt;/h3&gt;
+
+&lt;p&gt;Fridolin did work a long time ago, so that users could select a specific
+date and time to schedule a shutdown or reboot of the system. Stef
+finished that work added tests and it&amp;rsquo;s now in Cockpit.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/blog/images/shutdown-date.png"&gt;Screenshot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/2419"&gt;Changes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Properly terminate user sessions on the Accounts page&lt;/h3&gt;
+
+&lt;p&gt;The Accounts page now properly terminates user sessions when the
+Terminate Session button is clicked. We use the correct systemd
+loginctl commands.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5359"&gt;Changes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Get it&lt;/h3&gt;
+
+&lt;p&gt;You can &lt;a href="http://cockpit-project.org/running.html"&gt;get Cockpit here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cockpit 125 is &lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-125-1.fc25"&gt;available in Fedora 25&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Or &lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/125"&gt;download the tarball&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

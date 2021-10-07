@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Ansible</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/ansible.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Running Kubernetes on Fedora Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/"/>
+    <id>http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/</id>
+    <published>2017-09-06T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;Fedora 26 Atomic Host relies on Kubernetes for automating deployment, scaling, and operations of application containers across clusters of hosts.&lt;/p&gt;
+
+&lt;p&gt;Getting up and running with Kubernetes on Fedora Atomic Host involves installing Kubernetes (or sticking with the version of the software that&amp;rsquo;s currently baked into the images), and then configuring a cluster. This can be done manually, with the Kubeadm utility, or with Ansible scripts (among other methods).&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Below is an overview of your options for installing and configuring Kubernetes clusters on Fedora Atomic Hosts. If you&amp;rsquo;re looking to get up and running as quickly as possible with a Fedora Atomic-hosted Kubernetes cluster, skip ahead to the &lt;q&gt;Kubeadm Deployment&lt;/q&gt; section below. For a more configurable installation, check out the Ansible Deployment section.&lt;/p&gt;
+
+&lt;h3&gt;Install Kubernetes&lt;/h3&gt;
+
+&lt;h4&gt;Use Built-in Packages&lt;/h4&gt;
+
+&lt;p&gt;Fedora Atomic Host ships with Kubernetes packages baked into the system image. The specific version of Kubernetes included matches the latest release marked stable for f26 in Fedora&amp;rsquo;s &lt;a href="https://bodhi.fedoraproject.org/updates/?packages=kubernetes&amp;amp;release=F26"&gt;updates system&lt;/a&gt;. If this is the version you wish to run, you can move on to the Manual Deployment, Ansible Deployment or Kubeadm Deployment sections.&lt;/p&gt;
+
+&lt;h5&gt;Updates and Testing Packages&lt;/h5&gt;
+
+&lt;p&gt;If there is a newer stable Kubernetes version available that hasn&amp;rsquo;t yet appeared in a two-weekly Fedora Atomic release, you can access it by rebasing to the updates ref of Fedora Atomic, which is recomposed each night to track the latest stable packages:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# rpm-ostree rebase fedora-atomic:fedora/26/x86_64/updates/atomic-host -r&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Similarly, if there is a newer Kubernetes version available in Fedora&amp;rsquo;s updates-testing repository, you can access it by rebasing to the testing ref of Fedora Atomic, which is recomposed each night to track the latest testing packages:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# rpm-ostree rebase fedora-atomic:fedora/26/x86_64/testing/atomic-host -r&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Use System Containers&lt;/h4&gt;
+
+&lt;p&gt;You can also install Kubernetes using &lt;a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;system containers&lt;/a&gt;, a new approach that will eventually replace baked-in Kubernetes packages in the atomic host. You can begin trying it out now, however:&lt;/p&gt;
+
+&lt;h5&gt;Run on your kubernetes master&lt;/h5&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-apiserver registry.fedoraproject.org/f26/kubernetes-apiserver&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-controller-manager registry.fedoraproject.org/f26/kubernetes-controller-manager&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-scheduler registry.fedoraproject.org/f26/kubernetes-scheduler&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5&gt;Run on your kubernetes node(s)&lt;/h5&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# atomic install --system --system-package=no --name kubelet registry.fedoraproject.org/f26/kubernetes-kubelet&lt;/span&gt;
+
+&lt;span class="c"&gt;# atomic install --system --system-package=no --name kube-proxy registry.fedoraproject.org/f26/kubernetes-proxy&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here, you could proceed with the Manual Deployment or the Ansible Deployment sections.&lt;/p&gt;
+
+&lt;p&gt;System containers place systemd unit files in &lt;code&gt;/etc/systemd/system&lt;/code&gt;, where they override the unit files from the packages baked into the image, so it&amp;rsquo;s possible to install system containers built from other versions of Fedora. You could, for instance, build and run containers including the more recent (1.7.2) version of Kubernetes from rawhide from &lt;a href="https://github.com/projectatomic/atomic-system-containers"&gt;these sources&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Keep in mind that unlike standard containers, which are stored under &lt;code&gt;/var/lib/docker&lt;/code&gt; and may reside on a separate partition, system containers are stored in the root partition, so you may need to provide that partition with more space.&lt;/p&gt;
+
+&lt;h3&gt;Deploy Kubernetes&lt;/h3&gt;
+
+&lt;h4&gt;Kubeadm Deployment&lt;/h4&gt;
+
+&lt;p&gt;Kubeadm is a tool for bootstrapping Kubernetes clusters that&amp;rsquo;s still &lt;a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#kubeadm-maturity"&gt;under development&lt;/a&gt; by the Kubernetes project, but offers a really simple method of getting up and running with a single or multi-node cluster. Starting with the Kubernetes version that ships with Fedora Atomic Host, the kubeadm command is available in a Fedora package. It&amp;rsquo;s not currently baked into the image, but you can install it using rpm-ostree package layering:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# rpm-ostree install kubernetes-kubeadm ethtool ebtables&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After installing, you either have to reboot (using &lt;code&gt;systemctl reboot&lt;/code&gt; or by tacking an &lt;code&gt;-r&lt;/code&gt; onto the end of the install command above) or you can skip the reboot and apply the changes using the experimental command &lt;code&gt;rpm-ostree ex livefs&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In order for kubeadm to work with SELinux in enforcing mode, you&amp;rsquo;ll need to &lt;a href="https://github.com/kubernetes/kubeadm/issues/279"&gt;for now&lt;/a&gt; create the following directory and set its SELinux context as follows:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# mkdir /etc/kubernetes/pki&lt;/span&gt;
+
+&lt;span class="c"&gt;# chcon -Rt container_share_t /etc/kubernetes/pki&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also, kubeadm requires a different restart-on-fail behavior from the kubelet, so we&amp;rsquo;ll need to add three lines to this drop-in file (this step won&amp;rsquo;t be necessary once &lt;a href="http://pkgs.fedoraproject.org/cgit/rpms/kubernetes.git/commit/?id=e1f50eb5233848580ed354b1ec8b0c886ce8caaf"&gt;this commit&lt;/a&gt; makes its way into the stable kubeadm rpm):&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="c"&gt;# vi /etc/systemd/system/kubelet.service.d/kubeadm.conf&lt;/span&gt;
+
+&lt;span class="nv"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;always
+&lt;span class="nv"&gt;StartLimitInterval&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;0
+&lt;span class="nv"&gt;RestartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;10
+
+&lt;span class="c"&gt;# systemctl daemon-reload&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here, you can follow the &lt;a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/"&gt;upstream kubeadm documentation&lt;/a&gt; to bring up a cluster. Note, though, that you&amp;rsquo;ll have to append &lt;code&gt;--skip-preflight-checks&lt;/code&gt; to the &lt;code&gt;kubeadm init&lt;/code&gt; command because kubeadm currently does not know where to look for Fedora&amp;rsquo;s kernel module configuration. See this &lt;a href="https://github.com/kubernetes/kubernetes/pull/49410"&gt;pull request&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;p&gt;Also, most of the network plugins I&amp;rsquo;ve tested with Kubeadm have an issue running with SELinux confinement, which is one of the reasons why the upstream docs suggest putting SELinux into permissive mode. There are a couple of ways to avoid disabling this security feature on your host, however. I typically edit the yaml file that configures the network plugin to tell Kubernetes to run the plugin as type &lt;a href="http://danwalsh.livejournal.com/74754.html"&gt;&lt;code&gt;spc_t&lt;/code&gt;&lt;/a&gt;, which leaves its containers unconfined by SELinux.&lt;/p&gt;
+
+&lt;p&gt;For instance, here&amp;rsquo;s a portion of the Flannel plugin yaml that I&amp;rsquo;ve edited:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;spec:
+  template:
+    metadata:
+      labels:
+        tier: node
+        app: flannel
+    spec:
+      securityContext:
+        seLinuxOptions:
+          &lt;span class="nb"&gt;type&lt;/span&gt;: &lt;span class="s2"&gt;"spc_t"&lt;/span&gt;
+      hostNetwork: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The three lines beginning with &lt;code&gt;securityContext:&lt;/code&gt; go in right before the &lt;code&gt;hostNetwork: true&lt;/code&gt; line. This same trick should work in any of the network plugin yaml files.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve opened &lt;a href="https://pagure.io/atomic/kubernetes-sig/issue/3"&gt;an issue&lt;/a&gt; here to track efforts to get SELinux-compatible changes into these upstream plugins. Head over there to track progress or help out.&lt;/p&gt;
+
+&lt;p&gt;Another item to keep in mind for Kubeadm on Fedora Atomic Host is that the 1.13.x version of the docker container runtime that&amp;rsquo;s stable in Fedora 26 &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#external-dependency-version-information"&gt;isn&amp;rsquo;t yet validated&lt;/a&gt; for Kubernetes. Due to &lt;a href="https://github.com/kubernetes/kubernetes/issues/40182"&gt;this issue&lt;/a&gt;, you may have to run &lt;code&gt;sudo iptables -P FORWARD ACCEPT&lt;/code&gt; on each Kubeadm node in order to access your services over the network.&lt;/p&gt;
+
+&lt;h5&gt;Kubeadm system container&lt;/h5&gt;
+
+&lt;p&gt;It&amp;rsquo;s also possible to run Kubeadm in a system container, although there isn&amp;rsquo;t yet an official Fedora container image for this system container. Check out &lt;a href="https://github.com/projectatomic/atomic-system-containers/pull/96"&gt;this git pull request&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;h4&gt;Ansible Deployment&lt;/h4&gt;
+
+&lt;p&gt;For a more advanced installation option, the contrib repository of the upstream Kubernetes project contains &lt;a href="https://github.com/kubernetes/contrib/tree/master/ansible"&gt;ansible scripts&lt;/a&gt; for deploying a Kubernetes cluster that work with Fedora Atomic Host and its default Kubernetes packages, as well as with an Atomic Host with installed system containers.&lt;/p&gt;
+
+&lt;p&gt;Grab the scripts by git cloning them:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;git clone https://github.com/kubernetes/contrib.git
+
+&lt;span class="nb"&gt;cd &lt;/span&gt;contrib/ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, create and populate an inventory file with the hostnames or IP addresses of the systems you intend to use as your master and your nodes:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="gp"&gt;$ &lt;/span&gt;vi inventory/inventory
+
+&lt;span class="o"&gt;[&lt;/span&gt;masters]
+kube-master-test.example.com
+
+&lt;span class="o"&gt;[&lt;/span&gt;etcd:children]
+masters
+
+&lt;span class="o"&gt;[&lt;/span&gt;nodes]
+kube-minion-test-[1:2].example.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Review and modify &lt;code&gt;inventory/group_vars/all.yml&lt;/code&gt; as needed, for instance, setting your user name or password to use with ansible as desired.&lt;/p&gt;
+
+&lt;p&gt;Finally, run the deploy cluster script:&lt;/p&gt;
+&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;scripts
+
+./deploy-cluster.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For more information, check out the &lt;a href="https://github.com/kubernetes/contrib/blob/master/ansible/README.md"&gt;README file&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Manual Deployment&lt;/h4&gt;
+
+&lt;p&gt;Finally, the Project Atomic &lt;a href="http://www.projectatomic.io/docs/gettingstarted/"&gt;Getting Started Guide&lt;/a&gt; provides manual directions for configuring a cluster that should work with a stock Fedora Atomic Host or with a host with Kubernetes installed via system containers.&lt;/p&gt;
+
+&lt;h3&gt;Openshift Origin&lt;/h3&gt;
+
+&lt;p&gt;Another set of routes to running Kubernetes on Fedora Atomic Host involve installing and configuring Openshift Origin, a container application platform built from Kubernetes. Openshift Origin&amp;rsquo;s &lt;a href="https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md"&gt;&lt;code&gt;oc cluster up&lt;/code&gt;&lt;/a&gt; command provides a similar experience to Kubeadm, and there are also &lt;a href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/"&gt;Anisble scripts available&lt;/a&gt; for deploying a full-fledged cluster.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Automate Building Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/02/automate-building-atomic-host/"/>
+    <id>http://www.projectatomic.io/blog/2017/02/automate-building-atomic-host/</id>
+    <published>2017-02-27T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Trishna Guha</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt; hosts are built from standard RPM packages that have been composed into filesystem trees using rpm-ostree. This guide provides an example of automating building and testing new Atomic Host ostrees.&lt;/p&gt;
+
+&lt;p&gt;One of the primary benefits to Atomic Host and OSTree has been the ability to &lt;q&gt;configure once, deploy many times&lt;/q&gt; using custom OSTree images. But the process for doing so wasn&amp;rsquo;t streamlined or well-documented. I&amp;rsquo;m helping change that. I&amp;rsquo;m going to describe how to build atomic host in automated way. At the end of the article you&amp;rsquo;ll be able to create VM from QCOW2 image which is going to boot your own OSTree.  The VM can also be used for testing Atomic Host releases (please feel free to &lt;a href="https://pagure.io/atomic-wg/issues"&gt;open an issue if you find anything&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The procedure and Ansible playbook below will enable you to create your own Atomic Host OSTree image. This is the first step in creating your own &lt;q&gt;distributions&lt;/q&gt; of Atomic Host to install on your cloud servers. Note that it will install a bunch of requirements on your local server, as well as using system resources heavily. As such, you may want to run it on a development machine instead of your personal laptop.&lt;/p&gt;
+
+&lt;p&gt;If you just want to compose an ostree, and don&amp;rsquo;t need the playbook automation or testing, see &lt;a href="http://www.projectatomic.io/docs/compose-your-own-tree/"&gt;the documentation for composing ostrees&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Requirements&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fedora Atomic QCOW2 Image. The image can be downloaded from here: &lt;a href="https://getfedora.org/en/atomic/download/"&gt;Fedora-Atomic&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Make sure that Ansible is installed on your system. Note that I am installing it on my &lt;a href="https://getfedora.org/en/workstation/download"&gt;Fedora-Workstation&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo dnf install ansible python2-dnf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Process&lt;/h4&gt;
+
+&lt;p&gt;Clone the &lt;a href="https://github.com/trishnaguha/build-atomic-host/"&gt;Build-Atomic-Host&lt;/a&gt; git repo on your working machine/&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/trishnaguha/build-atomic-host.git
+$ cd build-atomic-host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Create VM from the QCOW2 Image&lt;/h4&gt;
+
+&lt;p&gt;The following creates a VM from QCOW2 Image where the username is &lt;code&gt;atomic-user&lt;/code&gt; and password is &lt;code&gt;atomic&lt;/code&gt;.
+Here &lt;code&gt;atomic-node&lt;/code&gt; is the instance name.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo sh create-vm.sh atomic-node /path/to/fedora-atomic25.qcow2
+# For example: /var/lib/libvirt/images/Fedora-Atomic-25-20170131.0.x86_64.qcow2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Install Requirements and Start the HTTP Server&lt;/h4&gt;
+
+&lt;p&gt;The custom ostree is made available via a simple web server. The following playbook installs requirements, creates directory structure, initializes the OSTree repository and starts the HTTP server on TCP Port 35000.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible-playbook setup.yml --ask-sudo-pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use &lt;code&gt;ip addr&lt;/code&gt; to check for the IP Address of the HTTP server.  This needs to be the interface by which your workstations communicates with virtual machines running on it, such as &lt;q&gt;virbr0&lt;/q&gt; for LibVirt on Linux:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ip addr
+7: virbr0: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 52:54:00:37:7f:e9 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In our example, the IP Address of the running HTTP server is &lt;code&gt;192.168.122.1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Give the ostree a name and add HTTP Server IP Address&lt;/h4&gt;
+
+&lt;p&gt;Replace the variables given in &lt;a href="https://github.com/trishnaguha/build-atomic-host/tree/master/vars/atomic.yml"&gt;vars/atomic.yml&lt;/a&gt; with your choice of ostree name and the HTTP server IP address.
+For Instance:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Variables for Atomic host
+atomicname: my-atomic
+httpserver: 192.168.122.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here &lt;code&gt;my-atomic&lt;/code&gt; is the ostree name and &lt;code&gt;192.168.122.1&lt;/code&gt; is HTTP Server IP Address.&lt;/p&gt;
+
+&lt;h4&gt;Run All-in-one Playbook&lt;/h4&gt;
+
+&lt;p&gt;The following playbook composes the ostree, performs SSH-setup and rebases on the created tree:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible-playbook main.yml --ask-sudo-pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Check IP Address of the Atomic instance&lt;/h4&gt;
+
+&lt;p&gt;The following command returns the IP Address of the running Atomic instance:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo virsh domifaddr atomic-node
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Reboot&lt;/h4&gt;
+
+&lt;p&gt;Now SSH to the Atomic Host and reboot it so that it can reboot into the created ostree:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ssh atomic-user@&amp;lt;atomic-hostIP&amp;gt;
+$ sudo systemctl reboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Wait for few minutes after the reboot so that you do not get connection refused by the host while SSH-ing.&lt;/p&gt;
+
+&lt;h4&gt;Verify: SSH to the Atomic Host&lt;/h4&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ssh atomic-user@192.168.122.221
+[atomic-user@atomic-node ~]$ sudo rpm-ostree status
+State: idle
+Deployments:
+● my-atomic:fedora-atomic/25/x86_64/docker-host
+       Version: 25.1 (2017-02-07 05:34:46)
+        Commit: 15b70198b8ec7fd54271f9672578544ff03d1f61df8d7f0fa262ff7519438eb6
+        OSName: fedora-atomic
+
+  fedora-atomic:fedora-atomic/25/x86_64/docker-host
+       Version: 25.51 (2017-01-30 20:09:59)
+        Commit: f294635a1dc62d9ae52151a5fa897085cac8eaa601c52e9a4bc376e9ecee11dd
+        OSName: fedora-atomic
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you have the updated tree and can test it in the VM.&lt;/p&gt;
+
+&lt;p&gt;If you are interested in composing your own tree that includes addition or deletion of packages of your choice, please follow &lt;a href="http://www.projectatomic.io/docs/compose-your-own-tree/"&gt;Compose-your-own-tree&lt;/a&gt; by &lt;a href="https://twitter.com/jasonbrooks"&gt;Jason Brooks&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Shout-Out for the following folks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://gbraad.nl"&gt;Gerard Braad&lt;/a&gt; who mentored me for the project.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/jlebon"&gt;Jonathan Lebon&lt;/a&gt; who demonstrated Building Atomic host workshop in &lt;a href="https://devconf.cz/"&gt;DevConf.CZ&lt;/a&gt;, 2017 at Brno. His slides are here: &lt;a href="http://jlebon.com/devconf/slides.pdf"&gt;jlebon-devconf-slides&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Set Up Remote Access for Docker on Atomic Host</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/01/remote-access-docker-daemon/"/>
+    <id>http://www.projectatomic.io/blog/2017/01/remote-access-docker-daemon/</id>
+    <published>2017-01-09T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>trishnag, jberkus</name>
+    </author>
+    <content type="html">&lt;p&gt;This post will describe how to set up remote command-line access for the &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; daemon running on an Atomic host. This will let you run &lt;code&gt;docker ps&lt;/code&gt;, &lt;code&gt;docker run&lt;/code&gt; and other commands from your desktop and manage a server.&lt;/p&gt;
+
+&lt;p&gt;We are also going to secure the Docker daemon with TLS (transport layer security) since we are connecting remotely. Before you carry on with the following steps, keep in mind that &lt;strong&gt;any&lt;/strong&gt; process on the client that can access the TLS certs now has &lt;strong&gt;full&lt;/strong&gt; control of the Docker daemon on the server and can do anything it wants to do. So, only copy those certificates to client hosts completely under your control.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;First, we will create client certificate and server certificate to secure our Docker daemon, using OpenSSL. For the rest of this post, I am using &lt;a href="https://getfedora.org/en/atomic/"&gt;Fedora-Atomic&lt;/a&gt; host as the remote host (Docker daemon) and &lt;a href="https://getfedora.org/en/workstation/download/"&gt;Fedora workstation&lt;/a&gt; as my local machine (Docker client).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/CHouseknecht"&gt;Chris Houseknecht&lt;/a&gt; wrote an &lt;a href="https://www.ansible.com/"&gt;Ansible&lt;/a&gt; role which creates all the certificates required automatically, so that there is no need to issue OpenSSL commands manually. Here is the Ansible role repository: &lt;a href="https://github.com/ansible/role-secure-docker-daemon"&gt;role-secure-docker-daemon&lt;/a&gt;. We&amp;rsquo;ll be cloning it.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir docker-remote-access
+$ cd docker-remote-accessi
+$ git clone https://github.com/ansible/role-secure-docker-daemon.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create an ansible config file, inventory, and playbook file to set up the Docker client and play the role.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ touch ansible.cfg inventory remote-access.yml
+$ ls
+ansible.cfg  inventory  remote-access.yml role-secure-docker-daemon
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is the Directory structure:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ tree docker-remote-access/
+docker-remote-access/
+├── ansible.cfg
+├── inventory
+├── remote-access.yml
+└── role-secure-docker-daemon
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;ansible.cfg&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vim ansible.cfg
+[defaults]
+inventory=inventory
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;inventory&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vim inventory
+[daemonhost]
+'IP_OF_ATOMIC_HOST' ansible_ssh_private_key_file='PRIVATE_KEY_FILE'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;strong&gt;IP_OF_ATOMIC_HOST&lt;/strong&gt; in the inventory file with the IP of your Atomic host (Docker daemon host) and &lt;strong&gt;PRIVATE_KEY_FILE&lt;/strong&gt; with private key file on your local system that you use to log into that host.&lt;/p&gt;
+
+&lt;p&gt;Now, we&amp;rsquo;re ready to execute a playbook which will copy all of the files and change settings to make this work.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;remote-access.yml&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vim remote-access.yml
+---
+- name: Docker Client Set up
+  hosts: daemonhost
+  gather_facts: no
+  tasks:
+    - name: Make ~/.docker directory for docker certs
+      local_action: file path='~/.docker' state='directory'
+
+    - name: Add Environment variables to ~/.bashrc
+      local_action: lineinfile dest='~/.bashrc' line='export DOCKER_TLS_VERIFY=1\nexport DOCKER_CERT_PATH=~/.docker/\nexport DOCKER_HOST=tcp://{{ inventory_hostname }}:2376\n' state='present'
+
+    - name: Source ~/.bashrc file
+      local_action: shell source ~/.bashrc
+
+- name: Docker Daemon Set up
+  hosts: daemonhost
+  gather_facts: no
+  remote_user: fedora
+  become: yes
+  become_method: sudo
+  become_user: root
+  roles:
+    - role: role-secure-docker-daemon
+      dds_host: "{{ inventory_hostname }}"
+      dds_server_cert_path: /etc/docker
+      dds_restart_docker: no
+  tasks:
+    - name: fetch ca.pem from daemon host
+      fetch:
+        src: /root/.docker/ca.pem
+        dest: ~/.docker/
+        fail_on_missing: yes
+        flat: yes
+    - name: fetch cert.pem from daemon host
+      fetch:
+        src: /root/.docker/cert.pem
+        dest: ~/.docker/
+        fail_on_missing: yes
+        flat: yes
+    - name: fetch key.pem from daemon host
+      fetch:
+        src: /root/.docker/key.pem
+        dest: ~/.docker/
+        fail_on_missing: yes
+        flat: yes
+    - name: Remove Environment variable OPTIONS from /etc/sysconfig/docker
+      lineinfile:
+        dest: /etc/sysconfig/docker
+        regexp: '^OPTIONS'
+        state: absent
+
+    - name: Modify Environment variable OPTIONS in /etc/sysconfig/docker
+      lineinfile:
+        dest: /etc/sysconfig/docker
+        line: "OPTIONS='--selinux-enabled --log-driver=journald --tlsverify --tlscacert=/etc/docker/ca.pem --tlscert=/etc/docker/server-cert.pem --tlskey=/etc/docker/server-key.pem -H=0.0.0.0:2376 -H=unix:///var/run/docker.sock'"
+        state: present
+
+    - name: Remove client certs from daemon host
+      file:
+        path: /root/.docker
+        state: absent
+
+    - name: Reload Docker daemon
+      command: systemctl daemon-reload
+    - name: Restart Docker daemon
+      command: systemctl restart docker.service
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The playbook will create client and server certificates on the Atomic host, fetch the client certificates to the workstation (Docker client), and execute the secure docker setup role.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ansible-playbook remote-access.yml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make sure tcp port 2376 is opened on the remote host (Docker daemon). If you are using Openstack, add the tcp port in your security rule, and if you are using AWS, add it to the security group.&lt;/p&gt;
+
+&lt;p&gt;So now, if you try running any docker command as regular user on your workstation, it will talk to the docker daemon of the Atomic host and execute the command there. You do not need to ssh to the remote host to issue commands, allowing you to launch containerized applications remotely and easily, yet securely.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# docker run -d -P training/webapp python app.py
+Unable to find image 'training/webapp:latest' locally
+Trying to pull repository docker.io/training/webapp ...
+sha256:06e9c1983bd6d5db5fba376ccd63bfa529e8d02f23d5079b8f74a616308fb11d: Pulling from docker.io/training/webapp
+e190868d63f8: Extracting [======================================&amp;gt;            ] 50.69 MB/65.77 MB
+...
+Status: Downloaded newer image for docker.io/training/webapp:latest
+00f41fb132afbc260c99b3d984af6d64b1a2d567c625500a254970cc5172ba2d
+#
+# docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                     NAMES
+00f41fb132af        training/webapp     "python app.py"     31 seconds ago      Up 23 seconds       0.0.0.0:32768-&amp;gt;5000/tcp   sleepy_leakey
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you get &lt;code&gt;Cannot connect to the Docker daemon&lt;/code&gt;, then try running &lt;code&gt;source ~/.bashrc&lt;/code&gt; manually.  If you get &lt;code&gt;could not read CA certificate &amp;quot;/etc/docker/ca.pem&amp;quot;&lt;/code&gt;, then try logging out of your desktop session and back in.&lt;/p&gt;
+
+&lt;p&gt;If you want to copy the playbook more easily, there&amp;rsquo;s a repository &lt;a href="https://github.com/trishnaguha/fedora-cloud-ansible/tree/master/docker-remote-access"&gt;here&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Containerization and Deployment of application on Atomic host with Ansible-Playbook</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2016/10/deployment-using-ansible/"/>
+    <id>http://www.projectatomic.io/blog/2016/10/deployment-using-ansible/</id>
+    <published>2016-10-27T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Trishna Guha</name>
+    </author>
+    <content type="html">&lt;p&gt;This mini-tutorial describes how to build &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt; image and deploy containerized application on &lt;a href="http://www.projectatomic.io/"&gt;Atomic&lt;/a&gt; host using &lt;a href="https://www.ansible.com/"&gt;Ansible&lt;/a&gt; Playbook.&lt;/p&gt;
+
+&lt;p&gt;Building Docker image for an application and running container/cluster of containers is nothing new. But the idea is to automate the whole process and this is where Ansible playbooks come in to play.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; You can use any Cloud/Workstation based Image to execute the following task.&lt;/p&gt;
+
+&lt;h3&gt;How to automate the containerization and deployment process for a simple Flask application&lt;/h3&gt;
+
+&lt;p&gt;First, let’s create a simple &lt;strong&gt;Flask Hello-World&lt;/strong&gt; application. This is the directory structure of the entire application.  You can copy these files from the repository &lt;a href="https://github.com/trishnaguha/fedora-cloud-ansible"&gt;trishnaguha/fedora-cloud-ansible&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;flask-helloworld/
+├── ansible
+│   ├── ansible.cfg
+│   ├── inventory
+│   └── main.yml
+├── Dockerfile
+└── flask-helloworld
+    ├── hello_world.py
+    ├── static
+    │   └── style.css
+    └── templates
+        ├── index.html
+        └── master.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;hello_world.py&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;from flask import Flask, render_template
+
+APP = Flask(__name__)
+
+@APP.route('/')
+def index():
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    APP.run(debug=True, host='0.0.0.0')
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;static/style.css&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;body {
+  background: #F8A434;
+  font-family: 'Lato', sans-serif;
+  color: #FDFCFB;
+  text-align: center;
+  position: relative;
+  bottom: 35px;
+  top: 65px;
+}
+.description {
+  position: relative;
+  top: 55px;
+  font-size: 50px;
+  letter-spacing: 1.5px;
+  line-height: 1.3em;
+  margin: -2px 0 45px;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;templates/master.html&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight html"&gt;&lt;code&gt;&lt;span class="cp"&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+    {% block head %}
+    &lt;span class="nt"&gt;&amp;lt;title&amp;gt;&lt;/span&gt;{% block title %}{% endblock %}&lt;span class="nt"&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+    {% endblock %}
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"&lt;/span&gt; &lt;span class="na"&gt;integrity=&lt;/span&gt;&lt;span class="s"&gt;"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"&lt;/span&gt; &lt;span class="na"&gt;crossorigin=&lt;/span&gt;&lt;span class="s"&gt;"anonymous"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;integrity=&lt;/span&gt;&lt;span class="s"&gt;"sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1"&lt;/span&gt; &lt;span class="na"&gt;crossorigin=&lt;/span&gt;&lt;span class="s"&gt;"anonymous"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;"stylesheet"&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;"{{ url_for('static', filename='style.css') }}"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+                                &lt;span class="nt"&gt;&amp;lt;link&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;'http://fonts.googleapis.com/css?family=Lato:400,700'&lt;/span&gt; &lt;span class="na"&gt;rel=&lt;/span&gt;&lt;span class="s"&gt;'stylesheet'&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;'text/css'&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;"container"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    {% block content %}
+    {% endblock %}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;templates/index.html&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;extends&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"master.html"&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;block&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;title&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}Welcome&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;to&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;Flask&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;App&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;endblock&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;block&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;content&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;&amp;lt;div&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;class=&lt;/span&gt;&lt;span class="s2"&gt;"description"&lt;/span&gt;&lt;span class="err"&gt;&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;
+
+&lt;/span&gt;&lt;span class="err"&gt;Hello&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;World&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="err"&gt;%&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;endblock&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;%}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the &lt;strong&gt;Dockerfile&lt;/strong&gt; to build the image.  Remember to put your name and email after MAINTAINER:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora
+MAINTAINER YOUR NAME HERE&amp;lt;your@email.address&amp;gt;
+
+RUN dnf -y update &amp;amp;&amp;amp; dnf -y install python-flask python-jinja2 &amp;amp;&amp;amp; dnf clean all
+RUN mkdir -p /app
+
+COPY files/ /app/
+WORKDIR /app
+
+ENTRYPOINT ["python"]
+CMD ["hello_world.py"]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s everything we need to build the container.  Now let&amp;rsquo;s automate it.&lt;/p&gt;
+
+&lt;h3&gt;Ansible playbook for our application&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Create Inventory file:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[atomic]
+&amp;lt;IP_ADDRESS_OF_HOST&amp;gt; ansible_ssh_private_key_file=&amp;lt;'PRIVATE_KEY_FILE'&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;IP_ADDRESS_OF_HOST&lt;/code&gt; with the IP address of the atomic/remote host and &lt;code&gt;‘PRIVATE_KEY_FILE’&lt;/code&gt; with your private key file.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Create ansible.cfg file:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[defaults]
+inventory=inventory
+remote_user=&amp;lt;USER&amp;gt;
+
+[privilege_escalation]
+become_method=sudo
+become_user=root
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;USER&lt;/code&gt; with the user of your remote host (Atomic).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Create the Playbook main.yml file:&lt;/strong&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;---
+- name: Deploy Flask App
+  hosts: atomic
+  become: yes
+
+  vars:
+    src_dir: [Source Directory]
+    dest_dir: [Destination Directory]
+
+  tasks:
+    - name: Create Destination Directory
+      file:
+       path: "{{ dest_dir }}/files"
+       state: directory
+       recurse: yes
+
+    - name: Copy Dockerfile to host
+      copy:
+       src: "{{ src_dir }}/Dockerfile"
+       dest: "{{ dest_dir }}"
+
+    - name: Copy Application to host
+      copy:
+       src: "{{ src_dir }}/flask-helloworld/"
+       dest: "{{ dest_dir }}/files/"
+
+    - name: Make sure that the current directory is {{ dest_dir }}
+      command: cd {{ dest_dir }}
+
+    - name: Build Docker Image
+      command: docker build --rm -t fedora/flask-app:test -f "{{ dest_dir }}/Dockerfile" "{{ dest_dir }}"
+
+    - name: Run Docker Container
+      command: docker run -d --name helloworld -p 5000:5000 fedora/flask-app:test
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;[Source Directory]&lt;/code&gt; in &lt;code&gt;src_dir&lt;/code&gt; field in main.yml with your &lt;code&gt;/path/to/src_dir&lt;/code&gt; of the current host.&lt;/p&gt;
+
+&lt;p&gt;Replace &lt;code&gt;[Destination Directory]&lt;/code&gt; in &lt;code&gt;dest_dir&lt;/code&gt; field in main.yml with your &lt;code&gt;/path/to/dest_dir&lt;/code&gt; of the remote atomic host.&lt;/p&gt;
+
+&lt;p&gt;Issue the following command in order to run the playbook. Make sure you are in the &lt;code&gt;ansible&lt;/code&gt; directory.
+&lt;code&gt;$ ansible-playbook main.yml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To verify whether the application is running, you can curl the localhost on your remote atomic host with
+&lt;code&gt;$ curl http://localhost:5000&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can also manage your containers running on remote host using &lt;a href="http://cockpit-project.org/"&gt;Cockpit&lt;/a&gt;. Check this article to know how to use Cockpit to manage your containers: &lt;a href="https://fedoramagazine.org/deploy-containers-atomic-host-ansible-cockpit"&gt;Manage-Containers-with-Cockpit&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is the repository that contains Playbooks to deploy containers on Atomic host: &lt;a href="https://github.com/trishnaguha/fedora-cloud-ansible"&gt;trishnaguha/fedora-cloud-ansible&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Clustering Atomic Hosts with Kubernetes, Ansible, and Vagrant</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/"/>
+    <id>http://www.projectatomic.io/blog/2015/09/clustering-atomic-hosts-with-kubernetes-ansible-and-vagrant/</id>
+    <published>2015-09-21T18:31:32+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;A single Atomic Host is a fine place to run your containers, but these hosts are much more fun when bunched into clusters, a task that we can manage with the help of &lt;a href="http://kubernetes.io/"&gt;Kubernetes&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;There are a lot of &lt;a href="https://github.com/kubernetes/kubernetes/blob/release-1.0/docs/getting-started-guides/README.md"&gt;great guides&lt;/a&gt; for setting up a kubernetes cluster, but my favorite involves ansible and vagrant, and lives in the kubernetes &lt;a href="https://github.com/kubernetes/contrib/"&gt;contrib&lt;/a&gt; repository on Github. &lt;/p&gt;
+
+&lt;p&gt;This install method can be used with the libvirt, virtualbox or openstack vagrant providers. You can also use the ansible scripts on their own, if vagrant isn&amp;rsquo;t your thing.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Prerequisites&lt;/h3&gt;
+
+&lt;p&gt;To follow along, you&amp;rsquo;ll need a machine with vagrant and a provider for libvirt, virtualbox, or openstack. I typically use libvirt on Fedora, but I&amp;rsquo;ve had success with virtualbox on Fedora as well &amp;ndash; if someone wants to test this with virtualbox and Windows or OS X, please let me know if it works.&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;m using Fedora 23, and this command pulled in the specific dependencies I needed:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;dnf install -y vagrant-libvirt libvirt-devel gcc gcc-c++ ruby-devel python-netaddr git wget unzip libselinux-python ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For Fedora 22, which ships with an older version of vagrant (&lt;code&gt;1.7.2&lt;/code&gt;), and for CentOS 7, which doesn&amp;rsquo;t have vagrant in its software repositories, you&amp;rsquo;ll need to install vagrant from the &lt;a href="https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4_x86_64.rpm"&gt;upstream package&lt;/a&gt;. And run &lt;code&gt;vagrant plugin install vagrant-libvirt&lt;/code&gt; to get the libvirt provider.&lt;/p&gt;
+
+&lt;p&gt;The way that this &lt;code&gt;Vagrantfile&lt;/code&gt; is currently written, you&amp;rsquo;re required to have the &lt;code&gt;vagrant-openstack-provider&lt;/code&gt; installed, whether you&amp;rsquo;re using it or not, so either install it:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant plugin install vagrant-openstack-provider
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or, comment out this line in the &lt;code&gt;Vagrantfile&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt; require 'vagrant-openstack-provider' 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you do intend to use openstack, you&amp;rsquo;ll need to copy &lt;code&gt;openstack_config.yml.example&lt;/code&gt; to &lt;code&gt;openstack_config.yml&lt;/code&gt; and edit &lt;code&gt;openstack_config.yml&lt;/code&gt; to include your own credentials and other details specific to your openstack cloud. You&amp;rsquo;ll need to upload one of the &lt;a href="http://www.projectatomic.io/download/"&gt;qcow2-formatted atomic images&lt;/a&gt; to openstack, as well, and specify that image by name in this config file. &lt;/p&gt;
+
+&lt;h3&gt;DNS, kube-addons, and SELinux&lt;/h3&gt;
+
+&lt;p&gt;One of the nice things about this method of bringing up a kubernetes cluster is that it configures the set of &lt;a href="https://github.com/kubernetes/kubernetes/tree/master/cluster/addons"&gt;kubernetes addons&lt;/a&gt;, which includes &lt;a href="https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/dns/README.md"&gt;DNS support&lt;/a&gt;. However, a major open issue with the DNS addon (and at least some of the others) is the way that it conflicts with SELinux. The ansible scripts take care of putting SELinux into permissive mode &amp;ndash; a workaround I hope won&amp;rsquo;t be required for too long.&lt;/p&gt;
+
+&lt;h3&gt;Get the code&lt;/h3&gt;
+
+&lt;p&gt;I made a fork of the kubernetes contrib repo with a &lt;a href="https://github.com/kubernetes/contrib/compare/master...jasonbrooks:atomic"&gt;small set of changes&lt;/a&gt; to make atomic hosts work. &lt;/p&gt;
+
+&lt;p&gt;Mostly, the changes boil down to &lt;em&gt;skip this step if you&amp;rsquo;re on an atomic host&lt;/em&gt;, but I&amp;rsquo;ve also modded the Vagrantfile to add support for setting a &lt;code&gt;distro_type&lt;/code&gt;, so you can indicate whether you want to use Fedora Atomic (&lt;code&gt;export DISTRO_TYPE=fedora-atomic&lt;/code&gt;), or CentOS Atomic (&lt;code&gt;export DISTRO_TYPE=centos-atomic&lt;/code&gt;). The default in the script is CentOS Atomic.&lt;/p&gt;
+
+&lt;p&gt;Grab my fork by git cloning it or by downloading the zip archive: &lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ git clone https://github.com/jasonbrooks/contrib.git
+$ cd contrib/ansible/vagrant
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ wget https://github.com/jasonbrooks/contrib/archive/atomic.zip
+$ unzip atomic.zip
+$ cd contrib-atomic/ansible/vagrant
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Bring up the cluster&lt;/h3&gt;
+
+&lt;p&gt;We&amp;rsquo;ll use vagrant to bring up our kube-master and kube-nodes. The default number of nodes is 2, but you can change this by setting a different env variable for &lt;code&gt;NUM_NODES&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant up --no-provision --provider=libvirt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If your Atomic Host image needs updating, you can do it before provisioning, like this:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ for i in {kube-node-1,kube-master,kube-node-2}; do vagrant ssh $i -c "sudo atomic host upgrade"; done
+$ vagrant reload --no-provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Time to configure kubernetes, by running the ansible playbook on the kube-master:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant provision kube-master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Kubernetes should be all set up now.&lt;/p&gt;
+
+&lt;h3&gt;Testing it out&lt;/h3&gt;
+
+&lt;p&gt;I typically test out my kubernetes clusters by running the upstream project&amp;rsquo;s &lt;a href="https://github.com/kubernetes/kubernetes/tree/master/examples/guestbook-go"&gt;guestbook-go sample application&lt;/a&gt;, which features a simple front end app that runs across multiple hosts, and a redis-based backend that divides its work between a master node and a few slave nodes. I&amp;rsquo;ve &lt;a href="https://github.com/projectatomic/nulecule/tree/master/examples/guestbook-go"&gt;packaged guestbook-go&lt;/a&gt; into an &lt;a href="http://www.projectatomic.io/docs/atomicapp/"&gt;Atomicapp&lt;/a&gt; for ease of deployment:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ vagrant ssh kube-master
+
+$ mkdir guest &amp;amp;&amp;amp; cd guest
+$ sudo atomic run projectatomic/guestbookgo-atomicapp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the app is up and running, which you can discern by watching &lt;code&gt;kubectl get pods&lt;/code&gt;, you can figure out the IP and port on which to access the app in your browser:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ kubectl get pods --watch
+NAME                 READY     STATUS    RESTARTS   AGE
+guestbook-hv1cy      1/1       Running   0          1m
+guestbook-nkkew      1/1       Running   0          1m
+guestbook-w2urm      1/1       Running   0          1m
+redis-master-4qr7s   1/1       Running   0          1m
+redis-slave-3gvcn    1/1       Running   0          1m
+redis-slave-btki8    1/1       Running   0          1m
+
+$ kubectl describe nodes kube-node-1 | grep Addresses
+Addresses:  192.168.121.66
+
+$ kubectl describe service guestbook | grep NodePort
+NodePort:       &amp;lt;unnamed&amp;gt;   32615/TCP
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Based on the output above, you&amp;rsquo;d be able to reach your app at &lt;code&gt;http://192.168.121.66:32615&lt;/code&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/guestbook-go.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Next steps&lt;/h3&gt;
+
+&lt;p&gt;I&amp;rsquo;m keen to see / help realize a fix for running SELinux in enforcing mode. Also, I&amp;rsquo;m working on getting my atomic-friendly changes merged upstream, so we won&amp;rsquo;t need to mess with a fork.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

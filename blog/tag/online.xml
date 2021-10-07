@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Online</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/online.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Project Atomic Online Meetup Wednesday</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/06/project-atomic-online-meetup-wednesday/"/>
+    <id>http://www.projectatomic.io/blog/2015/06/project-atomic-online-meetup-wednesday/</id>
+    <published>2015-06-15T20:55:57+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;Still wondering what this Atomic stuff is all about? Want a quick primer on Project Atomic?&lt;/p&gt;
+
+&lt;p&gt;Join us on Wednesday at 2 p.m. Eastern for a high level introduction to Project Atomic and its components. We&amp;rsquo;ll look at all the &lt;q&gt;pieces&lt;/q&gt; of Atomic, from Atomic Host, to rpm-ostree, the Atomic command (/usr/bin/atomic), Nulecule, and Atomic App. &lt;/p&gt;
+
+&lt;p&gt;The event is hosted on BlueJeans, you can view the event using your Browser (a plugin is required for Firefox) or using the BlueJeans app on iOS or Android.&lt;/p&gt;
+
+&lt;p&gt;To join, visit &lt;a href="https://a2m.bluejeans.com/a2m/live-event/ch34638"&gt;https://a2m.bluejeans.com/a2m/live-event/ch34638&lt;/a&gt; on Wednesday, 17 June at 2 p.m. Eastern.&lt;/p&gt;
+
+&lt;p&gt;This will be part of a regular series of online events about Project Atomic and its components. Keep your eyes on the Project Atomic blog for upcoming events!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

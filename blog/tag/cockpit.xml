@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Cockpit</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/cockpit.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Atomic Events October 2017</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/10/atomic-october-events/"/>
+    <id>http://www.projectatomic.io/blog/2017/10/atomic-october-events/</id>
+    <published>2017-10-20T20:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;Project Atomic contributors and projects will be represented at many events
+in October.  If you&amp;rsquo;re coming to any of these events, drop by
+and say hello!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;All Things Open&lt;/strong&gt;: Charlie Drage will be presenting &lt;a href="https://allthingsopen.org/talk/kompose-going-from-docker-compose-to-kubernetes-and-beyond/"&gt;Kompose: Going from Docker
+Compose to Kubernetes and Beyond&lt;/a&gt;.
+It&amp;rsquo;s likely that he and Dusty Mabe will also be around the Red Hat booth; drop by.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Open Source Summit Europe&lt;/strong&gt;: Tomas Tomecek will be presenting &lt;a href="https://osseu17.sched.com/event/BxIW/from-dockerfiles-to-ansible-container-tomas-tomecek-red-hat"&gt;From Dockerfiles to Ansible Container&lt;/a&gt;
+and Stef Walters will be presenting &lt;a href="https://osseu17.sched.com/event/ByIY/training-machines-to-be-open-source-contributors-stef-walter-red-hat-inc"&gt;Training Machines to be Open Source Contributors&lt;/a&gt;.
+Also, while not strictly part of Atomic, &lt;a href="https://osseu17.sched.com/event/BxIG/container-migration-around-the-world-adrian-reber-red-hat-and-mike-rapoport-ibm-research"&gt;Container Migration&lt;/a&gt;
+looks pretty cool.  Plus, come visit the Red Hat booth where Cockpit contributors will
+demonstrate the latest releases of the most modern server GUI.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Usenix LISA&lt;/strong&gt;: On Sunday, you can choose between &lt;a href="https://www.usenix.org/conference/lisa17/training-program"&gt;two workshops&lt;/a&gt;: Mark Lamourine&amp;rsquo;s &lt;em&gt;Container Hosts: CoreOS and Project Atomic&lt;/em&gt; and Ryan Jarvinen&amp;rsquo;s &lt;em&gt;Hands-on Intro to Kubernetes&lt;/em&gt;  We will also have a &lt;a href="https://www.usenix.org/conference/lisa17/bofs"&gt;BOF on the evening of Wednesday, November 1st&lt;/a&gt; on Migrating to
+Containers, OpenShift, or Atomic Host.  Join us in the Garden Room at 7pm. Then on Friday you can learn about &lt;a href="https://www.usenix.org/conference/lisa17/conference-program/presentation/preisler"&gt;OpenSCAP&lt;/a&gt; with Martin Preisler and Marek Haicman. Plus,
+we&amp;rsquo;ll have Atomic Host and OpenShift contributors at the Red Hat booth.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 148 supports Internet Explorer</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/08/cockpit-148/"/>
+    <id>http://www.projectatomic.io/blog/2017/08/cockpit-148/</id>
+    <published>2017-08-04T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Josh Berkus</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://cockpit-project.org/blog/cockpit-148.html"&gt;Cockpit 148&lt;/a&gt; has been released, including support for using Cockpit in Internet Explorer.  You can read more about it in &lt;a href="http://cockpit-project.org/blog/cockpit-148.html"&gt;the Cockpit Blog&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 145 with Machines and Terminal improvements</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/07/cockpit-145/"/>
+    <id>http://www.projectatomic.io/blog/2017/07/cockpit-145/</id>
+    <published>2017-07-07T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release regularly.
+Here are the release notes from versions 144 and 145.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Terminal size&lt;/h3&gt;
+
+&lt;p&gt;The Terminal now uses the full window size and dynamically resizes with it.
+Previously its size was fixed to 80x24 characters.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Full-window terminal" width="1147" height="595" src="/images/cockpit-145/terminal-full-window.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Machines page reactiveness&lt;/h3&gt;
+
+&lt;p&gt;The Machines page now listens to libvirt events instead of reading the entire
+state of all virtual machines every ten seconds. This makes the page much more
+reactive to state changes and reduces the number of calls to &lt;code&gt;virsh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Delete VM functionality&lt;/h3&gt;
+
+&lt;p&gt;A &lt;q&gt;Delete&lt;/q&gt; button/dialog was added to the Machines page. If the VM is still
+running, it will be force-stopped first. The dialog also offers you the choice
+to remove the VM&amp;rsquo;s disk images as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Delete VM" width="1349" height="922" src="/images/cockpit-145/machines-delete.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Retire external Machines provider API&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 132 introduced an external API for the Machines page that allowed third
+party plugins to dynamically add/manage virtual machines from providers other
+than libvirt. This was found to be not supportable in the long run and thus was
+discontinued.&lt;/p&gt;
+
+&lt;h3&gt;ABRT integration&lt;/h3&gt;
+
+&lt;p&gt;On Fedora 26 the Logs Page now shows Problem reports from the ABRT crash
+reporting tool. They appear as new message class &lt;q&gt;Problem&lt;/q&gt; in the journal view,
+and their details can be visited when clicking on them:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="ABRT list view" width="1145" height="301" src="/images/cockpit-145/logs-abrt-list.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="ABRT detail view" width="962" height="357" src="/images/cockpit-145/logs-abrt-details.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks to Matej Marusak for this feature!&lt;/p&gt;
+
+&lt;h3&gt;Always recommend restarting after applying Software Updates&lt;/h3&gt;
+
+&lt;p&gt;Most supported operating systems in Cockpit don&amp;rsquo;t provide a reliable
+detection of whether they require restarting the machine after applying updates
+for them to fully take effect. This particularly affects updates to the kernel,
+but also restarting services. For now, Cockpit will always recommend to
+restart the machine after applying updates:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Restart after Updates" width="772" height="350" src="/images/cockpit-145/updates-restart.png?1633620578" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Cancelling Software Updates&lt;/h3&gt;
+
+&lt;p&gt;The Software Updates page now has a Cancel button that is enabled while it is
+still safe to abort a running update, i.e. while the updates are still being
+downloaded.&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 145 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/145"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-145-1.fc26"&gt;Fedora 26&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit Virtual Hackfest</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/"/>
+    <id>http://www.projectatomic.io/blog/2017/06/cockpit-hackfest-0617/</id>
+    <published>2017-06-27T14:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;There&amp;rsquo;s a Cockpit Hackfest underway in Karlsruhe, Germany. We&amp;rsquo;re working on the
+virtual machine functionality in Cockpit.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Hackfest" width="4128" height="2322" src="/images/hackfest-1.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;That means interacting with libvirt. Although libvirt has remoting functionality
+it has no API that&amp;rsquo;s actually remotable and callable from Cockpit javascript code.
+So Lars and Pavel started working on a DBus wrapper for the API.&lt;/p&gt;
+
+&lt;p&gt;At the same time, Martin is working on making the current
+&lt;a href="http://libvirt.org/virshcmdref.html"&gt;virsh&lt;/a&gt; based access to libvirt more
+performant, so we don&amp;rsquo;t block on waiting until the DBus wrapper is done.&lt;/p&gt;
+
+&lt;p&gt;Lots of work was done understanding &lt;a href="http://redux.js.org/"&gt;redux&lt;/a&gt;. The initial
+machines code in Cockpit was written using redux, and we needed to map it&amp;rsquo;s
+concept of models and state to the Cockpit way of storing state on the server
+and UI concepts like dialogs. Everyone was involved.&lt;/p&gt;
+
+&lt;p&gt;Andreas, Garrett have been working on designs for creating a virtual machine
+and editing virtual machines. Dominik started work on implementing that code.&lt;/p&gt;
+
+&lt;p&gt;Marius worked on deletion of virtual machines, and already has a
+&lt;a href="https://github.com/cockpit-project/cockpit/pull/7113"&gt;pull request&lt;/a&gt; open.&lt;/p&gt;
+
+&lt;p&gt;Stef worked is working on the integration tests for the virtual machine stuff
+and is booting nested VMs &lt;a href="https://github.com/cockpit-project/cockpit/pull/7117"&gt;using nested images&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="Hackfest" width="4032" height="3024" src="/images/hackfest-2.jpg?1633620578" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Wheeee.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 143 with New Software Updates Page</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/06/cockpit-143/"/>
+    <id>http://www.projectatomic.io/blog/2017/06/cockpit-143/</id>
+    <published>2017-06-20T18:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the &lt;a href="http://cockpit-project.org/"&gt;modern Linux admin interface&lt;/a&gt;. We release regularly.
+Here are the release notes from version 143.&lt;/p&gt;
+
+&lt;h3&gt;&lt;q&gt;Software Updates&lt;/q&gt; page for package based operating systems&lt;/h3&gt;
+
+&lt;p&gt;There is a new &lt;q&gt;Software Updates&lt;/q&gt; page for classic dnf/yum/apt based systems,
+to complement the already existing one for OSTree on
+&lt;a href="https://www.projectatomic.io"&gt;Atomic&lt;/a&gt;. This uses the &lt;a href="https://www.freedesktop.org/software/PackageKit/"&gt;PackageKit
+API&lt;/a&gt; for platform
+independence. This feature is shipped in the new &lt;code&gt;cockpit-packagekit&lt;/code&gt;
+sub-package.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;See it in action:&lt;/p&gt;
+
+&lt;iframe width="720" height="540" src="https://www.youtube.com/embed/BENWI-dTKMs?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h3&gt;Inline VNC consoles&lt;/h3&gt;
+
+&lt;p&gt;The inline VNC console advertised in &lt;a href="http://cockpit-project.org/blog/cockpit-142.html"&gt;Cockpit 142&lt;/a&gt;
+was not actually working from the released &lt;code&gt;cockpit-machine&lt;/code&gt; package due to a
+packaging problem. Cockpit 143 corrects this problem. Thanks to Marek Libra!&lt;/p&gt;
+
+&lt;h3&gt;Kubernetes RBAC authorization support&lt;/h3&gt;
+
+&lt;p&gt;The Kubernetes page can now be used to log into Kubernetes installations that
+use &lt;a href="https://kubernetes.io/docs/admin/authorization/rbac/"&gt;RBAC authorization&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;RPM packages for IBM Z systems&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code&gt;cockpit-docker&lt;/code&gt; RPM package is now being built on the s390x (IBM Z
+Systems) architecture, as the Fedora Docker package is available there.
+(&lt;a href="https://bugzilla.redhat.com/show_bug.cgi?id=1462113"&gt;#1462113&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3&gt;Try it out&lt;/h3&gt;
+
+&lt;p&gt;Cockpit 143 is available now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://cockpit-project.org/running.html"&gt;For your Linux system&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/143"&gt;Source Tarball&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-143-1.fc26"&gt;Fedora 26&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

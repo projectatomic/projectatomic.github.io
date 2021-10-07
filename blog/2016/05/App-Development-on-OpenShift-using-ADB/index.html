@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+App Development on OpenShift using ADB &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Praveen Kumar' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='App Development on OpenShift using ADB' property='og:title'>
+<meta content='The Atomic Developer Bundle (ADB) is a prepackaged development environment filled production-grade pre-configured tools that also include OpenShift origin. Using ADB app-developers can easily start building and developing their application on OpenShift platform.&#x000A;&#x000A;In this blog post, we are going to learn step by step to create an application on OpenShift platform and deploy. Before we proceed any further, I highly recommend you to go through prerequisites guide. ADB provide a custom Vagrantfile to setup and provision OpenShift platform.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/05/App-Development-on-OpenShift-using-ADB/' property='og:url'>
+<meta content='2016-05-03T14:14:00Z' property='article:published_time'>
+<meta content='praveenkumar' property='article:author:username'>
+<meta content='ADB' property='article:tag'>
+<link href='/blog/tag/adb.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='origin' property='article:tag'>
+<link href='/blog/tag/origin.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='App Development on OpenShift using ADB' name='twitter:title'>
+<meta content='The Atomic Developer Bundle (ADB) is a prepackaged development environment filled production-grade pre-configured tools that also include OpenShift origin. Using ADB app-developers can easily start building and developing their application on OpenShift platform.&#x000A;&#x000A;In this blog post, we are going to learn step by step to create an application on OpenShift platform and deploy. Before we proceed any further, I highly recommend you to go through prerequisites guide. ADB provide a custom Vagrantfile to setup and provision OpenShift platform.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_05 blog_2016_05_App-Development-on-OpenShift-using-ADB blog_2016_05_App-Development-on-OpenShift-using-ADB_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+App Development on OpenShift using ADB
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/praveenkumar/">Praveen Kumar</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-05-03T14:14:00Z'>
+Tuesday  3 May 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://github.com/projectatomic/adb-atomic-developer-bundle">The Atomic Developer Bundle (ADB)</a> is a prepackaged development environment filled production-grade pre-configured tools that also include <a href="https://github.com/openshift/origin">OpenShift origin</a>. Using ADB app-developers can easily start building and developing their application on OpenShift platform.</p>
+
+<p>In this blog post, we are going to learn step by step to create an application on OpenShift platform and deploy. Before we proceed any further, I highly recommend you to go through <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst">prerequisites guide</a>. ADB provide a custom Vagrantfile to setup and provision OpenShift platform.</p>
+
+<p></p>
+
+<h3>Guideline for App Creation</h3>
+
+<p><strong>Step 1. Get ADB custom Vagrantfile for OpenShift</strong></p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/projectatomic/adb-atomic-developer-bundle&#x000A;$ cd adb-atomic-developer-bundle/components/centos/centos-openshift-setup&#x000A;$ vagrant up&#x000A;</code></pre>
+
+<p><strong>Step 2. Download OpenShift origin client for your host</strong></p>
+
+<ul>
+<li><a href="https://github.com/openshift/origin/releases/download/v1.1.1/openshift-origin-client-tools-v1.1.1-e1d9873-windows.zip">Windows</a></li>
+<li><a href="https://github.com/openshift/origin/releases/download/v1.1.1/openshift-origin-client-tools-v1.1.1-e1d9873-mac.zip">Mac</a></li>
+<li><a href="https://github.com/openshift/origin/releases/download/v1.1.1/openshift-origin-client-tools-v1.1.1-e1d9873-linux-64bit.tar.gz">Linux</a></li>
+</ul>
+
+<p><strong>Step 3. Get OpenShift CLI details using <code>vagrant-service-manager</code> plugin</strong></p>
+<pre class="highlight plaintext"><code>$ vagrant service-manager env openshift&#x000A;You can access the OpenShift console on: https://10.1.2.2:8443/console&#x000A;To use OpenShift CLI, run: oc login https://10.1.2.2:8443&#x000A;</code></pre>
+
+<p><strong>Step 4. Login to OpenShift using client tool (<em>Make sure you use relative/absolute path for client binary</em>)</strong></p>
+<pre class="highlight plaintext"><code>$ ./oc login https://10.1.2.2:8443&#x000A;The server uses a certificate signed by an unknown authority.&#x000A;You can bypass the certificate check, but any data you send to the server could be intercepted by others.&#x000A;Use insecure connections? (y/n): y&#x000A;&#x000A;Authentication required for https://10.1.2.2:8443 (openshift)&#x000A;Username: openshift-dev&#x000A;Password: devel&#x000A;Login successful.&#x000A;&#x000A;Using project "sample-project".&#x000A;</code></pre>
+
+<p><strong>Step 5. Sample templates provided to give an idea how you can create your application</strong></p>
+<pre class="highlight plaintext"><code>$ ./oc get templates -n openshift&#x000A;NAME                                 DESCRIPTION                                                                        PARAMETERS      OBJECTS&#x000A;cakephp-example                      An example CakePHP application with no database                                    15 (8 blank)    5&#x000A;cakephp-mysql-example                An example CakePHP application with a MySQL database                               16 (3 blank)    7&#x000A;eap64-basic-s2i                      Application template for EAP 6 applications built using S2I.                       12 (3 blank)    5&#x000A;eap64-mysql-persistent-s2i           Application template for EAP 6 MySQL applications with persistent storage bui...   34 (16 blank)   10&#x000A;jws30-tomcat7-mysql-persistent-s2i   Application template for JWS MySQL applications with persistent storage built...   28 (11 blank)   10&#x000A;nodejs-example                       An example Node.js application with no database                                    12 (8 blank)    5&#x000A;nodejs-mongodb-example               An example Node.js application with a MongoDB database                             13 (3 blank)    7&#x000A;&#x000A;</code></pre>
+
+<p><strong>Step 6. Let we go ahead and deploy our first app <a href="https://github.com/openshift/nodejs-ex">nodejs-example</a></strong></p>
+<pre class="highlight plaintext"><code>$ ./oc new-app nodejs-example&#x000A;--&gt; Deploying template "nodejs-example" in project "openshift" for "nodejs-example"&#x000A;     With parameters:&#x000A;      Memory Limit=512Mi&#x000A;      Git Repository URL=https://github.com/openshift/nodejs-ex.git&#x000A;      Git Reference=&#x000A;      Context Directory=&#x000A;      Application Hostname=&#x000A;      GitHub Webhook Secret=diq3I7lgSY4IQe5IMgmA7QJB77A6SSCJBjicXd6G # generated&#x000A;      Generic Webhook Secret=ICtFb7HtU0vBKU5OxFXMR8UKxIdhAG8eiT2AYlYc # generated&#x000A;      Database Service Name=&#x000A;      MongoDB Username=&#x000A;      MongoDB Password=&#x000A;      Database Name=&#x000A;      Database Administrator Password=&#x000A;--&gt; Creating resources with label app=nodejs-example ...&#x000A;    service "nodejs-example" created&#x000A;    route "nodejs-example" created&#x000A;    imagestream "nodejs-example" created&#x000A;    buildconfig "nodejs-example" created&#x000A;    deploymentconfig "nodejs-example" created&#x000A;--&gt; Success&#x000A;    Build scheduled for "nodejs-example", use 'oc logs' to track its progress.&#x000A;    Run 'oc status' to view your app.&#x000A;</code></pre>
+
+<p><strong>Step 7. Check status of your deployed application</strong></p>
+<pre class="highlight plaintext"><code>$ ./oc status&#x000A;In project OpenShift sample project (sample-project) on server https://10.1.2.2:8443&#x000A;&#x000A;svc/nodejs-example - 172.30.252.169:8080&#x000A;  dc/nodejs-example deploys istag/nodejs-example:latest &lt;-&#x000A;    bc/nodejs-example builds https://github.com/openshift/nodejs-ex.git with openshift/nodejs:0.10&#x000A;    #1 deployed 3 minutes ago - 1 pod&#x000A;  exposed by route/nodejs-example&#x000A;&#x000A;View details with 'oc describe &lt;resource&gt;/&lt;name&gt;' or list everything with 'oc get all'.&#x000A;</code></pre>
+
+<p><strong>Step 8. Get your application route to access from browser (<em>nodejs-example-sample-project.centos7-adb.10.1.2.7.xip.io</em>)</strong></p>
+<pre class="highlight plaintext"><code>$ ./oc get routes&#x000A;NAME             HOST/PORT                                                       PATH      SERVICE          TERMINATION   LABELS&#x000A;nodejs-example   nodejs-example-sample-project.centos7-adb.10.1.2.7.xip.io            nodejs-example                 app=nodejs-example,template=nodejs-example&#x000A;</code></pre>
+
+<p>So now you have a sample app running on OpenShift platform. You can do lot of experiments using <a href="https://docs.openshift.org/latest/cli_reference/index.html">client binary</a> or from the <a href="https://docs.openshift.org/latest/getting_started/developers/developers_console.html">browser</a>. Give it a try and let us know your feedback/concern/issues.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/adb/">ADB</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/origin/">origin</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/05/App-Development-on-OpenShift-using-ADB/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/05/App-Development-on-OpenShift-using-ADB/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/05/App-Development-on-OpenShift-using-ADB/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

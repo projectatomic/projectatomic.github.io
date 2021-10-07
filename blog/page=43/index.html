@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Project Atomic News &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_page-43 blog_page-43_index source-haml'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<section class='blog-archive'>
+<h1>Project News</h1>
+<section class='articles'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/12/atomic-app-0-3/">Atomic App 0.3.0 release!</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/cdrage/">Charlie Drage</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-17T17:00:00Z'>
+Thursday 17 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Today we&rsquo;ve released <a href="https://github.com/projectatomic/atomicapp/releases">0.3.0</a> of <a href="http://www.projectatomic.io/docs/atomicapp/">Atomic App</a>! We&rsquo;ve crossed a few things on our roadmap as well as introduced a brand-new provider; <a href="https://mesosphere.github.io/marathon/"><strong>Marathon!</strong></a> For those new to Marathon, it&rsquo;s a cluster-wide init and control system for services in cgroups or Docker containers, that usually runs on top of Apache Mesos.</p>
+
+<p>The main features of this release are:</p>
+
+<ul>
+<li>Marathon provider (thank you <a href="https://github.com/kadel">@kadel</a> and <a href="https://github.com/dharmit">@dharmit</a>!)</li>
+<li>A complete refactor of our OpenShift provider (using the HTTP API rather than oc command)</li>
+<li>Support for <code>oc new-app</code> deployment</li>
+<li>CLI options (ex. &ndash;answers-conf) may now be used anywhere on the command line</li>
+</ul>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/12/atomic-app-0-3/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/alm/">alm</a></li>
+<li><a href="/blog/tag/application-lifecycle/">application lifecycle</a></li>
+<li><a href="/blog/tag/atomic-app/">atomic app</a></li>
+<li><a href="/blog/tag/composite-apps/">composite apps</a></li>
+<li><a href="/blog/tag/developers/">developers</a></li>
+<li><a href="/blog/tag/nulecule/">nulecule</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/12/ADB-1-5/">Releasing the Atomic Developer Bundle 1.5</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/lala/">Lalatendu Mohanty</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-17T15:00:00Z'>
+Thursday 17 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Project Atomic is pleased to announce the release of the Atomic Developer Bundle (ADB) 1.5, a Vagrant box that provides a ready-to-use development environment for container applications. With ADB, developers can dive right into producing complex, multi-container applications.</p>
+
+<p>The 1.5 release adds the ability to develop and test using <a href="http://www.openshift.org/">OpenShift Origin v3</a>. The ADB is useful on Microsoft Windows, Apple&rsquo;s OS X and GNU/Linux distributions. The ADB provides a container development ecosystem that ensures that developers are able to work with Linux containers even if their base operating system does not support it.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/12/ADB-1-5/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/developer-tools/">Developer tools</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+<li><a href="/blog/tag/openshift/">openshift</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/12/fedora-atomic-host-two-week-release-12-15-2015-ready/">Fedora Atomic Host Two-Week Release (12-15-2015) Ready!</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-17T14:20:54Z'>
+Thursday 17 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>The Fedora Project&rsquo;s Cloud Working Group is pleased to announce the December 15 two-week Fedora Atomic Host is <a href="https://getfedora.org/en/cloud/download/atomic.html">ready to download</a>. Fedora Atomic Host is optimized to run Docker containers and is on a rapid-release cycle to match the pace of Linux container technology. Note that there will be no release on December 29 due to the holiday.</p>
+
+<p>We release the Fedora Atomic Host builds approximately every two weeks in all the supported formats (installable ISO, qcow2, Vagrant Boxes, and EC2 images), with the most up-to-date snapshot of our stack to work with Linux containers.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/12/fedora-atomic-host-two-week-release-12-15-2015-ready/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">Atomic Host</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+<li><a href="/blog/tag/fedora/">Fedora</a></li>
+<li><a href="/blog/tag/fedora-cloud/">Fedora Cloud</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/12/making-docker-images-write-only-in-production/">Making Docker images read-only in production</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dwalsh/">Dan Walsh</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-16T22:06:42Z'>
+Wednesday 16 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>With Docker 1.10 approaching soon, I wanted to talk about one of the useful new features coming that makes it easier to run containers in read-only mode. Using the new <code>--tmpfs</code> you can run a container as read only, but still use writeable directories for things like <code>/etc</code>, <code>/tmp</code> or <code>/run</code> but discard changes when a container is stopped.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/12/making-docker-images-write-only-in-production/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/images/">images</a></li>
+<li><a href="/blog/tag/operations/">operations</a></li>
+<li><a href="/blog/tag/production/">production</a></li>
+<li><a href="/blog/tag/tmpfs/">tmpfs</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+<a href="/blog/2015/12/fedora-atomic-sssd-container/">External authentication for Fedora Atomic Host</a>
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/adelton/">Jan Pazdziora</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-08T16:00:00Z'>
+Tuesday  8 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>By default, Fedora Atomic images come with cloud-init, which supports customization of various aspects of the running instance, including password for the default user. However, if many users in an organization should have access to the Atomic Host, the local configuration of the instance will not scale and user identities, authentication, and authorization need to be based on external identity management solution. </p>
+
+<p>For IPA (FreeIPA/IdM), Active Directory, or generic LDAP servers, SSSD can serve as an agent providing these services, from user identity lookups and user group membership resolution to access control. With an SSSD container now available, Fedora Atomic Hosts can be deployed in very similar way to normal Fedora.</p>
+
+<p>
+<a class="more-link read-more" href="/blog/2015/12/fedora-atomic-sssd-container/">Read More &raquo;</a>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/authentication/">authentication</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/sssd/">sssd</a></li>
+</ul>
+</div>
+</footer>
+</article>
+
+<ul class='pagination'>
+<li>
+<a href="/blog/page=42/">Newer</a>
+</li>
+<li>
+<a href="/blog/page=39/">39</a>
+</li>
+<li>
+<a href="/blog/page=40/">40</a>
+</li>
+<li>
+<a href="/blog/page=41/">41</a>
+</li>
+<li>
+<a href="/blog/page=42/">42</a>
+</li>
+<li class='active'>
+<span>43</span>
+</li>
+<li>
+<a href="/blog/page=44/">44</a>
+</li>
+<li>
+<a href="/blog/page=45/">45</a>
+</li>
+<li>
+<a href="/blog/page=46/">46</a>
+</li>
+<li>
+<a href="/blog/page=47/">47</a>
+</li>
+<li>
+<a href="/blog/page=44/">Older</a>
+</li>
+</ul>
+
+</section>
+
+</section>
+
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

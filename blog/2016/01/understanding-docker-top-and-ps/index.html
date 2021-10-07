@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+atomic top, docker top, and ps &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Antonio Murdaca' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='atomic top, docker top, and ps' property='og:title'>
+<meta content='Looking to view running container information quickly? Check out the new atomic top command!&#x000A;&#x000A;atomic top is a new atomic sub-command that will allow you to interactively display the top process information from all of your containers running on a host. It works like the standard top command, where it will continuously update the top processes. Under the hood, atomic top is using Docker’s top API to gather information about a particular container. When queried, the Docker daemon uses ps to give back results. The same thing happens with the Docker CLI.&#x000A;&#x000A;Docker’s top command allows users to display the ps output for the main process of a given container ID or name. It’s handy because it returns information about containers running on remote daemons as well.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/01/understanding-docker-top-and-ps/' property='og:url'>
+<meta content='2016-01-18T17:40:47Z' property='article:published_time'>
+<meta content='runcom' property='article:author:username'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='atomic top, docker top, and ps' name='twitter:title'>
+<meta content='Looking to view running container information quickly? Check out the new atomic top command!&#x000A;&#x000A;atomic top is a new atomic sub-command that will allow you to interactively display the top process information from all of your containers running on a host. It works like the standard top command, where it will continuously update the top processes. Under the hood, atomic top is using Docker’s top API to gather information about a particular container. When queried, the Docker daemon uses ps to give back results. The same thing happens with the Docker CLI.&#x000A;&#x000A;Docker’s top command allows users to display the ps output for the main process of a given container ID or name. It’s handy because it returns information about containers running on remote daemons as well.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_01 blog_2016_01_understanding-docker-top-and-ps blog_2016_01_understanding-docker-top-and-ps_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+atomic top, docker top, and ps
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/runcom/">Antonio Murdaca</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-01-18T17:40:47Z'>
+Monday 18 January 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Looking to view running container information quickly? Check out the new <code>atomic top</code> command!</p>
+
+<p><code>atomic top</code> is a new atomic sub-command that will allow you to interactively display the top process information from <em>all</em> of your containers running on a host. It works like the standard <code>top</code> command, where it will continuously update the top processes. Under the hood, <code>atomic top</code> is using Docker&rsquo;s top API to gather information about a particular container. When queried, the Docker daemon uses <code>ps</code> to give back results. The same thing happens with the Docker CLI.</p>
+
+<p>Docker&rsquo;s <code>top</code> command allows users to display the <code>ps</code> output for the main process of a given container ID or name. It&rsquo;s handy because it returns information about containers running on remote daemons as well.</p>
+
+<p></p>
+
+<p>While developing the <code>atomic top</code> subcommand, we ran into some weird <em>issues</em>. We were interested, for instance, in listing only some <code>ps</code> columns, not all.</p>
+
+<p>Let&rsquo;s see how <code>docker top</code> is internally implemented and what gotchas and pitfalls you should be aware of when using <code>ps</code>.</p>
+
+<h3>How Does It Work?</h3>
+
+<p>-
+First things first, the command synopsis from the man page is <code>docker top [--help] CONTAINER [ps OPTIONS]</code>. <code>ps OPTIONS</code>
+refers to any options the <code>ps</code> binary accepts.</p>
+
+<p>On Linux hosts, when you run <code>docker top CONTAINER</code>, the CLI sends a request to the docker daemon (which could be running
+on a different host) in order to get the <code>ps</code> information for the given container. It does so by calling the <code>ps</code> binary from the host on which the daemon
+is running.</p>
+
+<p>Internally, when <em>no ps options</em> are provided, the daemon first gets the PID of the given container, calls out <code>ps -ef</code>, then get its output, and finally
+filters out all but the line containing the container&rsquo;s PID.</p>
+
+<p>Instead, when a user <em>does</em> provide <code>ps</code> options, the daemon simply drops <code>-ef</code> and just append user&rsquo;s options to <code>ps</code>. For instance, <code>docker top CONTAINER -o pid,cmd</code> calls <code>ps -o pid,cmd</code>.</p>
+
+<p>So far, so good, you might think. But to fully understand <code>docker top</code>, we should be aware of how <code>ps</code> works.</p>
+
+<h3>Enter <code>ps</code></h3>
+
+<p>The main <em>gotcha</em> to understand about <code>ps</code> is that it accepts several kinds of options. Quoting from <code>man ps</code>:</p>
+
+<blockquote>
+<ul>
+<li>UNIX options, which may be grouped and must be preceded by a dash.</li>
+<li>BSD options, which may be grouped and must not be used with a dash.</li>
+<li>GNU long options, which are preceded by two dashes.</li>
+</ul>
+</blockquote>
+
+<p>What the above means is that doing <code>ps -ef</code> and <code>ps ef</code> (notice there&rsquo;s no dash in the second command) produces a totally different output:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;# UNIX options&#x000A;$ ps -ef&#x000A;UID        PID  PPID  C STIME TTY          TIME CMD&#x000A;root         1     0  0 19:32 ?        00:00:01 /usr/lib/systemd/systemd --switched-root --system --deserialize 22&#x000A;root         2     0  0 19:32 ?        00:00:00 [kthreadd]&#x000A;root         3     2  0 19:32 ?        00:00:00 [ksoftirqd/0]&#x000A;root         5     2  0 19:32 ?        00:00:00 [kworker/0:0H]&#x000A;root         6     2  0 19:32 ?        00:00:00 [kworker/u16:0]&#x000A;root         7     2  0 19:32 ?        00:00:00 [rcu_sched]&#x000A;root         8     2  0 19:32 ?        00:00:00 [rcu_bh]&#x000A;root         9     2  0 19:32 ?        00:00:00 [rcuos/0]&#x000A;[...]&#x000A;&#x000A;# BSD options&#x000A;$ ps ef&#x000A;PID TTY      STAT   TIME COMMAND&#x000A; 3206 tty2     Ssl+   0:00 /usr/libexec/gdm-x-session --run-script gnome-session XDG_SEAT=seat0 LOGNAME=runcom USER=r&#x000A; 3212 tty2     Sl+    0:10  \_ /usr/libexec/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -nolisten tcp -&#x000A; 3265 tty2     Sl+    0:00  \_ dbus-daemon --print-address 4 --session XDG_SEAT=seat0 LOGNAME=runcom USER=runcom USER&#x000A; 3268 tty2     Sl+    0:00  \_ /usr/libexec/gnome-session-binary XDG_VTNR=2 XDG_SESSION_ID=1 GUESTFISH_INIT=\e[1;34m&#x000A; 3341 tty2     Sl+    0:00      \_ /usr/libexec/gnome-settings-daemon XDG_VTNR=2 XDG_SESSION_ID=1 HOSTNAME=localhost.&#x000A; 3427 tty2     SLl+   0:25      \_ /usr/bin/gnome-shell XDG_VTNR=2 XDG_SESSION_ID=1 GUESTFISH_INIT=\e[1;34m HOSTNAME=&#x000A; 3449 tty2     Sl     0:00      |   \_ ibus-daemon --xim --panel disable XDG_VTNR=2 XDG_SESSION_ID=1 GUESTFISH_INIT=\&#x000A; 3454 tty2     Sl     0:00      |       \_ /usr/libexec/ibus-dconf XDG_VTNR=2 XDG_SESSION_ID=1 GUESTFISH_INIT=\e[1;34&#x000A;[...]&#x000A;</code></pre>
+
+<p>The first command (with the dash) is showing every process on the system (<code>-e</code> stands for <em>Select all processes</em>, <code>-f</code> stands for <em>Do full-format listing</em>).
+In the second command, <code>e</code> stands for <em>Show the environment after the command.</em> and <code>f</code> means the same as the UNIX variant.</p>
+
+<p>By default, <code>ps</code> (<em>without flags</em>) selects all processes with the same effective user ID (euid=EUID) as the current user and associated with the same terminal as the invoker.<br>
+However, there&rsquo;s an hidden note within the man page lines which says:</p>
+
+<blockquote>
+<p>The use of BSD-style options will also change the process selection to include processes on other terminals (TTYs) that are owned by you</p>
+</blockquote>
+
+<p>So the second command shows what <code>ps</code> alone would have shown along with all other processes, owned by me, on different terminals (TTYs). This is clearly different from <code>ps -ef</code> which shows <em>all</em> processes in the system.</p>
+
+<p>To achieve the same as <code>ps -ef</code> using BSD options, you would have done <code>ps aux</code> instead. I&rsquo;ll leave to the reader understanding what <code>aux</code> does here.</p>
+
+<p>To sum up this section:</p>
+
+<ul>
+<li> <code>ps</code> shows all processes with the same effective user ID (euid=EUID) as the current user and associated with the same terminal as the invoker</li>
+<li><code>ps -ef</code> shows <em>all</em> processes in the system and it&rsquo;s using UNIX options</li>
+<li><code>ps  ef</code> is the same as <code>ps</code>,  it shows processes owned by me <em>but</em> it will show processes on other terminals (TTYs)</li>
+<li>I should have used <code>ps aux</code> to show <em>all</em> processes in the system using BSD options</li>
+<li>This isn&rsquo;t fun</li>
+<li><em>TTYs are Evil for <code>ps</code></em></li>
+</ul>
+
+<h3>When Problems Arise</h3>
+
+<p>Enough <code>ps</code> basics. Let&rsquo;s see how having those different UNIX/BSD options may cause trouble. Specifically, let&rsquo;s see this with <code>docker top</code> and understand why I wrote <em>TTYs are evil for <code>ps</code></em>.</p>
+
+<p>Fire up two containers, one without a TTY and another with:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;$ docker run -d fedora /usr/bin/vi # this won't have a TTY allocated&#x000A;bb910bada1373d639d6ba98557a0f1319bf0164d0d3e3347adef4dff8a155862&#x000A;&#x000A;$ docker run -ti fedora /bin/bash # this will have a TTY, as specified by -ti&#x000A;[root@4a4fa008ac25 /]#&#x000A;&#x000A;$ docker ps # in another terminal&#x000A;CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES&#x000A;4a4fa008ac25        fedora              "/bin/bash"         About a minute ago   Up About a minute                       distracted_ptolemy&#x000A;bb910bada137        fedora              "/usr/bin/vi"       About a minute ago   Up About a minute                       loving_einstein&#x000A;</code></pre>
+
+<p>Now run <code>docker top</code>:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;$ docker top 4a4fa008ac25&#x000A;UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD&#x000A;root                9046                2048                0                   20:36               pts/6               00:00:00            /bin/bash&#x000A;&#x000A;$ docker top bb910bada137&#x000A;UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD&#x000A;root                8952                2048                0                   20:35               ?                   00:00:00            /usr/bin/vi&#x000A;</code></pre>
+
+<p>Everything works fine, both containers show <code>ps</code> output correctly. Notice how the first container&mdash;the <em>interactive</em> one&mdash;does have a TTY allocated&mdash;<code>pts/6</code>&mdash;while the other just shows <code>?</code>.</p>
+
+<p>From the previous sections, we know that Docker is internally running <code>ps -ef</code> to get the list of all processes running on the system and filters out all lines but the line containing the container main process PID. We also know that the list contains all process on every TTY, which clearly includes processes with and without TTYs. So far, so good again.</p>
+
+<p>Now let&rsquo;s play around with columns. Let&rsquo;s say I&rsquo;m interested in having only the <code>PID</code> column and the <code>CMD</code> column. I remember the option was <code>o</code>, or <code>-o</code>. Whatever&hellip; let&rsquo;s run <code>docker top</code> to filter out the columns we&rsquo;re not interested in. I&rsquo;m going to use <code>o</code> now:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;$ docker top 4a4fa008ac25 o pid,cmd&#x000A;PID                 CMD&#x000A;9046                /bin/bash&#x000A;&#x000A;$ docker top bb910bada137 o pid,cmd&#x000A;PID                 CMD&#x000A;</code></pre>
+
+<p>What?! no output from the second <code>docker top</code>? Why? Maybe I should use <code>-o</code> instead:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;$ docker top 4a4fa008ac25 -o pid,cmd&#x000A;PID                 CMD&#x000A;&#x000A;$ docker top bb910bada137 -o pid,cmd&#x000A;PID                 CMD&#x000A;8952                /usr/bin/vi&#x000A;</code></pre>
+
+<p>Great, now the results are inverted and I&rsquo;m not getting any output for the second container.</p>
+
+<p>Breathe. Let&rsquo;s get a step back.</p>
+
+<h3>TTYs Are Evil in <code>ps</code></h3>
+
+<p>Remember that <code>ps</code> with BSD options shows processes on other terminals (TTYs)? While empty or UNIX options selects all processes with the same effective user ID (euid=EUID) as the current user and <em>associated with the same terminal as the invoker</em>? The invoker in both cases is root from the docker daemon itself which also doesn&rsquo;t have a TTY (remember this):</p>
+<pre class="highlight plaintext"><code>sh&#x000A;$ ps -eo cmd,tty | grep docker&#x000A;/usr/bin/docker daemon -D - ? # no TTY&#x000A;</code></pre>
+
+<p>So, let&rsquo;s see what&rsquo;s happening in each case (given the shown above invoker has no TTY):</p>
+
+<ul>
+<li><p><code>docker top 4a4fa008ac25 -o pid,cmd</code></p>
+
+<ul>
+<li>Container has TTY allocated</li>
+<li>No output because the process <em>isn&rsquo;t</em> associated with the same terminal as the invoker<br></li>
+</ul></li>
+<li><p><code>docker top bb910bada137 -o pid,cmd</code></p>
+
+<ul>
+<li>Container has no TTY</li>
+<li>Output because the process <em>is</em> associated, apparently, with the same terminal as the invoker</li>
+</ul></li>
+<li><p><code>docker top 4a4fa008ac25 o pid,cmd</code></p>
+
+<ul>
+<li>Container has TTY</li>
+<li>Output because BSD options shows processes on other  TTYs unless the TTY isn&rsquo;t allocated (try with <code>ps o tty</code>)</li>
+</ul></li>
+<li><p><code>docker top bb910bada137 o pid,cmd</code></p>
+
+<ul>
+<li>Container has a no TTY</li>
+<li>No output because BSD options shows all processes on other TTYs unless the TTY isn&rsquo;t allocated (try with <code>ps o tty</code>)</li>
+</ul></li>
+</ul>
+
+<p>Clear. Well, now that we <em>slightly</em> understand how <code>docker top</code> and <code>ps</code> works, let&rsquo;s fix the weird scenario above by running the commands with the correct options:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;# UNIX options&#x000A;$ docker top 4a4fa008ac25 -eo pid,cmd&#x000A;PID                 CMD&#x000A;9046                /bin/bash&#x000A;&#x000A;$ docker top bb910bada137 -eo pid,cmd&#x000A;PID                 CMD&#x000A;8952                /usr/bin/vi&#x000A;&#x000A;# BSD options&#x000A;$ docker top 4a4fa008ac25 axo pid,cmd&#x000A;PID                 CMD&#x000A;9046                /bin/bash&#x000A;&#x000A;$ docker top bb910bada137 axo pid,cmd&#x000A;PID                 CMD&#x000A;8952                /usr/bin/vi&#x000A;</code></pre>
+
+<p>I suggest you to go and have a look at the whole <code>man ps</code> to get a better sight on all of this.</p>
+
+<blockquote>
+<p>Take special care of the BSD <code>a</code> and <code>x</code> options as we used them above to solve the issue.</p>
+</blockquote>
+
+<h3><code>atomic top</code></h3>
+
+<p><code>atomic top</code> is used the same way <code>docker top</code> queries for <code>ps</code> information. It slightly differs from <code>docker top</code> because it&rsquo;s using <code>ncurses</code> to have an interactive panel to list containers information, order columns, automatically add and remove containers and more. Following is a screenshot of what you&rsquo;ll have in the next atomic versions:</p>
+
+<p><img alt="atomic top screenshot" src="/images/atomic_top.png" /></p>
+
+<p>As a sidenote, if you want to list additional columns in <code>atomic top</code> you would just add <code>-o</code> with the fields you&rsquo;re interested, as in:</p>
+<pre class="highlight plaintext"><code>sh&#x000A;$ sudo atomic top -o uid,gid&#x000A;&#x000A;[..interactive and super cool panel :)..]&#x000A;</code></pre>
+
+<p>I hope I&rsquo;ve covered the basics to avoid getting frustrated by the common pitfalls you could incur while using <code>ps</code>, <code>docker top</code>, and <code>atomic top</code>. This will also hopefully avoid anyone from filing bug reports against <code>docker top</code> when the wrong options are provided.</p>
+
+<p>Huge thanks for inspiration to <em>Brent Baude</em> and <em>Daniel Walsh</em>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/01/understanding-docker-top-and-ps/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/01/understanding-docker-top-and-ps/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/01/understanding-docker-top-and-ps/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

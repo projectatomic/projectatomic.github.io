@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Developing with Mesos-Marathon provider on Atomic Developer Bundle (ADB) &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dharmit Shah' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Developing with Mesos-Marathon provider on Atomic Developer Bundle (ADB)' property='og:title'>
+<meta content='Since the 1.6.0 release, the Atomic Developer Bundle&#x000A;(ADB)&#x000A;includes support for Mesos-Marathon as an orchestrator. This is in conjunction&#x000A;with the support for Mesos-Marathon that was added to&#x000A;Atomic App 0.3.0. This feature&#x000A;supports developers choosing to work with atomicapps on Mesos-Marathon.&#x000A;&#x000A;Mesos Marathon is a distributed control system which can be used for container&#x000A;orchestration in large server clusters.  Some Docker-based infrastructure teams&#x000A;use Mesos instead of Kubernetes. Learn more here:&#x000A;&#x000A;&#x000A;Mesos&#x000A;Marathon' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/04/developing-with-mesos-marathon/' property='og:url'>
+<meta content='2016-04-07T00:00:00Z' property='article:published_time'>
+<meta content='dharmit' property='article:author:username'>
+<meta content='atomic developer bundle' property='article:tag'>
+<link href='/blog/tag/atomic developer bundle.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='developer tools' property='article:tag'>
+<link href='/blog/tag/developer tools.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='marathon' property='article:tag'>
+<link href='/blog/tag/marathon.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='mesos' property='article:tag'>
+<link href='/blog/tag/mesos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Developing with Mesos-Marathon provider on Atomic Developer Bundle (ADB)' name='twitter:title'>
+<meta content='Since the 1.6.0 release, the Atomic Developer Bundle&#x000A;(ADB)&#x000A;includes support for Mesos-Marathon as an orchestrator. This is in conjunction&#x000A;with the support for Mesos-Marathon that was added to&#x000A;Atomic App 0.3.0. This feature&#x000A;supports developers choosing to work with atomicapps on Mesos-Marathon.&#x000A;&#x000A;Mesos Marathon is a distributed control system which can be used for container&#x000A;orchestration in large server clusters.  Some Docker-based infrastructure teams&#x000A;use Mesos instead of Kubernetes. Learn more here:&#x000A;&#x000A;&#x000A;Mesos&#x000A;Marathon' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_04 blog_2016_04_developing-with-mesos-marathon blog_2016_04_developing-with-mesos-marathon_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Developing with Mesos-Marathon provider on Atomic Developer Bundle (ADB)
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dharmit/">Dharmit Shah</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-04-07T00:00:00Z'>
+Thursday  7 April 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Since the 1.6.0 release, the <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">Atomic Developer Bundle
+(ADB)</a>
+includes support for Mesos-Marathon as an orchestrator. This is in conjunction
+with the support for Mesos-Marathon that was added to
+<a href="https://github.com/projectatomic/atomicapp">Atomic App</a> 0.3.0. This feature
+supports developers choosing to work with atomicapps on Mesos-Marathon.</p>
+
+<p>Mesos Marathon is a distributed control system which can be used for container
+orchestration in large server clusters.  Some Docker-based infrastructure teams
+use Mesos instead of Kubernetes. Learn more here:</p>
+
+<ul>
+<li><a href="http://mesos.apache.org/">Mesos</a></li>
+<li><a href="http://mesosphere.github.io/marathon/">Marathon</a></li>
+</ul>
+
+<p></p>
+
+<h3>Starting the Vagrant box</h3>
+
+<p>A <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-mesos-marathon-singlenode-setup/Vagrantfile">Vagrantfile</a>
+has been created that will use the ADB and provision it with a fully setup and
+configured single node Mesos-Marathon installation.</p>
+
+<p>One can either clone the ADB repo to use this setup or download only the
+Vagrantfile and Ansible playbook. To avoid any errors, it&rsquo;d be best to clone
+the repo and spin up the vagrant box:</p>
+<pre class="highlight plaintext"><code>$ git clone https://github.com/projectatomic/adb-atomic-developer-bundle/&#x000A;$ cd adb-atomic-developer-bundle/components/centos/centos-mesos-marathon-singlenode-setup/&#x000A;$ vagrant up&#x000A;</code></pre>
+
+<p>If you need help with setting up Vagrant or a virtualization provider, refer
+<a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/docs/installing.rst">this
+document</a>.</p>
+
+<p>Note that when you do <code>vagrant up</code>, the <a href="https://github.com/projectatomic/adb-atomic-developer-bundle/blob/master/components/centos/centos-mesos-marathon-singlenode-setup/provisioning/playbook.yml">Ansible
+playbook</a>,
+used to do the provisioning, downloads certain packages from the Internet.
+Hence, the time for box to get ready for use is directly dependent on your
+Internet connection. It pulls around 130 MB from the Internet.</p>
+
+<h3>Developing on the box</h3>
+
+<p>This section focuses on running containerized applications in the newly created
+Mesos-Marathon box with the help of
+<a href="http://www.projectatomic.io/docs/atomicapp/">Atomic App</a>.</p>
+
+<h4>Install Atomic App</h4>
+
+<p>Since the current ADB release doesn&rsquo;t have the latest version of Atomic App, we
+want to install it. The Atomic App <a href="https://github.com/projectatomic/atomicapp#installing-atomic-app">installation
+section</a> on
+its GitHub repo explains how to install the current release.</p>
+
+<h4>Setup Mesos-DNS</h4>
+
+<p>In this example, I am using Mesos-DNS as a service discovery mechanism for
+Mesos. However, you can use any tool of your choice and code your application
+accordingly.</p>
+
+<p>To setup Mesos-DNS, download the binary from its
+<a href="https://github.com/mesosphere/mesos-dns/releases">releases</a> page. Copy it to a
+location in the <code>$PATH</code> variable or modify the <code>$PATH</code> variable - whatever is
+convenient to you. I copied to /usr/bin/:</p>
+<pre class="highlight plaintext"><code>$ sudo yum -y install wget bind-utils    # we'll need bind-utils for dig&#x000A;$ wget https://github.com/mesosphere/mesos-dns/releases/download/v0.5.1/mesos-dns-v0.5.1-linux-amd64&#x000A;$ sudo mv mesos-dns-v0.5.1-linux-amd64 /usr/bin/mesos-dns&#x000A;$ sudo chmod +x /usr/bin/mesos-dns&#x000A;</code></pre>
+
+<p>Create a directory under <code>/etc</code> to store configuartion for Mesos-DNS. And create
+a file <code>config.json</code> under it with contents like below:</p>
+<pre class="highlight plaintext"><code>$ sudo mkdir /etc/mesos-dns&#x000A;$ cat /etc/mesos-dns/config.json&#x000A;{&#x000A;    "zk": "zk://10.0.2.2:2181/mesos",&#x000A;    "refreshSeconds": 60,&#x000A;    "ttl": 60,&#x000A;    "domain": "mesos",&#x000A;    "port": 53,&#x000A;    "resolvers": ["8.8.8.8"],&#x000A;    "timeout": 5,&#x000A;    "listener": "10.2.2.2",&#x000A;    "httpon": true,&#x000A;    "httpport": 8123&#x000A;&#x000A;}&#x000A;</code></pre>
+
+<p>Replace 10.0.2.2 in above output to the IP of your vagrant box. This IP is of
+the system on which ZooKeeper is running.</p>
+
+<p>Next, start Mesos-DNS from the command line or using Marathon. Mesos-DNS
+documentation suggests to use Marathon as it&rsquo;ll ensure that the Mesos-DNS
+service is restarted in event of any failure. I prefer checking from the
+command line before deploying it using Marathon.</p>
+<pre class="highlight plaintext"><code>$ sudo mesos-dns -config=/etc/mesos-dns/config.json&#x000A;</code></pre>
+
+<p>If Mesos-DNS was deployed successfully, you should be able to make DNS lookups
+using it as your server. Make sure to edit your <code>/etc/resolv.conf</code> to have the IP
+of system running Mesos-DNS as the first entry for nameserver:</p>
+<pre class="highlight plaintext"><code>$ cat /etc/resolv.conf&#x000A;nameserver 10.2.2.2&#x000A;nameserver 8.8.8.8&#x000A;</code></pre>
+
+<p>Now you can perform DNS lookups:</p>
+<pre class="highlight plaintext"><code>$ dig marathon.mesos&#x000A;$ dig mesos-dns.marathon.mesos&#x000A;$ dig master.mesos&#x000A;$ dig slave.mesos&#x000A;</code></pre>
+
+<p>All of the above lookups will be answered by Mesos-DNS if the setup is correct.</p>
+
+<h4>Deploy a Flask + Redis based page visit counter app</h4>
+
+<p>This is an atomic app based on the Nulecule specification that creates a 2-tier
+application based on Flask and Redis. Every time you access the web page, a
+message is displayed which indicates the number of times the web page was
+accessed. And this counter is incremented upon each access.</p>
+
+<p>To make this example work, make sure that Mesos-DNS is configured. The IP
+address of the server hosting Mesos-DNS needs to be the first nameserver entry
+in <code>/etc/resolv.conf</code> file. This makes it the primary DNS server. Related
+documentation <a href="http://mesosphere.github.io/mesos-dns/docs/#slave-setup">link</a>.</p>
+
+<p>For the Redis container in this repo, go ahead and create a directory
+<code>/opt/redis</code> on the Vagrant box. This is for the sake of persistence. Also,
+you need to apply below SELinux context to <code>/opt/redis</code> on the host:</p>
+<pre class="highlight plaintext"><code>$ sudo mkdir /opt/redis&#x000A;$ sudo chcon -Rt svirt_sandbox_file_t /opt/redis&#x000A;</code></pre>
+
+<p>With that setup in place, you can simply do:</p>
+<pre class="highlight plaintext"><code>$ atomicapp run --provider=marathon dharmit/flask_redis&#x000A;</code></pre>
+
+<p>Above command will download three Docker images:</p>
+
+<ol>
+<li>Image containing information about our Nulecule&#39;ized application</li>
+<li>Flask Docker image</li>
+<li>Redis Docker image</li>
+</ol>
+
+<p>The repository containing the code for this Flask application can be found on
+this <a href="https://github.com/dharmit/flask_redis_nulecule_app">link</a>.</p>
+
+<h4>Checking the application</h4>
+
+<p>If all went well, Marathon web UI or <code>docker ps</code> on the shell should give you
+information about the port on the Vagrant box that&rsquo;s mapped to the port 5000
+inside the Flask container. In my case it was 31364.</p>
+<pre class="highlight plaintext"><code>$ curl localhost:31364&#x000A;&lt;div align=center&gt;&lt;img src='https://pbs.twimg.com/profile_images/458352291767013376/K9nN_rhH_400x400.png'&gt;&lt;h1&gt;This page has been visited 1 times!&lt;/h1&gt;&lt;br&gt;&lt;/div&gt;&#x000A;</code></pre>
+
+<p>Please share feedback about your experience with the process of setting up
+Mesos-Marathon provider on ADB. You can do this by engaging with developrs on
+<code>#nulecule</code> IRC channel on Freenode or open an issue under <a href="https://github.com/projectatomic/adb-atomic-developer-bundle">ADB repo on
+github</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-developer-bundle/">atomic developer bundle</a></li>
+<li><a href="/blog/tag/developer-tools/">developer tools</a></li>
+<li><a href="/blog/tag/marathon/">marathon</a></li>
+<li><a href="/blog/tag/mesos/">mesos</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/04/developing-with-mesos-marathon/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/04/developing-with-mesos-marathon/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/04/developing-with-mesos-marathon/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

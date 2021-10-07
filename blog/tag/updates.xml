@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Updates</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/updates.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Updated CentOS Containers Available via Docker Hub</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/11/updated-centos-containers-available-via-docker-hub/"/>
+    <id>http://www.projectatomic.io/blog/2014/11/updated-centos-containers-available-via-docker-hub/</id>
+    <published>2014-11-05T17:08:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;The CentOS project &lt;a href="http://lists.centos.org/pipermail/centos-announce/2014-November/020735.html"&gt;has updated its Docker Images&lt;/a&gt; on the Docker Hub for CentOS 5, CentOS 6, and CentOS 7.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;rsquo;re using CentOS containers, you can quickly update the image with &lt;code&gt;docker pull centos:centos6&lt;/code&gt; (to get CentOS 6.6). This will grab the image if you don&amp;rsquo;t have it locally, or update the image if you have it and just need to catch up to the latest release. &lt;/p&gt;
+
+&lt;p&gt;The latest releases are:
+ * CentOS 5.11
+ * CentOS 6.6
+ * CentOS 7.0.1406&lt;/p&gt;
+
+&lt;p&gt;Note that this updates the fakesystemd package to properly include dependencies for the lsb-base container, and has fixed some broken symlinks in the CentOS 7 container.&lt;/p&gt;
+
+&lt;p&gt;The CentOS Project also makes a number of pre-packaged container applications available on the &lt;a href="https://registry.hub.docker.com/u/centos/"&gt;Docker Hub&lt;/a&gt;. Currently you can choose from MariaDB, FreeIPA, Nginx, Apache httpd, and Wildfly. &lt;/p&gt;
+
+&lt;p&gt;If you have any questions or have an interest in helping to package additional container applications, see the &lt;a href="http://lists.centos.org/mailman/listinfo/centos-devel"&gt;centos-devel&lt;/a&gt; mailing list or join the conversation in #centos-devel on Freenode.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

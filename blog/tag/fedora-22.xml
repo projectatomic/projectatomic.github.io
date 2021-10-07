@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Fedora 22</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/fedora-22.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Fedora 22 Released with Atomic Hosts</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2015/05/fedora-22-released-with-atomic-hosts/"/>
+    <id>http://www.projectatomic.io/blog/2015/05/fedora-22-released-with-atomic-hosts/</id>
+    <published>2015-05-27T18:14:16+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Brockmeier</name>
+    </author>
+    <content type="html">&lt;p&gt;A quick note for folks who might have missed the announcement yesterday, &lt;a href="http://fedoramagazine.org/fedora-22-released/"&gt;Fedora 22 was officially released&lt;/a&gt;, along with &lt;a href="https://getfedora.org/en/cloud/download/atomic.html"&gt;Atomic images&lt;/a&gt; for OpenStack/KVM, Amazon EC2, and Vagrant.&lt;/p&gt;
+
+&lt;p&gt;The Vagrant images are suitable for VirtualBox and libvirt/KVM, so they&amp;rsquo;re usable on Linux (libvirt), or Mac OS X and Windows (VirtualBox) with the appropriate Vagrant providers. Josef Stříbný has written up a short tutorial on &lt;a href="http://fedoramagazine.org/running-vagrant-fedora-22/"&gt;using Vagrant images on Fedora 22&lt;/a&gt; on Fedora Magazine.&lt;/p&gt;
+
+&lt;p&gt;Of course, Fedora 22 also includes the Workstation and Server editions – and the Fedora 22 Docker image will be available via the Docker Hub very soon.&lt;/p&gt;
+
+&lt;p&gt;Questions or feedback on the Fedora 22 Atomic host release? &lt;a href="https://admin.fedoraproject.org/mailman/listinfo/cloud"&gt;Talk to us on the Fedora Cloud mailing list&lt;/a&gt;, or fire up your favorite IRC client and head to Freenode in the #fedora-cloud channel.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Kubernetes in Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Project Atomic. Sponsored by Red Hat, Inc.' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' docs docs_kubernetes docs_kubernetes_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../blog/feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<div class='row'>
+<div class='col-sm-9'>
+<h1>Kubernetes in Atomic Host</h1>
+
+<p>Atomic Hosts rely primarily on Kubernetes for automating deployment, scaling, and operations of application containers across clusters of hosts.</p>
+
+<p>Initially, the Atomic Hosts from Fedora and CentOS shipped with Kubernetes included in the image by default, but the projects have been moving toward containerized Kubernetes deployments, with the goal of making it easier to deploy different versions. </p>
+
+<p>Below is an overview of the state of Kubernetes in Fedora Atomic and CentOS Atomic, and some information on other installation options. </p>
+
+<h2>Fedora Atomic Host</h2>
+
+<p>As of Fedora 25, Kubernetes, as well as Etcd and Flannel, <a href="https://pagure.io/fedora-atomic/blob/9ca7cc0c806014576a6413ce5aac3db72c421f5d/f/fedora-atomic-docker-host.json#_113">is included</a> in the default image.</p>
+
+<p>Fedora&rsquo;s Kubernetes <a href="https://apps.fedoraproject.org/packages/kubernetes">is packaged</a> in three rpms: kubernetes-node (containing the kubelet and kube-proxy), kubernetes-master (containing the scheduler, controller-manager, and apiserver), and kubernetes-client (containing the kubectl cli). Each of master and node components is managed by a systemd service file included in the rpms.</p>
+
+<h3>Deployment</h3>
+
+<p>The simplest and most complete way to bring up a Kubernetes cluster with Fedora Atomic Host is to use the upstream <a href="https://github.com/kubernetes-incubator/kubespray">kubernetes ansible scripts</a>. For a more manual approach, consult the <a href="http://www.projectatomic.io/docs/gettingstarted/">getting started guide</a>.</p>
+
+<p>Up until late 2016, Fedora&rsquo;s kubernetes packages were based on a version of kubernetes adapted from openshift origin, which itself was adapted from upstream kubernetes. This arrangement led to delays between upstream kubernetes releases and Fedora&rsquo;s kubernetes releases. Currently, Fedora&rsquo;s kubernetes is based directly on upstream, which has enabled Fedora to significantly narrow the release gap.</p>
+
+<h2>CentOS Atomic Host</h2>
+
+<p>As in Fedora, CentOS&rsquo;s Kubernetes <a href="https://git.centos.org/summary/?r=rpms/kubernetes">is packaged</a> in three rpms: kubernetes-node (containing the kubelet and kube-proxy), kubernetes-master (containing the scheduler, controller-manager, and apiserver), and kubernetes-client (containing the kubectl cli). Each of master and node components is managed by a systemd service file included in the rpms.</p>
+
+<p>The downstream release of <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">CentOS Atomic Host</a> ships without the kubernetes-master package built into the image. Instead, users are expected to run the master kubernetes components (apiserver, scheduler, and controller-manager) in containers, managed via systemd, using the service files and <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/ContainerizedMaster">instructions on the CentOS wiki</a>. The containers referenced in these systemd service files are built in and hosted from the <a href="https://wiki.centos.org/ContainerPipeline">CentOS Community Container Pipeline</a>, based on Dockerfiles from the <a href="https://github.com/CentOS/CentOS-Dockerfiles/tree/master/kubernetes">CentOS-Dockerfiles repository</a>.</p>
+
+<p>It&rsquo;s also possible to layer the kubernetes-master package onto the CentOS Atomic Host image using the command:</p>
+<pre class="highlight plaintext"><code># rpm-ostree install kubernetes-master --reboot&#x000A;</code></pre>
+
+<p>Following a reboot, the kubernetes-master package will be installed and will operate as if it were built into the image, and will persist through future upgrades.</p>
+
+<h3>Deployment</h3>
+
+<p>The simplest and most complete way to bring up a Kubernetes cluster with CentOS Atomic Host is to use the upstream <a href="https://github.com/kubernetes/contrib/tree/master/ansible">kubernetes ansible scripts</a> after first installing the systemd unit files referenced above or installing kubernetes-master using rpm-ostree install. For a more manual approach, consult the <a href="http://www.projectatomic.io/docs/gettingstarted/">getting started guide</a>.</p>
+
+<p>CentOS&rsquo;s kubernetes packages are based on a version of kubernetes adapted from openshift origin, which itself was adapted from upstream kubernetes. This arrangement has led to delays between upstream kubernetes releases and CentOS&rsquo;s kubernetes releases, but the currently available kubernetes version in CentOS is fairly up-to-date, at v1.5.2.</p>
+
+<h2>CentOS Atomic Host Alpha/Continuous</h2>
+
+<p>The CentOS Atomic SIG produces a second, <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Devel">faster-moving content stream</a> that combines a base of CentOS packages with an overlay of <a href="https://github.com/CentOS/sig-atomic-buildscripts/blob/master/overlay.yml">certain continuously-built packages</a> pulled from upstream git sources. The packages are built using a project called <a href="https://github.com/cgwalters/rpmdistro-gitoverlay">rpmdistro-gitoverlay</a> that runs as a <a href="https://ci.centos.org/job/atomic-rdgo-centos7/">Jenkins job</a> within the CentOS CI infrastructure.</p>
+
+<p>This continuous stream is the vanguard of the effort toward containerized Kubernetes deployment, and <a href="https://github.com/CentOS/sig-atomic-buildscripts/pull/144">ships without</a> kubernetes, etcd, flannel or the packages that enable ceph and gluster storage integration on the host.</p>
+
+<h3>Deployment</h3>
+
+<p>Deploying kubernetes on a host running the continuous stream involves replacing the kubernetes components with containers (see Containerized Kubernetes, below) or with rpm-ostree package layering:</p>
+<pre class="highlight plaintext"><code># rpm-ostree install kubernetes flannel etcd --reboot&#x000A;</code></pre>
+
+<h2>Containerized Kubernetes</h2>
+
+<h3>Using distribution-provided images and rpms</h3>
+
+<p>There&rsquo;s <a href="https://pagure.io/atomic-wg/issues?status=Open&amp;tags=remove-kube">work underway</a> to remove Kubernetes from the image, in favor of a containerized deployment method. By placing <a href="https://github.com/jasonbrooks/contrib/blob/atomic-update/ansible/roles/master/templates/atomic/kube-apiserver.service">systemd service files</a> that pull and run Kubernetes containers based on <a href="http://www.projectatomic.io/blog/2017/02/fedora-layered-image-release/">Fedora</a> or <a href="https://wiki.centos.org/ContainerPipeline">CentOS</a> packages into <code>/etc/systemd/system</code> on a host, these containers can serve as a drop-in replacement for the built-in Kubernetes packages, and should work with the upstream <a href="https://github.com/kubernetes/contrib/tree/master/ansible">kubernetes ansible scripts</a> or with the <a href="http://www.projectatomic.io/docs/gettingstarted/">getting started guide</a>.</p>
+
+<h4>Etcd &amp; Flannel System Containers</h4>
+
+<p>It&rsquo;s also a goal for flannel and etcd to run in containers on Atomic Hosts, but since flannel needs to modify docker&rsquo;s configuration to operate, and since flannel depends on etcd to run, there&rsquo;s a bit of a chicken and egg situation when running these as docker containers.</p>
+
+<p><a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">System containers</a>, which can be run independently from the docker daemon, offer a solution. For drop-in replacement purposes, installation and configuration of system containers is a bit more complicated than dropping unit files into <code>/etc/systemd/system</code>. </p>
+
+<p>For instance, this command to install etcd as a system container takes care of creating a systemd unit file, and at the same time wraps in a portion of the configuration:</p>
+<pre class="highlight plaintext"><code>atomic install --system --set ETCD_ENDPOINTS=http://192.168.122.2:2379 gscrivano/flannel&#x000A;</code></pre>
+
+<p>The ansible scripts expect to set etcd configuration options by editing config files on the host. The kubernetes docker images linked above handle this sort of expectation by mounting the host&rsquo;s <code>/etc/kubernetes</code> directory into the kubernetes containers, making those configuration files available to the containers.</p>
+
+<p>The ansible scripts and manual setup steps expect that a host with etcd installed will have etcdctl installed as well. This application can be run from within the system container, but must be run as <code>runc exec -- etcd /usr/bin/etcdctl</code> which involves some modification to scripts or setup steps. It may be worth exploring creating an etcdctl script in <code>/usr/local/bin/</code> that runs etcdctl from within the container to make this simpler.</p>
+
+<h3>Using kubeadm</h3>
+
+<p><a href="https://kubernetes.io/docs/getting-started-guides/kubeadm/">kubeadm</a> is a tool for more easily deploying kubernetes clusters. kubeadm is currently in alpha. kubeadm is packaged in rpm form and documented to work with CentOS 7. The kubeadm rpms provide binaries for the kubelet, kubectl, kubeadm, and binaries for the kubernetes <a href="https://github.com/containernetworking/cni">Container Networking Interface</a>.</p>
+
+<p>kubeadm can make bringing up a cluster as easy as running <code>kubeadm init</code> on a master and then running <code>kubeadm join --token=&lt;token&gt; &lt;master-ip&gt;</code> on additional nodes.</p>
+
+<p>As packaged by the upstream, kubeadm&rsquo;s kubernetes-cni package wants to place its binaries in <code>/opt</code>, which rpm-ostree does not allow. There have been <a href="https://jebpages.com/2016/11/01/installing-kubernetes-on-centos-atomic-host-with-kubeadm/">some experiments</a> around modifying the packages to use a different location.</p>
+
+<h3>Using other docker-based methods</h3>
+
+<p>It&rsquo;s possible to run kubernetes on an atomic host using upstream-provided containers run by docker by following <a href="https://github.com/kubernetes/kube-deploy/">this guide</a>.</p>
+
+</div>
+<div class='col-sm-3 hidden-print'>
+<h3>Documentation Index</h3>
+<nav role='navigation'>
+<ul class='docbrowser nav nav-vertical'>
+<li class='disabled'>
+<h4>First Steps</h4>
+</li>
+<li class='nav-link-introduction' role='menuitem'>
+<a href='/docs/introduction'>Introduction</a>
+</li>
+<li class='nav-link-quick-start-guide' role='menuitem'>
+<a href='/docs/quickstart'>Quick Start Guide</a>
+</li>
+<li class='nav-link-bare-metal-installation-fedora' role='menuitem'>
+<a href='/docs/fedora_atomic_bare_metal_installation'>Bare Metal Installation (Fedora)</a>
+</li>
+<li class='disabled'>
+<h4>In Depth</h4>
+</li>
+<li class='nav-link-rpm-ostree-os-update-system' role='menuitem'>
+<a href='/docs/os-updates'>rpm-ostree OS Update System</a>
+</li>
+<li class='nav-link-setting-up-storage' role='menuitem'>
+<a href='/docs/docker-storage-recommendation'>Setting Up Storage</a>
+</li>
+<li class='nav-link-supported-filesystems' role='menuitem'>
+<a href='/docs/filesystems'>Supported Filesystems</a>
+</li>
+<li class='nav-link-building-images' role='menuitem'>
+<a href='/docs/docker-building-images'>Building Images</a>
+</li>
+<li class='nav-link-image-author-guidance' role='menuitem'>
+<a href='/docs/docker-image-author-guidance'>Image Author Guidance</a>
+</li>
+<li class='nav-link-about-selinux' role='menuitem'>
+<a href='/docs/docker-and-selinux'>About SELinux</a>
+</li>
+<li class='nav-link-atomic-host-networking' role='menuitem'>
+<a href='/docs/atomic-host-networking'>Atomic Host Networking</a>
+</li>
+<li class='disabled'>
+<h4>Contributing</h4>
+</li>
+<li class='nav-link-how-to-contribute' role='menuitem'>
+<a href='/docs/#contribute'>How to Contribute</a>
+</li>
+</ul>
+</nav>
+
+</div>
+</div>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+<div class='edit-this-page pull-right'>
+<a href="https://github.com/projectatomic/atomic-site/edit/master/source/docs/kubernetes.md"><i class="icon fa fa-fw fa-github"></i>Edit this page on GitHub</a>
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

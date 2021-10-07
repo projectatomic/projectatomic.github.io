@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Building a Sub-Atomic Cluster, Part 2 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Building a Sub-Atomic Cluster, Part 2' property='og:title'>
+<meta content='I’m continuing to kit out the Sub-Atomic Cluster, in the process it’s received some upgrades.  Thanks to John Hawley of the Minnowboard Project at Intel, I now have a nice power supply instead of the tangle of power strips, and in a couple days I’ll also have more SSD storage.  You can see here that one node is in a nice blue metal case: that’s Muon, which we’ll be raffling off at DockerCon. Come by booth G14 to see the cluster and for a chance to win the Muon!&#x000A;&#x000A;&#x000A;&#x000A;While I’m waiting for those, though, I might as well get this set up as a proper Kubernetes cluster.  Ansible is my tool for doing this.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/06/micro-cluster-part-2/' property='og:url'>
+<meta content='2016-06-16T12:43:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='events' property='article:tag'>
+<link href='/blog/tag/events.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Building a Sub-Atomic Cluster, Part 2' name='twitter:title'>
+<meta content='I’m continuing to kit out the Sub-Atomic Cluster, in the process it’s received some upgrades.  Thanks to John Hawley of the Minnowboard Project at Intel, I now have a nice power supply instead of the tangle of power strips, and in a couple days I’ll also have more SSD storage.  You can see here that one node is in a nice blue metal case: that’s Muon, which we’ll be raffling off at DockerCon. Come by booth G14 to see the cluster and for a chance to win the Muon!&#x000A;&#x000A;&#x000A;&#x000A;While I’m waiting for those, though, I might as well get this set up as a proper Kubernetes cluster.  Ansible is my tool for doing this.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_06 blog_2016_06_micro-cluster-part-2 blog_2016_06_micro-cluster-part-2_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Building a Sub-Atomic Cluster, Part 2
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-06-16T12:43:00Z'>
+Thursday 16 June 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>I&rsquo;m continuing to kit out the Sub-Atomic Cluster, in the process it&rsquo;s received some upgrades.  Thanks to John Hawley of the Minnowboard Project at Intel, I now have a nice power supply instead of the tangle of power strips, and in a couple days I&rsquo;ll also have more SSD storage.  You can see here that one node is in a nice blue metal case: that&rsquo;s Muon, which we&rsquo;ll be raffling off at <a href="http://2016.dockercon.com/">DockerCon</a>. Come by booth G14 to see the cluster and for a chance to win the Muon!</p>
+
+<p><img alt="picture of minnowboard cluster" src="https://photos.smugmug.com/Computers/ContanersContainersContainers/i-tpXMt68/0/M/IMG_20160615_181254-M.jpg" /></p>
+
+<p>While I&rsquo;m waiting for those, though, I might as well get this set up as a proper Kubernetes cluster.  Ansible is my tool for doing this.</p>
+
+<p></p>
+
+<p>One way to set up Kubernetes clusters&mdash;and the only way which has been specifically configured for Atomic&mdash;is <a href="https://github.com/kubernetes/contrib/tree/master/ansible">Kubernetes Ansible</a>.  I actually use <a href="https://github.com/jasonbrooks/contrib/tree/atomic/ansible">Jason Brooks&rsquo; fork</a>, though, because there&rsquo;s a few Atomic-specific fixes in it.  </p>
+
+<p>So, next I plugged my laptop into the Sub-Atomic Cluster router.  I logged into each host and did three things:</p>
+
+<ol>
+<li>Added an SSH key for keyless auth as the <q>atomic</q> user</li>
+<li>Started timesyncd</li>
+<li>Started Cockpit</li>
+</ol>
+
+<p>Step 2 is one of those things I learned the hard way.  Timesyncd isn&rsquo;t started by default on Fedora Atomic Host, and etcd and Kubernetes behave fairly badly if the hosts in the cluster show very different times.  In fact, Ansible config will fail.  <a href="https://fedorahosted.org/cloud/ticket/161">I have an issue open</a> and this should get fixed in the future.  For now, the way you enable it is:</p>
+<pre class="highlight plaintext"><code>timedatectl set-ntp true&#x000A;</code></pre>
+
+<p><a href="http://cockpit-project.org/">Cockpit</a> is a terrific GUI for managing your Linux hosts and more.  In future posts, we&rsquo;ll talk about using Cockpit to manage Kubernetes; for now, it&rsquo;s useful to launch a cockpit instance to manage each host.  For example, I can use it to check which containers are running on one node:</p>
+
+<p><img alt="cockpit UI for containers" width="1170" height="621" src="/images/subatomic_host_cockpit_1.png?1633620578" /></p>
+
+<p>The way to launch these is to call them using the <code>atomic</code> command:</p>
+<pre class="highlight plaintext"><code>atomic run cockpit/ws&#x000A;&#x000A;/usr/bin/docker run -d --privileged --pid=host -v /:/host cockpit/ws /container/atomic-run --local-ssh&#x000A;0ad2d2b10a1fdd7d1220920e9b0c594901885db85dda706a5404433da6f44e70&#x000A;</code></pre>
+
+<p>Now I&rsquo;m ready to do Ansible.  Since there are a bunch of dependencies, I set up a container running Fedora 23.  I installed the Ansible 1.9 package because Kubernetes-ansible isn&rsquo;t up to current releases.  If you&rsquo;re using a Fedora 24 container, use <a href="https://copr.fedorainfracloud.org/coprs/jasonbrooks/ansible1.9.4/">this COPR</a>.  </p>
+
+<p>After installing the other dependencies, I cloned Jason&rsquo;s repository in the container.  Next I had to configure it.  The first part of that was to create an inventory file:</p>
+<pre class="highlight plaintext"><code>emacs inventory&#x000A;&#x000A;[masters]&#x000A;192.168.1.100&#x000A;&#x000A;[etcd]&#x000A;192.168.1.100&#x000A;&#x000A;[nodes]&#x000A;192.168.1.101&#x000A;192.168.1.102&#x000A;192.168.1.103&#x000A;192.168.1.104&#x000A;</code></pre>
+
+<p>As you can see, we&rsquo;ve got a master and four kubelets, which are the four nodes.  We&rsquo;re setting up single-node etcd, which is not a production setup.  That&rsquo;s mostly because I&rsquo;m waiting on my msata SSDs; I don&rsquo;t want to run etcd on a board which has only a microSD as storage, given the number of writes etcd does.  Once I have the new hardware, I&rsquo;ll be able to do an HA setup for Kubernetes.</p>
+
+<p>I also had to make some changes to <code>group_vars/all.yml</code>:</p>
+<pre class="highlight plaintext"><code>ansible_ssh_user: atomic&#x000A;&#x000A;...&#x000A;&#x000A;# If a password is needed to sudo to root that password must be set here&#x000A;ansible_sudo_pass: MY_SUDO_PASS&#x000A;</code></pre>
+
+<p>That is, since Ansible is going to be logging into hosts using a user with sudo, I need to give it that user and its password.  The rest of the defaults work pretty well for a demo cluster, so I&rsquo;m going to accept them.  The main reason one would change anything would be to change the various networks in order to avoid conflicting with your local network, but I&rsquo;ve already avoided that with a private router.</p>
+
+<p>Now, I can run Ansible:</p>
+<pre class="highlight plaintext"><code>./setup.sh&#x000A;&#x000A;PLAY [all] ********************************************************************&#x000A;&#x000A;TASK: [pre-ansible | Get os_version from /etc/os-release] *********************&#x000A;ok: [192.168.1.100]&#x000A;&#x000A;...&#x000A;&#x000A;PLAY RECAP ********************************************************************&#x000A;192.168.1.100              : ok=280  changed=11   unreachable=0    failed=0   &#x000A;192.168.1.101              : ok=170  changed=32   unreachable=0    failed=0   &#x000A;192.168.1.102              : ok=170  changed=32   unreachable=0    failed=0   &#x000A;192.168.1.103              : ok=170  changed=32   unreachable=0    failed=0   &#x000A;192.168.1.104              : ok=170  changed=32   unreachable=0    failed=0   &#x000A;</code></pre>
+
+<p>If your output ends in the above, setup was successful.  If not, you&rsquo;ll need to scroll back through the output to see what failed.  My first time around, I got a bunch of <q>expired certificate</q> failures, which was caused by the timesyncd issue.</p>
+
+<p>What Ansible just set up for me included the following:</p>
+
+<ul>
+<li>Kubernetes with SSL support</li>
+<li>Docker with Flannel network overlay</li>
+<li>Single-node etcd</li>
+</ul>
+
+<p>Things it did not set up for me include:</p>
+
+<ul>
+<li>Docker registry</li>
+<li>Cockpit Kubernetes</li>
+<li>applications</li>
+<li>high availability</li>
+</ul>
+
+<p>We&rsquo;ll get to those later.  For now, let&rsquo;s see how Kubernetes is doing:</p>
+<pre class="highlight plaintext"><code>-bash-4.3# kubectl get nodes&#x000A;NAME       STATUS     AGE&#x000A;electron   Ready      57s&#x000A;muon       Ready      23s&#x000A;neutron    Ready      1m&#x000A;photon     Ready      2m&#x000A;</code></pre>
+
+<p>Looks good for now.  More later, or stop by the booth at <a href="http://2016.dockercon.com/">DockerCon</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/events/">events</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/06/micro-cluster-part-2/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/06/micro-cluster-part-2/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/06/micro-cluster-part-2/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

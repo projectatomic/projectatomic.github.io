@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Google</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/google.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Upstream Atomic: Vagrant Support for Kubernetes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/"/>
+    <id>http://www.projectatomic.io/blog/2014/07/upstream-atomic-vagrant-support-for-kubernetes/</id>
+    <published>2014-07-25T16:49:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Brian Proffitt</name>
+    </author>
+    <content type="html">&lt;p&gt;One of the most interesting things about Project Atomic is how much work is going on, even as the project seems to be standing still. After the discussions Joe and I have had at OSCON this past week, I can safely say the work around containers is moving so fast that it almost seems that if you blink you will miss it.&lt;/p&gt;
+
+&lt;p&gt;Atomic is not the usual open source project, in that there&amp;rsquo;s not really code to download and install as a separate package. Rather, Project Atomic a combination of a lot of upstream projects that will be integrated within CentOS and Fedora. And, of course, Red Hat plans to build and distribute its own Red Hat Enterprise Linux Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;Because Atomic&amp;rsquo;s small but growing community is using upstream projects like &lt;a href="http://mesos.apache.org/"&gt;Apache Mesos&lt;/a&gt;, Google&amp;rsquo;s &lt;a href="https://github.com/GoogleCloudPlatform/kubernetes"&gt;Kubernetes&lt;/a&gt;, and &lt;a href="https://www.docker.com/"&gt;Docker&lt;/a&gt;, community members are submitting new code and features to those projects on almost a daily basis.&lt;/p&gt;
+
+&lt;p&gt;Case in point: yesterday Red Hat&amp;rsquo;s &lt;a href="https://github.com/derekwaynecarr"&gt;Derek Carr&lt;/a&gt; let us know that a new feature he was working on for Kubernetes had been merged into that project: the capability to &lt;a href="https://github.com/GoogleCloudPlatform/kubernetes/pull/550"&gt;manage Vagrant clusters with Kubernetes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Kubernetes is just one of the orchestration tools that will be included in Atomic for container management, and the inclusion of Vagrant support is a key move to get more developer involvement. While developers have long coded Linux applications, many programmers prefer Apple&amp;rsquo;s hardware for their needs. Vagrant is very useful tool enabling them to have the best of both worlds.&lt;/p&gt;
+
+&lt;p&gt;Specifically, Kubernetes users will be able to spin up a local &lt;a href="http://www.vagrantup.com/"&gt;Vagrant&lt;/a&gt; cluster of Fedora machines running a single master with &lt;em&gt;N&lt;/em&gt; minions. Kubernetes will reuse existing Salt configuration scripts to provision master and minions. Carr has also added support to run on Red Hat-based operating systems, where systemd manages installed services. &lt;/p&gt;
+
+&lt;p&gt;Carr has tested this on Vagrant 1.6.2, and it is recommended that users who want to test this feature use this version or higher of Vagrant. Head on over to GitHub and test this new feature today.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

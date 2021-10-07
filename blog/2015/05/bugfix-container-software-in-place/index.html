@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Bugfix Container Software In Place &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Aaron Weitekamp' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Bugfix Container Software In Place' property='og:title'>
+<meta content='Debugging container applications can be frustrating. Last week a few of us got together to hack on Atomicapp and the Nulecule specification. The codebase was moving fast, so I hit a few bugs. The problem was the application I was running was in a container and the bug was difficult to reproduce on my local workstation. The python traceback output suggested it was a simple fix so I wanted to just edit the code in place in the container and keep moving. But then how would I get the code onto my local development box and into my git repository? And how could I test this code change?&#x000A;&#x000A;My approach was to bindmount the source from the local workstation into the container so the files being edited can remain in the local git repository.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/05/bugfix-container-software-in-place/' property='og:url'>
+<meta content='2015-05-19T17:54:07Z' property='article:published_time'>
+<meta content='aweiteka' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='development' property='article:tag'>
+<link href='/blog/tag/development.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Bugfix Container Software In Place' name='twitter:title'>
+<meta content='Debugging container applications can be frustrating. Last week a few of us got together to hack on Atomicapp and the Nulecule specification. The codebase was moving fast, so I hit a few bugs. The problem was the application I was running was in a container and the bug was difficult to reproduce on my local workstation. The python traceback output suggested it was a simple fix so I wanted to just edit the code in place in the container and keep moving. But then how would I get the code onto my local development box and into my git repository? And how could I test this code change?&#x000A;&#x000A;My approach was to bindmount the source from the local workstation into the container so the files being edited can remain in the local git repository.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_05 blog_2015_05_bugfix-container-software-in-place blog_2015_05_bugfix-container-software-in-place_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Bugfix Container Software In Place
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/aweiteka/">Aaron Weitekamp</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-05-19T17:54:07Z'>
+Tuesday 19 May 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Debugging container applications can be frustrating. Last week a few of us got together to hack on <a href="https://github.com/projectatomic/atomicapp">Atomicapp</a> and the <a href="https://github.com/projectatomic/nulecule">Nulecule specification</a>. The codebase was moving fast, so I hit a few bugs. The problem was the application I was running was in a container and the bug was difficult to reproduce on my local workstation. The python traceback output suggested it was a simple fix so I wanted to just edit the code in place in the container and keep moving. But then how would I get the code onto my local development box and into my git repository? And how could I test this code change?</p>
+
+<p>My approach was to bindmount the source from the local workstation into the container so the files being edited can remain in the local git repository.</p>
+
+<p></p>
+
+<h3>Setup</h3>
+
+<p>I&rsquo;m running a <a href="https://atlas.hashicorp.com/atomicapp/boxes/dev">vagrant box</a> that rsync&rsquo;s content from the current directory into <code>/home/vagrant/sync</code>. The container image <code>projectatomic/atomicapp:dev</code> is run in the vagrant VM. The challenge is to bindmount the sync directory into the container to overwrite the container code with my local development git repository.</p>
+
+<p><img width="452" height="441" src="/images/vagrant-docker-dev-env.png?1633620578" /></p>
+
+<h3>Procedure</h3>
+
+<ol>
+<li><p>Clone your fork of the source code repository.</p>
+<pre class="highlight plaintext"><code>git clone https://github.com/projectatomic/atomicapp.git&#x000A;</code></pre></li>
+<li><p>Create a simple Vagrantfile that will rsync the current working directory. The default Vagrantfile should do.</p></li>
+<li><p>Start the vagrant box</p>
+<pre class="highlight plaintext"><code>vagrant up&#x000A;</code></pre></li>
+<li><p>SSH to the vagrant VM</p>
+<pre class="highlight plaintext"><code>vagrant ssh&#x000A;</code></pre></li>
+<li><p>Now you&rsquo;re in the vagrant VM. Pull the buggy container image</p>
+<pre class="highlight plaintext"><code>docker pull projectatomic/atomicapp:dev&#x000A;</code></pre></li>
+<li><p>We need to know how to run the image. Inspect the RUN LABEL using the atomic CLI</p>
+<pre class="highlight plaintext"><code>$ atomic info projectatomic/atomicapp:dev&#x000A;RUN          : docker run -it --rm --privileged --net=host -v `pwd`:/atomicapp -v /run:/run -v /:/host --name NAME -e NAME=NAME -e IMAGE=IMAGE IMAGE -v run /atomicapp&#x000A;INSTALL      : docker run --rm -it --privileged -v /run:/run -v `pwd`:/atomicapp -e IMAGE=IMAGE -e NAME=NAME --name NAME IMAGE -v install --destination /atomicapp /application-entity&#x000A;</code></pre></li>
+<li><p>Copy the RUN line and add a bindmount of the rsync directory to the installed directory of the container. Since this is a python application this is in <code>/usr/lib/python2.7/site-packages/</code>. We&rsquo;ll also need to change the <code>ENTRYPOINT</code> of the container to bash so we can do interactive development.</p>
+<pre class="highlight plaintext"><code>$ docker run -it --rm --privileged --net=host \&#x000A;  -v /home/vagrant/sync/atomicapp:/usr/lib/python2.7/site-packages/atomicapp-0.1-py2.7.egg/atomicapp \&#x000A;  --entrypoint bash -v /run:/run -v /:/host \&#x000A;  --name atomicapp -e NAME=atomicapp -e IMAGE=projectatomic/atomicapp:dev \&#x000A;  projectatomic/atomicapp:dev&#x000A;</code></pre></li>
+<li><p>Now you&rsquo;re in the container bash shell. Run the application to reproduce the bug.</p></li>
+<li><p>In another terminal window on your local workstation, edit the source code to add some debugging statements and save.</p></li>
+<li><p>From the local workstation rsync the repo changes you just made.</p>
+<pre class="highlight plaintext"><code>vagrant rsync&#x000A;</code></pre></li>
+<li><p>Back in the other window running the container bash shell you should now see the changes you just made. Try running the application again.</p></li>
+<li><p>Repeat steps 8-10 as your development workflow. When you have fixed the bug, commit the changes, push and submit a pull request.</p></li>
+</ol>
+
+<p>This example uses Python, an interpreted language, but a similar approach should work with compiled languages such as <a href="http://golang.org/">Go</a>. If you&rsquo;re not running in a Vagrant environment the steps are fewer but I included them here so you might benefit from seeing the rsync workflow.</p>
+
+<p>Working with containers means learning new ways of debugging. I hope this post helps broaden your vision of how this can be done while still retaining efficient workflows under version control.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/development/">development</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/vagrant/">vagrant</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/05/bugfix-container-software-in-place/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/05/bugfix-container-software-in-place/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/05/bugfix-container-software-in-place/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Docker 1.8 and the New Daemon Command &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Shishir Mahajan' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Docker 1.8 and the New Daemon Command' property='og:title'>
+<meta content='Docker 1.8 fixes a long term problem with handling of command line options. It introduces the docker daemon command which segregates the global options from the daemon options.&#x000A;&#x000A;Docker daemon is a background server side process that manages images and containers. It is a child of the init system e.g systemd and can be started using systemd unit files. For the purpose of this article we will using linux distribution fedora.&#x000A;&#x000A;A system administrator can execute systemctl start docker to start the docker daemon.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/09/docker-daemon-command/' property='og:url'>
+<meta content='2015-09-11T05:00:09Z' property='article:published_time'>
+<meta content='shishir' property='article:author:username'>
+<meta content='1.8' property='article:tag'>
+<link href='/blog/tag/1.8.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='daemon' property='article:tag'>
+<link href='/blog/tag/daemon.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Docker 1.8 and the New Daemon Command' name='twitter:title'>
+<meta content='Docker 1.8 fixes a long term problem with handling of command line options. It introduces the docker daemon command which segregates the global options from the daemon options.&#x000A;&#x000A;Docker daemon is a background server side process that manages images and containers. It is a child of the init system e.g systemd and can be started using systemd unit files. For the purpose of this article we will using linux distribution fedora.&#x000A;&#x000A;A system administrator can execute systemctl start docker to start the docker daemon.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_09 blog_2015_09_docker-daemon-command blog_2015_09_docker-daemon-command_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Docker 1.8 and the New Daemon Command
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/shishir/">Shishir Mahajan</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-09-11T05:00:09Z'>
+Friday 11 September 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Docker 1.8 fixes a long term problem with handling of command line options. It introduces the <code>docker daemon</code> command which segregates the global options from the daemon options.</p>
+
+<p>Docker daemon is a background server side process that manages images and containers. It is a child of the init system e.g systemd and can be started using systemd unit files. For the purpose of this article we will using linux distribution fedora.</p>
+
+<p>A system administrator can execute <code>systemctl start docker</code> to start the <code>docker daemon.</code></p>
+
+<p></p>
+
+<p><img alt="systemctl start docker" src="/images/docker_daemon_start.png" /></p>
+
+<p>As you can see in the above screenshot, writing <code>systemctl start docker</code> will instruct systemd to go to <code>/usr/lib/systemd/system/docker.service</code> unit file and start docker based on <code>ExecStart</code> flag. Under the hood, this unit file executes the docker binary <code>/usr/bin/docker -d</code> to start the daemon. What this means is, a user can also start docker daemon by executing <code>docker -d</code> or <code>docker --daemon.</code></p>
+
+<p>So why do we need a new <code>docker daemon</code> command? Is <code>docker -d</code> or <code>docker --daemon</code> not good enough to start the daemon? The new docker daemon command solves a very important problem which I like to call the <code>Daemon Flag-Set Problem</code>.</p>
+
+<h3>Daemon Flag-set Problem</h3>
+
+<p>If I do <code>docker --help</code> on a docker package prior to docker-1.8, I see the below flags.</p>
+
+<p><img alt="docker help" src="/images/docker_help.png" /></p>
+
+<p>These flags are a combination of globals flags and daemon flags. Global flags are flags which are applicable to all docker commands. Daemon flags are specific to docker daemon. Since there is no clear distinction of which flags are global and which are daemon, a docker user can pass any of these flags to any docker command. If that flag is global it will be applied to the command, else if the flag is daemon it will be silently ignored. </p>
+
+<p>To give an example, <code>--selinux-enabled</code> is a daemon flag which enables SELinux support. <code>docker inspect</code> is a command which returns low level information on a container or image. Ideally <code>--selinux-enabled</code> flag should only be applicable to <code>docker daemon,</code> and if passed to other docker commands should blow up.</p>
+
+<p><br/></p>
+
+<p><img alt="docker inspect" src="/images/docker_inspect.png" /></p>
+
+<p><br/></p>
+
+<p>As you can see in the above screenshot <code>--selinux-enabled</code> was silently ignored by the inspect command. To solve this <code>Daemon Flag-Set Problem,</code> the docker daemon command will be introduced starting with the Docker 1.8.0 package.</p>
+
+<h3>The Docker Daemon Command</h3>
+
+<p>From docker 1.8.0 onwards, if a user starts docker daemon using <code>docker -d</code> or <code>docker --daemon,</code> He will get a warning message to switch to new <code>docker daemon</code> command.</p>
+
+<p><img alt="docker warning" src="/images/docker-d.png" /></p>
+
+<p>Using <code>docker --help</code> will display something like the below screenshot.</p>
+
+<p><img alt="new docker help" src="/images/new_docker_help.png" /></p>
+
+<p>As you can see in the above screenshot <code>docker --help</code> only shows the global flags, and not the daemon flags. To see the daemon flags we can run <code>docker daemon --help</code> which will produce something like the following output.</p>
+
+<p><img alt="new docker daemon help" src="/images/new_docker_daemon_help.png" /></p>
+
+<p>The above screenshot is a trimmed down version of daemon flags. The actual output will show all daemon flags.</p>
+
+<p>The Docker <code>daemon</code> command will bring the following changes to docker users:</p>
+
+<ul>
+<li>A user can still start docker daemon using <code>docker -d</code> and <code>docker --daemon</code>. Docker provides full backward compatibility without breaking any existing use cases.</li>
+<li>With the new <code>docker daemon</code> command, global flags and daemon flags must be passed in the below format.</li>
+</ul>
+
+<p><img alt="docker daemon format" src="/images/docker_daemon_format.png" /></p>
+
+<p>What this means is, the below command <code>docker --selinux-enabled daemon</code> will throw an error. Since <code>--selinux-enabled</code> is a daemon flag, it should be passed after docker daemon command. This would however completely work with <code>docker -d</code> maintaining the backward compatibility.</p>
+
+<p><img alt="docker daemon error" src="/images/docker-selinux.png" /></p>
+
+<p><img alt="docker daemon error" src="/images/docker_daemon_error.png" /></p>
+
+<ul>
+<li>Daemon flags now cannot be passed to other docker commands (as global flags) like inspect, pull, push etc. Now, If we run the above  <code>docker inspect</code> example again, it would blow up.</li>
+</ul>
+
+<p>I worked with Daniel Walsh (also of Red Hat) on fixing these issues for more than a year. Also a special thanks to Tibor Vass (of Docker) for taking over, completing, and making it available upstream.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/1-8/">1.8</a></li>
+<li><a href="/blog/tag/daemon/">daemon</a></li>
+<li><a href="/blog/tag/docker/">Docker</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/09/docker-daemon-command/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/09/docker-daemon-command/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/09/docker-daemon-command/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

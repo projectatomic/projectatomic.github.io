@@ -1,0 +1,1052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Containers</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/containers.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Building Kernel Modules with Podman</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/"/>
+    <id>http://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/</id>
+    <published>2018-06-06T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Joe Doss</name>
+    </author>
+    <content type="html">&lt;h3&gt;Building Kernel Modules on Atomic with Podman&lt;/h3&gt;
+
+&lt;p&gt;The goal of this post is to explain how to build and load a kernel module inside a container using Podman.&lt;/p&gt;
+
+&lt;p&gt;Building and using third party kernel modules on Atomic is a challenging task. There are a handful of methods for supporting kernel modules on a Linux system such as kmods, akmods, DKMS, and manually building them by hand. Digging into all of the technical hurdles Atomic faces with each method is a very large topic and a bit out of scope for this blog post, so we will focus on DKMS for the time being.&lt;/p&gt;
+
+&lt;p&gt;Using &lt;a href="https://github.com/dell/dkms"&gt;DKMS&lt;/a&gt; on Atomic does not work as &lt;a href="https://github.com/projectatomic/rpm-ostree/issues/1091"&gt;expected&lt;/a&gt;. This means using popular third party kernel modules such as NVidia drivers, VirtualBox, and WireGuard via their supported install methods will not work as a result, but I will explain how we can work around these limitations in this blog post.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h4&gt;Fedora Atomic and Kernel Modules&lt;/h4&gt;
+
+&lt;p&gt;There are a few technical reasons on why building a kernel module inside of a container is a quick path for getting a third party kernel module built and loaded on Fedora Atomic Host.&lt;/p&gt;
+
+&lt;p&gt;The first is all kernel modules must be built to match the version of the current running kernel,  meaning we have to ensure that the kernel module is built consistently for every new kernel for it to work correctly.&lt;/p&gt;
+
+&lt;p&gt;The second is the fact that most of the file system on Atomic is read only.  Most third party kernel modules have their source stored in &lt;code&gt;/usr/src&lt;/code&gt; and once they are built, they are stored in &lt;code&gt;/usr/lib/modules&lt;/code&gt;. Since both paths are immutable, this makes using a container ideal to build and store the kernel module.&lt;/p&gt;
+
+&lt;p&gt;The last surrounds how packages are created in the bi-weekly Fedora Atomic Host composes. The &lt;code&gt;kernel-devel&lt;/code&gt; packages sometimes do not match up with the kernel that is being shipped in these bi-weekly updates. This means consistently getting the correct &lt;code&gt;kernel-devel&lt;/code&gt; packages can be challenging. If we build the kernel module inside a container, we can pull in the correct &lt;code&gt;kernel-devel&lt;/code&gt; packages from &lt;a href="https://koji.fedoraproject.org/koji/packageinfo?packageID=8"&gt;Koji&lt;/a&gt; for the booted kernel to build the module.&lt;/p&gt;
+
+&lt;h4&gt;Building a Kernel Module with Podman&lt;/h4&gt;
+
+&lt;p&gt;In this example we are building the &lt;a href="https://www.wireguard.com"&gt;WireGuard&lt;/a&gt; kernel module, which is an extremely simple yet fast and modern VPN. For non-Atomic Fedora/CentOS/RHEL based installs, you can use the &lt;code&gt;wireguard-dkms&lt;/code&gt; &lt;a href="https://copr.fedorainfracloud.org/coprs/jdoss/wireguard/"&gt;RPM&lt;/a&gt;. It uses DKMS to build and load the kernel module on boot. This doesn&amp;rsquo;t help us get WireGuard running on Atomic as it will only result in failure. This leads us to building the kernel module inside of a container.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s check out the Dockerfile below:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora as builder
+MAINTAINER "Joe Doss" &amp;lt;joe@solidadmin.com&amp;gt;
+
+ARG WIREGUARD_VERSION
+ARG WIREGUARD_KERNEL_VERSION
+ARG WIREGUARD_SHA256
+
+WORKDIR /tmp
+
+RUN dnf update -y &amp;amp;&amp;amp; dnf install \
+        libmnl-devel elfutils-libelf-devel findutils binutils boost-atomic boost-chrono \
+        boost-date-time boost-system boost-thread cpp dyninst efivar-libs gc \
+        gcc glibc-devel glibc-headers guile koji isl libatomic_ops libdwarf libmpc \
+        libpkgconf libtool-ltdl libxcrypt-devel make mokutil pkgconf pkgconf-m4 \
+        pkgconf-pkg-config unzip zip /usr/bin/pkg-config xz -y &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-devel-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        dnf install kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;amp;&amp;amp; \
+        dnf clean all &amp;amp;&amp;amp; \
+        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
+        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat &amp;gt;| "$t"; sha256sum --quiet -c &amp;lt;&amp;lt;&amp;lt;"${WIREGUARD_SHA256} $t" \
+        || exit 1; cat "$t"; } | tar xJf -
+
+WORKDIR /tmp/WireGuard-${WIREGUARD_VERSION}/src
+
+RUN KERNELDIR=/usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/build make -j$(nproc) &amp;amp;&amp;amp; make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Stepping through the above, we are going to point out the key aspects. At the very start, we pass in three &lt;code&gt;ARG&lt;/code&gt; directives. These are &lt;code&gt;WIREGUARD_VERSION&lt;/code&gt;, &lt;code&gt;WIREGUARD_KERNEL_VERSION&lt;/code&gt; and &lt;code&gt;WIREGUARD_SHA256&lt;/code&gt;. We use these to pass in three variables: the booted kernel version of the Fedora 28 Atomic Host node, the version of WireGuard to build, and the SHA265 sum of the WireGuard source tarball.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;RUN&lt;/code&gt; directive installs all of the packages required to build the WireGuard kernel module. It also uses &lt;code&gt;koji&lt;/code&gt; to download the correct package versions of &lt;code&gt;kernel-core&lt;/code&gt;, &lt;code&gt;kernel-devel&lt;/code&gt;, and &lt;code&gt;kernel-modules&lt;/code&gt; and it then installs them so it matches the current booted kernel of the Fedora Atomic Host node. From there it checks the SHA256 on the WireGuard source archive and extracts the it to &lt;code&gt;/usr/src&lt;/code&gt;. Finally, it builds and installs the kernel module inside the container.&lt;/p&gt;
+
+&lt;p&gt;Since Podman supports multi-stage Dockerfiles, we use a second stage without all of the extra installed packages that were required to build the kernel module and we copy over the &lt;code&gt;wireguard.ko&lt;/code&gt; file and the &lt;code&gt;wg&lt;/code&gt; binary to be used in the final container image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;FROM fedora
+MAINTAINER "Joe Doss" &amp;lt;joe@solidadmin.com&amp;gt;
+
+ARG WIREGUARD_KERNEL_VERSION
+
+WORKDIR /tmp
+
+RUN dnf update -y &amp;amp;&amp;amp; dnf install kmod koji -y &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-core-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        koji download-build --rpm --arch=x86_64 kernel-modules-${WIREGUARD_KERNEL_VERSION} &amp;amp;&amp;amp; \
+        dnf install /tmp/kernel-core-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-devel-${WIREGUARD_KERNEL_VERSION}.rpm \
+        kernel-modules-${WIREGUARD_KERNEL_VERSION}.rpm -y &amp;amp;&amp;amp; \
+        dnf clean all &amp;amp;&amp;amp; rm -f /tmp/*.rpm
+
+COPY --from=builder /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko \
+                    /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko
+
+COPY --from=builder /usr/bin/wg /usr/bin/wg
+
+CMD /usr/bin/wg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using &lt;code&gt;podman build&lt;/code&gt; we can pass in the required variables using &lt;code&gt;--build-arg&lt;/code&gt; to build the container and tag it with the &lt;code&gt;WIREGUARD_VERSION&lt;/code&gt;. To save time, we are using the &lt;code&gt;podman build&lt;/code&gt; feature to pull the Dockerfile from a &lt;a href="https://github.com/projectatomic/libpod/blob/master/docs/podman-build.1.md#building-an-image-using-a-git-repository"&gt;git repository&lt;/a&gt;. This will checkout the git repo to a temporary location and use the Dockerfile in the project root for the build context.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+export WIREGUARD_SHA256=ff653095cc0e4c491ab6cd095ddf5d1db207f48f947fb92873a73220363f423c
+
+sudo podman build --build-arg WIREGUARD_VERSION=${WIREGUARD_VERSION} \
+    --build-arg WIREGUARD_SHA256=${WIREGUARD_SHA256} \
+    --build-arg WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION} \
+    -t wireguard:${WIREGUARD_VERSION} git://github.com/jdoss/atomic-wireguard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the kernel module is done building you can view the container using &lt;code&gt;podman images&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ sudo podman images
+REPOSITORY                 TAG            IMAGE ID       CREATED              SIZE
+docker.io/library/fedora   latest         cc510acfcd70   4 weeks ago          263MB
+localhost/wireguard        0.0.20180531   c035e1bd76da   About a minute ago   741MB
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can now load the kernel module on Fedora Atomic Host using the following:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} modprobe udp_tunnel
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} modprobe ip6_udp_tunnel
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+     -e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+     wireguard:${WIREGUARD_VERSION} \
+     insmod /usr/lib/modules/${WIREGUARD_KERNEL_VERSION}/extra/wireguard.ko
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and then we can verify that it is loaded:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ lsmod |grep wireguard
+wireguard             229376  0
+ip6_udp_tunnel         16384  1 wireguard
+udp_tunnel             16384  1 wireguard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From there you can use the built container to call the WireGuard &lt;code&gt;wg&lt;/code&gt; binary to setup your WireGuard VPN on Fedora Atomic Host.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;export WIREGUARD_VERSION=0.0.20180531
+export WIREGUARD_KERNEL_VERSION=$(uname -r)
+
+sudo podman run --name wireguard -e "WIREGUARD_VERSION=${WIREGUARD_VERSION}" \
+-e "WIREGUARD_KERNEL_VERSION=${WIREGUARD_KERNEL_VERSION}" --rm --privileged \
+wireguard:${WIREGUARD_VERSION} /usr/bin/wg --help
+Usage: /usr/bin/wg &amp;lt;cmd&amp;gt; [&amp;lt;args&amp;gt;]
+
+Available subcommands:
+  show: Shows the current configuration and device information
+  showconf: Shows the current configuration of a given WireGuard interface, for use with `setconf'
+  set: Change the current configuration, add peers, remove peers, or change peers
+  setconf: Applies a configuration file to a WireGuard interface
+  addconf: Appends a configuration file to a WireGuard interface
+  genkey: Generates a new private key and writes it to stdout
+  genpsk: Generates a new preshared key and writes it to stdout
+  pubkey: Reads a private key from stdin and writes a public key to stdout
+You may pass `--help' to any of these subcommands to view usage.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All of the above is an example of a manual process for building a kernel module on Atomic. In order to provide an automated DKMS-like experience you can check out the &lt;a href="https://github.com/jdoss/atomic-wireguard"&gt;atomic-wireguard&lt;/a&gt; project on GitHub and &lt;a href="https://https//copr.fedorainfracloud.org/coprs/jdoss/atomic-wireguard/"&gt;Copr&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The goal of the &lt;code&gt;atomic-wireguard&lt;/code&gt; project is to automate the process of building the WireGuard kernel module with Podman on boot by using a build script called via systemd unit. It hopefully can be used as a stopgap to help support third party kernel modules on Atomic until official kernel module support is figured out. If you have any questions, please feel free to reach out to me (&lt;code&gt;jdoss&lt;/code&gt;) on Freenode in either the &lt;code&gt;#atomic&lt;/code&gt; or &lt;code&gt;#wireguard&lt;/code&gt; channels or on Twitter &lt;a href="https://twitter.com/jdoss"&gt;@jdoss&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Special thanks to the Project Atomic and libpod teams. Especially Dan Walsh, Dusty Mabe, Tom Sweeney, Matthew Heon, and Colin Walters for their patient help and guidance on this endeavor.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>The Many Ways to Build an OCI Image without Docker</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/"/>
+    <id>http://www.projectatomic.io/blog/2018/03/the-many-ways-to-build-oci-images/</id>
+    <published>2018-03-06T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Micah Abbott</name>
+    </author>
+    <content type="html">&lt;p&gt;When containers initially made their big splash into the industry via Docker,
+users were almost required to use the &lt;code&gt;docker&lt;/code&gt; CLI and daemon to create and
+manage their container images.  But a lot has happened since then and now it
+is easier than ever to create a container image without using &lt;code&gt;docker&lt;/code&gt; at all,
+since the Docker image format has been standardized as the
+&lt;a href="https://github.com/opencontainers/image-spec"&gt;OCI Image format&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this post, we&amp;rsquo;ll review some of the ways you can create and manage your
+container images without ever having to start the &lt;code&gt;docker&lt;/code&gt; daemon.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;ll explore these alternative ways to build container images using a
+privileged user, but most of the approaches also have a way to build images
+using a non-privileged user.  We&amp;rsquo;ll cover using a non-privileged user in a
+future blog post.&lt;/p&gt;
+
+&lt;h3&gt;orca-build&lt;/h3&gt;
+
+&lt;p&gt;The project that was probably first to build container images without &lt;code&gt;docker&lt;/code&gt;
+is the &lt;a href="https://github.com/cyphar/orca-build"&gt;orca-build&lt;/a&gt; project from
+&lt;a href="https://twitter.com/lordcyphar"&gt;Aleksa Sarai&lt;/a&gt; of SUSE.  He&amp;rsquo;s created a simple
+Python3 script which leverages &lt;a href="https://github.com/opencontainers/runc"&gt;runC&lt;/a&gt;,
+&lt;a href="http://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt;, and the
+&lt;a href="https://github.com/openSUSE/umoci"&gt;umoci&lt;/a&gt; library to build container images.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s see how it works with this simple Dockerfile that I&amp;rsquo;ve created to build
+an &lt;code&gt;httpd&lt;/code&gt; container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cat fedora27-httpd/Dockerfile
+FROM registry.fedoraproject.org/fedora:27
+LABEL maintainer='Micah Abbott &amp;lt;miabbott@redhat.com&amp;gt;' \
+      version='1.0'
+
+ENV container=docker
+
+COPY Dockerfile /root/
+
+RUN dnf -y install httpd &amp;amp;&amp;amp; \
+    dnf clean all &amp;amp;&amp;amp; \
+    echo "SUCCESS fedora27_httpd" &amp;gt; /var/www/html/index.html
+
+EXPOSE 80
+
+ENTRYPOINT [ "/usr/sbin/httpd" ]
+CMD [ "-D", "FOREGROUND" ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using a Fedora 27 system, I&amp;rsquo;ll install the dependencies for using &lt;code&gt;orca-build&lt;/code&gt;
+and then build the container image from the Dockerfile.  (But obviously, I
+won&amp;rsquo;t be installing &lt;code&gt;docker&lt;/code&gt;).&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# rpm -q docker
+package docker is not installed
+# systemctl status docker
+Unit docker.service could not be found.
+
+# dnf -y install git golang runc skopeo
+# export GOPATH=$HOME/go
+# export PATH=$PATH:$GOPATH/bin
+# go get -d github.com/openSUSE/umoci
+# cd $GOPATH/src/github.com/openSUSE/umoci/
+# make
+# cp $GOPATH/src/github.com/openSUSE/umoci/umoci $GOPATH/bin/
+# cd $HOME
+# git clone https://github.com/cyphar/orca-build.git
+# cd orca-build
+# python3 orca-build -t fedora27-httpd:orca $HOME/fedora27-httpd/
+orca-build[INFO] Created new image for build: /tmp/orca-build.y3n_2i0m
+orca-build[INFO] BUILD[1 of 8]: from ['registry.fedoraproject.org/fedora:27'] [json=False]
+  ---&amp;gt; [skopeo]
+Getting image source signatures
+Copying blob sha256:d445b8c354cc48e75ed621cb6783a80c29ac24135cdd98fd02ae70e1f18345bc
+ 80.81 MB / 80.81 MB [=====================================================] 10s
+Copying config sha256:400ec4f003634cb31d8b37d68ac56c41c6bbd8eb02eb7d7151b0ade59e513594
+ 424 B / 424 B [============================================================] 0s
+Writing manifest to image destination
+Storing signatures
+  &amp;lt;--- [skopeo]
+orca-build[INFO] BUILD[2 of 8]: label ['maintainer=Micah Abbott &amp;lt;miabbott@redhat.com&amp;gt;', 'version=1.0'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+orca-build[INFO] BUILD[3 of 8]: env ['container=docker'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+orca-build[INFO] BUILD[4 of 8]: copy ['Dockerfile', '/root/'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+orca-build[INFO] BUILD[5 of 8]: run ['dnf', '-y', 'install', 'httpd', '&amp;amp;&amp;amp;', 'dnf', 'clean', 'all', '&amp;amp;&amp;amp;', 'echo', 'SUCCESS fedora27_httpd', '&amp;gt;', '/var/www/html/index.html'] [json=False]
+  ---&amp;gt; [umoci]
+  &amp;lt;--- [umoci]
+  ---&amp;gt; [runc]
+Error: Failed to synchronize cache for repo 'updates'
+  &amp;lt;--- [runc]
+orca-build[CRITICAL] Error executing subprocess: runc --root=/tmp/orca-runcroot.un2g__rz run --bundle=/tmp/orca-bundle.dw5x64x0 orca-build-6bE2dWZlNxyZELMtkmHjObCb9fAkvMbq failed with error code 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Hmmm&amp;hellip;I believe &lt;code&gt;runc&lt;/code&gt; doesn&amp;rsquo;t have network access to allow &lt;code&gt;dnf&lt;/code&gt; to install
+packages.  That is disappointing.  But I don&amp;rsquo;t want to spend too much time on
+any one way of building an image, so let&amp;rsquo;s move on to another method.&lt;/p&gt;
+
+&lt;h3&gt;jessfraz/img&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/jessfraz"&gt;Jessie Frazelle&lt;/a&gt; recently announced her own
+project called &lt;a href="https://github.com/jessfraz/img"&gt;img&lt;/a&gt; that handles building
+OCI images without &lt;code&gt;docker&lt;/code&gt;. Her approach uses a Go binary that leverages
+&lt;a href="https://github.com/moby/buildkit"&gt;buildkit&lt;/a&gt; from the Moby project to build
+images.&lt;/p&gt;
+
+&lt;p&gt;Using the same Dockerfile and Fedora 27 system, let&amp;rsquo;s try to build the image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# go get github.com/jessfraz/img
+# img build -t fedora27-httpd:img $HOME/fedora27-httpd/
+Building fedora27-httpd:img
+Setting up the rootfs... this may take a bit.
+INFO[0001] resolving docker.io/tonistiigi/copy@sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e
+INFO[0001] resolving registry.fedoraproject.org/fedora:27@sha256:3a75aec3625da0c80dcedda6a0321f997f812e24336a1c06d8b402afffc55450
+INFO[0010] unpacking registry.fedoraproject.org/fedora:27@sha256:3a75aec3625da0c80dcedda6a0321f997f812e24336a1c06d8b402afffc55450
+RUN [copy /src-0/Dockerfile /dest/root/]
+---&amp;gt;
+&amp;lt;--- e70rtudliv77emdm70tc5m027 0 &amp;lt;nil&amp;gt;
+RUN [/bin/sh -c dnf -y install httpd &amp;amp;&amp;amp;     dnf clean all &amp;amp;&amp;amp;     echo "SUCCESS fedora27_httpd" &amp;gt; /var/www/html/index.html]
+---&amp;gt;
+Fedora 27 - x86_64 - Updates                    8.8 MB/s |  20 MB     00:02
+Fedora 27 - x86_64                              6.1 MB/s |  58 MB     00:09
+Last metadata expiration check: 0:00:05 ago on Sat Mar  3 21:06:25 2018.
+Dependencies resolved.
+================================================================================
+ Package                  Arch         Version              Repository     Size
+================================================================================
+Installing:
+ httpd                    x86_64       2.4.29-1.fc27        updates       1.3 M
+Installing dependencies:
+ apr                      x86_64       1.6.3-1.fc27         updates       121 k
+ apr-util                 x86_64       1.6.1-2.fc27         updates       102 k
+ fedora-logos-httpd       noarch       28.0.2-1.fc27        updates        33 k
+ httpd-filesystem         noarch       2.4.29-1.fc27        updates        25 k
+ httpd-tools              x86_64       2.4.29-1.fc27        updates        89 k
+ mailcap                  noarch       2.1.48-2.fc27        fedora         37 k
+ mod_http2                x86_64       1.10.13-1.fc27       updates       151 k
+
+Transaction Summary
+================================================================================
+Install  8 Packages
+
+Total download size: 1.9 M
+Installed size: 5.0 M
+Downloading Packages:
+(1/8): httpd-filesystem-2.4.29-1.fc27.noarch.rp  66 kB/s |  25 kB     00:00
+(2/8): mailcap-2.1.48-2.fc27.noarch.rpm         431 kB/s |  37 kB     00:00
+(3/8): httpd-tools-2.4.29-1.fc27.x86_64.rpm     136 kB/s |  89 kB     00:00
+(4/8): apr-1.6.3-1.fc27.x86_64.rpm              319 kB/s | 121 kB     00:00
+(5/8): apr-util-1.6.1-2.fc27.x86_64.rpm         338 kB/s | 102 kB     00:00
+(6/8): mod_http2-1.10.13-1.fc27.x86_64.rpm      728 kB/s | 151 kB     00:00
+(7/8): fedora-logos-httpd-28.0.2-1.fc27.noarch. 332 kB/s |  33 kB     00:00
+(8/8): httpd-2.4.29-1.fc27.x86_64.rpm           984 kB/s | 1.3 MB     00:01
+--------------------------------------------------------------------------------
+Total                                           857 kB/s | 1.9 MB     00:02
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1
+  Installing       : apr-1.6.3-1.fc27.x86_64                                1/8
+  Running scriptlet: apr-1.6.3-1.fc27.x86_64                                1/8
+  Installing       : apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Running scriptlet: apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Installing       : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Installing       : fedora-logos-httpd-28.0.2-1.fc27.noarch                4/8
+  Installing       : mailcap-2.1.48-2.fc27.noarch                           5/8
+  Running scriptlet: httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Installing       : httpd-2.4.29-1.fc27.x86_64                             8/8
+  Running scriptlet: httpd-2.4.29-1.fc27.x86_64                             8/8Failed to connect to bus: No such file or directory
+
+  Verifying        : httpd-2.4.29-1.fc27.x86_64                             1/8
+  Verifying        : httpd-filesystem-2.4.29-1.fc27.noarch                  2/8
+  Verifying        : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Verifying        : mailcap-2.1.48-2.fc27.noarch                           4/8
+  Verifying        : apr-1.6.3-1.fc27.x86_64                                5/8
+  Verifying        : apr-util-1.6.1-2.fc27.x86_64                           6/8
+  Verifying        : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Verifying        : fedora-logos-httpd-28.0.2-1.fc27.noarch                8/8
+
+Installed:
+  httpd.x86_64 2.4.29-1.fc27            apr.x86_64 1.6.3-1.fc27
+  apr-util.x86_64 1.6.1-2.fc27          fedora-logos-httpd.noarch 28.0.2-1.fc27
+  httpd-filesystem.noarch 2.4.29-1.fc27 httpd-tools.x86_64 2.4.29-1.fc27
+  mailcap.noarch 2.1.48-2.fc27          mod_http2.x86_64 1.10.13-1.fc27
+
+Complete!
+18 files removed
+&amp;lt;--- rx3j12yy3t0ea0shbimrgxtdx 0 &amp;lt;nil&amp;gt;
+INFO[0063] exporting layers
+INFO[0066] exporting manifest sha256:1fd9c488a4f116e3d02c5ea0d9277994bc8145ea7bb5021442b348b257b7b6e6
+INFO[0066] exporting config sha256:ae05d003b8ec6d046eb73ca8d3333a9d6e10bac332af7591a101f6f118f2bf7c
+INFO[0066] naming to fedora27-httpd:img
+Successfully built fedora27-httpd:img
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can also use &lt;code&gt;img&lt;/code&gt; to list the container image that was just built.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# img ls
+NAME                                        SIZE        CREATED AT  UPDATED AT  DIGEST
+docker.io/tonistiigi/copy@sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e   1.333KiB    7 days ago  7 days ago  sha256:476e0a67a1e4650c6adaf213269a2913deb7c52cbc77f954026f769d51e1a14e
+fedora27-httpd:img                              754B        7 days ago  43 hours ago    sha256:1fd9c488a4f116e3d02c5ea0d9277994bc8145ea7bb5021442b348b257b7b6e6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That was pretty easy and successful!  There are more things that &lt;code&gt;img&lt;/code&gt; can
+do, but let&amp;rsquo;s continue to expore other ways to build container images.&lt;/p&gt;
+
+&lt;h3&gt;DIY Docker using Skopeo+OStree+Runc&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href="https://twitter.com/muayyadalsadi"&gt;Muayyad Alsadi&lt;/a&gt; recently shared his blog
+post called &lt;a href="https://bcksp.blogspot.com/2018/02/diy-docker-using-skopeoostreerunc.html"&gt;DIY Docker using Skopeo+OStree+Runc&lt;/a&gt;
+to the &lt;a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-February/msg00087.html"&gt;atomic-devel&lt;/a&gt;
+mailing list.  In his post, he describes using &lt;code&gt;skopeo&lt;/code&gt; and &lt;code&gt;ostree&lt;/code&gt; to pull
+down existing Docker images and building out a rootfs that can be used by
+&lt;code&gt;runc&lt;/code&gt;.  It is not exactly the same operation as building a container image
+from a Dockerfile, but it is a useful exercise to show off some of the gory
+details of working with OCI images.&lt;/p&gt;
+
+&lt;p&gt;But what if you don&amp;rsquo;t want to have to run multiple &lt;code&gt;skopeo&lt;/code&gt; and &lt;code&gt;ostree&lt;/code&gt;
+commands to pull down content and prep a container image?  Or maybe you don&amp;rsquo;t
+really care about the details of OCI images and you just want to pull a
+container image without &lt;code&gt;docker&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;All of those operations are neatly wrapped up in the &lt;a href="http://github.com/projectatomic/atomic"&gt;atomic CLI&lt;/a&gt;
+and can be reduced to a single command!&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt; # atomic pull --storage=ostree docker.io/redis:alpine
+Getting image source signatures
+Copying blob sha256:ff3a5c916c92643ff77519ffa742d3ec61b7f591b6b7504599d95a4a41134e28
+ 1.97 MB / 1.97 MB [========================================================] 0s
+Copying blob sha256:aae70a2e60279ffae89150a59b81fe10d1d81f341ef6f31b9714ea6cc3418577
+ 1.22 KB / 1.22 KB [========================================================] 0s
+Copying blob sha256:87c655da471c9a7d8f946ec7b04a6a72a98ae8c1734bddf4b950861b5638fe20
+ 8.35 KB / 8.35 KB [========================================================] 0s
+Copying blob sha256:a0bd51ac7350a7048a0bd85a83d87181a0b851952e94f70e18c1ddb6ff96e66e
+ 7.73 MB / 7.73 MB [========================================================] 0s
+Copying blob sha256:755565c3ea2b1335705a21024b1bdb607f85492b284e8dec37eb759c0d601f57
+ 99 B / 99 B [==============================================================] 0s
+Copying blob sha256:8bf100ea488d16d4401a9af72879db0c1ab56045b42670ebf64fe1f8d90568fc
+ 397 B / 397 B [============================================================] 0s
+Copying config sha256:d3117424aaee14ab2b0edb68d3e3dcc1785b2e243b06bd6322f299284c640465
+ 4.68 KB / 4.68 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And soon, you&amp;rsquo;ll be able to use the very same &lt;code&gt;atomic&lt;/code&gt; command to run the
+container image via &lt;code&gt;runc&lt;/code&gt;.  Keep your eyes open for new versions of &lt;code&gt;atomic&lt;/code&gt;
+that will include this &lt;a href="https://github.com/projectatomic/atomic/pull/1196"&gt;pull request&lt;/a&gt;
+from &lt;a href="https://twitter.com/gscrivano"&gt;Giuseppe Scrivano&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There&amp;rsquo;s one more way to build container images that we&amp;rsquo;ll cover before
+wrapping up this post.&lt;/p&gt;
+
+&lt;h3&gt;Use This One Weird Command to Build OCI Images!&lt;/h3&gt;
+
+&lt;p&gt;Maybe you are thinking, &lt;q&gt;Gee, it&amp;rsquo;s great that we have all these ways to build
+container images without Docker, but I&amp;rsquo;d really like a tool that highlights my
+Boston accent.&lt;/q&gt;&lt;/p&gt;
+
+&lt;p&gt;Enter &lt;a href="https://github.com/projectatomic/buildah"&gt;buildah&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;ve probably already seen this tool mentioned on this blog a few times,
+but it&amp;rsquo;s worth showing off another time just how easy it is to install and use.
+We&amp;rsquo;ll continue to use the same Dockerfile and Fedora 27 system to build our
+image.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install buildah
+# buildah bud -t fedora27_httpd:buildah $HOME/fedora27-httpd/
+STEP 1: FROM registry.fedoraproject.org/fedora:27
+Getting image source signatures
+Copying blob sha256:d445b8c354cc48e75ed621cb6783a80c29ac24135cdd98fd02ae70e1f18345bc
+ 80.81 MiB / 80.81 MiB [===================================================] 32s
+Copying config sha256:99b71991af6eef73e85e3a657641cf2447929f37fff1f9570d525a6ef485a4a8
+ 1.27 KiB / 1.27 KiB [======================================================] 0s
+Writing manifest to image destination
+Storing signatures
+STEP 2: LABEL maintainer='Micah Abbott &amp;lt;miabbott@redhat.com&amp;gt;'       version='1.0'
+STEP 3: ENV container=docker
+STEP 4: COPY Dockerfile /root/
+STEP 5: RUN dnf -y install httpd &amp;amp;&amp;amp;     dnf clean all &amp;amp;&amp;amp;     echo "SUCCESS fedora27_httpd" &amp;gt; /var/www/html/index.html
+Fedora 27 - x86_64 - Updates                    3.0 MB/s |  20 MB     00:06
+Fedora 27 - x86_64                              1.6 MB/s |  58 MB     00:35
+Last metadata expiration check: 0:00:08 ago on Mon Mar  5 16:02:41 2018.
+Dependencies resolved.
+================================================================================
+ Package                  Arch         Version              Repository     Size
+================================================================================
+Installing:
+ httpd                    x86_64       2.4.29-1.fc27        updates       1.3 M
+Installing dependencies:
+ apr                      x86_64       1.6.3-1.fc27         updates       121 k
+ apr-util                 x86_64       1.6.1-2.fc27         updates       102 k
+ fedora-logos-httpd       noarch       28.0.2-1.fc27        updates        33 k
+ httpd-filesystem         noarch       2.4.29-1.fc27        updates        25 k
+ httpd-tools              x86_64       2.4.29-1.fc27        updates        89 k
+ mailcap                  noarch       2.1.48-2.fc27        fedora         37 k
+ mod_http2                x86_64       1.10.13-1.fc27       updates       151 k
+
+Transaction Summary
+================================================================================
+Install  8 Packages
+
+Total download size: 1.9 M
+Installed size: 5.0 M
+Downloading Packages:
+(1/8): httpd-filesystem-2.4.29-1.fc27.noarch.rp 107 kB/s |  25 kB     00:00
+(2/8): httpd-tools-2.4.29-1.fc27.x86_64.rpm     208 kB/s |  89 kB     00:00
+(3/8): mailcap-2.1.48-2.fc27.noarch.rpm         127 kB/s |  37 kB     00:00
+(4/8): apr-util-1.6.1-2.fc27.x86_64.rpm         452 kB/s | 102 kB     00:00
+(5/8): apr-1.6.3-1.fc27.x86_64.rpm              305 kB/s | 121 kB     00:00
+(6/8): fedora-logos-httpd-28.0.2-1.fc27.noarch. 355 kB/s |  33 kB     00:00
+(7/8): mod_http2-1.10.13-1.fc27.x86_64.rpm      699 kB/s | 151 kB     00:00
+(8/8): httpd-2.4.29-1.fc27.x86_64.rpm           1.1 MB/s | 1.3 MB     00:01
+--------------------------------------------------------------------------------
+Total                                           933 kB/s | 1.9 MB     00:02
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1
+  Installing       : apr-1.6.3-1.fc27.x86_64                                1/8
+  Running scriptlet: apr-1.6.3-1.fc27.x86_64                                1/8
+  Installing       : apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Running scriptlet: apr-util-1.6.1-2.fc27.x86_64                           2/8
+  Installing       : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Installing       : fedora-logos-httpd-28.0.2-1.fc27.noarch                4/8
+  Installing       : mailcap-2.1.48-2.fc27.noarch                           5/8
+  Running scriptlet: httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : httpd-filesystem-2.4.29-1.fc27.noarch                  6/8
+  Installing       : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Installing       : httpd-2.4.29-1.fc27.x86_64                             8/8
+  Running scriptlet: httpd-2.4.29-1.fc27.x86_64                             8/8
+Failed to connect to bus: No such file or directory
+  Verifying        : httpd-2.4.29-1.fc27.x86_64                             1/8
+  Verifying        : httpd-filesystem-2.4.29-1.fc27.noarch                  2/8
+  Verifying        : httpd-tools-2.4.29-1.fc27.x86_64                       3/8
+  Verifying        : mailcap-2.1.48-2.fc27.noarch                           4/8
+  Verifying        : apr-1.6.3-1.fc27.x86_64                                5/8
+  Verifying        : apr-util-1.6.1-2.fc27.x86_64                           6/8
+  Verifying        : mod_http2-1.10.13-1.fc27.x86_64                        7/8
+  Verifying        : fedora-logos-httpd-28.0.2-1.fc27.noarch                8/8
+
+Installed:
+  httpd.x86_64 2.4.29-1.fc27            apr.x86_64 1.6.3-1.fc27
+  apr-util.x86_64 1.6.1-2.fc27          fedora-logos-httpd.noarch 28.0.2-1.fc27
+  httpd-filesystem.noarch 2.4.29-1.fc27 httpd-tools.x86_64 2.4.29-1.fc27
+  mailcap.noarch 2.1.48-2.fc27          mod_http2.x86_64 1.10.13-1.fc27
+
+Complete!
+18 files removed
+STEP 6: EXPOSE 80
+STEP 7: ENTRYPOINT [ "/usr/sbin/httpd" ]
+STEP 8: CMD [ "-D", "FOREGROUND" ]
+STEP 9: COMMIT containers-storage:[overlay@/var/lib/containers/storage+/var/run/containers/storage:overlay.override_kernel_check=true]docker.io/library/fedora27_httpd:buildah
+[root@fedora27cloud-dev ~]# buildah images
+IMAGE ID             IMAGE NAME                                               CREATED AT             SIZE
+99b71991af6e         registry.fedoraproject.org/fedora:27                     Mar 1, 2018 07:48      234.9 MB
+c3fddc394f81         docker.io/library/fedora27_httpd:buildah                 Mar 5, 2018 16:03      252 MB
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On my Fedora 27 host, I just needed two commands to install &lt;code&gt;buildah&lt;/code&gt; and
+build the container image!  When you pair &lt;code&gt;buildah&lt;/code&gt; with &lt;code&gt;atomic&lt;/code&gt;, you have
+a powerful combination of tools that will allow you to build, manage, and run
+your container images without ever having to run the Docker daemon.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>How does Atomic run system containers without Docker Daemon?</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/"/>
+    <id>http://www.projectatomic.io/blog/2018/03/containers-w-skopeo-ostree-oci/</id>
+    <published>2018-03-05T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>alsadi</name>
+    </author>
+    <content type="html">&lt;h3&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;In 2016, we started to &lt;a href="https://www.projectatomic.io/blog/2016/09/running-kubernetes-in-containers-on-atomic/"&gt;Containerize the Kubernetes stack&lt;/a&gt;,
+that is to ship all the components as containers as you can see &lt;a href="https://registry.fedoraproject.org/"&gt;here&lt;/a&gt;.
+But some of those containers like &lt;a href="https://coreos.com/etcd/"&gt;etcd&lt;/a&gt; and &lt;a href="https://coreos.com/flannel/docs/latest/"&gt;flanneld&lt;/a&gt;
+must be started before Docker daemon because &lt;code&gt;etcd&lt;/code&gt; is the cluster state store,
+and &lt;code&gt;flanneld&lt;/code&gt; is the cluster network overlay (SDN).&lt;/p&gt;
+
+&lt;p&gt;In this blog post we are going to demonstrate how to use the same components used by
+&lt;a href="http://www.projectatomic.io/"&gt;Project Atomic&lt;/a&gt;
+in the so called &lt;a href="https://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;system containers&lt;/a&gt;
+that is to run the containers without a Docker daemon, namely:
+&lt;a href="https://github.com/projectatomic/skopeo"&gt;skopeo&lt;/a&gt;,
+&lt;a href="https://github.com/ostreedev/ostree"&gt;ostree&lt;/a&gt;, and an OCI runtime like
+&lt;a href="https://github.com/opencontainers/runc"&gt;runc&lt;/a&gt;
+or &lt;a href="https://github.com/projectatomic/bubblewrap"&gt;bubble wraps&lt;/a&gt; and its &lt;a href="https://github.com/projectatomic/bwrap-oci"&gt;OCI wrapper&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Background&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Atomic Host&lt;/code&gt; is an immutable stateless operating system,
+that is designed to consume applications via containers.
+You can do carefree updates or even switch from &lt;code&gt;CentOS&lt;/code&gt; to &lt;code&gt;Fedora&lt;/code&gt; and vice versa
+because of the image-like nature of &lt;code&gt;ostree&lt;/code&gt; and it&amp;rsquo;s carefree because your workloads are in the containers.
+It has many use cases like running &lt;code&gt;Kubernetes&lt;/code&gt; clusters,
+and there is an ongoing effort to extend it to desktop
+(using &lt;a href="https://flatpak.org/"&gt;Flatpak&lt;/a&gt; as the containers for the desktop, which also uses ostree). This desktop variant is called &lt;a href="https://www.projectatomic.io/blog/2018/02/fedora-atomic-workstation/"&gt;Atomic Workstation&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In the containerized Kubernetes stack, there seems to be &lt;q&gt;the chicken or the egg&lt;/q&gt; dilemma,
+We need a running &lt;code&gt;flanneld&lt;/code&gt; or &lt;code&gt;etcd&lt;/code&gt; to start Docker Daemon,
+and you need a running docker daemon to start flanneld or etcd if they are shipped as containers.&lt;/p&gt;
+
+&lt;p&gt;In this blog post, we are going to demonstrate how to pull docker container images
+and run them the same way as the &lt;a href="https://github.com/projectatomic/atomic"&gt;Atomic tool&lt;/a&gt; does.&lt;/p&gt;
+
+&lt;p&gt;If you inspected the &lt;code&gt;flannel&lt;/code&gt; container image (either using &lt;code&gt;docker inspect&lt;/code&gt; or remotely with &lt;code&gt;skopeo inspect&lt;/code&gt;)
+you would see that it has a label called &lt;code&gt;atomic.type&lt;/code&gt; indicating it is a system container.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo inspect docker://registry.fedoraproject.org/f27/flannel
+{
+    "Name": "registry.fedoraproject.org/f27/flannel",
+    "Labels": {
+        "atomic.type": "system",
+// ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Either that or by passing &lt;code&gt;--system&lt;/code&gt; after &lt;code&gt;atomic install&lt;/code&gt;,
+those are special containers that are executed without Docker daemon,
+those containers have &lt;a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/"&gt;a special directory structure&lt;/a&gt;
+like their &lt;code&gt;systemd&lt;/code&gt; service template as you can see in the source of &lt;a href="https://src.fedoraproject.org/container/flannel/blob/master/f/Dockerfile#_23"&gt;Fedora&amp;rsquo;s flannel container source&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The steps in this article are inspired by &lt;a href="https://github.com/projectatomic/atomic/blob/v1.22/Atomic/syscontainers.py"&gt;how atomic tool work under the hood&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You can follow those steps on atomic host or in your regular OS (I&amp;rsquo;ve tested them on regular Fedora Workstation),
+and you don&amp;rsquo;t need to be root.&lt;/p&gt;
+
+&lt;h3&gt;OSTree - a space-efficient way to store images locally&lt;/h3&gt;
+
+&lt;p&gt;OSTree is the same technology used by Atomic host to store its own host OS images.
+It&amp;rsquo;s a content-addressable object storage to store files,
+which means a file is stored once even if it&amp;rsquo;s in multiple images,
+this is even more efficient than layer-based Docker&amp;rsquo;s storage backends, because it&amp;rsquo;s not on layer level, but on file level.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start by creating a directory and initializing it to contain bare OSTree repo,
+but because we are running as non-root we need to pass &lt;code&gt;--mode=bare-user&lt;/code&gt; instead of &lt;code&gt;--mode=bare&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir ostree
+$ cd ostree
+$ ostree init --mode=bare-user --repo=$PWD
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Skopeo - for dealing with container Images and Image registries&lt;/h3&gt;
+
+&lt;p&gt;Skopeo can inspect remote container images from various registries and formats,
+pull them, and store them in many kinds of ways. 
+We are going to demonstrate how to pull small images and run them,
+so for this purpose let&amp;rsquo;s choose some small few megabytes images like &lt;code&gt;docker://redis:alpine&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ skopeo copy docker://redis:alpine ostree:redis@$PWD
+$ skopeo copy docker://nginx:alpine ostree:nginx@$PWD
+$ skopeo copy docker://busybox:alpine ostree:busybox@$PWD
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can list images in OSTree using:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ostree refs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The interesting part of the output looks like:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ociimage/redis_3Alatest
+ociimage/nginx_3Alatest
+ociimage/busybox_3Alatest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The Atomic command like tool is written in python, and it uses &lt;code&gt;libostree&lt;/code&gt; via &lt;code&gt;gobject-introspection&lt;/code&gt;, it looks like &lt;a href="https://github.com/projectatomic/atomic/blob/v1.22/Atomic/syscontainers.py#L26"&gt;this&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;import gi
+gi.require_version('OSTree', '1.0')
+from gi.repository import OSTree
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For our article we are going to use &lt;code&gt;ostree&lt;/code&gt; command line interface:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ ostree ls ociimage/redis_3Alatest 
+d00755 1000 1000      0 /
+-00644 1000 1000   1568 /manifest.json
+$ ostree cat ociimage/redis_3Alatest /manifest.json
+{
+// ...
+   "config": {
+      "mediaType": "application/vnd.docker.container.image.v1+json",
+      "size": 4791,
+      "digest": "sha256:d3117424aaee14ab2b0edb68d3e3dcc1785b2e243b06bd6322f299284c640465"
+   },
+// ...
+   "layers": [
+      {
+         "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+         "size": 2065537,
+         "digest": "sha256:ff3a5c916c92643ff77519ffa742d3ec61b7f591b6b7504599d95a4a41134e28"
+      },
+      //  ..
+    ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We are going to use &lt;code&gt;jq&lt;/code&gt; tool to get the specific parts from this JSON like getting the config digest:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ config_hash=`ostree cat ociimage/redis_3Alatest /manifest.json | jq -r .config.digest | cut -d ':' -f 2`
+$ ostree cat ociimage/$config_hash /content | jq 
+{
+// ...
+}
+$ ostree cat ociimage/$config_hash /content | jq .config.Entrypoint
+["docker-entrypoint.sh"]
+$ ostree cat ociimage/$config_hash /content | jq .config.Cmd
+["redis-server"]
+$ ostree cat ociimage/$config_hash /content | jq .config.ExposedPorts
+{"6379/tcp": {}}
+$ ostree cat ociimage/$config_hash /content | jq .config.Volumes
+{"/data": {}}
+$ ostree cat ociimage/$config_hash /content | jq .config.WorkingDir
+"/data"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s create a directory for our container and apply layers one by one inside that directory,
+using &lt;code&gt;ostree checkout&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ mkdir -p cont1/rootfs
+$ ostree checkout --union ociimage/redis_3Alatest cont1
+$ cat cont1/manifest.json | jq -r '.layers[]|.digest' | cut -d ':' -f 2 |
+  while read a
+  do
+    ostree checkout --union ociimage/$a cont1/rootfs;
+  done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can reverse the order of layers (using &lt;code&gt;tac&lt;/code&gt;) and use &lt;code&gt;--union-add&lt;/code&gt; instead of &lt;code&gt;--union&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Running the container using OCI runtimes&lt;/h3&gt;
+
+&lt;h4&gt;Runc&lt;/h4&gt;
+
+&lt;p&gt;Now we have checked out the redis root filesystem in &lt;code&gt;cont1/rootfs&lt;/code&gt;,
+and that does not take space because they are merely &lt;a href="https://en.wikipedia.org/wiki/Hard_link"&gt;hard links&lt;/a&gt;
+to those in our ostree repo. Before we run it, let&amp;rsquo;s generate &lt;a href="https://github.com/opencontainers/runtime-spec/blob/master/config.md"&gt;OCI &lt;code&gt;config.json&lt;/code&gt;&lt;/a&gt; using &lt;code&gt;runc spec&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ cd cont1
+$ mkdir data
+$ runc spec --rootless
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have added &lt;code&gt;--rootless&lt;/code&gt; because we are not running as root, by default it&amp;rsquo;s configured to run &lt;code&gt;/bin/sh&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="s2"&gt;"process"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"terminal"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="s2"&gt;"args"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"sh"&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;&lt;span class="w"&gt;
+  &lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can edit the file &lt;code&gt;config.json&lt;/code&gt;, for example you can:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;adjust &lt;code&gt;args&lt;/code&gt;: to be the command to be executed, for example &lt;code&gt;&amp;quot;args&amp;quot;: [ &amp;quot;redis-server&amp;quot; ]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;env&lt;/code&gt;: to pass custom environment variables&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;cwd&lt;/code&gt;: to set current working directory (in our example,  it could be &lt;code&gt;/data&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;mounts&lt;/code&gt;: to add tmpfs on &lt;q&gt;/tmp&lt;/q&gt; and &lt;q&gt;/var/run&lt;/q&gt; or even &lt;q&gt;/var&lt;/q&gt;, or even bind mount data volumes&lt;/li&gt;
+&lt;li&gt;adjust &lt;code&gt;namespaces&lt;/code&gt;: to add &lt;code&gt;{&amp;quot;type&amp;quot;: &amp;quot;network&amp;quot;}&lt;/code&gt; to make a separated network stack otherwise it would use host networking&lt;/li&gt;
+&lt;li&gt;you can adjust mapping between users &lt;code&gt;&amp;quot;linux&amp;quot;: { &amp;quot;uidMappings&amp;quot;: [ ... ] }&lt;/code&gt; typically containers root is the current user&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Atomic system containers can ship a template for config.json as in &lt;a href="https://src.fedoraproject.org/container/flannel/blob/master/f/config.json.template"&gt;flannel&amp;rsquo;s config.json.template&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is how you can attach a writable directory for &lt;code&gt;/data&lt;/code&gt; (which is &lt;code&gt;cont1/data&lt;/code&gt; we have created before):&lt;/p&gt;
+&lt;pre class="highlight json"&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="s2"&gt;"mounts"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"destination"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"/data"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"type"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"bind"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"source"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;"data"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt;
+            &lt;/span&gt;&lt;span class="s2"&gt;"options"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"rbind"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s2"&gt;"rw"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+        &lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+    &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="err"&gt;//&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;...&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To run the container type &lt;code&gt;runc run&lt;/code&gt; followed by any name like &lt;code&gt;redis&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ runc run redis 
+1:C 03 Mar 16:13:06.463 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+1:C 03 Mar 16:13:06.474 # Redis version=4.0.8, bits=64, commit=00000000, modified=0, pid=1, just started
+...                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.8 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In another terminal you can have a shell inside the container using &lt;code&gt;runc exec redis /bin/sh&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ runc exec redis /bin/sh
+/data # ps -a
+PID   USER     TIME   COMMAND
+    1 root       0:00 redis-server
+   18 root       0:00 /bin/sh
+   24 root       0:00 ps -a
+/data # 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Bubble Wraps OCI&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;bwrap-oci&lt;/code&gt; is another OCI runtime that is designed for userspace containers (non-root)
+You can use the same &lt;code&gt;config.json&lt;/code&gt; we made in previous section.
+There was &lt;a href="https://github.com/projectatomic/bwrap-oci/pull/17"&gt;a bug&lt;/a&gt; in &lt;code&gt;bwrap-oci&lt;/code&gt;,
+that&amp;rsquo;s why you need to build it from source.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci run redis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can list running Bubble wrapped containers using &lt;code&gt;bwrap-oci list&lt;/code&gt;&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ bwrap-oci list
+NAME                          PID       STATUS    BUNDLE
+redis                         23369     running   /home/alsadi/ostree/cont1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately there is no &lt;code&gt;bwrap-oci exec&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Atomic Options&lt;/h3&gt;
+
+&lt;p&gt;Atomic Install has corresponding options to the choices we have demonstrated in this article like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--storage=ostree|docker&lt;/code&gt; whether to use &lt;code&gt;docker&lt;/code&gt; or &lt;code&gt;ostree&lt;/code&gt; to store the image&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--runtime=/bin/bwrap-oci&lt;/code&gt; for user containers or when &lt;code&gt;--user&lt;/code&gt; is passed&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--runtime=/bin/runc&lt;/code&gt; for system containers or when &lt;code&gt;--system&lt;/code&gt; is passed&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more details type &lt;code&gt;man atomic install&lt;/code&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Building a Buildah container image for Kubernetes</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/"/>
+    <id>http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/</id>
+    <published>2018-03-01T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>ipbabble</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;img alt="buildah logo" src="https://cdn.rawgit.com/projectatomic/buildah/master/logos/buildah-logo_large.png" /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Building a Buildah Container Image for Kubernetes&lt;/h3&gt;
+
+&lt;h4&gt;Background&lt;/h4&gt;
+
+&lt;p&gt;Dan Walsh (&lt;a href="https://github.com/rhatdan"&gt;@rhatdan&lt;/a&gt;) asked me to look into building a working &lt;a href="https://github.com/projectatomic/buildah"&gt;Buildah&lt;/a&gt; container image. This was not just a cool experiment. It has a real purpose. As many readers know, Dan is not a fan of &lt;a href="https://www.youtube.com/watch?v=BeRr3aZbzqo&amp;amp;list=PLaR6Rq6Z4IqfhzC5ds3sMju7KKNzdd0xy&amp;amp;t=1055s"&gt;&lt;q&gt;big fat daemons&lt;/q&gt;&lt;/a&gt;. This has become less of an issue when running containers in Kubernetes as there is an alternative with &lt;a href="http://cri-o.io/"&gt;CRI-O&lt;/a&gt;. CRI-O provides kubernetes a standard interface to &lt;a href="https://github.com/opencontainers/runtime-spec"&gt;OCI compliant runtimes&lt;/a&gt;. &lt;a href="https://github.com/opencontainers/runc"&gt;runC&lt;/a&gt; is the reference implementation of the OCI runtime specification. Kubernetes calls the runtC runtime through CRI-O and runC then talks to the Linux kernel to run a container. This bypasses the need for the Docker daemon, and containerd. With CRI-O, there is no requirement for the Docker daemon for a kubernetes cluster to run containers.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;However this does not solve the problem of building container images. Until recently, Docker was considered the gold standard for building OCI compliant container images - and with Docker, a running daemon is required to build them. There are two ways to solve this: have dedicated build nodes or run the Docker daemon across the cluster, which puts us back at square zero. &lt;/p&gt;
+
+&lt;p&gt;The daemon runs as root, and adds complexity and attack surface. To mitigate this risk, having dedicated machines for doing builds seems the better choice. But when you have a cluster of resources with something like Kubernetes you really don’t want to waste resources with dedicated nodes which might sit idle when not doing builds. It’s much better to schedule builds in the cluster, just like any other process. There are several reasons for this.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In a continuous integration, multi-tenant environment there can be multiple builds going on at any time. So if your cluster is a PaaS for developers you want to be able to schedule builds whenever the developer needs them as quickly as possible. Having the ability to schedule across the cluster is very efficient.&lt;/li&gt;
+&lt;li&gt;When new base images become available in a continuous deployment environment, you will want to take advantage of them as soon as possible. This may cause a spike of build activity that you want to spread across the cluster rather than overloading a single machine.&lt;/li&gt;
+&lt;li&gt;Related to the second point, when security events like a CVE occurs, many images will need to be rebuilt to ensure the vulnerability is addressed. Again this is going to cause spikes and will require many simultaneous build resources. &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Therefore it is important to be able to be able to schedule container image builds within the kubernetes cluster. But it&amp;rsquo;s hardly worth having solved the &lt;q&gt;big fat daemon&lt;/q&gt; issue for runtime if you still need the daemon for build time across the cluster. i.e. you still need to have Docker running on all the nodes in the cluster if you intend to do builds on them.&lt;/p&gt;
+
+&lt;p&gt;Enter Buildah. Buildah doesn’t require a daemon to run on a host in order to build a container image. At the same time it would be great if we didn’t have to install Buildah on every node in the cluster, as we did with Docker, and also maintain consistent updates on each node. Instead it would be preferable to run Buildah as a container. If we can.&lt;/p&gt;
+
+&lt;p&gt;So I embarked on this effort and hit several small roadblocks, but essentially got it working relatively quickly.&lt;/p&gt;
+
+&lt;h4&gt;Building a Buildah OCI &lt;a href="https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction/#h.dqlu6589ootw"&gt;image&lt;/a&gt;&lt;/h4&gt;
+
+&lt;p&gt;First let’s summarize the goal and purpose of this exercise. We want to build a Buildah container that can be run by Kubernetes to perform image builds across the cluster on demand. This allows kubernetes to orchestrate build farms. If we can do this then we can remove the need for running a Docker daemon everywhere on the Kubernetes cluster. CRI-O and runC solve the runtime problem and CRI-O, runC and Buildah solve the build problem.&lt;/p&gt;
+
+&lt;p&gt;Time to install Buildah. Run as root because you will need to be root for running Buildah commands for this exercise. My Linux of choice is Fedora and so I use DNF.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf -y install buildah
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here are the steps I performed to build my Buildah OCI image:&lt;/p&gt;
+
+&lt;p&gt;First I wanted to build it from scratch. I wanted nothing in the container except what I need to run Buildah. But what about DNF or Yum, you might ask? Don&amp;rsquo;t need them. If I&amp;rsquo;m using this Buildah container from the command line then I&amp;rsquo;ll be using the host’s package manager, whatever that might be. If I&amp;rsquo;m using Buildah &lt;code&gt;bud&lt;/code&gt;, aka build-using-dockerfile, then I&amp;rsquo;m using the FROM images package manager. To start the process, I created a scratch container and stored the container&amp;rsquo;s name, which happens to be working-container, in a environment variable for convenience.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# containerid=$(buildah from scratch)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I need to mount the container&amp;rsquo;s file system so that I can install the buildah package and dependencies.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# scratchmnt=$(buildah mount $containerid)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next I install the buildah package and dependencies into the containers filesystem. Notice that as I&amp;rsquo;m doing this from a Fedora laptop I&amp;rsquo;m defaulting to the Fedora repositories and I&amp;rsquo;m specifying the version, 27. Also, I clean up afterward so that we can reduce the image size. If you skip the &lt;code&gt;dnf clean&lt;/code&gt; step you&amp;rsquo;ll have extra bloat.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf install --installroot $scratchmnt --release 27 buildah --setopt install_weak_deps=false -y
+# dnf clean all --installroot $scratchmnt --release 27
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to set the container ENTRYPOINT and CMD. It&amp;rsquo;s good practice to use ENTRYPOINT for the command that you want to run. When containerizing a command line tool, I usually set CMD to &lt;code&gt;--help&lt;/code&gt; so that it gets appended to the ENTRYPOINT if you don&amp;rsquo;t specify any parameters. I got into the practice after reading Michael Crosby’s &lt;a href="http://crosbymichael.com/dockerfile-best-practices.html"&gt;Best Practices&lt;/a&gt; post. See section 5. &lt;/p&gt;
+
+&lt;p&gt;(Currently Buildah needs ‘\’ for parameters with ‘&amp;ndash;’. That will get fixed.)&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah config --cmd "\-\-help" $containerid
+# buildah config --entrypoint /usr/bin/buildah $containerid
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It’s also good practice, and pretty important, to set some other metadata like the image name and who created it etc.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah config --author "wgh @ redhat.com" --created-by "ipbabble" --label name=buildah $containerid
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally I need to commit the container to an image. It should be called &lt;code&gt;buildah&lt;/code&gt; because it is good practice to name a command line tool container the name of the command. That way, if its ENTRYPOINT is set correctly, you can run it similar to the command it is containerizing. The following command ran a little over a minute and currently has no status output. So be patient.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# buildah commit $containerid buildah
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A bonus step is to push it to a registry so that other people can use it. I used the Podman client to do that. Below I push to the &lt;a href="https://quay.io"&gt;Quay.io&lt;/a&gt; public registry. In order to do that you need to create an account. Click on the “Create Account” link on the &lt;a href="https://quay.io/signin/"&gt;sign in page&lt;/a&gt;. Push to Quay just like Docker. (Quay supports OCI version 1.0 or above). You can install Podman (a daemon-less alternative to Docker) using DNF and then use it to authenticate with and then push the image to quay.io.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# dnf -y install podman
+# podman login quay.io
+Username: ipbabble
+Password:
+Login Succeeded!
+# podman push buildah quay.io/ipbabble/buildah
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4&gt;Running the Buildah container using Podman&lt;/h4&gt;
+
+&lt;p&gt;To test it you can also use the Podman client. That way you don&amp;rsquo;t have to install Docker and the &lt;q&gt;big fat daemon&lt;/q&gt;. In order to do this there are a number of parameters required. Of course the purpose of this exercise to build a Buildah container for use with Kubernetes. So this will be run by runC through CRI-O and not Podman.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For the main use case you need to run Podman as a privileged container. This will change in the future, but for right now building a container image requires access to the underlying &lt;code&gt;/var/lib/containers&lt;/code&gt; directory so the the image is persisted and can be shared with others on the host. But for this case we&amp;rsquo;ll make use of the &lt;code&gt;--privileged&lt;/code&gt; parameter in &lt;code&gt;podman run&lt;/code&gt;. It doesn’t require &lt;code&gt;/var/lib/containers&lt;/code&gt; for building, just for sharing. You could bind mount another directory that doesn’t need privileges. See more about that below in “The case for no privilege”. There are some considerations.&lt;/li&gt;
+&lt;li&gt;You probably need network access if you are going to run something like &lt;code&gt;buildah bud&lt;/code&gt;. You don&amp;rsquo;t need this if you are just running &lt;code&gt;buildah images/containers&lt;/code&gt; etc. But many use cases will be using &lt;code&gt;bud&lt;/code&gt; and so I&amp;rsquo;ve just used the hosts network and now the bridge because it&amp;rsquo;s a short running build process. So for the example I&amp;rsquo;ll use the &lt;code&gt;--network host&lt;/code&gt; parameter for &lt;code&gt;podman run&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;You&amp;rsquo;ll need to bind mount an area of the file system, so that &lt;code&gt;buildah bud&lt;/code&gt; can build up and then commit the image to the host file system. This can be &lt;code&gt;/var/lib/containers&lt;/code&gt; if you like, so as it’s immediately shared shared on the host, or it can be some build sandbox area etc. You also need to bind mount the Dockerfile path so that Buildah can see the Dockerfile. So for the example I’ll use the bind mount parameter &lt;code&gt;-v&lt;/code&gt; or &lt;code&gt;--volume&lt;/code&gt; parameter for &lt;code&gt;podman run&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Use your favorite Nginx Dockerfile or the one below. &lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Base on the Fedora
+FROM fedora:latest
+MAINTAINER http://fedoraproject.org/wiki/Cloud
+
+RUN dnf -y update &amp;amp;&amp;amp; dnf clean all
+RUN dnf -y install nginx &amp;amp;&amp;amp; dnf clean all
+RUN echo "daemon off;" &amp;gt;&amp;gt; /etc/nginx/nginx.conf
+RUN echo "nginx on Fedora" &amp;gt; /usr/share/nginx/html/index.html
+
+EXPOSE 80
+
+ENTRYPOINT [ "/usr/sbin/nginx" ]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The following command builds an Nginx container image called ‘nginx’. Obviously using Podman (or Docker) is overkill because they both have build capabilities. Ideally this container would be run in a pod on kubernetes through CRI-O. My Dockerfile is in my &lt;code&gt;/home/whenry/dfs&lt;/code&gt; directory (shorter for dockerfiles). So I bind mount that directory to &lt;code&gt;/tmp&lt;/code&gt; inside the container. Inside it’s &lt;code&gt;/tmp/Dockerfile&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# podman run --privileged --network host -v /var/lib/containers:/var/lib/containers:rw  -v /home/whenry/dfs:/tmp:Z buildah bud -f /tmp/Dockerfile -t nginx 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Currently, due to OverlayFS requiring root privileges, this container must run in privileged mode. This requirement should be deprecated when Fedora’s OverlayFS does not require a privileged user.&lt;/p&gt;
+
+&lt;h4&gt;Current issues with non privileged mode&lt;/h4&gt;
+
+&lt;p&gt;There is a requirement in large clusters for buildah not to run in privileged mode. There are ways to mitigate this but there will be cases where people demand it.&lt;/p&gt;
+
+&lt;p&gt;I had prepared an example of how to do this but I will keep it for a later blog.  Here are some of the current constraints I encountered trying to solve the non-privileged problem.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you want to share the builds immediately through the hosts &lt;code&gt;/var/lib/containers&lt;/code&gt; then you need to run Buildah as privileged. You could build somewhere else and then move the images to &lt;code&gt;/var/lib/containers&lt;/code&gt; - see below. &lt;/li&gt;
+&lt;li&gt;If you don&amp;rsquo;t care to share on the host immediately then you can use unprivileged (don’t use &amp;ndash;privileged) but you need to use a different directory than /var/lib/containers. However currently OverlayFS requires privileged mode on Fedora/RHEL. This should be fixed soon. You could use &lt;code&gt;--storage-driver=vfs&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;If you decide to build inside the container you can do that with unprivileged, but you hit the overlay on overlay issue and will then need to run with &lt;code&gt;--storage-driver vfs&lt;/code&gt;. This worked at one point but I’ve seen a regression. I am investigating.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Watch for a progress upstream and for a new blog post on using Buildah unprivileged in a later blog. &lt;/p&gt;
+
+&lt;h4&gt;Final thanks and some helpful links&lt;/h4&gt;
+
+&lt;p&gt;Feel free to pull the Buildah image  ipbabble/buildah from Quay.io. Have fun. Thanks to &lt;a href="https://github.com/nalind"&gt;@nalind&lt;/a&gt;, &lt;a href="https://github.com/nalind"&gt;@tsweeney&lt;/a&gt; (so many great edits) , &lt;a href="https://github.com/fatherlinux"&gt;@fatherlinux&lt;/a&gt;,  &lt;a href="https://twitter.com/bbaude"&gt;@bbaude&lt;/a&gt;, &lt;a href="https://github.com/rhatdan"&gt;@rhatdan&lt;/a&gt;, &lt;a href="https://twitter.com/rossturk"&gt;@rossturk&lt;/a&gt;, and &lt;a href="https://github.com/bparees"&gt;@bparees&lt;/a&gt; (confirming the kubernetes use case) for all the input along the way. &lt;/p&gt;
+
+&lt;p&gt;If you have any suggestions or issues please post them at the &lt;a href="https://github.com/projectatomic/buildah/issues"&gt;Project Atomic Buildah Issues&lt;/a&gt; page. For more information on Buildah and how you might contribute please visit the &lt;a href="https://github.com/projectatomic/buildah"&gt;Buildah home page&lt;/a&gt; on Github including &lt;a href="https://github.com/projectatomic/buildah/blob/master/docs/tutorials/README.md"&gt;tutorials&lt;/a&gt;.  For more information on the buildah system container see &lt;a href="https://github.com/projectatomic/atomic-system-containers/buildah-fedora/config.json.template"&gt;here&lt;/a&gt;. My previous blogs on Buildah: &lt;a href="http://www.projectatomic.io/blog/2017/11/getting-started-with-buildah/"&gt;Intro to Buildah&lt;/a&gt;, &lt;a href="http://www.projectatomic.io/blog/2018/01/using-image-registries-with-buildah/"&gt;Using Buildah with registries&lt;/a&gt;. Information on Podman can be found &lt;a href="https://github.com/projectatomic/libpod"&gt;here&lt;/a&gt;.  Podman man pages &lt;a href="https://github.com/projectatomic/libpod/tree/master/docs"&gt;here&lt;/a&gt;. &lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Buildah Blocks- Buildah builds itself!</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2018/02/buildah-builds-itself/"/>
+    <id>http://www.projectatomic.io/blog/2018/02/buildah-builds-itself/</id>
+    <published>2018-02-27T00:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Tom Sweeney</name>
+    </author>
+    <content type="html">&lt;p&gt;I’m a fan of Isaac Asimov’s &lt;a href="https://en.wikipedia.org/wiki/Three_Laws_of_Robotics"&gt;&lt;q&gt;Three Laws of Robotics&lt;/q&gt;&lt;/a&gt; and I&amp;rsquo;m beginning to wonder if these laws need to be wired into &lt;a href="https://github.com/projectatomic/buildah"&gt;Buildah&lt;/a&gt;. You see Buildah builds itself. It’s self-propagating.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;We recently were building out our test system for Buildah and for part of that testing we needed to make sure Buildah&amp;rsquo;s RPM would build.  Buildah uses Travis CI to do its testing and within our test bats file we create a container and then the RPM within it to make sure the RPM builds appropriately. While reviewing the code for that test, I commented that it would be nice if we could create a second container to install the RPM on and maybe make sure the command &lt;code&gt;buildah help&lt;/code&gt; worked.&lt;/p&gt;
+
+&lt;p&gt;Nalin Dahyabhai, who started the Buildah project, one upped that (truth be told, that&amp;rsquo;s Nalin&amp;rsquo;s Standard Operating Procedure).  What he put together was deceptively simple, yet extremely powerful.&lt;/p&gt;
+
+&lt;p&gt;First Nalin creates a container using the command ‘buildah from’ using Fedora 27.  This creates a container that runs Fedora 27.  He then uses ‘buildah mount’ to get the location of the container’s root file system and saves that to the ‘$root’ variable.  Once that’s in hand, a directory is created for the rpm bits and pieces to be placed into that will be needed to make an RPM for Buildah.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Build a container to use for building the binaries.
+        image=registry.fedoraproject.org/fedora:27
+        cid=$(buildah --debug=false from --pull --signature-policy ${TESTSDIR}/policy.json $image)
+        root=$(buildah --debug=false mount $cid)
+        commit=$(git log --format=%H -n 1)
+        shortcommit=$(echo ${commit} | cut -c-7)
+        mkdir -p ${root}/rpmbuild/{SOURCES,SPECS}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that a container is ready, the necessary spec files are put in place and rpmbuild is invoked on the container to make the rpm file for Buildah.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Build the tarball.
+(cd ..; git archive --format tar.gz --prefix=buildah-${commit}/ ${commit}) &amp;gt; ${root}/rpmbuild/SOURCES/buildah-${shortcommit}.tar.gz
+
+# Update the .spec file with the commit ID.
+sed s:REPLACEWITHCOMMITID:${commit}:g ${TESTSDIR}/../contrib/rpm/buildah.spec &amp;gt; ${root}/rpmbuild/SPECS/buildah.spec
+
+# Install build dependencies and build binary packages.
+buildah --debug=false run $cid -- dnf -y install 'dnf-command(builddep)' rpm-build
+buildah --debug=false run $cid -- dnf -y builddep --spec rpmbuild/SPECS/buildah.spec
+buildah --debug=false run $cid -- rpmbuild --define "_topdir /rpmbuild" -ba /rpmbuild/SPECS/buildah.spec
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then a second container is built again using Fedora 27 and the rpm file that was built on the first container is copied into this new container. Then the rpm is installed using dnf. Buildah has now been installed onto the new container with the latest bits from GitHub.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Build a second new container.
+cid2=$(buildah --debug=false from --pull --signature-policy ${TESTSDIR}/policy.json registry.fedoraproject.org/fedora:
+root2=$(buildah --debug=false mount $cid2)
+
+# Copy the binary packages from the first container to the second one and build a list of
+# their filenames relative to the root of the second container.
+rpms=
+mkdir -p ${root2}/packages
+for rpm in ${root}/rpmbuild/RPMS/*/*.rpm ; do
+cp $rpm ${root2}/packages/
+rpms="$rpms "/packages/$(basename $rpm)
+done
+
+# Install the binary packages into the second container.
+buildah --debug=false run $cid2 -- dnf -y install $rpms
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the new container up and running, Nalin&amp;rsquo;s able to run a number of commands in the container pulling out key information to verify that the rpm is installed and works as expected.&lt;/p&gt;
+&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# Run the binary package and compare its self-identified version to the one we tried to build.
+id=$(buildah --debug=false run $cid2 -- buildah version | awk '/^Git Commit:/ { print $NF }')
+bv=$(buildah --debug=false run $cid2 -- buildah version | awk '/^Version:/ { print $NF }')
+rv=$(buildah --debug=false run $cid2 -- rpm -q --queryformat '%{version}' buildah)
+echo "short commit: $shortcommit"
+echo "id: $id"
+echo "buildah version: $bv"
+echo "buildah rpm version: $rv"
+test $shortcommit = $id
+test $bv = $rv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There you have it, Buildah building and testing itself.  Granted I’m not too worried if Buildah doesn’t follow the &lt;q&gt;Three Laws of Robotics&lt;/q&gt; at this point, but this technique is really powerful. This test runs on each and every pull request to Buildah. If the RPM can’t be built, installed and minimal operations completed, the tests won’t run and the code won’t get committed.&lt;/p&gt;
+
+&lt;p&gt;For more information on Buildah check it out on &lt;a href="https://github.com/projectatomic/buildah"&gt;GitHub&lt;/a&gt; - also checkout the &lt;a href="https://github.com/projectatomic/buildah/blob/master/tests/rpm.bats"&gt;rpm.bats&lt;/a&gt; file there which is where code examples in this blog came from.  If you’re interested, we’d love to have you become a contributor on the project.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Buildah == Simplicity&lt;/strong&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

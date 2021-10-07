@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Announcing Project Atomic: An Operating System Concept for Running Docker Containers &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Joe Brockmeier' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Announcing Project Atomic: An Operating System Concept for Running Docker Containers' property='og:title'>
+<meta content='As most folks know, Red Hat has already been working hard on Docker support in Red Hat Enterprise Linux. Today we’re taking the wraps off a new operating system concept for running Docker containers...' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2014/04/announcing-project-atomic/' property='og:url'>
+<meta content='2014-04-15T12:00:00Z' property='article:published_time'>
+<meta content='jzb' property='article:author:username'>
+<meta content='Atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Announcing Project Atomic: An Operating System Concept for Running Docker Containers' name='twitter:title'>
+<meta content='As most folks know, Red Hat has already been working hard on Docker support in Red Hat Enterprise Linux. Today we’re taking the wraps off a new operating system concept for running Docker containers...' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2014 blog_2014_04 blog_2014_04_announcing-project-atomic blog_2014_04_announcing-project-atomic_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Announcing Project Atomic: An Operating System Concept for Running Docker Containers
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jzb/">Joe Brockmeier</a>
+</span>
+&ndash;
+<time class='published' datetime='2014-04-15T12:00:00Z'>
+Tuesday 15 April 2014
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>As most folks know, Red Hat has <a href="http://developerblog.redhat.com/2013/11/26/rhel6-5-ga/">already been working hard on Docker support</a> in Red Hat Enterprise Linux. Today we&rsquo;re taking the wraps off a new operating system concept for running Docker containers called <a href="http://www.projectatomic.io/">Project Atomic</a>. This concept, known as an Atomic Host, will provide users with a familiar host environment for Docker containers that allows atomic updates to the host OS as well as containerized applications.</p>
+
+<p>The <a href="http://centos.org">CentOS Project</a>, <a href="http://fedoraproject.org">Fedora Project</a>, and <a href="http://redhat.com/">Red Hat</a> will be taking the technologies developed under Project Atomic to deliver Atomic Hosts for running containerized applications. The Fedora Project&rsquo;s <a href="http://rpm-ostree.cloud.fedoraproject.org/#/">Atomic Initiative</a> has evaluation builds available today, with CentOS images coming soon.</p>
+
+<h3>The Elements of Atomic</h3>
+
+<p>The Atomic Host comprises a set of packages from an operating system such as Fedora, CentOS, or Red Hat Enterprise Linux, pulled together with [rpm-ostree] to create a filesystem tree that can be deployed, and updated, as an atomic unit. This means that the entire base OS is updated simultaneously, and (just as with Docker containers) can be rolled back if needed.</p>
+
+<p>The Atomic Host inherits features of the base distribution crucial to running Docker containers, but brings along only the essential components to streamlined application delivery. The result is a Host OS with just the right tools, such as <a href="http://www.freedesktop.org/wiki/Software/systemd/">systemd</a> for managing container dependencies and fault recovery, journald for secure aggregation and attribution of container logs, and SELinux for isolating containers to enable separation of applications and to allow multi-tenant systems. </p>
+
+<p>Basing the Atomic Host on RPMs used for Fedora, CentOS, or Red Hat Enterprise Linux gives users the ability to deploy hosts that behave like the the rest of their operating systems, and have packages that have undergone extensive testing in general production, but are optimized for Docker deployments.</p>
+
+<h3>Atomic Fusion</h3>
+
+<p>Rather than supplanting upstream development, Project Atomic will serve as a community hub for development of the technologies and tools used to create and optimize the Atomic Host for running Docker containers. </p>
+
+<p>As you can see, some of these elements have been baking for years at all levels of the stack, even long before Docker (but not much of its underlying container technology) was announced. For example, Colin Waters started work on OSTree (the progenitor to rpm-ostree) <a href="https://lwn.net/Articles/511877/#walters">years ago to make it simpler for GNOME developers and users</a>. Our work in systemd, with control groups, and with SELinux also goes back years, and now we&rsquo;re able to pull this together to match the need for a host OS optimized for streamlined application delivery.</p>
+
+<p>Red Hat also has been active in upstream Docker development, with patches accepted recently for SELinux and systemd cgroup integration. We&rsquo;re committed to ensuring that we provide the best experience in running Docker containers, and carry all the related work upstream to Docker. </p>
+
+<h3>Dig In</h3>
+
+<p>Project Atomic is still in early days, but we already have Fedora and Red Hat Enterprise Linux images to test out, and discussion channels for learning more about using and deploying Atomic Hosts. To keep up with our work, be sure to sign up for the announce list, follow us on Twitter, and keep an eye on the Project Atomic blog. Have questions? Send them our way on <a href="http://ask.projectatomic.io">Ask.ProjectAtomic.io</a>.</p>
+
+<p>We&rsquo;re excited to get this work in front of the community and start working with you to improve Project Atomic&rsquo;s features and help you be successful in deploying the technology. </p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">Atomic</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2014/04/announcing-project-atomic/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2014/04/announcing-project-atomic/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2014/04/announcing-project-atomic/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Joe Brockmeier
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/39606c0c942bb877967b5b54b29a9d66" /></div>
+<div class='author-blurb with-photo'>
+<p>Works on Red Hat&rsquo;s Open Source and Standards team. Music junkie, and artist-in-training. Vim lover. Fan of polar bears and cats. Enjoys beer.</p>
+
+<div class='more-link'>
+<a href="/blog/author/jzb/">View all posts by Joe Brockmeier &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

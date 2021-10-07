@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 27 Atomic Host November 30th Release &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Josh Berkus' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 27 Atomic Host November 30th Release' property='og:title'>
+<meta content='A new Fedora Atomic Host update is available via an OSTree commit:&#x000A;Version: 27.16&#x000A;Commit(x86_64): 86727cdbc928b7f7dd0e32f62d3b973a8395d61e0ff751cfea7cc0bc5222142f&#x000A;Commit(aarch64): 49f9b422bc53b30aea3074c75a15e8322ed1d14980ff0b5f9c694089598b4f2f&#x000A;Commit(ppc64le): 600955d77630fec6d1d3a76af31d872f2fed8af1495399256a0dfff013a518f3&#x000A;&#x000A;&#x000A;This is a large update as it is the first update in Fedora 27. Included&#x000A;are new kernel, systemd, ostree, rpm-ostree, and atomic CLI. Future updates&#x000A;should be quite a bit smaller than this.&#x000A;&#x000A;We are releasing images from multiple architectures but please note&#x000A;that x86_64 architecture is the only one that undergoes automated&#x000A;testing at this time.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/12/fedora-atomic-30-nov-17/' property='og:url'>
+<meta content='2017-12-01T13:00:00Z' property='article:published_time'>
+<meta content='jberkus' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 27 Atomic Host November 30th Release' name='twitter:title'>
+<meta content='A new Fedora Atomic Host update is available via an OSTree commit:&#x000A;Version: 27.16&#x000A;Commit(x86_64): 86727cdbc928b7f7dd0e32f62d3b973a8395d61e0ff751cfea7cc0bc5222142f&#x000A;Commit(aarch64): 49f9b422bc53b30aea3074c75a15e8322ed1d14980ff0b5f9c694089598b4f2f&#x000A;Commit(ppc64le): 600955d77630fec6d1d3a76af31d872f2fed8af1495399256a0dfff013a518f3&#x000A;&#x000A;&#x000A;This is a large update as it is the first update in Fedora 27. Included&#x000A;are new kernel, systemd, ostree, rpm-ostree, and atomic CLI. Future updates&#x000A;should be quite a bit smaller than this.&#x000A;&#x000A;We are releasing images from multiple architectures but please note&#x000A;that x86_64 architecture is the only one that undergoes automated&#x000A;testing at this time.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_12 blog_2017_12_fedora-atomic-30-nov-17 blog_2017_12_fedora-atomic-30-nov-17_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 27 Atomic Host November 30th Release
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jberkus/">Josh Berkus</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-12-01T13:00:00Z'>
+Friday  1 December 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>A new Fedora Atomic Host update is available via an OSTree commit:</p>
+<pre class="highlight plaintext"><code>Version: 27.16&#x000A;Commit(x86_64): 86727cdbc928b7f7dd0e32f62d3b973a8395d61e0ff751cfea7cc0bc5222142f&#x000A;Commit(aarch64): 49f9b422bc53b30aea3074c75a15e8322ed1d14980ff0b5f9c694089598b4f2f&#x000A;Commit(ppc64le): 600955d77630fec6d1d3a76af31d872f2fed8af1495399256a0dfff013a518f3&#x000A;</code></pre>
+
+<p>This is a large update as it is the first update in Fedora 27. Included
+are new kernel, systemd, ostree, rpm-ostree, and atomic CLI. Future updates
+should be quite a bit smaller than this.</p>
+
+<p>We are releasing images from multiple architectures but please note
+that x86_64 architecture is the only one that undergoes automated
+testing at this time.</p>
+
+<p></p>
+
+<p>The diff between this and the previous released version is:</p>
+
+<ul>
+<li>ostree diff commit old: d428d3ad8ecf44e53d138042bad56a10308883a0c5d64b9c51eff27fdc9da82c</li>
+<li>ostree diff commit new: 86727cdbc928b7f7dd0e32f62d3b973a8395d61e0ff751cfea7cc0bc5222142f</li>
+</ul>
+
+<p>Upgraded:</p>
+
+<ul>
+<li>NetworkManager 1:1.8.4-2.fc27.x86_64 -&gt; 1:1.8.4-7.fc27.x86_64</li>
+<li>NetworkManager-libnm 1:1.8.4-2.fc27.x86_64 -&gt; 1:1.8.4-7.fc27.x86_64</li>
+<li>NetworkManager-team 1:1.8.4-2.fc27.x86_64 -&gt; 1:1.8.4-7.fc27.x86_64</li>
+<li>atomic 1.19.1-1.fc27.x86_64 -&gt; 1.20.1-3.fc27.x86_64</li>
+<li>atomic-registries 1.19.1-1.fc27.x86_64 -&gt; 1.20.1-3.fc27.x86_64</li>
+<li>audit 2.7.8-1.fc27.x86_64 -&gt; 2.8.1-1.fc27.x86_64</li>
+<li>audit-libs 2.7.8-1.fc27.x86_64 -&gt; 2.8.1-1.fc27.x86_64</li>
+<li>audit-libs-python 2.7.8-1.fc27.x86_64 -&gt; 2.8.1-1.fc27.x86_64</li>
+<li>audit-libs-python3 2.7.8-1.fc27.x86_64 -&gt; 2.8.1-1.fc27.x86_64</li>
+<li>bind99-libs 9.9.11-2.fc27.x86_64 -&gt; 9.9.11-3.fc27.x86_64</li>
+<li>bind99-license 9.9.11-2.fc27.noarch -&gt; 9.9.11-3.fc27.noarch</li>
+<li>bubblewrap 0.1.8-3.fc27.x86_64 -&gt; 0.2.0-2.fc27.x86_64</li>
+<li>cockpit-bridge 151-2.fc27.x86_64 -&gt; 155-1.fc27.x86_64</li>
+<li>cockpit-docker 151-2.fc27.x86_64 -&gt; 155-1.fc27.x86_64</li>
+<li>cockpit-networkmanager 151-2.fc27.noarch -&gt; 155-1.fc27.noarch</li>
+<li>cockpit-ostree 151-2.fc27.x86_64 -&gt; 155-1.fc27.x86_64</li>
+<li>cockpit-system 151-2.fc27.noarch -&gt; 155-1.fc27.noarch</li>
+<li>compat-openssl10 1:1.0.2j-9.fc27.x86_64 -&gt; 1:1.0.2m-1.fc27.x86_64</li>
+<li>container-selinux 2:2.28-1.fc27.noarch -&gt; 2:2.29-1.fc27.noarch</li>
+<li>container-storage-setup 0.8.0-1.git1d27ecf.fc27.noarch -&gt; 0.8.0-2.git1d27ecf.fc27.noarch</li>
+<li>coreutils 8.27-16.fc27.x86_64 -&gt; 8.27-17.fc27.x86_64</li>
+<li>coreutils-common 8.27-16.fc27.x86_64 -&gt; 8.27-17.fc27.x86_64</li>
+<li>criu 3.5-1.fc27.x86_64 -&gt; 3.6-1.fc27.x86_64</li>
+<li>crypto-policies 20170816-1.git2618a6c.fc27.noarch -&gt; 20170816-2.gite0a4066.fc27.noarch</li>
+<li>curl 7.55.1-5.fc27.x86_64 -&gt; 7.55.1-7.fc27.x86_64</li>
+<li>dbus 1:1.11.20-1.fc27.x86_64 -&gt; 1:1.12.0-1.fc27.x86_64</li>
+<li>dbus-libs 1:1.11.20-1.fc27.x86_64 -&gt; 1:1.12.0-1.fc27.x86_64</li>
+<li>device-mapper 1.02.142-4.fc27.x86_64 -&gt; 1.02.144-1.fc27.x86_64</li>
+<li>device-mapper-event 1.02.142-4.fc27.x86_64 -&gt; 1.02.144-1.fc27.x86_64</li>
+<li>device-mapper-event-libs 1.02.142-4.fc27.x86_64 -&gt; 1.02.144-1.fc27.x86_64</li>
+<li>device-mapper-libs 1.02.142-4.fc27.x86_64 -&gt; 1.02.144-1.fc27.x86_64</li>
+<li>device-mapper-persistent-data 0.7.0-0.6.rc6.fc27.x86_64 -&gt; 0.7.5-1.fc27.x86_64</li>
+<li>docker 2:1.13.1-26.gitb5e3294.fc27.x86_64 -&gt; 2:1.13.1-42.git4402c09.fc27.x86_64</li>
+<li>docker-common 2:1.13.1-26.gitb5e3294.fc27.x86_64 -&gt; 2:1.13.1-42.git4402c09.fc27.x86_64</li>
+<li>docker-rhel-push-plugin 2:1.13.1-26.gitb5e3294.fc27.x86_64 -&gt; 2:1.13.1-42.git4402c09.fc27.x86_64</li>
+<li>efivar 31-3.fc27.x86_64 -&gt; 32-2.fc27.x86_64</li>
+<li>efivar-libs 31-3.fc27.x86_64 -&gt; 32-2.fc27.x86_64</li>
+<li>expat 2.2.4-1.fc27.x86_64 -&gt; 2.2.5-1.fc27.x86_64</li>
+<li>gawk 4.1.4-7.fc27.x86_64 -&gt; 4.1.4-8.fc27.x86_64</li>
+<li>glib-networking 2.54.0-1.fc27.x86_64 -&gt; 2.54.1-1.fc27.x86_64</li>
+<li>glib2 2.54.1-1.fc27.x86_64 -&gt; 2.54.2-1.fc27.x86_64</li>
+<li>glibc 2.26-15.fc27.x86_64 -&gt; 2.26-16.fc27.x86_64</li>
+<li>glibc-all-langpacks 2.26-15.fc27.x86_64 -&gt; 2.26-16.fc27.x86_64</li>
+<li>glibc-common 2.26-15.fc27.x86_64 -&gt; 2.26-16.fc27.x86_64</li>
+<li>glusterfs 3.12.1-2.fc27.x86_64 -&gt; 3.12.3-1.fc27.x86_64</li>
+<li>glusterfs-client-xlators 3.12.1-2.fc27.x86_64 -&gt; 3.12.3-1.fc27.x86_64</li>
+<li>glusterfs-fuse 3.12.1-2.fc27.x86_64 -&gt; 3.12.3-1.fc27.x86_64</li>
+<li>glusterfs-libs 3.12.1-2.fc27.x86_64 -&gt; 3.12.3-1.fc27.x86_64</li>
+<li>gnupg2 2.2.0-1.fc27.x86_64 -&gt; 2.2.3-1.fc27.x86_64</li>
+<li>gnupg2-smime 2.2.0-1.fc27.x86_64 -&gt; 2.2.3-1.fc27.x86_64</li>
+<li>gnutls 3.5.15-1.fc27.x86_64 -&gt; 3.5.16-3.fc27.x86_64</li>
+<li>gperftools-libs 2.6.1-3.fc27.x86_64 -&gt; 2.6.1-5.fc27.x86_64</li>
+<li>grub2-common 1:2.02-18.fc27.noarch -&gt; 1:2.02-19.fc27.noarch</li>
+<li>grub2-efi-x64 1:2.02-18.fc27.x86_64 -&gt; 1:2.02-19.fc27.x86_64</li>
+<li>grub2-pc 1:2.02-18.fc27.x86_64 -&gt; 1:2.02-19.fc27.x86_64</li>
+<li>grub2-pc-modules 1:2.02-18.fc27.noarch -&gt; 1:2.02-19.fc27.noarch</li>
+<li>grub2-tools 1:2.02-18.fc27.x86_64 -&gt; 1:2.02-19.fc27.x86_64</li>
+<li>grub2-tools-extra 1:2.02-18.fc27.x86_64 -&gt; 1:2.02-19.fc27.x86_64</li>
+<li>grub2-tools-minimal 1:2.02-18.fc27.x86_64 -&gt; 1:2.02-19.fc27.x86_64</li>
+<li>gssproxy 0.7.0-12.fc27.x86_64 -&gt; 0.7.0-24.fc27.x86_64</li>
+<li>ima-evm-utils 1.0-1.fc27.x86_64 -&gt; 1.0-2.fc27.x86_64</li>
+<li>initscripts 9.77-1.fc27.x86_64 -&gt; 9.78-1.fc27.x86_64</li>
+<li>iproute 4.12.0-3.fc27.x86_64 -&gt; 4.13.0-1.fc27.x86_64</li>
+<li>iproute-tc 4.12.0-3.fc27.x86_64 -&gt; 4.13.0-1.fc27.x86_64</li>
+<li>kernel 4.13.9-300.fc27.x86_64 -&gt; 4.13.15-300.fc27.x86_64</li>
+<li>kernel-core 4.13.9-300.fc27.x86_64 -&gt; 4.13.15-300.fc27.x86_64</li>
+<li>kernel-modules 4.13.9-300.fc27.x86_64 -&gt; 4.13.15-300.fc27.x86_64</li>
+<li>kpartx 0.7.1-6.git847cc43.fc27.x86_64 -&gt; 0.7.1-8.git847cc43.fc27.x86_64</li>
+<li>krb5-libs 1.15.2-2.fc27.x86_64 -&gt; 1.15.2-4.fc27.x86_64</li>
+<li>libbasicobjects 0.1.1-33.fc27.x86_64 -&gt; 0.1.1-36.fc27.x86_64</li>
+<li>libcollection 0.7.0-33.fc27.x86_64 -&gt; 0.7.0-36.fc27.x86_64</li>
+<li>libcrypt-nss 2.26-15.fc27.x86_64 -&gt; 2.26-16.fc27.x86_64</li>
+<li>libcurl 7.55.1-5.fc27.x86_64 -&gt; 7.55.1-7.fc27.x86_64</li>
+<li>libini_config 1.3.0-33.fc27.x86_64 -&gt; 1.3.1-36.fc27.x86_64</li>
+<li>libnfsidmap 0.27-3.fc27.x86_64 -&gt; 1:2.2.1-1.rc1.fc27.x86_64</li>
+<li>libnl3 3.3.0-3.fc27.x86_64 -&gt; 3.4.0-1.fc27.x86_64</li>
+<li>libnl3-cli 3.3.0-3.fc27.x86_64 -&gt; 3.4.0-1.fc27.x86_64</li>
+<li>libpath_utils 0.2.1-33.fc27.x86_64 -&gt; 0.2.1-36.fc27.x86_64</li>
+<li>libpkgconf 1.3.9-1.fc27.x86_64 -&gt; 1.3.10-1.fc27.x86_64</li>
+<li>libref_array 0.1.5-33.fc27.x86_64 -&gt; 0.1.5-36.fc27.x86_64</li>
+<li>libreport-filesystem 2.9.2-1.fc27.x86_64 -&gt; 2.9.3-1.fc27.x86_64</li>
+<li>libsolv 0.6.29-2.fc27.x86_64 -&gt; 0.6.30-2.fc27.x86_64</li>
+<li>libsss_idmap 1.15.3-5.fc27.x86_64 -&gt; 1.16.0-2.fc27.x86_64</li>
+<li>libsss_nss_idmap 1.15.3-5.fc27.x86_64 -&gt; 1.16.0-2.fc27.x86_64</li>
+<li>libsss_sudo 1.15.3-5.fc27.x86_64 -&gt; 1.16.0-2.fc27.x86_64</li>
+<li>libtirpc 1.0.2-3.fc27.x86_64 -&gt; 1.0.2-4.fc27.x86_64</li>
+<li>libunwind 1.2-3.fc27.x86_64 -&gt; 1.2.1-3.fc27.x86_64</li>
+<li>libzstd 1.3.1-1.fc27.x86_64 -&gt; 1.3.2-1.fc27.x86_64</li>
+<li>linux-firmware 20171009-78.gitbf04291.fc27.noarch -&gt; 20171123-79.git90436ce.fc27.noarch</li>
+<li>lua-libs 5.3.4-5.fc27.x86_64 -&gt; 5.3.4-6.fc27.x86_64</li>
+<li>lvm2 2.02.173-4.fc27.x86_64 -&gt; 2.02.175-1.fc27.x86_64</li>
+<li>lvm2-libs 2.02.173-4.fc27.x86_64 -&gt; 2.02.175-1.fc27.x86_64</li>
+<li>microcode_ctl 2:2.1-18.fc27.x86_64 -&gt; 2:2.1-19.fc27.x86_64</li>
+<li>net-tools 2.0-0.44.20160912git.fc27.x86_64 -&gt; 2.0-0.45.20160912git.fc27.x86_64</li>
+<li>nettle 3.3-5.fc27.x86_64 -&gt; 3.4-1.fc27.x86_64</li>
+<li>nfs-utils 1:2.1.1-6.rc5.fc27.x86_64 -&gt; 1:2.2.1-1.rc1.fc27.x86_64</li>
+<li>nss 3.33.0-1.0.fc27.x86_64 -&gt; 3.34.0-1.0.fc27.x86_64</li>
+<li>nss-pem 1.0.3-5.fc27.x86_64 -&gt; 1.0.3-6.fc27.x86_64</li>
+<li>nss-softokn 3.33.0-1.0.fc27.x86_64 -&gt; 3.34.0-1.0.fc27.x86_64</li>
+<li>nss-softokn-freebl 3.33.0-1.0.fc27.x86_64 -&gt; 3.34.0-1.0.fc27.x86_64</li>
+<li>nss-sysinit 3.33.0-1.0.fc27.x86_64 -&gt; 3.34.0-1.0.fc27.x86_64</li>
+<li>nss-tools 3.33.0-1.0.fc27.x86_64 -&gt; 3.34.0-1.0.fc27.x86_64</li>
+<li>nss-util 3.33.0-1.0.fc27.x86_64 -&gt; 3.34.0-1.0.fc27.x86_64</li>
+<li>oci-umount 2:2.0.0-2.gitf90b64c.fc27.x86_64 -&gt; 2:2.3.0-1.git51e7c50.fc27.x86_64</li>
+<li>openssl 1:1.1.0f-9.fc27.x86_64 -&gt; 1:1.1.0g-1.fc27.x86_64</li>
+<li>openssl-libs 1:1.1.0f-9.fc27.x86_64 -&gt; 1:1.1.0g-1.fc27.x86_64</li>
+<li>ostree 2017.12-2.fc27.x86_64 -&gt; 2017.13-3.fc27.x86_64</li>
+<li>ostree-grub2 2017.12-2.fc27.x86_64 -&gt; 2017.13-3.fc27.x86_64</li>
+<li>ostree-libs 2017.12-2.fc27.x86_64 -&gt; 2017.13-3.fc27.x86_64</li>
+<li>p11-kit 0.23.8-1.fc27.x86_64 -&gt; 0.23.9-2.fc27.x86_64</li>
+<li>p11-kit-trust 0.23.8-1.fc27.x86_64 -&gt; 0.23.9-2.fc27.x86_64</li>
+<li>pcre 8.41-1.fc27.2.x86_64 -&gt; 8.41-3.fc27.x86_64</li>
+<li>pcre2 10.30-1.fc27.x86_64 -&gt; 10.30-2.fc27.x86_64</li>
+<li>pkgconf 1.3.9-1.fc27.x86_64 -&gt; 1.3.10-1.fc27.x86_64</li>
+<li>pkgconf-m4 1.3.9-1.fc27.noarch -&gt; 1.3.10-1.fc27.noarch</li>
+<li>pkgconf-pkg-config 1.3.9-1.fc27.x86_64 -&gt; 1.3.10-1.fc27.x86_64</li>
+<li>publicsuffix-list-dafsa 20170828-1.fc27.noarch -&gt; 20171028-1.fc27.noarch</li>
+<li>python2 2.7.13-17.fc27.x86_64 -&gt; 2.7.14-2.fc27.x86_64</li>
+<li>python2-asn1crypto 0.22.0-4.fc27.noarch -&gt; 0.23.0-1.fc27.noarch</li>
+<li>python2-cryptography 2.0.2-2.fc27.x86_64 -&gt; 2.0.2-3.fc27.x86_64</li>
+<li>python2-libs 2.7.13-17.fc27.x86_64 -&gt; 2.7.14-2.fc27.x86_64</li>
+<li>python3 3.6.2-13.fc27.x86_64 -&gt; 3.6.3-2.fc27.x86_64</li>
+<li>python3-asn1crypto 0.22.0-4.fc27.noarch -&gt; 0.23.0-1.fc27.noarch</li>
+<li>python3-cryptography 2.0.2-2.fc27.x86_64 -&gt; 2.0.2-3.fc27.x86_64</li>
+<li>python3-docker 2.5.1-2.fc27.noarch -&gt; 2.6.1-1.fc27.noarch</li>
+<li>python3-gobject-base 3.26.0-1.fc27.x86_64 -&gt; 3.26.1-1.fc27.x86_64</li>
+<li>python3-libs 3.6.2-13.fc27.x86_64 -&gt; 3.6.3-2.fc27.x86_64</li>
+<li>python3-sssdconfig 1.15.3-5.fc27.noarch -&gt; 1.16.0-2.fc27.noarch</li>
+<li>rpm-ostree 2017.9-1.fc27.x86_64 -&gt; 2017.10-2.fc27.x86_64</li>
+<li>rpm-ostree-libs 2017.9-1.fc27.x86_64 -&gt; 2017.10-2.fc27.x86_64</li>
+<li>runc 1:1.0.1-3.gitc5ec254.fc27.x86_64 -&gt; 2:1.0.0-11.rc4.gitaea4f21.fc27.x86_64</li>
+<li>screen 4.6.1-3.fc27.x86_64 -&gt; 4.6.2-1.fc27.x86_64</li>
+<li>selinux-policy 3.13.1-283.14.fc27.noarch -&gt; 3.13.1-283.17.fc27.noarch</li>
+<li>selinux-policy-targeted 3.13.1-283.14.fc27.noarch -&gt; 3.13.1-283.17.fc27.noarch</li>
+<li>skopeo 0.1.23-6.git1bbd87f.fc27.x86_64 -&gt; 0.1.26-1.git2e8377a.fc27.x86_64</li>
+<li>skopeo-containers 0.1.23-6.git1bbd87f.fc27.x86_64 -&gt; 0.1.26-1.git2e8377a.fc27.x86_64</li>
+<li>sos 3.4-2.fc27.noarch -&gt; 3.5-1.fc27.noarch</li>
+<li>sssd-client 1.15.3-5.fc27.x86_64 -&gt; 1.16.0-2.fc27.x86_64</li>
+<li>strace 4.19-1.fc27.x86_64 -&gt; 4.20-1.fc27.x86_64</li>
+<li>systemd 234-8.fc27.x86_64 -&gt; 234-9.fc27.x86_64</li>
+<li>systemd-container 234-8.fc27.x86_64 -&gt; 234-9.fc27.x86_64</li>
+<li>systemd-libs 234-8.fc27.x86_64 -&gt; 234-9.fc27.x86_64</li>
+<li>systemd-pam 234-8.fc27.x86_64 -&gt; 234-9.fc27.x86_64</li>
+<li>systemd-udev 234-8.fc27.x86_64 -&gt; 234-9.fc27.x86_64</li>
+<li>tzdata 2017b-2.fc27.noarch -&gt; 2017c-1.fc27.noarch</li>
+<li>vim-minimal 2:8.0.1176-1.fc27.x86_64 -&gt; 2:8.0.1322-1.fc27.x86_64</li>
+</ul>
+
+<p>Removed:</p>
+
+<ul>
+<li>python-backports-1.0-11.fc27.x86_64</li>
+</ul>
+
+<p>Added:</p>
+
+<ul>
+<li>python2-backports-1.0-12.fc27.x86_64</li>
+<li>python3-pytoml-0.1.14-2.git7dea353.fc27.noarch</li>
+</ul>
+
+<p>Existing systems can be upgraded in place via e.g. <code>atomic host upgrade</code> or
+<code>atomic host deploy</code>.  Systems on Fedora Atomic 26 can be upgraded using <code>rpm-ostree rebase</code>.
+Refer to the <a href="/blog/2017/11/fedora-atomic-26-to-27-upgrade/">upgrade guide</a>
+for more details.</p>
+
+<p>Corresponding image media for new installations can be
+<a href="https://getfedora.org/en/atomic/download/">downloaded from GetFedora.org</a>.</p>
+
+<p>Respective signed CHECKSUM files can be found here:</p>
+
+<ul>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171129.0/Atomic/aarch64/iso/Fedora-Atomic-27-20171129.0-aarch64-CHECKSUM">aarch64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171129.0/Atomic/ppc64le/iso/Fedora-Atomic-27-20171129.0-ppc64le-CHECKSUM">ppc64le ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171129.0/Atomic/x86_64/iso/Fedora-Atomic-27-20171129.0-x86_64-CHECKSUM">x86_64 ISO</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171129.0/CloudImages/aarch64/images/Fedora-CloudImages-27-20171129.0-aarch64-CHECKSUM">aarch64 Cloud Image</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171129.0/CloudImages/ppc64le/images/Fedora-CloudImages-27-20171129.0-ppc64le-CHECKSUM">ppc64le Cloud Image</a></li>
+<li><a href="https://alt.fedoraproject.org/pub/alt/atomic/stable/Fedora-Atomic-27-20171129.0/CloudImages/x86_64/images/Fedora-CloudImages-27-20171129.0-x86_64-CHECKSUM">x86_64 Cloud Image</a></li>
+</ul>
+
+<p>For direct download, the <q>latest</q> targets are always available at the following URLs:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest">Latest ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest">Latest QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest">Latest raw image</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest">Latest LibVirt VM</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest">Latest VirtualBox VM</a></li>
+</ul>
+
+<p>Filename fetching URLs for downloading to remote systems are available by querying the following links:</p>
+
+<ul>
+<li><a href="https://getfedora.org/atomic_iso_latest_filename">ISO</a></li>
+<li><a href="https://getfedora.org/atomic_qcow2_latest_filename">QCOW</a></li>
+<li><a href="https://getfedora.org/atomic_raw_latest_filename">raw</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_libvirt_latest_filename">LibVirt</a></li>
+<li><a href="https://getfedora.org/atomic_vagrant_virtualbox_latest_filename">VirtualBox</a></li>
+</ul>
+
+<p>For more information about the latest targets, please reference <a href="https://fedoraproject.org/wiki/Atomic_WG#Fedora_Atomic_Image_Download_Links">the Fedora
+Atomic Wiki space</a>.</p>
+
+<p>The Vagrant Cloud page with the new atomic host:</p>
+
+<ul>
+<li><a href="https://app.vagrantup.com/fedora/">All Fedora boxes</a></li>
+<li><a href="https://app.vagrantup.com/fedora/boxes/27-atomic-host">Fedora Atomic Host 27</a></li>
+</ul>
+
+<p>To provision using vagrant:</p>
+<pre class="highlight plaintext"><code>vagrant init fedora/27-atomic-host; vagrant up&#x000A;</code></pre>
+
+<p>or, if you already have the box, to get the new one:</p>
+<pre class="highlight plaintext"><code>vagrant box update --box fedora/27-atomic-host&#x000A;</code></pre>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/12/fedora-atomic-30-nov-17/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/12/fedora-atomic-30-nov-17/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/12/fedora-atomic-30-nov-17/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Project Atomic</title>
+  <subtitle>Tag: Kerberos</subtitle>
+  <id>http://www.projectatomic.io/blog/</id>
+  <link href="http://www.projectatomic.io/blog/"/>
+  <link href="http://www.projectatomic.io/blog/tag/kerberos.xml" rel="self"/>
+  <updated>2019-11-21T00:00:00+00:00</updated>
+  <author>
+    <name>Project Atomic. Sponsored by Red Hat, Inc.</name>
+  </author>
+  <entry>
+    <title>Cockpit 129 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/01/cockpit-129/"/>
+    <id>http://www.projectatomic.io/blog/2017/01/cockpit-129/</id>
+    <published>2017-01-23T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://cockpit-project.org/blog/cockpit-129.html"&gt;Cockpit 129 has been released&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Cockpit is the modern Linux admin interface. We release regularly. Here are the release notes from version 128 and 129&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Manage remotes and rebasing in OSTree&lt;/h3&gt;
+
+&lt;p&gt;When working with OSTrees on operating systems like &lt;a href="http://www.projectatomic.io/docs/os-updates/"&gt;Atomic Host&lt;/a&gt; there will often be multiple branches to choose from. For example there may be a beta version of the operating system. Thanks to Peter’s work, Cockpit can now switch between branches and view and activate OSTrees from those branches. Also, Cockpit supports managing multiple remotes and viewing their branches. Remotes are a way of describing where OSTree should pull updates from. Take a look at the video below for a demo.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://youtu.be/dF8M3xq9FcI"&gt;Demo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5599"&gt;Change&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;The subpackage cockpit-dashboard has been split out&lt;/h3&gt;
+
+&lt;p&gt;The new cockpit-dashboard subpackage contains the dashboard itself and the cockpit-ssh process. Eventually this paves the way for more flexibility regarding authentication processes, but for now cockpit-ws unconditionally depends on cockpit-dashboard, and also requires the identical versions. Nothing changes for those who install the cockpit package. But this allows more flexibility when using Cockpit for specific use cases.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5338"&gt;Change&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Issues upgrading Cockpit on Debian and Fedora have been fixed&lt;/h3&gt;
+
+&lt;p&gt;Our packaging changes in recent versions broke upgrading Cockpit on Debian and Fedora. This is fixed now and updates should work properly once again.&lt;/p&gt;
+
+&lt;h3&gt;On Atomic, sosreport works again&lt;/h3&gt;
+
+&lt;p&gt;A bug that prevented the diagnostic tool sosreport from working on Atomic systems was fixed. Generating and accessing these diagnostic reports can be very helpful when diagnosing or reporting an issue on the system.&lt;/p&gt;
+
+&lt;h3&gt;Optionally disable the dependency on libssh&lt;/h3&gt;
+
+&lt;p&gt;When configuring Cockpit, the option disable-ssh disables building cockpit-ssh and removes the dependency on libssh. This is useful when building on an operating system where libssh is not available.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5743"&gt;Change&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Get it&lt;/h3&gt;
+
+&lt;p&gt;You can &lt;a href="http://cockpit-project.org/running.html"&gt;get Cockpit here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cockpit 129 is &lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-129-1.fc25"&gt;available in Fedora 25&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Or &lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/129"&gt;download the tarball&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks,
+Dominik&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Cockpit 127 Released</title>
+    <link rel="alternate" href="http://www.projectatomic.io/blog/2017/01/cockpit-127/"/>
+    <id>http://www.projectatomic.io/blog/2017/01/cockpit-127/</id>
+    <published>2017-01-10T16:00:00+00:00</published>
+    <updated>2021-10-07T14:03:16+00:00</updated>
+    <author>
+      <name>Stef Walter</name>
+    </author>
+    <content type="html">&lt;p&gt;Cockpit is the modern Linux admin interface. We release regularly. Here
+are the release notes from versions 126 and 127:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3&gt;Show security scan information about container images&lt;/h3&gt;
+
+&lt;p&gt;Lars did work to show security scan information about container images.
+The displayed scans happen via the &lt;a href="https://developers.redhat.com/blog/2016/05/02/introducing-atomic-scan-container-vulnerability-detection/"&gt;atomic scan&lt;/a&gt;
+tools and the data
+comes from the &lt;a href="https://www.open-scap.org/"&gt;OpenSCAP&lt;/a&gt; system. Take a look at the video below.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=zANUkEmfaAk"&gt;Demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Changes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/4952"&gt;https://github.com/cockpit-project/cockpit/pull/4952&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5259"&gt;https://github.com/cockpit-project/cockpit/pull/5259&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5686"&gt;https://github.com/cockpit-project/cockpit/pull/5686&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Choose whether password is cached and reused on the login screen&lt;/h3&gt;
+
+&lt;p&gt;The typical workflow for peforming privileged tasks on a Linux system is
+to log in as a non-root user and then use sudo or Polkit to escalate
+privileges.&lt;/p&gt;
+
+&lt;p&gt;Stef did work to make Cockpit&amp;rsquo;s privilege escalation reflect this
+properly. Cockpit now has an option on the login screen to
+&lt;q&gt;Reuse my password for privileged tasks&lt;/q&gt;. Checking this option
+automatically performs reuses the login password as necessary to
+escalate privileges. If you leave this box unchecked then Cockpit will
+behave exactly as a normal user login without special privileges.&lt;/p&gt;
+
+&lt;p&gt;In the future we&amp;rsquo;ll have a way to enable this option once logged in, and
+retype your password inside of the logged in session.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://www.youtube.com/watch?v=TW6UsPbNkV4"&gt;Demo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5522"&gt;Change&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;The remotectl command can now combine certificate and key files&lt;/h3&gt;
+
+&lt;p&gt;Peter did work to make it easier to use TLS certificate and key files
+with Cockpit for port 9090. Normally the server certificate(s) and key
+need to be combined into a single file and placed into the
+/etc/cockpit/ws-certs.d directory. The remotectl command that comes with
+Cockpit can now be used to build such a combined file.&lt;/p&gt;
+
+&lt;p&gt;Due to this, when Cockpit is deployed as an Openshift Pod it can use
+certificates provided by Openshift.&lt;/p&gt;
+
+&lt;p&gt;Docs: man remotectl&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5525"&gt;Change&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Cockpit respects /etc/shells&lt;/h3&gt;
+
+&lt;p&gt;Martin fixed Cockpit so it only allows the user to log in if the user
+has a valid shell listed in /etc/shells. In addition bugs on Ubuntu and
+Debian have been fixed where users were created without valid shells.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5665"&gt;Change&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Allow renaming of active devices in networking interface&lt;/h3&gt;
+
+&lt;p&gt;You can now rename network devices like bonds or bridges while they&amp;rsquo;re
+active. The change will apply immediately and without any interruption
+in service.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5570"&gt;Change&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Rename cockpit-shell to cockpit-system&lt;/h3&gt;
+
+&lt;p&gt;The cockpit-shell subpackage has been renamed to cockpit-system to
+better reflect its focus: configuring and troubleshooting the local system.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5600"&gt;Change&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Kerberos authentication now works even if gss-proxy is in use&lt;/h3&gt;
+
+&lt;p&gt;Sometimes Kerberos (or GSSAPI) single-sign-on authentication requires
+multiple round trips to the server. Cockpit now supports this properly,
+and the end result is that SSO works even when fancy things like
+GSS-Proxy are in use.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://github.com/cockpit-project/cockpit/pull/5495"&gt;Change&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Get it&lt;/h3&gt;
+
+&lt;p&gt;You can &lt;a href="http://cockpit-project.org/running.html"&gt;get Cockpit here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Cockpit 127 is &lt;a href="https://bodhi.fedoraproject.org/updates/cockpit-127-1.fc25"&gt;available in Fedora 25&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Or &lt;a href="https://github.com/cockpit-project/cockpit/releases/tag/127"&gt;download the tarball&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

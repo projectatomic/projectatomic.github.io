@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fedora 28->29 Atomic Host Upgrade Guide &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Dusty Mabe' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Fedora 28-&gt;29 Atomic Host Upgrade Guide' property='og:title'>
+<meta content='Introduction&#x000A;&#x000A;This week we put out the first&#x000A;release of Fedora 29 Atomic Host. This will be the last major release&#x000A;of Fedora Atomic Host as we prepare for Fedora CoreOS&#x000A;which will be released in Fedora 30.&#x000A;&#x000A;In this post we’ll quickly list some known issues and then talk about updating &#x000A;an existing Fedora 28 Atomic Host system to Fedora 29. We’ll cover preparing&#x000A;the system for upgrade and performing the upgrade.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/' property='og:url'>
+<meta content='2018-10-31T00:00:00Z' property='article:published_time'>
+<meta content='dustymabe' property='article:author:username'>
+<meta content='atomic' property='article:tag'>
+<link href='/blog/tag/atomic.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Fedora 28-&gt;29 Atomic Host Upgrade Guide' name='twitter:title'>
+<meta content='Introduction&#x000A;&#x000A;This week we put out the first&#x000A;release of Fedora 29 Atomic Host. This will be the last major release&#x000A;of Fedora Atomic Host as we prepare for Fedora CoreOS&#x000A;which will be released in Fedora 30.&#x000A;&#x000A;In this post we’ll quickly list some known issues and then talk about updating &#x000A;an existing Fedora 28 Atomic Host system to Fedora 29. We’ll cover preparing&#x000A;the system for upgrade and performing the upgrade.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2018 blog_2018_10 blog_2018_10_fedora-atomic-28-to-29-upgrade blog_2018_10_fedora-atomic-28-to-29-upgrade_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Fedora 28->29 Atomic Host Upgrade Guide
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/dustymabe/">Dusty Mabe</a>
+</span>
+&ndash;
+<time class='published' datetime='2018-10-31T00:00:00Z'>
+Wednesday 31 October 2018
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<h3>Introduction</h3>
+
+<p>This week we put out the <a href="https://lists.projectatomic.io/projectatomic-archives/atomic-devel/2018-October/msg00006.html">first</a>
+release of Fedora 29 Atomic Host. This will be the last major release
+of Fedora Atomic Host as we prepare for <a href="https://coreos.fedoraproject.org/">Fedora CoreOS</a>
+which will be released in Fedora 30.</p>
+
+<p>In this post we&rsquo;ll quickly list some known issues and then talk about updating 
+an existing Fedora 28 Atomic Host system to Fedora 29. We&rsquo;ll cover preparing
+the system for upgrade and performing the upgrade.</p>
+
+<p></p>
+
+<p><strong>NOTE:</strong> If you really don&rsquo;t want to upgrade to Fedora 29 see the
+          later section: <em>Appendix B: Fedora 28 Atomic Host Life Support</em>.</p>
+
+<h3>Known Issues</h3>
+
+<ul>
+<li>Device timeout when installing from ISO with swap space. </li>
+</ul>
+
+<p>We found <a href="https://pagure.io/atomic-wg/issue/513">an issue</a>
+where instances installed via the ISO image via anaconda were
+having long boot times because of device timeouts. We traced
+this down to <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1641268">a bug in dracut</a>
+and this will be fixed in the next release.</p>
+
+<ul>
+<li>Incompatibilities with OpenShift Origin &gt;= 3.11 and Kubernetes &gt;= 1.10.4</li>
+</ul>
+
+<p>In newer versions of <code>systemd</code> an API was removed that was needed by
+older versions of OpenShift/Kubernetes. It is recommended that you
+upgrade to Origin 3.11 or Kubernetes &gt; 1.10.4 before moving to Fedora
+29 Atomic Host. If you must use an older version of OpenShift/Kubernetes
+with Fedora 29 Atomic Host please see the later section: 
+<em>Appendix A: Using older versions of Kubernetes/OpenShift on Fedora 29 Atomic Host</em>.
+Discussion of this issue can be found in the <a href="https://pagure.io/atomic-wg/issue/512">pagure ticket</a>.</p>
+
+<h3>Preparing for Upgrade</h3>
+
+<p>Before we update to Fedora 29 Atomic Host we should check to
+see that we have at least a few GiB of free space in our root
+filesystem. The update to Fedora 29 can cause your system to
+retrieve more than 1 GiB of new content (not shared with Fedora
+28) and thus we&rsquo;ll need to make sure we have plenty of free space.</p>
+
+<p><strong>NOTE:</strong> Luckily if you skip this step OSTree will perform
+          <a href="https://github.com/ostreedev/ostree/pull/987">filesystem checks</a>
+          to make sure that upgrade will error gracefully before filling
+          up the filesystem.</p>
+
+<h3>Upgrading</h3>
+
+<p>Now we should be ready for the upgrade. If you are hosting any services
+on your instance you may want to prepare for them to have some downtime.</p>
+
+<p>Currently we are on Fedora 28 Atomic Host using the
+<code>fedora/28/x86_64/atomic-host</code> ref.</p>
+<pre class="highlight plaintext"><code>[vagrant@host ~]$ rpm-ostree status&#x000A;State: idle&#x000A;AutomaticUpdates: disabled&#x000A;Deployments:&#x000A;● ostree://fedora-atomic:fedora/28/x86_64/atomic-host&#x000A;                   Version: 28.20181007.0 (2018-10-07 20:43:44)&#x000A;                    Commit: 8df48fa2e70ad1952153ae00edbba08ed18b53c3d4095a22985d1085f5203ac6&#x000A;              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1&#x000A;</code></pre>
+
+<p>In order to do the upgrade we need to add the location of
+the Fedora 29 repository as a new remote (similar to a
+git remote) for <code>ostree</code> to know about:</p>
+<pre class="highlight plaintext"><code>[vagrant@host ~]$ sudo ostree remote add --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-29-primary fedora-atomic-29 https://dl.fedoraproject.org/atomic/repo/&#x000A;</code></pre>
+
+<p>You can see from the command that we are adding a new remote known as
+<code>fedora-atomic-29</code> with a remote url of <code>https://dl.fedoraproject.org/atomic/repo/</code>
+We are also setting the <code>gpgkeypath</code> variable in the configuration for
+the remote. This tells OSTree that we want commit signatures to be
+verified when we download from a remote.</p>
+
+<p>Now that we have our <code>fedora-atomic-29</code> remote we can do the upgrade!</p>
+<pre class="highlight plaintext"><code>[vagrant@host ~]$ sudo rpm-ostree rebase fedora-atomic-29:fedora/29/x86_64/atomic-host&#x000A;26 delta parts, 9 loose fetched; 264197 KiB transferred in 44 seconds        &#x000A;Upgraded:                                      &#x000A;  NetworkManager 1:1.10.12-1.fc28 -&gt; 1:1.12.4-1.fc29        &#x000A;  NetworkManager-libnm 1:1.10.12-1.fc28 -&gt; 1:1.12.4-1.fc29&#x000A;  NetworkManager-team 1:1.10.12-1.fc28 -&gt; 1:1.12.4-1.fc29&#x000A;  acl 2.2.53-1.fc28 -&gt; 2.2.53-2.fc29                &#x000A;  atomic 1.22.1-2.fc28 -&gt; 1.22.1-27.gitb507039.fc29       &#x000A;  atomic-devmode 0.3.7-4.fc28 -&gt; 0.3.7-6.fc29        &#x000A;  atomic-registries 1.22.1-2.fc28 -&gt; 1.22.1-27.gitb507039.fc29&#x000A;  attr 2.4.48-3.fc28 -&gt; 2.4.48-3.fc29              &#x000A;...&#x000A;  python-unversioned-command-2.7.15-10.fc29.noarch&#x000A;  python3-pyyaml-4.2-0.1.b4.fc29.x86_64&#x000A;Run "systemctl reboot" to start a reboot&#x000A;[vagrant@host ~]$ sudo systemctl reboot&#x000A;[vagrant@host ~]$ Connection to 192.168.121.95 closed by remote host.&#x000A;Connection to 192.168.121.95 closed.&#x000A;</code></pre>
+
+<p>After reboot we can log in and see the status:</p>
+<pre class="highlight plaintext"><code>$ vagrant ssh &#x000A;Last login: Wed Oct 31 21:14:44 2018 from 192.168.121.1&#x000A;[vagrant@host ~]$ rpm-ostree status&#x000A;State: idle&#x000A;AutomaticUpdates: disabled&#x000A;Deployments:&#x000A;● ostree://fedora-atomic-29:fedora/29/x86_64/atomic-host&#x000A;                   Version: 29.20181025.1 (2018-10-25 14:46:54)&#x000A;                    Commit: 4a999b4b303b47468ff1464051a14fd075d2e7b8bb647584b7cc80fed48cf27b&#x000A;              GPGSignature: Valid signature by 5A03B4DD8254ECA02FDA1637A20AA56B429476B4&#x000A;&#x000A;  ostree://fedora-atomic:fedora/28/x86_64/atomic-host&#x000A;                   Version: 28.20181007.0 (2018-10-07 20:43:44)&#x000A;                    Commit: 8df48fa2e70ad1952153ae00edbba08ed18b53c3d4095a22985d1085f5203ac6&#x000A;              GPGSignature: Valid signature by 128CF232A9371991C8A65695E08E7E629DB62FB1&#x000A;[vagrant@host ~]$&#x000A;[vagrant@host ~]$ cat /etc/os-release | head -n 2&#x000A;NAME=Fedora&#x000A;VERSION="29.20181025.1 (Atomic Host)"&#x000A;</code></pre>
+
+<p>We are now on Fedora 29 Atomic Host. Now is a good time to check your
+services (most likely running in containers) to see if they are still
+working. If not, then you always have the rollback command: <code>sudo&#x000A;rpm-ostree rollback</code>.</p>
+
+<p><strong>NOTE:</strong> Over time you can see updated commands for upgrading Atomic
+          Host between releases by visiting <a href="https://fedoraproject.org/wiki/Atomic_Host_upgrade">this</a>
+          wiki page.</p>
+
+<h3>Appendix A: Using older versions of Kubernetes/OpenShift on Fedora 29 Atomic Host</h3>
+
+<p>Due to <a href="https://pagure.io/atomic-wg/issue/512">an issue</a> that arises from the
+combination of the version of systemd that ships with Fedora 29 Atomic Host,
+and the version of runc that&rsquo;s bundled with Kubernetes and with OpenShift
+Origin, users of certain Kubernetes and OpenShift Origin releases must take
+steps to keep their Kubernetes or Origin clusters running following an upgrade to 29.</p>
+
+<p>Users running Kubernetes releases older than v1.10.4 or OpenShift Origin
+releases older than v3.11 would do best to upgrade their Kubernetes or
+Origin clusters to a more recent version before undertaking an upgrade
+to Fedora 29 Atomic Host.</p>
+
+<p>For users who prefer to upgrade to 29 without changing their cluster
+version, it&rsquo;s possible to work around the issue by changing the
+<code>cgroupdriver</code> for both docker and for either the kubelet or the
+orgin-node component from its default value of <code>systemd</code> to <code>cgroupfs</code>.</p>
+
+<h4>For docker (applies to both Kubernetes and OpenShift Origin clusters):</h4>
+<pre class="highlight plaintext"><code># cp /usr/lib/systemd/system/docker.service /etc/systemd/system/&#x000A;# sed -i 's/cgroupdriver=systemd/cgroupdriver=cgroupfs/' /etc/systemd/system/docker.service&#x000A;</code></pre>
+
+<h4>For kubelet (applies to Kubeadm-based Kubernetes clusters):</h4>
+<pre class="highlight plaintext"><code># sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/' /etc/systemd/system/kubelet.service.d/kubeadm.conf&#x000A;</code></pre>
+
+<h4>For origin-node (applies to OpenShift Origin clusters):</h4>
+<pre class="highlight plaintext"><code># vi /etc/origin/node/node-config.yaml&#x000A;</code></pre>
+
+<p>Add the following element to the <code>kubeletArguments:</code> section:</p>
+<pre class="highlight plaintext"><code>cgroup-driver:&#x000A;  - "cgroupfs"&#x000A;</code></pre>
+
+<p>After making these changes, rebase to 29 as directed above. After reboot
+the nodes should return in <code>Ready</code> state as expected.</p>
+
+<h3>Appendix B: Fedora 28 Atomic Host Life Support</h3>
+
+<p>As with Fedora 27 we will keep updating the Fedora 28 Atomic Host tree
+but we won&rsquo;t be performing regular testing on that tree and there will
+be no more formal releases for Fedora 28. Please move to Fedora 29 to
+take advantage of regular testing and formal releases every two weeks.</p>
+
+<h3>Conclusion</h3>
+
+<p>As in the past, the transition to Fedora 29 Atomic Host should be an
+easy process. If you have issues please join us in IRC (#atomic on
+<a href="https://freenode.net/">freenode</a>) or on the
+<a href="https://lists.projectatomic.io/mailman/listinfo/atomic-devel">atomic-devel</a>
+mailing list.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic/">atomic</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+<div class='author-info' id='author-info'>
+<h2>
+About
+Dusty Mabe
+</h2>
+<div class='author-photo'><img src="https://secure.gravatar.com/avatar/78c5dab261db4bc6ee0e038990fce2d8" /></div>
+<div class='author-blurb with-photo'>
+<p>Atomic OpenShift Engineer for Red Hat. Fedora Atomic WG member. Passionate about open source.</p>
+
+<div class='more-link'>
+<a href="/blog/author/dustymabe/">View all posts by Dusty Mabe &raquo;</a>
+</div>
+</div>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

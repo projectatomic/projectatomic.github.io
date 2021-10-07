@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+External authentication for Fedora Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jan Pazdziora' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='External authentication for Fedora Atomic Host' property='og:title'>
+<meta content='By default, Fedora Atomic images come with cloud-init, which supports customization of various aspects of the running instance, including password for the default user. However, if many users in an organization should have access to the Atomic Host, the local configuration of the instance will not scale and user identities, authentication, and authorization need to be based on external identity management solution. &#x000A;&#x000A;For IPA (FreeIPA/IdM), Active Directory, or generic LDAP servers, SSSD can serve as an agent providing these services, from user identity lookups and user group membership resolution to access control. With an SSSD container now available, Fedora Atomic Hosts can be deployed in very similar way to normal Fedora.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2015/12/fedora-atomic-sssd-container/' property='og:url'>
+<meta content='2015-12-08T16:00:00Z' property='article:published_time'>
+<meta content='adelton' property='article:author:username'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='authentication' property='article:tag'>
+<link href='/blog/tag/authentication.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='sssd' property='article:tag'>
+<link href='/blog/tag/sssd.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='External authentication for Fedora Atomic Host' name='twitter:title'>
+<meta content='By default, Fedora Atomic images come with cloud-init, which supports customization of various aspects of the running instance, including password for the default user. However, if many users in an organization should have access to the Atomic Host, the local configuration of the instance will not scale and user identities, authentication, and authorization need to be based on external identity management solution. &#x000A;&#x000A;For IPA (FreeIPA/IdM), Active Directory, or generic LDAP servers, SSSD can serve as an agent providing these services, from user identity lookups and user group membership resolution to access control. With an SSSD container now available, Fedora Atomic Hosts can be deployed in very similar way to normal Fedora.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2015 blog_2015_12 blog_2015_12_fedora-atomic-sssd-container blog_2015_12_fedora-atomic-sssd-container_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+External authentication for Fedora Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/adelton/">Jan Pazdziora</a>
+</span>
+&ndash;
+<time class='published' datetime='2015-12-08T16:00:00Z'>
+Tuesday  8 December 2015
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>By default, Fedora Atomic images come with cloud-init, which supports customization of various aspects of the running instance, including password for the default user. However, if many users in an organization should have access to the Atomic Host, the local configuration of the instance will not scale and user identities, authentication, and authorization need to be based on external identity management solution. </p>
+
+<p>For IPA (FreeIPA/IdM), Active Directory, or generic LDAP servers, SSSD can serve as an agent providing these services, from user identity lookups and user group membership resolution to access control. With an SSSD container now available, Fedora Atomic Hosts can be deployed in very similar way to normal Fedora.</p>
+
+<p></p>
+
+<h3>SSSD overview</h3>
+
+<p>The System Security Services Daemon (SSSD) is a daemon that provides identity, authentication, and authorization services to the operating system and applications. It provides modules and/or plugins for multiple subsystems of the operating system, including NSS, PAM, or sudo. It can cache multiple types of information to speed-up subsequent lookup or authentication operations, and it can use various remote backend types, including FreeIPA, Active Directory, or LDAP.</p>
+
+<p>SSSD can be configured by editing <code>/etc/sssd/sssd.conf</code> directly but due to overlap to other subsystems, those subsystems typically need to be configured as well to make use of SSSD, like <code>pam_sss.so</code> for PAM, or <code>/etc/krb5.*</code> for Kerberos operations. For two use cases, setups against FreeIPA and Active Directory, setup tools can be used to configure SSSD and other components of the operating system in automated fashion.</p>
+
+<h3>Working with SSSD container</h3>
+
+<p>The general steps in deploying the SSSD container include:</p>
+
+<ul>
+<li>Edit config file with options and parameters, or configure SSSD manually.</li>
+<li>Call <code>atomic install fedora/sssd [various options]</code> to invoke setup tool(s) to configure SSSD and other parts of the system.</li>
+<li>Call <code>atomic run fedora/sssd</code> or <code>systemctl start sssd.service</code> to start the container.</li>
+</ul>
+
+<p>What config files to use and what options to pass depend on the setup you want to achieve. The three most common use-cases will be:</p>
+
+<ul>
+<li>IPA-enrollment, for configuring the machine against FreeIPA/IdM, using <code>ipa-client-install</code> in the container.</li>
+<li>Joining the machine to Active Directory using <code>realm join</code>.</li>
+<li>Configuring SSSD manually on the host and telling the SSSD container to just use that configuration, without any setup tool invoked. </li>
+</ul>
+
+<p>Let us explore the possibilities in more detail.</p>
+
+<h3>IPA-enrolling Fedora Atomic</h3>
+
+<p>To IPA-enroll machine to FreeIPA or IdM server, you will want to either specify the parameters for <code>ipa-client-install</code> in <code>/etc/sssd/ipa-client-install-options</code> on the host before running <code>atomic install</code>, or you can pass the parameters as arguments to <code>atomic install fedora/sssd</code> directly.</p>
+
+<p>For example, if you&rsquo;ve pre-created the host record in IPA with</p>
+<pre class="highlight plaintext"><code>ipa$ ipa host-add --random host.example.com&#x000A;[...]&#x000A;  Random password: Fk96SdaP99wV&#x000A;</code></pre>
+
+<p>and obtained a one-time password for the IPA-enrollment, you can either use the <code>-w</code> and the password directly when calling <code>atomic install</code>:</p>
+<pre class="highlight plaintext"><code>host# atomic install fedora/sssd -w Fk96SdaP99wV&#x000A;[...]&#x000A;Client configuration complete.&#x000A;</code></pre>
+
+<p>Alternatively, you can store the option and the password in <code>/etc/sssd/ipa-client-install-options</code>:</p>
+<pre class="highlight plaintext"><code>-w Fk96SdaP99wV&#x000A;</code></pre>
+
+<p>You then do not need to pass the arguments to <code>atomic install</code> on the command line:</p>
+<pre class="highlight plaintext"><code>host# atomic install fedora/sssd&#x000A;[...]&#x000A;Client configuration complete.&#x000A;</code></pre>
+
+<p>Virtually any option to <code>ipa-client-install</code> can be used, and specified either as argument to <code>atomic install</code>, or in the <code>-options</code> file.</p>
+
+<h3>Joining Fedora Atomic to Active Directory</h3>
+
+<p>To join the machine to Active Directory, specify parameters to realm join in <code>/etc/sssd/realm-join-options,</code> for example:</p>
+<pre class="highlight plaintext"><code>ADDOMAIN.COM&#x000A;</code></pre>
+
+<p>When that file exists, plain</p>
+<pre class="highlight plaintext"><code>host# atomic install fedora/sssd&#x000A;</code></pre>
+
+<p>will call <code>realm join</code> instead of <code>ipa-client-install</code>.</p>
+
+<p>You can also use <code>realm join</code> and the parameters on the command line directly:</p>
+<pre class="highlight plaintext"><code>host# atomic install fedora/sssd realm join ADDOMAIN.TEST&#x000A;</code></pre>
+
+<p>In either case, since <code>realm join</code> does not accept the AD credentials on the command line, you have to put the password to <code>/etc/sssd/realm-join-password</code> before calling <code>atomic install</code>.</p>
+
+<h3>Using existing SSSD configuration</h3>
+
+<p>If you have configured SSSD on the Fedora Atomic Host manually or via some other mechanism, you can just enable the SSSD container and tell it to observe the existing configuration:</p>
+<pre class="highlight plaintext"><code>host# atomic install fedora/sssd --migrate&#x000A;</code></pre>
+
+<h3>Further reading</h3>
+
+<p>For more information about the SSSD container and the solution used, check <a href="http://www.adelton.com/docs/docker/fedora-atomic-sssd-container">SSSD in container on Fedora Atomic Host</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/authentication/">authentication</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/sssd/">sssd</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2015/12/fedora-atomic-sssd-container/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2015/12/fedora-atomic-sssd-container/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2015/12/fedora-atomic-sssd-container/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

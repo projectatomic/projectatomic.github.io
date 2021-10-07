@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+New CentOS Atomic Host with Optional Docker 1.12 &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='New CentOS Atomic Host with Optional Docker 1.12' property='og:title'>
+<meta content='Last week, the CentOS Atomic SIG released an updated version of CentOS Atomic Host (tree version 7.20161006), which offers users the option of substituting the host’s default docker 1.10 container engine with a more recent, docker 1.12-based version, provided via the docker-latest package.&#x000A;&#x000A;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box; or as an installable ISO, qcow2, or Amazon Machine image. Check out the CentOS wiki for download links and installation instructions, or read on to learn more about what’s new in this release.' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2016/10/new-centos-atomic-host-with-optional-docker-1-12/' property='og:url'>
+<meta content='2016-10-19T10:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='atomic host' property='article:tag'>
+<link href='/blog/tag/atomic host.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='centos' property='article:tag'>
+<link href='/blog/tag/centos.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='docker' property='article:tag'>
+<link href='/blog/tag/docker.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='swarm' property='article:tag'>
+<link href='/blog/tag/swarm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='New CentOS Atomic Host with Optional Docker 1.12' name='twitter:title'>
+<meta content='Last week, the CentOS Atomic SIG released an updated version of CentOS Atomic Host (tree version 7.20161006), which offers users the option of substituting the host’s default docker 1.10 container engine with a more recent, docker 1.12-based version, provided via the docker-latest package.&#x000A;&#x000A;CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box; or as an installable ISO, qcow2, or Amazon Machine image. Check out the CentOS wiki for download links and installation instructions, or read on to learn more about what’s new in this release.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2016 blog_2016_10 blog_2016_10_new-centos-atomic-host-with-optional-docker-1-12 blog_2016_10_new-centos-atomic-host-with-optional-docker-1-12_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+New CentOS Atomic Host with Optional Docker 1.12
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2016-10-19T10:00:00Z'>
+Wednesday 19 October 2016
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Last week, the CentOS Atomic SIG <a href="https://seven.centos.org/2016/10/new-centos-atomic-host-with-optional-docker-1-12/">released</a> an updated version of CentOS Atomic Host (tree version 7.20161006), which offers users the option of substituting the host’s default docker 1.10 container engine with a more recent, docker 1.12-based version, provided via the docker-latest package.</p>
+
+<p>CentOS Atomic Host is available as a VirtualBox or libvirt-formatted Vagrant box; or as an installable ISO, qcow2, or Amazon Machine image. Check out the <a href="https://wiki.centos.org/SpecialInterestGroup/Atomic/Download">CentOS wiki</a> for download links and installation instructions, or read on to learn more about what’s new in this release.</p>
+
+<p></p>
+
+<p>CentOS Atomic Host includes these core component versions:</p>
+
+<ul>
+<li>atomic-1.10.5-7.el7.x86_64</li>
+<li>cloud-init-0.7.5-10.el7.centos.1.x86_64</li>
+<li>docker-1.10.3-46.el7.centos.14.x86_64</li>
+<li>etcd-2.3.7-4.el7.x86_64</li>
+<li>flannel-0.5.3-9.el7.x86_64</li>
+<li>kernel-3.10.0-327.36.1.el7.x86_64</li>
+<li>kubernetes-1.2.0-0.13.gitec7364b.el7.x86_64</li>
+<li>ostree-2016.7-2.atomic.el7.x86_64</li>
+</ul>
+
+<h3>docker-latest</h3>
+
+<p>You can switch to the alternate docker version by running:</p>
+<pre class="highlight plaintext"><code># systemctl disable docker --now&#x000A;# systemctl enable docker-latest --now&#x000A;# sed -i '/DOCKERBINARY/s/^#//g' /etc/sysconfig/docker&#x000A;</code></pre>
+
+<p>You cannot run both docker and docker-latest at the same time on the same system.</p>
+
+<p>After enabling docker-latest on a trio of CentOS Atomic hosts, I thought I&rsquo;d try out one of the major docker 1.12 features, <a href="https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm/">swarm</a>.</p>
+<pre class="highlight plaintext"><code># docker swarm init --advertise-addr 10.10.171.201&#x000A;Swarm initialized: current node (e4w8o2f842vgn5yl77koi88m6) is now a manager.&#x000A;&#x000A;To add a worker to this swarm, run the following command:&#x000A;&#x000A;    docker swarm join \&#x000A;    --token SWMTKN-1-5db4knvzzljlkmpyzgqf58x2blzim0nn8r63qvzp5r14fs22m2-3mkjppcdeenqlcxgcudra98rl \&#x000A;    10.10.171.201:2377&#x000A;&#x000A;To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.&#x000A;</code></pre>
+
+<p>I ran the command provided on two additional CentOS Atomic hosts on which I&rsquo;d also enabled docker-latest, and started up <em>hello world</em> service recommended in the swarm docs:</p>
+<pre class="highlight plaintext"><code># docker service create --replicas 3 --name helloworld alpine ping docker.com&#x000A;&#x000A;# docker service inspect --pretty helloworld&#x000A;ID:     2ysb3w0v5c80fc01mibxpa9un&#x000A;Name:       helloworld&#x000A;Mode:       Replicated&#x000A; Replicas:  3&#x000A;Placement:&#x000A;UpdateConfig:&#x000A; Parallelism:   1&#x000A; On failure:    pause&#x000A;ContainerSpec:&#x000A; Image:     alpine&#x000A; Args:      ping docker.com&#x000A;Resources:&#x000A;</code></pre>
+
+<p>I&rsquo;m more familiar with kubernetes than with swarm, so I&rsquo;m interested to hear about your own docker 1.12 use cases and how you fare with them on CentOS Atomic.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/atomic-host/">atomic host</a></li>
+<li><a href="/blog/tag/centos/">centos</a></li>
+<li><a href="/blog/tag/docker/">docker</a></li>
+<li><a href="/blog/tag/swarm/">swarm</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2016/10/new-centos-atomic-host-with-optional-docker-1-12/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2016/10/new-centos-atomic-host-with-optional-docker-1-12/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2016/10/new-centos-atomic-host-with-optional-docker-1-12/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

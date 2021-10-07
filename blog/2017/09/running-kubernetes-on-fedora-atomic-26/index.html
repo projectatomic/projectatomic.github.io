@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Running Kubernetes on Fedora Atomic Host &mdash;
+Project Atomic
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Running Kubernetes on Fedora Atomic Host' property='og:title'>
+<meta content='Fedora 26 Atomic Host relies on Kubernetes for automating deployment, scaling, and operations of application containers across clusters of hosts.&#x000A;&#x000A;Getting up and running with Kubernetes on Fedora Atomic Host involves installing Kubernetes (or sticking with the version of the software that’s currently baked into the images), and then configuring a cluster. This can be done manually, with the Kubeadm utility, or with Ansible scripts (among other methods).' property='og:description'>
+<meta content='http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/' property='og:url'>
+<meta content='2017-09-06T16:00:00Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<meta content='ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='fedora' property='article:tag'>
+<link href='/blog/tag/fedora.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubeadm' property='article:tag'>
+<link href='/blog/tag/kubeadm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Running Kubernetes on Fedora Atomic Host' name='twitter:title'>
+<meta content='Fedora 26 Atomic Host relies on Kubernetes for automating deployment, scaling, and operations of application containers across clusters of hosts.&#x000A;&#x000A;Getting up and running with Kubernetes on Fedora Atomic Host involves installing Kubernetes (or sticking with the version of the software that’s currently baked into the images), and then configuring a cluster. This can be done manually, with the Kubeadm utility, or with Ansible scripts (among other methods).' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='/blog/feed.xml' rel='alternate' title='Project Atomic' type='application/atom+xml'>
+<link href="/stylesheets/application.css?1633620577" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1633620578" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' blog blog_2017 blog_2017_09 blog_2017_09_running-kubernetes-on-fedora-atomic-26 blog_2017_09_running-kubernetes-on-fedora-atomic-26_index source-md'>
+<section class='container' id='page-wrap'>
+<div class='row'>
+<div class='col-md-3 col-lg-2' id='sidebar'>
+<div id='nav-primary'>
+<nav class='navbar navbar-default' role='navigation'>
+<div class='navbar-header'>
+<button class='navbar-toggle' data-target='.navbar-ex1-collapse' data-toggle='collapse'>
+<span class='sr-only'>
+Toggle navigation
+</span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+<span class='icon-bar'></span>
+</button>
+<a class='navbar-brand' href='/'>
+Project Atomic
+</a>
+</div>
+<div class='collapse navbar-collapse navbar-ex1-collapse'>
+<ul class='nav navbar-nav'>
+<li><a class="get-started" href="/download">Get Started</a></li>
+<li><a class="documentation" href="/docs">Documentation</a></li>
+<li><a class="developer-community" href="/community">Developer Community</a></li>
+<li><a class="talks" href="/community/talks">Talks</a></li>
+<li><a class="on-github" href="https://github.com/projectatomic/">On GitHub</a></li>
+<li><a class="blog" href="/blog">Blog</a></li>
+<li><a class="twitter" href="http://www.twitter.com/projectatomic">Twitter</a></li>
+<li><a class="rss" href="../../../feed.xml">RSS</a></li>
+</ul>
+</div>
+</nav>
+
+</div>
+
+</div>
+<section class='col-lg-10 col-md-9 container' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-12'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Running Kubernetes on Fedora Atomic Host
+</h2>
+<p class='post-meta'>
+<span class='byline'>
+by
+</span>
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+<time class='published' datetime='2017-09-06T16:00:00Z'>
+Wednesday  6 September 2017
+</time>
+</p>
+</header>
+<section class='post-content entry-content'>
+<p>Fedora 26 Atomic Host relies on Kubernetes for automating deployment, scaling, and operations of application containers across clusters of hosts.</p>
+
+<p>Getting up and running with Kubernetes on Fedora Atomic Host involves installing Kubernetes (or sticking with the version of the software that&rsquo;s currently baked into the images), and then configuring a cluster. This can be done manually, with the Kubeadm utility, or with Ansible scripts (among other methods).</p>
+
+<p></p>
+
+<p>Below is an overview of your options for installing and configuring Kubernetes clusters on Fedora Atomic Hosts. If you&rsquo;re looking to get up and running as quickly as possible with a Fedora Atomic-hosted Kubernetes cluster, skip ahead to the <q>Kubeadm Deployment</q> section below. For a more configurable installation, check out the Ansible Deployment section.</p>
+
+<h3>Install Kubernetes</h3>
+
+<h4>Use Built-in Packages</h4>
+
+<p>Fedora Atomic Host ships with Kubernetes packages baked into the system image. The specific version of Kubernetes included matches the latest release marked stable for f26 in Fedora&rsquo;s <a href="https://bodhi.fedoraproject.org/updates/?packages=kubernetes&amp;release=F26">updates system</a>. If this is the version you wish to run, you can move on to the Manual Deployment, Ansible Deployment or Kubeadm Deployment sections.</p>
+
+<h5>Updates and Testing Packages</h5>
+
+<p>If there is a newer stable Kubernetes version available that hasn&rsquo;t yet appeared in a two-weekly Fedora Atomic release, you can access it by rebasing to the updates ref of Fedora Atomic, which is recomposed each night to track the latest stable packages:</p>
+<pre class="highlight shell"><code><span class="c"># rpm-ostree rebase fedora-atomic:fedora/26/x86_64/updates/atomic-host -r</span>&#x000A;</code></pre>
+
+<p>Similarly, if there is a newer Kubernetes version available in Fedora&rsquo;s updates-testing repository, you can access it by rebasing to the testing ref of Fedora Atomic, which is recomposed each night to track the latest testing packages:</p>
+<pre class="highlight shell"><code><span class="c"># rpm-ostree rebase fedora-atomic:fedora/26/x86_64/testing/atomic-host -r</span>&#x000A;</code></pre>
+
+<h4>Use System Containers</h4>
+
+<p>You can also install Kubernetes using <a href="http://www.projectatomic.io/blog/2016/09/intro-to-system-containers/">system containers</a>, a new approach that will eventually replace baked-in Kubernetes packages in the atomic host. You can begin trying it out now, however:</p>
+
+<h5>Run on your kubernetes master</h5>
+<pre class="highlight shell"><code><span class="c"># atomic install --system --system-package=no --name kube-apiserver registry.fedoraproject.org/f26/kubernetes-apiserver</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-controller-manager registry.fedoraproject.org/f26/kubernetes-controller-manager</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-scheduler registry.fedoraproject.org/f26/kubernetes-scheduler</span>&#x000A;</code></pre>
+
+<h5>Run on your kubernetes node(s)</h5>
+<pre class="highlight shell"><code><span class="c"># atomic install --system --system-package=no --name kubelet registry.fedoraproject.org/f26/kubernetes-kubelet</span>&#x000A;&#x000A;<span class="c"># atomic install --system --system-package=no --name kube-proxy registry.fedoraproject.org/f26/kubernetes-proxy</span>&#x000A;</code></pre>
+
+<p>From here, you could proceed with the Manual Deployment or the Ansible Deployment sections.</p>
+
+<p>System containers place systemd unit files in <code>/etc/systemd/system</code>, where they override the unit files from the packages baked into the image, so it&rsquo;s possible to install system containers built from other versions of Fedora. You could, for instance, build and run containers including the more recent (1.7.2) version of Kubernetes from rawhide from <a href="https://github.com/projectatomic/atomic-system-containers">these sources</a>.</p>
+
+<p>Keep in mind that unlike standard containers, which are stored under <code>/var/lib/docker</code> and may reside on a separate partition, system containers are stored in the root partition, so you may need to provide that partition with more space.</p>
+
+<h3>Deploy Kubernetes</h3>
+
+<h4>Kubeadm Deployment</h4>
+
+<p>Kubeadm is a tool for bootstrapping Kubernetes clusters that&rsquo;s still <a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#kubeadm-maturity">under development</a> by the Kubernetes project, but offers a really simple method of getting up and running with a single or multi-node cluster. Starting with the Kubernetes version that ships with Fedora Atomic Host, the kubeadm command is available in a Fedora package. It&rsquo;s not currently baked into the image, but you can install it using rpm-ostree package layering:</p>
+<pre class="highlight shell"><code><span class="c"># rpm-ostree install kubernetes-kubeadm ethtool ebtables</span>&#x000A;</code></pre>
+
+<p>After installing, you either have to reboot (using <code>systemctl reboot</code> or by tacking an <code>-r</code> onto the end of the install command above) or you can skip the reboot and apply the changes using the experimental command <code>rpm-ostree ex livefs</code>.</p>
+
+<p>In order for kubeadm to work with SELinux in enforcing mode, you&rsquo;ll need to <a href="https://github.com/kubernetes/kubeadm/issues/279">for now</a> create the following directory and set its SELinux context as follows:</p>
+<pre class="highlight shell"><code><span class="c"># mkdir /etc/kubernetes/pki</span>&#x000A;&#x000A;<span class="c"># chcon -Rt container_share_t /etc/kubernetes/pki</span>&#x000A;</code></pre>
+
+<p>Also, kubeadm requires a different restart-on-fail behavior from the kubelet, so we&rsquo;ll need to add three lines to this drop-in file (this step won&rsquo;t be necessary once <a href="http://pkgs.fedoraproject.org/cgit/rpms/kubernetes.git/commit/?id=e1f50eb5233848580ed354b1ec8b0c886ce8caaf">this commit</a> makes its way into the stable kubeadm rpm):</p>
+<pre class="highlight shell"><code><span class="c"># vi /etc/systemd/system/kubelet.service.d/kubeadm.conf</span>&#x000A;&#x000A;<span class="nv">Restart</span><span class="o">=</span>always&#x000A;<span class="nv">StartLimitInterval</span><span class="o">=</span>0&#x000A;<span class="nv">RestartSec</span><span class="o">=</span>10&#x000A;&#x000A;<span class="c"># systemctl daemon-reload</span>&#x000A;</code></pre>
+
+<p>From here, you can follow the <a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/">upstream kubeadm documentation</a> to bring up a cluster. Note, though, that you&rsquo;ll have to append <code>--skip-preflight-checks</code> to the <code>kubeadm init</code> command because kubeadm currently does not know where to look for Fedora&rsquo;s kernel module configuration. See this <a href="https://github.com/kubernetes/kubernetes/pull/49410">pull request</a> for more information.</p>
+
+<p>Also, most of the network plugins I&rsquo;ve tested with Kubeadm have an issue running with SELinux confinement, which is one of the reasons why the upstream docs suggest putting SELinux into permissive mode. There are a couple of ways to avoid disabling this security feature on your host, however. I typically edit the yaml file that configures the network plugin to tell Kubernetes to run the plugin as type <a href="http://danwalsh.livejournal.com/74754.html"><code>spc_t</code></a>, which leaves its containers unconfined by SELinux.</p>
+
+<p>For instance, here&rsquo;s a portion of the Flannel plugin yaml that I&rsquo;ve edited:</p>
+<pre class="highlight shell"><code>spec:&#x000A;  template:&#x000A;    metadata:&#x000A;      labels:&#x000A;        tier: node&#x000A;        app: flannel&#x000A;    spec:&#x000A;      securityContext:&#x000A;        seLinuxOptions:&#x000A;          <span class="nb">type</span>: <span class="s2">"spc_t"</span>&#x000A;      hostNetwork: <span class="nb">true</span>&#x000A;</code></pre>
+
+<p>The three lines beginning with <code>securityContext:</code> go in right before the <code>hostNetwork: true</code> line. This same trick should work in any of the network plugin yaml files.</p>
+
+<p>I&rsquo;ve opened <a href="https://pagure.io/atomic/kubernetes-sig/issue/3">an issue</a> here to track efforts to get SELinux-compatible changes into these upstream plugins. Head over there to track progress or help out.</p>
+
+<p>Another item to keep in mind for Kubeadm on Fedora Atomic Host is that the 1.13.x version of the docker container runtime that&rsquo;s stable in Fedora 26 <a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#external-dependency-version-information">isn&rsquo;t yet validated</a> for Kubernetes. Due to <a href="https://github.com/kubernetes/kubernetes/issues/40182">this issue</a>, you may have to run <code>sudo iptables -P FORWARD ACCEPT</code> on each Kubeadm node in order to access your services over the network.</p>
+
+<h5>Kubeadm system container</h5>
+
+<p>It&rsquo;s also possible to run Kubeadm in a system container, although there isn&rsquo;t yet an official Fedora container image for this system container. Check out <a href="https://github.com/projectatomic/atomic-system-containers/pull/96">this git pull request</a> for more information.</p>
+
+<h4>Ansible Deployment</h4>
+
+<p>For a more advanced installation option, the contrib repository of the upstream Kubernetes project contains <a href="https://github.com/kubernetes/contrib/tree/master/ansible">ansible scripts</a> for deploying a Kubernetes cluster that work with Fedora Atomic Host and its default Kubernetes packages, as well as with an Atomic Host with installed system containers.</p>
+
+<p>Grab the scripts by git cloning them:</p>
+<pre class="highlight shell"><code>git clone https://github.com/kubernetes/contrib.git&#x000A;&#x000A;<span class="nb">cd </span>contrib/ansible&#x000A;</code></pre>
+
+<p>Next, create and populate an inventory file with the hostnames or IP addresses of the systems you intend to use as your master and your nodes:</p>
+<pre class="highlight shell"><code><span class="gp">$ </span>vi inventory/inventory&#x000A;&#x000A;<span class="o">[</span>masters]&#x000A;kube-master-test.example.com&#x000A;&#x000A;<span class="o">[</span>etcd:children]&#x000A;masters&#x000A;&#x000A;<span class="o">[</span>nodes]&#x000A;kube-minion-test-[1:2].example.com&#x000A;</code></pre>
+
+<p>Review and modify <code>inventory/group_vars/all.yml</code> as needed, for instance, setting your user name or password to use with ansible as desired.</p>
+
+<p>Finally, run the deploy cluster script:</p>
+<pre class="highlight shell"><code><span class="nb">cd </span>scripts&#x000A;&#x000A;./deploy-cluster.sh&#x000A;</code></pre>
+
+<p>For more information, check out the <a href="https://github.com/kubernetes/contrib/blob/master/ansible/README.md">README file</a>.</p>
+
+<h4>Manual Deployment</h4>
+
+<p>Finally, the Project Atomic <a href="http://www.projectatomic.io/docs/gettingstarted/">Getting Started Guide</a> provides manual directions for configuring a cluster that should work with a stock Fedora Atomic Host or with a host with Kubernetes installed via system containers.</p>
+
+<h3>Openshift Origin</h3>
+
+<p>Another set of routes to running Kubernetes on Fedora Atomic Host involve installing and configuring Openshift Origin, a container application platform built from Kubernetes. Openshift Origin&rsquo;s <a href="https://github.com/openshift/origin/blob/master/docs/cluster_up_down.md"><code>oc cluster up</code></a> command provides a similar experience to Kubeadm, and there are also <a href="http://www.projectatomic.io/blog/2016/12/part1-install-origin-on-f25-atomic-host/">Anisble scripts available</a> for deploying a full-fledged cluster.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'>
+<li><a href="/blog/tag/ansible/">ansible</a></li>
+<li><a href="/blog/tag/fedora/">fedora</a></li>
+<li><a href="/blog/tag/kubeadm/">kubeadm</a></li>
+<li><a href="/blog/tag/kubernetes/">kubernetes</a></li>
+</ul>
+</div>
+
+<p>
+<small>Share this post:</small>
+<span class='btn-group' id='social_share'>
+<a class='btn btn-default btn-xs' href='http://twitter.com/share?text=yourtext&amp;url=http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/' role='button' title='Twitter'>
+<i class='fa fa-twitter'></i>
+Twitter
+</a>
+<a class='btn btn-default btn-xs' href='http://www.facebook.com/sharer.php?u=http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/' role='button' title='Facebook'>
+<i class='fa fa-facebook'></i>
+Facebook
+</a>
+<a class='btn btn-default btn-xs' href='https://plus.google.com/share?url=http://www.projectatomic.io/blog/2017/09/running-kubernetes-on-fedora-atomic-26/' role='button' title='Google'>
+<i class='fa fa-google-plus'></i>
+Google+
+</a>
+</span>
+</p>
+
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</div>
+<div class='row'>
+<div class='col-md-offset-3 col-md-9 col-lg-offset-2 col-lg-10' id='footer'>
+<footer>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="https://fedoraproject.org/wiki/Legal:PrivacyPolicy">Privacy Policy</a></li>
+</ul>
+
+&copy; 2014&ndash;2021 Project Atomic. Sponsored by Red Hat, Inc.
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://tracker.osci.io/piwik/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 4]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://tracker.osci.io/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+</footer>
+</div>
+</div>
+
+</section>
+
+<script src="/javascripts/application.js?1633620584" type="text/javascript"></script>
+
+
+</body>
+</html>

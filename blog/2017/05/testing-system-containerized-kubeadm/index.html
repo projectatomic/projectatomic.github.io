@@ -21,7 +21,7 @@ Project Atomic
 <meta content='article' property='og:type'>
 <meta content='Testing System-Containerized Kubeadm' property='og:title'>
 <meta content='Recently, I’ve been experimenting with running Kubernetes in system containers, and those tests led me to wonder whether I could use system containers as a means of working around the issues I’ve experienced installing kubeadm, the simple-to-use tool for bootstrapping kubernetes clusters, on an atomic host.&#x000A;&#x000A;On a regular CentOS or Fedora host, using kubeadm is a matter of installing rpms for the kubelet, kubectl, kubeadm itself, and for a set of Kubernetes networking tools, kubernetes-cni. On an atomic host, rpm-ostree package layering allows for installing rpms, but if existing kube rpms are already part the atomic host image, as they are for Fedora Atomic Host, you won’t be able to install the prescribed upstream kube versions. And even on a host without built-in kubernetes, like CentOS Atomic Continuous, rpm-ostree won’t abide rpm content stored in /opt.' property='og:description'>
-<meta content='http://www.projectatomic.io/blog/2017/05/testing-system-containerized-kubeadm/' property='og:url'>
+<meta content='https://www.projectatomic.io/blog/2017/05/testing-system-containerized-kubeadm/' property='og:url'>
 <meta content='2017-05-30T13:00:00Z' property='article:published_time'>
 <meta content='jbrooks' property='article:author:username'>
 <meta content='atomic' property='article:tag'>

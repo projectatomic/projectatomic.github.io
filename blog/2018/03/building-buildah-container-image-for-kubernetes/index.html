@@ -21,7 +21,7 @@ Project Atomic
 <meta content='article' property='og:type'>
 <meta content='Building a Buildah container image for Kubernetes' property='og:title'>
 <meta content='Building a Buildah Container Image for Kubernetes&#x000A;&#x000A;Background&#x000A;&#x000A;Dan Walsh (@rhatdan) asked me to look into building a working Buildah container image. This was not just a cool experiment. It has a real purpose. As many readers know, Dan is not a fan of big fat daemons. This has become less of an issue when running containers in Kubernetes as there is an alternative with CRI-O. CRI-O provides kubernetes a standard interface to OCI compliant runtimes. runC is the reference implementation of the OCI runtime specification. Kubernetes calls the runtC runtime through CRI-O and runC then talks to the Linux kernel to run a container. This bypasses the need for the Docker daemon, and containerd. With CRI-O, there is no requirement for the Docker daemon for a kubernetes cluster to run containers.' property='og:description'>
-<meta content='http://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/' property='og:url'>
+<meta content='https://www.projectatomic.io/blog/2018/03/building-buildah-container-image-for-kubernetes/' property='og:url'>
 <meta content='2018-03-01T00:00:00Z' property='article:published_time'>
 <meta content='ipbabble' property='article:author:username'>
 <meta content='buildah' property='article:tag'>

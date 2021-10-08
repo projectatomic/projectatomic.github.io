@@ -21,7 +21,7 @@ Project Atomic
 <meta content='article' property='og:type'>
 <meta content='Granting Rights to Users to Use Docker in Fedora' property='og:title'>
 <meta content='I saw on the docker-dev list someone was asking about Fedora documentation that described how you add a user to the docker group. The user wanted to allow his users to do docker search to try to find images that they could use.&#x000A;&#x000A;From the Docker installation documentation regarding Fedora: &#x000A;&#x000A;&#x000A;Granting rights to users to use Docker&#x000A;&#x000A;Fedora 19 and 20 shipped with Docker 0.11. The package has already been updated to 1.0 in Fedora 20. If you are still using the 0.11 version you will need to grant rights to users of Docker.&#x000A;&#x000A;The docker command line tool contacts the docker daemon process via a socket file /var/run/docker.sock owned by group docker. One must be member of that group in order to contact the docker -d process.&#x000A;&#x000A;&#x000A;Luckily this documentation is somewhat wrong, you still need to add users to the docker group in order for them to use docker from a non-root account.  I would hope that all Distributions have this policy.' property='og:description'>
-<meta content='http://www.projectatomic.io/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/' property='og:url'>
+<meta content='https://www.projectatomic.io/blog/2014/09/granting-rights-to-users-to-use-docker-in-fedora/' property='og:url'>
 <meta content='2014-09-24T14:47:00Z' property='article:published_time'>
 <meta content='dwalsh' property='article:author:username'>
 <meta content='Docker' property='article:tag'>

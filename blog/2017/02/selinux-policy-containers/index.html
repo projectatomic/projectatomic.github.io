@@ -21,7 +21,7 @@ Project Atomic
 <meta content='article' property='og:type'>
 <meta content='Tightening Up SELinux Policy for Containers' property='og:title'>
 <meta content='I wrote a blog post a couple of weeks ago explaining how SELinux can block breakout of processes in containers using when exploiting a vulnerability in the /usr/bin/docker-runc or /usr/bin/runc executable.  At the time, I explained that the policy for container_t was blocked from writing to most parts of the OS other the container content labeled container_file_t. Despite blocking writes, though, it still allowed reads of some files.&#x000A;&#x000A;A few people were alarmed when they realized that SELinux would block the breakout on writes but there is a chance for information leakage into the container. The usual example was the ability to read /etc/passwd from the host. But this isn’t unlimited access to the host. If the same container processes tried to read /etc/shadow on the hosts, or content in users home directories, or database data in /var, they would be blocked.' property='og:description'>
-<meta content='http://www.projectatomic.io/blog/2017/02/selinux-policy-containers/' property='og:url'>
+<meta content='https://www.projectatomic.io/blog/2017/02/selinux-policy-containers/' property='og:url'>
 <meta content='2017-02-16T14:00:00Z' property='article:published_time'>
 <meta content='dwalsh' property='article:author:username'>
 <meta content='atomic' property='article:tag'>

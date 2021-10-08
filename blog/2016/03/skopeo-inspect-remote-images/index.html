@@ -21,7 +21,7 @@ Project Atomic
 <meta content='article' property='og:type'>
 <meta content='skopeo: inspect remote images' property='og:title'>
 <meta content='The atomic verify command checks whether there is a newer image available remotely and scans through all layers to see if any of the layers, which are base images themselves, have a new version available.  If the tool finds an out-of-date image, it will report as such. The command attempts to reach out the registry where the image has been downloaded from to understand if the local image is outdated.&#x000A;&#x000A;Currently, atomic verify relies on a Docker patch that Red Hat is carrying called remote repository inspection. It adds a new REST route that basically returns docker inspect-like information about a given image as found in the remote registry the image is hosted. We need this feature because atomic verify uses LABEL(s)—and in particular the Version LABEL—to check whether the local image needs to be updated. For more information about labels, see  the projectatomic/ContainerApplicationGenericLabels.' property='og:description'>
-<meta content='http://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/' property='og:url'>
+<meta content='https://www.projectatomic.io/blog/2016/03/skopeo-inspect-remote-images/' property='og:url'>
 <meta content='2016-03-01T10:39:51Z' property='article:published_time'>
 <meta content='runcom' property='article:author:username'>
 <meta content='docker' property='article:tag'>

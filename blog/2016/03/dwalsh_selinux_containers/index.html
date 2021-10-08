@@ -21,7 +21,7 @@ Project Atomic
 <meta content='article' property='og:type'>
 <meta content='Practical SELinux and Containers' property='og:title'>
 <meta content='I believe SELinux is the best security measure we currently have for controlling access between standard Docker containers. Of course, I might be biased.  &#x000A;&#x000A;All of the security separation measures are nice, and should be enabled for security in depth, but SELinux policy prevents a lot of break out situations where the other security mechanisms fail. With SELinux on Docker, we write policy that says that the container process running as svirt_lxc_net_t can only read/write svirt_sandbox_file_t by default (there are some booleans to allow it to write to network shared storage, if required, like for NFS). This means that if a process from a Docker container broke out of the container, it would only be able to write to files/directories labeled svirt_sandbox_file_t. We take advantage of Multi-Category Security (MCS) separation to ensure that the processes running in the container can only write to svirt_sandbox_file_t files with the same MCS Label: s0.' property='og:description'>
-<meta content='http://www.projectatomic.io/blog/2016/03/dwalsh_selinux_containers/' property='og:url'>
+<meta content='https://www.projectatomic.io/blog/2016/03/dwalsh_selinux_containers/' property='og:url'>
 <meta content='2016-03-04T02:20:31Z' property='article:published_time'>
 <meta content='dwalsh' property='article:author:username'>
 <meta content='containers' property='article:tag'>
